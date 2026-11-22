@@ -2,9 +2,20 @@ import type { SectionId } from '../utils/navigation';
 import type { QuoteDomain } from '../utils/quoteForm';
 import type { PageId } from '../utils/router';
 
+export interface UrgencyCase {
+  readonly title: string;
+  readonly text: string;
+  readonly icon: 'lock' | 'shield';
+  readonly imageSrc: string;
+  readonly imageAlt: string;
+}
+
 export interface UrgencyConfig {
+  readonly kicker: string;
   readonly title: string;
   readonly subtitle: string;
+  readonly cases: readonly UrgencyCase[];
+  readonly assurances: readonly { readonly label: string; readonly icon: 'timer' | 'shield' | 'file' }[];
   readonly ctaPrefix: string;
 }
 
@@ -203,8 +214,31 @@ export interface WhatsAppConfig {
 }
 
 export const URGENCY_CONFIG: UrgencyConfig = {
-  title: 'Porte claquée ? Porte forcée ?',
-  subtitle: 'Contactez-nous pour organiser votre dépannage.',
+  kicker: 'Dépannage en urgence',
+  title: 'Un problème de porte ?',
+  subtitle:
+    'Porte claquée, serrure forcée ou endommagée\u00A0: notre équipe vous accompagne rapidement à Marseille.',
+  cases: [
+    {
+      title: 'Porte claquée',
+      text: 'Clés oubliées, porte fermée par inadvertance.',
+      icon: 'lock',
+      imageSrc: '/src/assets/images/urg_porte_claquee.jpg',
+      imageAlt: 'Poignée et serrure d’une porte d’entrée sombre.',
+    },
+    {
+      title: 'Porte forcée',
+      text: 'Serrure endommagée, tentative d’effraction ou intrusion.',
+      icon: 'shield',
+      imageSrc: '/src/assets/images/urg_porte_forcee.jpg',
+      imageAlt: 'Cylindre de serrure abîmé après une tentative d’effraction.',
+    },
+  ],
+  assurances: [
+    { label: 'Intervention rapide', icon: 'timer' },
+    { label: 'Mise en sécurité', icon: 'shield' },
+    { label: 'Devis clair avant intervention', icon: 'file' },
+  ],
   ctaPrefix: 'Appeler le',
 };
 

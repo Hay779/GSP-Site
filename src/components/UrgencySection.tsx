@@ -1,4 +1,4 @@
-import { Lock, Phone } from 'lucide-react';
+import { FileText, Lock, Phone, ShieldAlert, ShieldCheck, Timer } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
 import type { UrgencyConfig } from '../data/sectionsContent';
 import type { BrandConfig } from '../utils/navigation';
@@ -9,6 +9,13 @@ interface UrgencySectionProps {
   readonly brand: BrandConfig;
 }
 
+const CASE_ICONS = { lock: Lock, shield: ShieldAlert } as const;
+const ASSURANCE_ICONS = { timer: Timer, shield: ShieldCheck, file: FileText } as const;
+
+/**
+ * Bloc « Un problème de porte ? » : deux cas d'urgence illustrés (porte claquée, porte forcée),
+ * trois engagements et l'appel direct.
+ */
 export function UrgencySection({ config, brand }: UrgencySectionProps) {
   const prefersReducedMotion = useReducedMotion() ?? false;
 
@@ -17,60 +24,109 @@ export function UrgencySection({ config, brand }: UrgencySectionProps) {
       id="03_Urgence"
       data-section="03_Urgence"
       aria-labelledby="03_Urgence-title"
-      className="w-full bg-[#292D2F] border-y border-[#B79A62]/65 scroll-mt-[74px] lg:scroll-mt-[88px]"
+      className="w-full bg-[#1C1F21] scroll-mt-[74px] lg:scroll-mt-[88px]"
     >
       <motion.div
         initial={prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 14 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={REVEAL_VIEWPORT}
         transition={{ duration: prefersReducedMotion ? 0 : 0.48, ease: REVEAL_EASE }}
-        className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-10 py-8 sm:py-9 lg:py-10"
+        className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-10 py-12 sm:py-14 lg:py-20"
       >
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 lg:gap-10">
-          {/* Bloc gauche : icône cadenas laiton, filet vertical et message d'urgence */}
-          <div className="flex items-start sm:items-center gap-4 sm:gap-6">
-            <span
-              aria-hidden="true"
-              className="grid h-12 w-12 sm:h-14 sm:w-14 shrink-0 place-items-center rounded-full border border-[#B79A62]/45 bg-[#1C1F21] text-[#B79A62]"
-            >
-              <Lock className="h-6 w-6 sm:h-7 sm:w-7" strokeWidth={1.6} />
-            </span>
-
-            <div>
-              <h2
-                id="03_Urgence-title"
-                className="font-display text-[23px] sm:text-[28px] lg:text-[32px] font-semibold leading-[1.18] tracking-[-0.015em] text-[#F3F0E7]"
-              >
-                {config.title}
-              </h2>
-              <p className="mt-1.5 text-[15px] sm:text-[17px] leading-[1.5] text-[#F3F0E7]/82">
-                {config.subtitle}
-              </p>
-            </div>
+        {/* En-tête : kicker, titre, sous-titre — et l'appel à droite sur grand écran */}
+        <div className="lg:flex lg:items-end lg:justify-between lg:gap-12">
+          <div className="max-w-[640px]">
+            <p className="section-kicker flex items-center gap-3 text-[#B79A62]">
+              <span aria-hidden="true" className="h-px w-8 bg-[#B79A62]" />
+              {config.kicker}
+            </p>
+            <h2 id="03_Urgence-title" className="section-title mt-3 text-[#F3F0E7]">
+              {config.title}
+            </h2>
+            <p className="section-subtitle mt-3 text-[#F3F0E7]/78">{config.subtitle}</p>
           </div>
-
-          {/* Bloc droit : accès direct à l'appel avec reflet laiton au survol */}
-          <div className="shrink-0">
-            <a
-              href={brand.phoneHref}
-              className="group relative overflow-hidden inline-flex min-h-[52px] w-full md:w-auto items-center justify-center gap-3 rounded-lg bg-[#B79A62] hover:bg-[#C6AA73] active:bg-[#A68952] px-6 sm:px-7 py-3.5 text-[16px] sm:text-[17px] font-semibold text-[#1C1F21] tabular-nums tracking-[0.01em] whitespace-nowrap transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F3F0E7]"
-            >
-              <span
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-500 ease-out group-hover:translate-x-full"
-              />
-              <Phone
-                className="relative h-[19px] w-[19px] shrink-0 transition-transform duration-150 group-hover:-rotate-6"
-                strokeWidth={1.9}
-                aria-hidden="true"
-              />
-              <span className="relative">
-                {config.ctaPrefix} {brand.phoneDisplay}
-              </span>
-            </a>
-          </div>
+          <CallButton brand={brand} prefix={config.ctaPrefix} className="hidden lg:inline-flex" />
         </div>
+
+        {/* Deux cas d'urgence : texte à gauche, photo en fondu à droite */}
+        <ul className="mt-8 lg:mt-10 grid gap-4 md:grid-cols-2 lg:gap-6">
+          {config.cases.map((item) => {
+            const Icon = CASE_ICONS[item.icon];
+            return (
+              <li
+                key={item.title}
+                className="relative isolate overflow-hidden rounded-2xl border border-[#B79A62]/40 bg-[#1C1F21] min-h-[190px] sm:min-h-[210px]"
+              >
+                <img
+                  src={item.imageSrc}
+                  alt={item.imageAlt}
+                  loading="lazy"
+                  className="absolute inset-y-0 right-0 -z-10 h-full w-[55%] object-cover"
+                />
+                <span
+                  aria-hidden="true"
+                  className="absolute inset-y-0 right-0 -z-10 w-[55%] bg-gradient-to-r from-[#1C1F21] via-[#1C1F21]/45 to-transparent"
+                />
+                <div className="flex h-full max-w-[62%] flex-col justify-center p-5 sm:p-6">
+                  <span
+                    aria-hidden="true"
+                    className="grid h-11 w-11 place-items-center rounded-full border border-[#B79A62]/70 text-[#B79A62]"
+                  >
+                    <Icon className="h-5 w-5" strokeWidth={1.6} />
+                  </span>
+                  <h3 className="mt-3 font-display text-[22px] sm:text-[24px] font-semibold leading-tight text-[#F3F0E7]">
+                    {item.title}
+                  </h3>
+                  <p className="mt-1.5 text-[14.5px] leading-[1.5] text-[#F3F0E7]/75">{item.text}</p>
+                  <span aria-hidden="true" className="mt-4 h-0.5 w-9 bg-[#B79A62]" />
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+
+        {/* Engagements */}
+        <ul className="mt-8 grid grid-cols-3 border-t border-[#F3F0E7]/12 pt-6">
+          {config.assurances.map((item, index) => {
+            const Icon = ASSURANCE_ICONS[item.icon];
+            return (
+              <li
+                key={item.label}
+                className={`flex flex-col sm:flex-row items-center sm:items-center gap-2 sm:gap-3 px-2 text-center sm:text-left ${
+                  index > 0 ? 'border-l border-[#F3F0E7]/12' : ''
+                } sm:justify-center`}
+              >
+                <Icon className="h-7 w-7 shrink-0 text-[#B79A62]" strokeWidth={1.5} aria-hidden="true" />
+                <span className="text-[13px] sm:text-[14.5px] leading-[1.35] text-[#F3F0E7]/88">{item.label}</span>
+              </li>
+            );
+          })}
+        </ul>
+
+        <CallButton brand={brand} prefix={config.ctaPrefix} className="mt-8 flex w-full lg:hidden" />
       </motion.div>
     </section>
+  );
+}
+
+function CallButton({
+  brand,
+  prefix,
+  className,
+}: {
+  readonly brand: BrandConfig;
+  readonly prefix: string;
+  readonly className: string;
+}) {
+  return (
+    <a
+      href={brand.phoneHref}
+      className={`group relative overflow-hidden shrink-0 min-h-[52px] items-center justify-center gap-3 rounded-lg bg-[#B79A62] hover:bg-[#C6AA73] active:bg-[#A68952] px-7 py-3.5 text-[16px] sm:text-[17px] font-semibold text-[#1C1F21] tabular-nums whitespace-nowrap transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F3F0E7] ${className}`}
+    >
+      <Phone className="h-[19px] w-[19px] shrink-0 transition-transform duration-150 group-hover:-rotate-6" strokeWidth={1.9} aria-hidden="true" />
+      <span>
+        {prefix} {brand.phoneDisplay}
+      </span>
+    </a>
   );
 }
