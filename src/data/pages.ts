@@ -22,6 +22,7 @@ import {
   FAQ_ZONE,
 } from './faqContent';
 import { HERO_CONFIG } from './heroConfig';
+import { DOMAIN_PAGE_EXTRAS, type BeforeAfterCase, type FeatureCard, type ProcessIconKey } from './domainPagesContent';
 import {
   AFTER_INCIDENT_CONFIG,
   AFTER_INCIDENT_PAGE_CONFIG,
@@ -31,6 +32,7 @@ import {
   FAQ_CONFIG,
   KEYS_BADGES_CONFIG,
   KEYS_BADGES_PAGE_CONFIG,
+  ZONE_INTERVENTION_CONFIG,
   type DomainCardItem,
   type FaqItem,
   type KeysBadgeIconKey,
@@ -52,6 +54,10 @@ export interface PageHeroDefinition {
   readonly intro: string;
   readonly imageSrc?: string;
   readonly imagePosition?: string;
+  /** Petits points rassurants sous l'introduction (2 ou 3, courts). */
+  readonly highlights?: readonly string[];
+  /** Raccourcis vers des sections de la page (pastilles cliquables). */
+  readonly shortcuts?: readonly { readonly label: string; readonly targetId: string }[];
   /** En-tête réduit (pages légales). */
   readonly compact?: boolean;
   /** Masque l'en-tête sur mobile et tablette (le contenu commence directement). */
@@ -120,11 +126,22 @@ export type PageBlock =
       readonly tone: 'light';
       readonly items: readonly AudienceCard[];
     } & SectionHeading)
+  | ({ readonly type: 'features'; readonly id: string; readonly tone: 'light'; readonly items: readonly FeatureCard[] } & SectionHeading)
+  | ({
+      readonly type: 'process';
+      readonly id: string;
+      readonly tone: BlockTone;
+      readonly steps: readonly NumberedStep[];
+      readonly icons?: readonly ProcessIconKey[];
+    } & SectionHeading)
+  | ({ readonly type: 'incidentServices'; readonly id: string; readonly tone: 'light' } & SectionHeading)
+  | ({ readonly type: 'beforeAfter'; readonly id: string; readonly tone: 'dark'; readonly items: readonly BeforeAfterCase[] } & SectionHeading)
   /* Sections partagées avec l'accueil (fond fixe) */
+  | { readonly type: 'brands' }
   | { readonly type: 'urgency' }
   | { readonly type: 'agencies' }
-  | { readonly type: 'zone' }
-  | { readonly type: 'reviews' };
+  | { readonly type: 'zone'; readonly embedded?: boolean }
+  | { readonly type: 'reviews'; readonly hideHeading?: boolean };
 
 export interface PageDefinition {
   readonly seoTitle: string;
@@ -133,15 +150,16 @@ export interface PageDefinition {
   readonly blocks: readonly PageBlock[];
 }
 
-/** Fond d'un bloc : « band » = bandeau neutre (urgence) qui peut suivre n'importe quel bloc. */
+/** Fond d'un bloc : « band » = bandeau neutre (urgence, zone) qui peut suivre n'importe quel bloc. */
 export function blockTone(block: PageBlock): BlockTone | 'band' {
   switch (block.type) {
     case 'urgency':
+    case 'zone':
       return 'band';
     case 'agencies':
     case 'reviews':
       return 'light';
-    case 'zone':
+    case 'brands':
       return 'dark';
     default:
       return block.tone;
@@ -198,32 +216,69 @@ export function buildDomainPage(domain: DomainCardItem): PageDefinition {
       intro: domain.pageIntro,
       imageSrc: domain.imageSrc,
       breadcrumbParent: 'domaines',
+      highlights: DOMAIN_PAGE_EXTRAS[domain.id].highlights,
       actions: [{ kind: 'quote', domain: domain.quoteDomain }, { kind: 'phone' }],
     },
-    blocks: [
-      {
-        type: 'cards',
-        id: 'page-prestations',
-        tone: 'light',
-        kicker: c.prestationsKicker,
-        title: c.prestationsTitle,
-        subtitle: domain.summary,
-        items: domain.prestations,
-      },
-      { type: 'steps', id: 'page-methode', tone: 'dark', kicker: c.methodKicker, title: c.methodTitle, steps: c.methodSteps },
-      {
-        type: 'domains',
-        id: 'page-autres-domaines',
-        tone: 'light',
-        kicker: c.otherDomainsKicker,
-        title: c.otherDomainsTitle,
-        excludeId: domain.id,
-      },
-      faqBlock('page-faq', 'dark', DOMAIN_FAQS[domain.id], `Vos questions en ${domain.title.toLowerCase()}.`),
-      { type: 'urgency' },
-      { type: 'agencies' },
-    ],
+    blocks: domainPageBlocks(domain),
   };
+}
+
+/**
+ * Blocs d'une page métier : urgence, prestations, avant / après (si photos), méthode,
+ * marques (serrurerie), autres domaines, FAQ, agences — en alternant clair / sombre.
+ */
+function domainPageBlocks(domain: DomainCardItem): PageBlock[] {
+  const c = DOMAIN_PAGE_CONFIG;
+  const extras = DOMAIN_PAGE_EXTRAS[domain.id];
+  const hasCases = extras.beforeAfter.length > 0;
+  const blocks: PageBlock[] = [
+    { type: 'urgency' },
+    {
+      type: 'features',
+      id: 'page-prestations',
+      tone: 'light',
+      kicker: c.prestationsKicker,
+      title: c.prestationsTitle,
+      subtitle: domain.summary,
+      items: extras.features,
+    },
+  ];
+  if (hasCases) {
+    blocks.push({
+      type: 'beforeAfter',
+      id: 'page-avant-apres',
+      tone: 'dark',
+      kicker: c.casesKicker,
+      title: c.casesTitle,
+      items: extras.beforeAfter,
+    });
+  }
+  // La méthode prend le fond opposé au bloc précédent.
+  const processTone: BlockTone = hasCases ? 'light' : 'dark';
+  blocks.push({ type: 'process', id: 'page-methode', tone: processTone, kicker: c.methodKicker, title: c.methodTitle, steps: c.methodSteps });
+  const otherDomains: PageBlock = {
+    type: 'domains',
+    id: 'page-autres-domaines',
+    tone: 'light',
+    kicker: c.otherDomainsKicker,
+    title: c.otherDomainsTitle,
+    excludeId: domain.id,
+  };
+  const faq = faqBlock('page-faq', 'dark', DOMAIN_FAQS[domain.id], `Vos questions en ${domain.title.toLowerCase()}.`);
+  if (processTone === 'light') {
+    // … méthode (clair) → marques ou FAQ (sombre) → autres domaines (clair) → [FAQ (sombre)] → agences (clair)
+    if (extras.showBrands) {
+      blocks.push({ type: 'brands' }, otherDomains, faq);
+    } else {
+      // (pas de bloc sombre disponible entre « autres domaines » et les agences : on le retire)
+      blocks.push(faq);
+    }
+  } else {
+    // … méthode (sombre) → autres domaines (clair) → FAQ (sombre)
+    blocks.push(otherDomains, faq);
+  }
+  blocks.push({ type: 'agencies' });
+  return blocks;
 }
 
 /* ------------------------------------------------------------------ */
@@ -305,8 +360,9 @@ const PRO_PAGES = {
       title: 'Un partenaire de confiance pour vos immeubles.',
       intro:
         'Syndics, assureurs, experts, agences immobilières et bailleurs : un seul interlocuteur à Marseille pour la serrurerie, la vitrerie, la menuiserie et les fermetures.',
-      imageSrc: DOMAINS_CONFIG.items.find((d) => d.id === 'serrurerie')?.imageSrc,
-      imagePosition: '60% 50%',
+      imageSrc: ZONE_INTERVENTION_CONFIG.bannerSrc,
+      imagePosition: '30% 40%',
+      highlights: ['Un seul interlocuteur', 'Devis avant intervention', 'Compte rendu avec photos'],
       breadcrumbLabel: 'Professionnels',
       actions: [{ kind: 'page', label: 'Devenir partenaire', page: 'devenir-partenaire' }, { kind: 'phone' }],
     },
@@ -338,7 +394,15 @@ const PRO_PAGES = {
           },
         ],
       },
-      { type: 'steps', id: 'page-methode', tone: 'dark', kicker: 'Notre méthode', title: 'Une collaboration simple et traçable.', steps: PRO_METHOD },
+      {
+        type: 'process',
+        id: 'page-methode',
+        tone: 'dark',
+        kicker: 'Notre méthode',
+        title: 'Une collaboration simple et traçable.',
+        steps: PRO_METHOD,
+        icons: ['hand', 'file', 'wrench', 'folder'],
+      },
       faqBlock('page-faq', 'light', FAQ_PRO_GENERAL, 'Vos questions de professionnels.'),
       PARTNER_CTA,
     ],
@@ -372,7 +436,15 @@ const PRO_PAGES = {
           'Portes de garage, rideaux et fermetures collectives',
         ],
       },
-      { type: 'steps', id: 'page-methode', tone: 'dark', kicker: 'Notre méthode', title: 'Une collaboration simple et traçable.', steps: PRO_METHOD },
+      {
+        type: 'process',
+        id: 'page-methode',
+        tone: 'dark',
+        kicker: 'Notre méthode',
+        title: 'Une collaboration simple et traçable.',
+        steps: PRO_METHOD,
+        icons: ['hand', 'file', 'wrench', 'folder'],
+      },
       faqBlock('page-faq', 'light', FAQ_PRO_SYNDICS, 'Vos questions de gestionnaires.'),
       PARTNER_CTA,
     ],
@@ -406,7 +478,15 @@ const PRO_PAGES = {
           'Suivi administratif du dossier',
         ],
       },
-      { type: 'steps', id: 'page-methode', tone: 'dark', kicker: 'Notre méthode', title: 'Une collaboration simple et traçable.', steps: PRO_METHOD },
+      {
+        type: 'process',
+        id: 'page-methode',
+        tone: 'dark',
+        kicker: 'Notre méthode',
+        title: 'Une collaboration simple et traçable.',
+        steps: PRO_METHOD,
+        icons: ['hand', 'file', 'wrench', 'folder'],
+      },
       faqBlock('page-faq', 'light', FAQ_PRO_ASSUREURS, 'Vos questions d’assureurs et d’experts.'),
       PARTNER_CTA,
     ],
@@ -440,7 +520,15 @@ const PRO_PAGES = {
           'Réglages et petites réparations de menuiseries et fermetures',
         ],
       },
-      { type: 'steps', id: 'page-methode', tone: 'dark', kicker: 'Notre méthode', title: 'Une collaboration simple et traçable.', steps: PRO_METHOD },
+      {
+        type: 'process',
+        id: 'page-methode',
+        tone: 'dark',
+        kicker: 'Notre méthode',
+        title: 'Une collaboration simple et traçable.',
+        steps: PRO_METHOD,
+        icons: ['hand', 'file', 'wrench', 'folder'],
+      },
       faqBlock('page-faq', 'light', FAQ_PRO_IMMOBILIER, 'Vos questions de gestionnaires de biens.'),
       PARTNER_CTA,
     ],
@@ -458,6 +546,7 @@ export const THEMATIC_PAGES: Readonly<Record<BlockPageId, PageDefinition>> = {
       intro: KEYS_BADGES_PAGE_CONFIG.intro,
       imageSrc: KEYS_BADGES_CONFIG.imageSrc,
       imagePosition: '65% 45%',
+      highlights: ['En boutique', 'À partir de votre original', 'République & Rome'],
       actions: [{ kind: 'page', label: 'Trouver une agence', page: 'agences-contact' }, { kind: 'phone' }],
     },
     blocks: [
@@ -470,16 +559,17 @@ export const THEMATIC_PAGES: Readonly<Record<BlockPageId, PageDefinition>> = {
         services: KEYS_BADGES_PAGE_CONFIG.services,
       },
       {
-        type: 'steps',
+        type: 'process',
         id: 'page-etapes',
         tone: 'dark',
         kicker: KEYS_BADGES_PAGE_CONFIG.stepsKicker,
         title: KEYS_BADGES_PAGE_CONFIG.stepsTitle,
         steps: KEYS_BADGES_PAGE_CONFIG.steps,
+        icons: ['hand', 'search', 'settings'],
       },
-      faqBlock('page-faq', 'light', FAQ_CLES_BADGES),
-      { type: 'urgency' },
+      // Service réalisé en boutique : les agences viennent juste après.
       { type: 'agencies' },
+      faqBlock('page-faq', 'dark', FAQ_CLES_BADGES),
     ],
   },
 
@@ -493,20 +583,37 @@ export const THEMATIC_PAGES: Readonly<Record<BlockPageId, PageDefinition>> = {
       intro: AFTER_INCIDENT_PAGE_CONFIG.intro,
       imageSrc: AFTER_INCIDENT_CONFIG.imageSrc,
       imagePosition: '70% 35%',
+      highlights: ['Mise en sécurité rapide', 'Reportage photo', 'Dossier assurance'],
       actions: [
         { kind: 'quote', label: AFTER_INCIDENT_CONFIG.primaryCtaLabel, domain: 'Après sinistre' },
         { kind: 'photos', label: AFTER_INCIDENT_CONFIG.secondaryCtaLabel },
       ],
     },
     blocks: [
+      { type: 'urgency' },
       {
-        type: 'cards',
+        type: 'incidentServices',
+        id: 'page-prise-en-charge',
+        tone: 'light',
+        kicker: AFTER_INCIDENT_PAGE_CONFIG.servicesKicker,
+        title: AFTER_INCIDENT_PAGE_CONFIG.servicesTitle,
+      },
+      {
+        type: 'beforeAfter',
+        id: 'page-avant-apres',
+        tone: 'dark',
+        kicker: AFTER_INCIDENT_PAGE_CONFIG.casesKicker,
+        title: AFTER_INCIDENT_PAGE_CONFIG.casesTitle,
+        items: DOMAIN_PAGE_EXTRAS.serrurerie.beforeAfter,
+      },
+      {
+        type: 'process',
         id: 'page-accompagnement',
         tone: 'light',
         kicker: AFTER_INCIDENT_PAGE_CONFIG.stepsKicker,
         title: AFTER_INCIDENT_PAGE_CONFIG.stepsTitle,
-        items: AFTER_INCIDENT_CONFIG.steps.map((step) => step.label),
-        columns: 4,
+        steps: AFTER_INCIDENT_CONFIG.steps.map((step) => ({ title: step.label, text: '' })),
+        icons: ['search', 'file', 'wrench', 'folder'],
       },
       {
         type: 'insurance',
@@ -515,9 +622,8 @@ export const THEMATIC_PAGES: Readonly<Record<BlockPageId, PageDefinition>> = {
         kicker: AFTER_INCIDENT_PAGE_CONFIG.insuranceKicker,
         title: AFTER_INCIDENT_PAGE_CONFIG.insuranceTitle,
       },
-      faqBlock('page-faq', 'light', FAQ_APRES_SINISTRE),
-      { type: 'urgency' },
       { type: 'agencies' },
+      faqBlock('page-faq', 'dark', FAQ_APRES_SINISTRE),
     ],
   },
 
@@ -559,11 +665,16 @@ export const THEMATIC_PAGES: Readonly<Record<BlockPageId, PageDefinition>> = {
       breadcrumbLabel: 'Zone d’intervention',
       intro:
         'Depuis nos agences République et Rome, nous intervenons dans les arrondissements de Marseille et dans plusieurs communes voisines.',
-      imageSrc: DOMAINS_CONFIG.items.find((d) => d.id === 'menuiserie')?.imageSrc,
-      imagePosition: '75% 40%',
+      imageSrc: ZONE_INTERVENTION_CONFIG.bannerSrc,
+      imagePosition: '30% 40%',
+      highlights: ['16 arrondissements', 'Communes voisines', '2 agences : République & Rome'],
       actions: [{ kind: 'quote' }, { kind: 'phone' }],
     },
     blocks: [
+      // La carte et la recherche d'abord : c'est l'objet de la page.
+      { type: 'zone', embedded: true },
+      { type: 'agencies' },
+      faqBlock('page-faq', 'dark', FAQ_ZONE),
       {
         type: 'domains',
         id: 'page-domaines',
@@ -571,9 +682,6 @@ export const THEMATIC_PAGES: Readonly<Record<BlockPageId, PageDefinition>> = {
         kicker: 'Nos domaines',
         title: 'Ce que nous faisons près de chez vous.',
       },
-      { type: 'zone' },
-      { type: 'agencies' },
-      faqBlock('page-faq', 'dark', FAQ_ZONE),
     ],
   },
 
@@ -589,7 +697,7 @@ export const THEMATIC_PAGES: Readonly<Record<BlockPageId, PageDefinition>> = {
       imagePosition: '65% 45%',
       actions: [{ kind: 'quote' }, { kind: 'phone' }],
     },
-    blocks: [{ type: 'reviews' }],
+    blocks: [{ type: 'reviews', hideHeading: true }],
   },
 
   'questions-frequentes': {
@@ -601,6 +709,15 @@ export const THEMATIC_PAGES: Readonly<Record<BlockPageId, PageDefinition>> = {
       title: 'Toutes nos réponses.',
       breadcrumbLabel: 'Questions fréquentes',
       intro: 'Retrouvez les questions les plus posées, classées par thème. Une question précise ? Appelez-nous.',
+      shortcuts: [
+        { label: 'Les essentiels', targetId: 'faq-general' },
+        { label: 'Serrurerie', targetId: 'faq-serrurerie' },
+        { label: 'Vitrerie', targetId: 'faq-vitrerie' },
+        { label: 'Menuiserie', targetId: 'faq-menuiserie' },
+        { label: 'Fermetures', targetId: 'faq-fermetures' },
+        { label: 'Clés & badges', targetId: 'faq-cles' },
+        { label: 'Après sinistre', targetId: 'faq-sinistre' },
+      ],
       actions: [{ kind: 'phone' }, { kind: 'quote' }],
     },
     blocks: [

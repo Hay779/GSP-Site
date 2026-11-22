@@ -137,7 +137,7 @@ export const SITE_SECTIONS: readonly SiteSectionSpec[] = [
     provisionalTitle: 'Du premier diagnostic à la remise en état.',
     summary:
       'Accompagnement après effraction, vandalisme ou bris de glace en 4 étapes, formulaire de besoin, envoi de photos et mention d’assurance à confirmer.',
-    toComplete: ['Lien avec Allianz à préciser avant publication'],
+    toComplete: [],
     surface: 'primary',
     density: 'standard',
   },

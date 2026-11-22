@@ -36,6 +36,8 @@ interface ReviewsSectionProps {
   readonly layout?: 'marquee' | 'grid';
   /** Lien vers la page de tous les avis (affiché en mode bandeau). */
   readonly allReviewsHref?: string;
+  /** Masque le sur-titre / titre / sous-titre (page Avis : déjà dans le haut de page). */
+  readonly hideHeading?: boolean;
 }
 
 /* ------------------------------------------------------------------ */
@@ -282,7 +284,7 @@ function ReviewsGrid({ reviews, isDemo }: { readonly reviews: readonly CustomerR
 
 /* ------------------------------------------------------------------ */
 
-export function ReviewsSection({ config, layout = 'marquee', allReviewsHref }: ReviewsSectionProps) {
+export function ReviewsSection({ config, layout = 'marquee', allReviewsHref, hideHeading = false }: ReviewsSectionProps) {
   const prefersReducedMotion = useReducedMotion() ?? false;
   const { reviews, isDemo } = resolveDisplayedReviews(REAL_REVIEWS, DEMO_REVIEWS, DEMO_ENABLED);
   const hasReviews = reviews.length > 0;
@@ -304,11 +306,13 @@ export function ReviewsSection({ config, layout = 'marquee', allReviewsHref }: R
           className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"
         >
           <div className="max-w-2xl">
-            <p className="section-kicker text-[#7D612D]">{config.kicker}</p>
-            <h2 id="08_Avis_Clients-title" className="mt-3 section-title text-[#1C1F21]">
-              {config.title}
-            </h2>
-            <p className="mt-4 section-subtitle text-[#1C1F21]/70">{config.subtitle}</p>
+            <div className={hideHeading ? 'sr-only' : ''}>
+              <p className="section-kicker text-[#7D612D]">{config.kicker}</p>
+              <h2 id="08_Avis_Clients-title" className="mt-3 section-title text-[#1C1F21]">
+                {config.title}
+              </h2>
+              <p className="mt-4 section-subtitle text-[#1C1F21]/70">{config.subtitle}</p>
+            </div>
             {isDemo && (
               <p className="mt-4 inline-flex rounded-lg border border-dashed border-[#B79A62] bg-[#FFFFFF] px-3 py-2 text-[13px] text-[#7D612D]">
                 Aperçu du design : avis d’exemple, non publiés sur le site.

@@ -13,11 +13,14 @@ import { MarseilleRadarMap } from './MarseilleRadarMap';
 interface ZoneInterventionSectionProps {
   readonly config: ZoneInterventionConfig;
   readonly onRequestQuoteForDistrict: (district?: string) => void;
+  /** Sur la page « Zone d'intervention » : sans bandeau photo ni titre (déjà dans le haut de page). */
+  readonly embedded?: boolean;
 }
 
 export function ZoneInterventionSection({
   config,
   onRequestQuoteForDistrict,
+  embedded = false,
 }: ZoneInterventionSectionProps) {
   const [selectedSector, setSelectedSector] = useState<string | null>(null);
   const [query, setQuery] = useState('');
@@ -58,10 +61,11 @@ export function ZoneInterventionSection({
       id="09_Zone_Intervention"
       data-section="09_Zone_Intervention"
       aria-labelledby="09_Zone_Intervention-title"
-      className="w-full bg-white scroll-mt-[74px] lg:scroll-mt-[88px] lg:pt-16"
+      className={`w-full bg-white scroll-mt-[74px] lg:scroll-mt-[88px] ${embedded ? '' : 'lg:pt-16'}`}
     >
       {/* Bandeau photo de Marseille : bas arrondi avec filet doré (mobile), carte arrondie (bureau) */}
-      <div className="mx-auto max-w-[1280px] lg:px-10">
+      {!embedded && (
+        <div className="mx-auto max-w-[1280px] lg:px-10">
         <div className="kb-curve relative">
           <img
             src={config.bannerSrc}
@@ -71,14 +75,15 @@ export function ZoneInterventionSection({
           />
         </div>
       </div>
+      )}
 
-      <div className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-10 pt-6 pb-14 sm:pb-20 lg:pt-12 lg:pb-24">
+      <div className={`mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-10 pb-14 sm:pb-20 lg:pb-24 ${embedded ? 'pt-12 sm:pt-16' : 'pt-6 lg:pt-12'}`}>
         <motion.div
           initial={prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={REVEAL_VIEWPORT}
           transition={{ duration: prefersReducedMotion ? 0 : 0.5, ease: REVEAL_EASE }}
-          className="max-w-3xl"
+          className={embedded ? 'sr-only' : 'max-w-3xl'}
         >
           <p className="section-kicker flex items-center gap-3 text-[#7D612D]">
             <span aria-hidden="true" className="h-px w-8 bg-[#B79A62]" />
@@ -99,7 +104,7 @@ export function ZoneInterventionSection({
           whileInView={{ opacity: 1, y: 0 }}
           viewport={REVEAL_VIEWPORT}
           transition={{ duration: prefersReducedMotion ? 0 : 0.55, delay: prefersReducedMotion ? 0 : 0.08, ease: REVEAL_EASE }}
-          className="mt-8 sm:mt-10 grid gap-5 lg:grid-cols-12 lg:gap-8 lg:items-start"
+          className={`${embedded ? '' : 'mt-8 sm:mt-10 '}grid gap-5 lg:grid-cols-12 lg:gap-8 lg:items-start`}
         >
           <div className="order-2 lg:col-span-7 overflow-hidden rounded-3xl shadow-[0_14px_36px_-20px_rgba(28,31,33,0.45)]">
             <MarseilleRadarMap

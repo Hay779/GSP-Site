@@ -189,7 +189,7 @@ export function ContactFormSection({ id, kicker, title, brand, whatsapp, agencie
 
                 <button
                   type="submit"
-                  className="inline-flex min-h-[52px] w-full items-center justify-center gap-2.5 rounded-lg bg-[#B79A62] px-8 text-[16px] font-semibold text-[#1C1F21] hover:bg-[#C6AA73] active:bg-[#A68952] sm:w-auto cursor-pointer"
+                  className="inline-flex h-12 w-full items-center justify-center gap-2.5 rounded-full bg-[#1C1F21] px-7 text-[16px] font-semibold text-[#F3F0E7] hover:bg-[#292D2F] sm:w-auto cursor-pointer [&_svg]:text-[#B79A62]"
                 >
                   <Send className="h-4 w-4" aria-hidden="true" />
                   Envoyer mon message

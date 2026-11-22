@@ -1,25 +1,21 @@
 import { useEffect, useState, type ReactNode } from 'react';
-import { ChevronRight } from 'lucide-react';
+import { Check } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
 import { REVEAL_EASE } from '../utils/scrollReveal';
 
-export interface BreadcrumbItem {
-  readonly label: string;
-  /** Absent pour la page courante. */
-  readonly href?: string;
-}
-
 interface PageHeroProps {
-  readonly kicker: string;
   readonly title: string;
   readonly intro: string;
   readonly imageSrc?: string;
   /** Cadrage de la photo (CSS object-position). */
   readonly imagePosition?: string;
-  readonly breadcrumb: readonly BreadcrumbItem[];
   readonly actions?: ReactNode;
   /** En-tête réduit, sans photo (pages légales). */
   readonly compact?: boolean;
+  /** Petits points rassurants affichés sous l'introduction. */
+  readonly highlights?: readonly string[];
+  /** Raccourcis vers des sections de la page (pastilles). */
+  readonly shortcuts?: readonly { readonly label: string; readonly targetId: string }[];
 }
 
 /** Met à jour le titre de l'onglet et la description Google de la page. */
@@ -41,15 +37,15 @@ export function usePageMeta(title: string, description: string) {
   }, [title, description]);
 }
 
-/** En-tête commun des pages intérieures : photo plein cadre, fil d'Ariane, titre, actions. */
+/** En-tête commun des pages intérieures. */
 export function PageHero({
-  kicker,
   title,
   intro,
   imageSrc,
   imagePosition = '60% 45%',
-  breadcrumb,
   actions,
+  highlights = [],
+  shortcuts = [],
   compact = false,
 }: PageHeroProps) {
   const prefersReducedMotion = Boolean(useReducedMotion());
@@ -67,91 +63,108 @@ export function PageHero({
     },
   });
 
-  // Sur mobile, la photo s'affiche en bandeau au-dessus du texte (rien n'est posé sur l'image).
   const hasPhoto = Boolean(imageSrc) && !compact && !imageFailed;
 
-  return (
-    <section
-      id="page-hero"
-      aria-labelledby="page-hero-title"
-      className={`relative w-full overflow-hidden bg-[#1C1F21] flex flex-col lg:flex-row lg:items-end ${
-        compact ? 'min-h-[300px] lg:min-h-[380px] justify-end' : hasPhoto ? 'lg:min-h-[620px]' : 'min-h-[460px] lg:min-h-[620px] justify-end'
-      }`}
-    >
-      <div
-        aria-hidden="true"
-        className={
-          hasPhoto
-            ? 'relative h-[38svh] min-h-[220px] max-h-[360px] w-full shrink-0 overflow-hidden lg:absolute lg:inset-0 lg:h-auto lg:min-h-0 lg:max-h-none'
-            : 'absolute inset-0'
-        }
+  const photo = (className: string) =>
+    imageSrc ? (
+      <motion.img
+        key={imageSrc}
+        src={imageSrc}
+        alt=""
+        referrerPolicy="no-referrer"
+        onError={() => setImageFailed(true)}
+        initial={prefersReducedMotion ? { scale: 1.02 } : { scale: 1.1 }}
+        animate={{ scale: 1.02 }}
+        transition={{ duration: prefersReducedMotion ? 0 : 6, ease: 'easeOut' }}
+        style={{ objectPosition: imagePosition }}
+        className={`h-full w-full object-cover will-change-transform ${className}`}
+      />
+    ) : null;
+
+  const text = (
+    <>
+      <motion.h1
+        {...fadeUp(0.04)}
+        id="page-hero-title"
+        className="font-display text-[clamp(2.15rem,4.4vw,3.5rem)] font-semibold leading-[1.06] tracking-[-0.015em] text-[#F3F0E7]"
       >
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_75%_40%,rgba(183,154,98,0.16),rgba(41,45,47,0.45)_45%,rgba(28,31,33,1)_85%)]" />
-        {hasPhoto && imageSrc && (
-          <motion.img
-            key={imageSrc}
-            src={imageSrc}
-            alt=""
-            referrerPolicy="no-referrer"
-            onError={() => setImageFailed(true)}
-            initial={prefersReducedMotion ? { scale: 1.04 } : { scale: 1.12 }}
-            animate={{ scale: 1.04 }}
-            transition={{ duration: prefersReducedMotion ? 0 : 6, ease: 'easeOut' }}
-            style={{ objectPosition: imagePosition }}
-            className="absolute inset-0 h-full w-full object-cover will-change-transform"
-          />
-        )}
-        {/* Mobile : simple fondu en bas de la photo. Ordinateur : voile latéral sous le texte. */}
-        <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#1C1F21] to-transparent lg:hidden" />
-        <div className="hidden lg:block absolute inset-0 bg-[linear-gradient(90deg,#1C1F21_0%,#1C1F21_30%,rgba(28,31,33,0.85)_48%,rgba(28,31,33,0.3)_75%,rgba(28,31,33,0.15)_100%)]" />
-        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#1C1F21] to-transparent" />
+        {title}
+      </motion.h1>
+      <motion.p {...fadeUp(0.12)} className="mt-4 sm:mt-5 max-w-[560px] text-[16px] sm:text-[18px] leading-[1.6] text-[#F3F0E7]/85">
+        {intro}
+      </motion.p>
+      {highlights.length > 0 && (
+        <motion.ul {...fadeUp(0.18)} className="mt-5 flex flex-wrap gap-x-5 gap-y-2">
+          {highlights.map((item) => (
+            <li key={item} className="inline-flex items-center gap-2 text-[14px] sm:text-[15px] text-[#F3F0E7]/80">
+              <Check className="h-4 w-4 shrink-0 text-[#B79A62]" strokeWidth={2.2} aria-hidden="true" />
+              {item}
+            </li>
+          ))}
+        </motion.ul>
+      )}
+      {shortcuts.length > 0 && (
+        <motion.nav {...fadeUp(0.18)} aria-label="Thèmes de la page" className="mt-6 flex flex-wrap gap-2">
+          {shortcuts.map((item) => (
+            <button
+              key={item.targetId}
+              type="button"
+              onClick={() => document.getElementById(item.targetId)?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+              className="rounded-full border border-[#F3F0E7]/25 px-3.5 py-1.5 text-[14px] text-[#F3F0E7]/90 hover:border-[#B79A62] hover:text-[#F3F0E7] transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62] cursor-pointer"
+            >
+              {item.label}
+            </button>
+          ))}
+        </motion.nav>
+      )}
+    </>
+  );
+
+  if (!hasPhoto) {
+    // En-tête sans photo (pages légales, ou photo indisponible).
+    return (
+      <section
+        id="page-hero"
+        aria-labelledby="page-hero-title"
+        className={`relative w-full overflow-hidden bg-[#1C1F21] bg-[radial-gradient(ellipse_at_75%_40%,rgba(183,154,98,0.16),rgba(41,45,47,0.45)_45%,rgba(28,31,33,1)_85%)] ${
+          compact ? '' : 'lg:min-h-[420px] lg:flex lg:items-center'
+        }`}
+      >
+        <div className={`relative mx-auto w-full max-w-[1280px] px-5 sm:px-8 lg:px-10 ${compact ? 'pt-20 pb-12 lg:pb-14' : 'pt-24 pb-14 lg:py-20'}`}>
+          <div className="max-w-[640px]">
+            {text}
+            {actions && (
+              <motion.div {...fadeUp(0.24)} className="mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4">
+                {actions}
+              </motion.div>
+            )}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section id="page-hero" aria-labelledby="page-hero-title" className="relative w-full overflow-hidden bg-[#1C1F21]">
+      {/* Mobile & tablette : photo en bandeau, bas arrondi avec filet doré */}
+      <div aria-hidden="true" className="kb-curve relative h-[34svh] min-h-[210px] max-h-[320px] overflow-hidden lg:hidden">
+        {photo('absolute inset-0')}
       </div>
 
-      <div className={`relative z-10 mx-auto w-full max-w-[1280px] px-5 sm:px-8 lg:px-10 ${compact ? 'pt-20 pb-12 lg:pb-14' : hasPhoto ? 'pt-3 pb-12 sm:pb-14 lg:py-24' : 'pt-28 pb-14 sm:pb-16 lg:py-24'}`}>
-        <nav aria-label="Fil d’Ariane" className="mb-6">
-          <ol className="flex flex-wrap items-center gap-1.5 text-[13px] text-[#F3F0E7]/70">
-            {breadcrumb.map((item, index) => (
-              <li key={item.label} className="flex items-center gap-1.5">
-                {index > 0 && (
-                  <ChevronRight aria-hidden="true" className="h-3.5 w-3.5 text-[#F3F0E7]/40" />
-                )}
-                {item.href ? (
-                  <a href={item.href} className="hover:text-[#B79A62] transition-colors duration-150">
-                    {item.label}
-                  </a>
-                ) : (
-                  <span aria-current="page" className="text-[#F3F0E7]">
-                    {item.label}
-                  </span>
-                )}
-              </li>
-            ))}
-          </ol>
-        </nav>
-
-        <div className="max-w-[640px]">
-          <motion.p {...fadeUp(0)} className="section-kicker text-[#B79A62]">
-            {kicker}
-          </motion.p>
-          <motion.h1
-            {...fadeUp(0.08)}
-            id="page-hero-title"
-            className="mt-4 font-display text-[clamp(2.15rem,4.4vw,3.6rem)] font-semibold leading-[1.06] tracking-[-0.015em] text-[#F3F0E7]"
-          >
-            {title}
-          </motion.h1>
-          <motion.p
-            {...fadeUp(0.16)}
-            className="mt-5 max-w-[560px] text-[16px] sm:text-[18px] leading-[1.6] text-[#F3F0E7]/85"
-          >
-            {intro}
-          </motion.p>
-
+      <div className="relative mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-10 pt-6 pb-12 sm:pb-14 lg:grid lg:grid-cols-12 lg:items-center lg:gap-12 lg:py-16">
+        <div className="lg:col-span-6">
+          {text}
           {actions && (
-            <motion.div {...fadeUp(0.24)} className="mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4">
+            <motion.div {...fadeUp(0.24)} className="mt-8 hidden sm:flex flex-row flex-wrap gap-3 sm:gap-4">
               {actions}
             </motion.div>
           )}
+          {/* Mobile : la barre Devis · SOS · Contact vient se placer ici (puis se fixe en bas en descendant). */}
+          <div id="hero-action-slot" className="mt-7 w-full sm:hidden" />
+        </div>
+        {/* Ordinateur : photo à droite, en carte arrondie */}
+        <div aria-hidden="true" className="relative hidden h-[400px] overflow-hidden rounded-3xl ring-1 ring-[#B79A62]/30 lg:col-span-6 lg:block">
+          {photo('absolute inset-0')}
         </div>
       </div>
     </section>
@@ -160,7 +173,7 @@ export function PageHero({
 
 /** Classes des deux boutons standard des en-têtes de page. */
 export const PAGE_HERO_PRIMARY_BUTTON =
-  'inline-flex min-h-[48px] items-center justify-center gap-2.5 rounded-lg bg-[#B79A62] hover:bg-[#C6AA73] active:bg-[#A68952] px-7 py-3 text-[15px] sm:text-[16px] font-semibold text-[#1C1F21] whitespace-nowrap transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F3F0E7] cursor-pointer';
+  'inline-flex min-h-[46px] items-center justify-center gap-2.5 rounded-full bg-[#B79A62] hover:bg-[#C6AA73] active:bg-[#A68952] px-7 py-3 text-[15px] sm:text-[16px] font-semibold text-[#1C1F21] whitespace-nowrap transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F3F0E7] cursor-pointer';
 
 export const PAGE_HERO_SECONDARY_BUTTON =
-  'inline-flex min-h-[48px] items-center justify-center gap-2.5 rounded-lg border border-[#F3F0E7]/65 bg-[#1C1F21]/35 hover:bg-[#F3F0E7]/10 hover:border-[#F3F0E7] px-7 py-3 text-[15px] sm:text-[16px] font-medium text-[#F3F0E7] tabular-nums whitespace-nowrap transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62] cursor-pointer';
+  'inline-flex min-h-[46px] items-center justify-center gap-2.5 rounded-full border border-[#F3F0E7]/65 bg-[#1C1F21]/35 hover:bg-[#F3F0E7]/10 hover:border-[#F3F0E7] px-7 py-3 text-[15px] sm:text-[16px] font-medium text-[#F3F0E7] tabular-nums whitespace-nowrap transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62] cursor-pointer';

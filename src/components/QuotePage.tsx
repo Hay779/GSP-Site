@@ -260,10 +260,8 @@ export function QuotePage({ brand, routerMode, prefill }: QuotePageProps) {
       <div className="hidden lg:block">
       <PageHero
         compact
-        kicker="Devis en ligne"
         title="Demander un devis."
         intro="Quelques questions, deux minutes : nous revenons vers vous avec un devis détaillé, validé avec vous avant toute intervention."
-        breadcrumb={[{ label: 'Accueil', href: hrefForHome(routerMode) }, { label: 'Demander un devis' }]}
       />
       </div>
 
