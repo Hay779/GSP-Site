@@ -143,12 +143,12 @@ export function HeroSlideshowIndicator({
 }) {
   const active = slides[activeIndex];
   return (
-    <div className="flex flex-col gap-2.5 lg:items-end">
+    <div className="flex flex-col lg:items-end">
       {/* Compteur masqué visuellement, annoncé aux lecteurs d'écran */}
       <p className="sr-only" aria-live="polite">
         Image {formatSlideCounter(activeIndex, slides.length)} : {active?.label}
       </p>
-      <div className="flex items-center gap-1.5" role="group" aria-label="Choisir une image">
+      <div className="flex items-center gap-1" role="group" aria-label="Choisir une image">
         {slides.map((slide, index) => {
           const isActive = index === activeIndex;
           return (
@@ -158,13 +158,13 @@ export function HeroSlideshowIndicator({
               onClick={() => onSelect(index)}
               aria-label={`Afficher l’image ${index + 1} : ${slide.label}`}
               aria-current={isActive ? 'true' : undefined}
-              className="group relative flex h-6 w-8 sm:w-10 items-center cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62]"
+              className="group relative flex h-4 w-5 sm:w-6 items-center cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62]"
             >
-              <span className="relative block h-[2px] w-full overflow-hidden bg-[#F3F0E7]/25 group-hover:bg-[#F3F0E7]/45">
+              <span className="relative block h-px w-full overflow-hidden bg-[#F3F0E7]/15 group-hover:bg-[#F3F0E7]/35">
                 {isActive && (
                   <span
                     key={`${index}-${activeIndex}`}
-                    className="hero-progress absolute inset-0 origin-left bg-[#B79A62]"
+                    className="hero-progress absolute inset-0 origin-left bg-[#F3F0E7]/55"
                     style={{
                       animationDuration: `${HERO_SLIDESHOW_TIMING.slideDurationMs}ms`,
                       animationPlayState: isPaused ? 'paused' : 'running',

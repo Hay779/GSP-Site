@@ -354,8 +354,8 @@ export function HeroSection({
 
       {/* Indicateur du diaporama + contrôle lecture/pause (vidéo ou diaporama) */}
       {(hasSlideshow || hasVideoSource) && (
-        <div className="pointer-events-none absolute inset-x-0 top-[calc(min(max(54svh,300px),520px)-62px)] lg:top-auto lg:bottom-8 z-20">
-          <div className="pointer-events-auto mx-auto flex max-w-[1280px] items-center justify-between lg:justify-end gap-5 px-5 sm:px-8 lg:px-10">
+        <div className="pointer-events-none absolute inset-x-0 top-[calc(min(max(54svh,300px),520px)-30px)] lg:top-auto lg:bottom-4 z-20">
+          <div className="pointer-events-auto mx-auto flex max-w-[1280px] items-center justify-center lg:justify-end gap-3 px-5 sm:px-8 lg:px-10">
             {hasSlideshow && (
               <HeroSlideshowIndicator
                 slides={slides}
@@ -376,7 +376,7 @@ export function HeroSection({
                     ? 'Mettre en pause le diaporama'
                     : 'Mettre en pause la vidéo d’arrière-plan'
               }
-              className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#F3F0E7]/30 bg-[#1C1F21]/55 text-[#F3F0E7] backdrop-blur-sm hover:border-[#B79A62] hover:text-[#B79A62] transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62] cursor-pointer"
+              className="sr-only focus:not-sr-only focus:inline-flex focus:h-10 focus:w-10 focus:shrink-0 focus:items-center focus:justify-center focus:rounded-full focus:border focus:border-[#B79A62] focus:bg-[#1C1F21]/80 focus:text-[#F3F0E7] focus:outline-2 focus:outline-offset-2 focus:outline-[#B79A62] cursor-pointer"
             >
               {(hasSlideshow ? isSlideshowPausedByChoice : isVideoPaused) ? (
                 <Play className="h-4 w-4" aria-hidden="true" />
