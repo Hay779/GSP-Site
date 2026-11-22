@@ -331,15 +331,13 @@ export function HeroSection({
               delay: prefersReducedMotion ? 0 : 0.5,
               ease: REVEAL_EASE,
             }}
-            className="mt-8 sm:mt-12 flex flex-wrap items-center gap-x-5 gap-y-2.5 sm:gap-y-3 sm:gap-x-0 border-t border-[#F3F0E7]/15 pt-5 sm:pt-6 w-full"
+            className="mt-8 sm:mt-12 grid grid-cols-3 sm:flex sm:flex-wrap sm:items-center sm:gap-y-3 border-t border-[#F3F0E7]/15 pt-5 sm:pt-6 w-full"
           >
             {config.commitments.map((item, index) => (
               <li
                 key={item.label}
-                className={`flex items-center gap-2 sm:gap-2.5 text-[13.5px] sm:text-[15px] text-[#F3F0E7]/85 whitespace-nowrap ${
-                  index > 0
-                    ? 'sm:border-l sm:border-[#F3F0E7]/20 sm:pl-5 sm:ml-5'
-                    : ''
+                className={`flex flex-col items-center gap-2 px-1 text-center text-[12.5px] leading-[1.3] text-[#F3F0E7]/85 sm:flex-row sm:gap-2.5 sm:px-0 sm:text-left sm:text-[15px] sm:whitespace-nowrap ${
+                  index > 0 ? 'border-l border-[#F3F0E7]/15 sm:border-[#F3F0E7]/20 sm:pl-5 sm:ml-5' : ''
                 }`}
               >
                 <CommitmentIcon icon={item.icon} />
