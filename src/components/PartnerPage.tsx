@@ -149,7 +149,7 @@ export function PartnerPage({ brand, routerMode }: { readonly brand: BrandConfig
                     'Un interlocuteur unique pour tous vos accès',
                     'Un devis détaillé avant chaque intervention',
                     'Des photos et un compte rendu pour vos dossiers',
-                    'Deux agences à Marseille : République & Lodi',
+                    'Deux agences à Marseille : République & Rome',
                   ].map((item) => (
                     <li key={item} className="flex gap-3">
                       <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#7D612D]" strokeWidth={2.4} aria-hidden="true" />

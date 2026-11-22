@@ -558,7 +558,7 @@ export const THEMATIC_PAGES: Readonly<Record<BlockPageId, PageDefinition>> = {
       title: 'Marseille et ses alentours.',
       breadcrumbLabel: 'Zone d’intervention',
       intro:
-        'Depuis nos agences République et Lodi, nous intervenons dans les arrondissements de Marseille et dans plusieurs communes voisines.',
+        'Depuis nos agences République et Rome, nous intervenons dans les arrondissements de Marseille et dans plusieurs communes voisines.',
       imageSrc: DOMAINS_CONFIG.items.find((d) => d.id === 'menuiserie')?.imageSrc,
       imagePosition: '75% 40%',
       actions: [{ kind: 'quote' }, { kind: 'phone' }],

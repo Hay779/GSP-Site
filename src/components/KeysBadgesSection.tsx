@@ -55,7 +55,7 @@ const KB_IMAGES = {
   badge: '/src/assets/images/kb_badge.jpg',
   facades: {
     republique: '/src/assets/images/kb_facade_republique.jpg',
-    lodi: '/src/assets/images/kb_facade_lodi.jpg',
+    rome: '/src/assets/images/kb_facade_rome.jpg',
   } as Record<string, string>,
 };
 
@@ -99,7 +99,7 @@ export function KeysBadgesSection({ config, details, agencies, pageHref, agencie
               )}
               <span className="absolute bottom-9 left-5 inline-flex items-center gap-2 rounded-xl bg-[#1C1F21]/85 px-4 py-2.5 text-[14px] font-medium text-[#F3F0E7] backdrop-blur-sm sm:left-8 lg:bottom-5 lg:left-5">
                 <Store className="h-[18px] w-[18px] text-[#B79A62]" aria-hidden="true" />
-                En boutique · République &amp; Lodi
+                En boutique · République &amp; Rome
               </span>
             </div>
           </motion.div>

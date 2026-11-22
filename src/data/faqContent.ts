@@ -188,7 +188,7 @@ export const FAQ_ZONE: readonly FaqItem[] = [
     id: 'zone-boutique',
     question: 'Puis-je venir directement en boutique ?',
     answer:
-      'Oui, nos agences République (2e) et Lodi (6e) vous accueillent pour vos doubles de clés et de badges et pour vos conseils.',
+      'Oui, nos agences République (2e) et Rome (6e) vous accueillent pour vos doubles de clés et de badges et pour vos conseils.',
   },
 ];
 
@@ -218,7 +218,7 @@ export const FAQ_PRO_GENERAL: readonly FaqItem[] = [
     id: 'pro-zone',
     question: 'Dans quels secteurs intervenez-vous pour les professionnels ?',
     answer:
-      'Dans les arrondissements de Marseille et plusieurs communes voisines, depuis nos agences République (2e) et Lodi (6e).',
+      'Dans les arrondissements de Marseille et plusieurs communes voisines, depuis nos agences République (2e) et Rome (6e).',
   },
 ];
 

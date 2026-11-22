@@ -58,10 +58,7 @@ function StorefrontPlaceholder({
         <circle cx="140" cy="166" r="7" stroke="#B79A62" strokeOpacity="0.55" />
         <path d="M 147 166 L 162 166 M 157 166 L 157 172 M 161 166 L 161 170" stroke="#B79A62" strokeOpacity="0.55" />
       </svg>
-      <span className="absolute right-3 top-3 rounded-md bg-[#F3F0E7]/10 px-2.5 py-1 text-[11.5px] font-medium text-[#F3F0E7]/75 backdrop-blur-sm">
-        {placeholderLabel}
-      </span>
-    </div>
+          </div>
   );
 }
 
@@ -78,206 +75,133 @@ function AgencyShowcase({
 }) {
   const [imageFailed, setImageFailed] = useState(false);
   const [pendingActionNotice, setPendingActionNotice] = useState<'phone' | 'maps' | null>(null);
-
   const hasPhoto = Boolean(agency.imageSrc.trim()) && !imageFailed;
   const hasPhone = Boolean(agency.phoneHref.trim());
   const hasDirections = Boolean(agency.directionsUrl.trim());
-  const reveal = buildCardRevealMotion({
-    index,
-    staggerSeconds: 0.14,
-    offsetY: 28,
-    duration: 0.62,
-    reducedMotion,
-  });
+  const reveal = buildCardRevealMotion({ index, offsetY: 18, duration: 0.5, reducedMotion });
+  const toggleNotice = (kind: 'phone' | 'maps') =>
+    setPendingActionNotice((current) => (current === kind ? null : kind));
 
   return (
     <motion.article
       initial={reveal.initial}
       whileInView={reveal.visible}
       viewport={REVEAL_VIEWPORT}
-      data-testid={`agency-showcase-${agency.id}`}
-      className="group flex flex-col overflow-hidden rounded-xl border border-[#1C1F21]/12 bg-[#FFFFFF] transition-colors duration-200 hover:border-[#B79A62] will-change-transform"
+      aria-labelledby={`agency-${agency.id}-title`}
+      className="rounded-3xl bg-white p-5 sm:p-6 shadow-[0_10px_30px_-18px_rgba(28,31,33,0.35)]"
     >
-      <div className="relative h-[200px] sm:h-[240px] overflow-hidden">
-        {hasPhoto ? (
-          <img
-            src={agency.imageSrc}
-            alt={agency.imageAlt}
-            referrerPolicy="no-referrer"
-            onError={() => setImageFailed(true)}
-            className="h-full w-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-[1.03]"
-          />
-        ) : (
-          <StorefrontPlaceholder
-            agencyName={agency.name}
-            placeholderLabel={agency.photoPlaceholderLabel}
-          />
-        )}
-        <span className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-md bg-[#1C1F21]/80 px-2.5 py-1 text-[11.5px] font-medium uppercase tracking-[0.14em] text-[#F3F0E7] backdrop-blur-sm">
-          <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-[#B79A62]" />
-          {agency.districtLabel}
-        </span>
+      {/* En-tête : façade en vignette + quartier et nom */}
+      <div className="flex items-center gap-4">
+        <div className="h-[84px] w-[112px] sm:h-[96px] sm:w-[132px] shrink-0 overflow-hidden rounded-2xl">
+          {hasPhoto ? (
+            <img
+              src={agency.imageSrc}
+              alt={agency.imageAlt}
+              loading="lazy"
+              onError={() => setImageFailed(true)}
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <StorefrontPlaceholder agencyName={agency.name} placeholderLabel={agency.photoPlaceholderLabel} />
+          )}
+        </div>
+        <div className="min-w-0">
+          <p className="text-[12px] font-semibold uppercase tracking-[0.16em] text-[#7D612D]">{agency.districtLabel}</p>
+          <h3
+            id={`agency-${agency.id}-title`}
+            className="mt-1 font-display text-[22px] sm:text-[24px] font-semibold leading-tight tracking-[-0.01em] text-[#1C1F21]"
+          >
+            {agency.name}
+          </h3>
+        </div>
       </div>
 
-      <div className="flex flex-1 flex-col p-6 sm:p-8">
-        <h3 className="font-display text-[24px] sm:text-[28px] font-semibold leading-[1.2] tracking-[-0.01em] text-[#1C1F21]">
-          {agency.name}
-        </h3>
-
-        <div className="mt-4 h-px w-full bg-[#1C1F21]/10" />
-
-        <ul className="mt-5 flex flex-col gap-3.5 text-[15px] sm:text-[16px] leading-[1.5]">
-          <li className="flex items-start gap-3.5">
-            <MapPin
-              className="mt-0.5 h-[18px] w-[18px] shrink-0 text-[#7D612D]"
-              strokeWidth={1.75}
-              aria-hidden="true"
-            />
-            <div
-              className={
-                agency.isAddressPending ? 'italic text-[#1C1F21]/55' : 'text-[#1C1F21]/88'
-              }
-            >
-              {agency.addressLines.map((line) => (
-                <span key={line} className="block">
-                  {line}
-                </span>
-              ))}
-            </div>
-          </li>
-
-          <li className="flex items-center gap-3.5">
-            <Phone
-              className="h-[18px] w-[18px] shrink-0 text-[#7D612D]"
-              strokeWidth={1.75}
-              aria-hidden="true"
-            />
-            {hasPhone ? (
-              <a
-                href={agency.phoneHref}
-                className="text-[#1C1F21] hover:text-[#7D612D] transition-colors duration-150 tabular-nums font-medium"
-              >
-                {agency.phoneDisplay}
-              </a>
-            ) : (
-              <span className="italic text-[#1C1F21]/55">{agency.phoneDisplay}</span>
-            )}
-          </li>
-
-          <li className="flex items-start gap-3.5">
-            <Clock
-              className="mt-0.5 h-[18px] w-[18px] shrink-0 text-[#7D612D]"
-              strokeWidth={1.75}
-              aria-hidden="true"
-            />
-            <div>
-              <p className="text-[14px] font-medium text-[#1C1F21]">{agency.hoursTitle}</p>
-              <p
-                className={`mt-0.5 text-[14px] sm:text-[15px] ${
-                  agency.isHoursPending ? 'italic text-[#1C1F21]/55' : 'text-[#1C1F21]/75'
-                }`}
-              >
-                {agency.hoursLabel}
-              </p>
-            </div>
-          </li>
-        </ul>
-
-        <div className="mt-auto pt-7">
-        <div className="flex flex-wrap items-center gap-3.5">
+      {/* Coordonnées */}
+      <ul className="mt-5 space-y-2.5 text-[15px] leading-[1.45]">
+        <li className="flex items-start gap-3">
+          <MapPin className="mt-0.5 h-[18px] w-[18px] shrink-0 text-[#B79A62]" strokeWidth={1.8} aria-hidden="true" />
+          <span className={agency.isAddressPending ? 'italic text-[#1C1F21]/50' : 'text-[#1C1F21]/85'}>
+            {agency.addressLines.join(', ')}
+          </span>
+        </li>
+        <li className="flex items-start gap-3">
+          <Phone className="mt-0.5 h-[18px] w-[18px] shrink-0 text-[#B79A62]" strokeWidth={1.8} aria-hidden="true" />
           {hasPhone ? (
-            <a
-              href={agency.phoneHref}
-              aria-label={`Appeler ${agency.name} au ${agency.phoneDisplay}`}
-              className="group/btn relative overflow-hidden inline-flex min-h-[48px] flex-1 sm:flex-initial sm:min-w-[168px] items-center justify-center gap-2.5 rounded-lg bg-[#B79A62] hover:bg-[#C6AA73] active:bg-[#A68952] px-6 py-3 text-[15px] font-semibold text-[#1C1F21] whitespace-nowrap transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1C1F21]"
-            >
-              <span
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-500 ease-out group-hover/btn:translate-x-full"
-              />
-              <Phone className="relative h-4 w-4 shrink-0" strokeWidth={2} aria-hidden="true" />
-              <span className="relative">Appeler</span>
+            <a href={agency.phoneHref} className="font-medium tabular-nums text-[#1C1F21] hover:text-[#7D612D]">
+              {agency.phoneDisplay}
             </a>
           ) : (
-            <button
-              type="button"
-              onClick={() =>
-                setPendingActionNotice((prev) => (prev === 'phone' ? null : 'phone'))
-              }
-              aria-label={`Appeler ${agency.name}`}
-              aria-expanded={pendingActionNotice === 'phone'}
-              className="group/btn relative overflow-hidden inline-flex min-h-[48px] flex-1 sm:flex-initial sm:min-w-[168px] items-center justify-center gap-2.5 rounded-lg bg-[#B79A62] hover:bg-[#C6AA73] active:bg-[#A68952] px-6 py-3 text-[15px] font-semibold text-[#1C1F21] whitespace-nowrap transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1C1F21] cursor-pointer"
-            >
-              <span
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-500 ease-out group-hover/btn:translate-x-full"
-              />
-              <Phone className="relative h-4 w-4 shrink-0" strokeWidth={2} aria-hidden="true" />
-              <span className="relative">Appeler</span>
-            </button>
+            <span className="italic text-[#1C1F21]/50">{agency.phoneDisplay}</span>
           )}
+        </li>
+        <li className="flex items-start gap-3">
+          <Clock className="mt-0.5 h-[18px] w-[18px] shrink-0 text-[#B79A62]" strokeWidth={1.8} aria-hidden="true" />
+          <span className={agency.isHoursPending ? 'italic text-[#1C1F21]/50' : 'text-[#1C1F21]/85'}>
+            {agency.hoursLabel}
+          </span>
+        </li>
+      </ul>
 
-          {hasDirections ? (
-            <a
-              href={agency.directionsUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`Ouvrir l’itinéraire vers ${agency.name}`}
-              className="group/nav inline-flex min-h-[48px] flex-1 sm:flex-initial sm:min-w-[168px] items-center justify-center gap-2.5 rounded-lg border border-[#1C1F21]/25 bg-transparent hover:border-[#1C1F21] hover:bg-[#1C1F21]/5 px-6 py-3 text-[15px] font-medium text-[#1C1F21] whitespace-nowrap transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7D612D]"
-            >
-              <Navigation
-                className="h-4 w-4 shrink-0 text-[#7D612D] transition-transform duration-200 group-hover/nav:translate-x-0.5 group-hover/nav:-translate-y-0.5"
-                strokeWidth={1.85}
-                aria-hidden="true"
-              />
-              <span>Itinéraire</span>
-            </a>
-          ) : (
-            <button
-              type="button"
-              onClick={() =>
-                setPendingActionNotice((prev) => (prev === 'maps' ? null : 'maps'))
-              }
-              aria-label={`Itinéraire vers ${agency.name}`}
-              aria-expanded={pendingActionNotice === 'maps'}
-              className="group/nav inline-flex min-h-[48px] flex-1 sm:flex-initial sm:min-w-[168px] items-center justify-center gap-2.5 rounded-lg border border-[#1C1F21]/25 bg-transparent hover:border-[#1C1F21] hover:bg-[#1C1F21]/5 px-6 py-3 text-[15px] font-medium text-[#1C1F21] whitespace-nowrap transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7D612D] cursor-pointer"
-            >
-              <Navigation
-                className="h-4 w-4 shrink-0 text-[#7D612D] transition-transform duration-200 group-hover/nav:translate-x-0.5 group-hover/nav:-translate-y-0.5"
-                strokeWidth={1.85}
-                aria-hidden="true"
-              />
-              <span>Itinéraire</span>
-            </button>
-          )}
-        </div>
-
-        {pendingActionNotice === 'phone' && (
-          <p
-            role="status"
-            className="mt-3.5 text-[13px] italic text-[#1C1F21]/65 leading-relaxed"
+      {/* Actions : pastille Appeler + lien Itinéraire */}
+      <div className="mt-5 flex items-center gap-5 border-t border-[#1C1F21]/8 pt-4">
+        {hasPhone ? (
+          <a
+            href={agency.phoneHref}
+            className="inline-flex h-10 items-center gap-2 rounded-full bg-[#1C1F21] px-4 text-[14px] font-semibold text-[#F3F0E7] hover:bg-[#292D2F] transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62]"
           >
-            Numéro direct de {agency.name} à compléter — standard principal joignable au{' '}
-            <a
-              href={brand.phoneHref}
-              className="not-italic font-semibold text-[#7D612D] hover:underline tabular-nums"
-            >
-              {brand.phoneDisplay}
-            </a>
-            .
-          </p>
-        )}
-
-        {pendingActionNotice === 'maps' && (
-          <p
-            role="status"
-            className="mt-3.5 text-[13px] italic text-[#1C1F21]/65 leading-relaxed"
+            <Phone className="h-4 w-4 text-[#B79A62]" strokeWidth={1.9} aria-hidden="true" />
+            Appeler
+          </a>
+        ) : (
+          <button
+            type="button"
+            onClick={() => toggleNotice('phone')}
+            aria-expanded={pendingActionNotice === 'phone'}
+            className="inline-flex h-10 items-center gap-2 rounded-full bg-[#1C1F21] px-4 text-[14px] font-semibold text-[#F3F0E7] hover:bg-[#292D2F] transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62] cursor-pointer"
           >
-            Adresse exacte de {agency.name} à compléter avant publication pour activer l’itinéraire.
-          </p>
+            <Phone className="h-4 w-4 text-[#B79A62]" strokeWidth={1.9} aria-hidden="true" />
+            Appeler
+          </button>
         )}
-        </div>
+        {hasDirections ? (
+          <a
+            href={agency.directionsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Itinéraire vers ${agency.name}`}
+            className="inline-flex items-center gap-1.5 text-[14.5px] font-semibold text-[#1C1F21] underline decoration-[#B79A62] decoration-2 underline-offset-[6px] hover:text-[#7D612D]"
+          >
+            <Navigation className="h-4 w-4 text-[#7D612D]" strokeWidth={1.85} aria-hidden="true" />
+            Itinéraire
+          </a>
+        ) : (
+          <button
+            type="button"
+            onClick={() => toggleNotice('maps')}
+            aria-label={`Itinéraire vers ${agency.name}`}
+            aria-expanded={pendingActionNotice === 'maps'}
+            className="inline-flex items-center gap-1.5 text-[14.5px] font-semibold text-[#1C1F21] underline decoration-[#B79A62] decoration-2 underline-offset-[6px] hover:text-[#7D612D] cursor-pointer"
+          >
+            <Navigation className="h-4 w-4 text-[#7D612D]" strokeWidth={1.85} aria-hidden="true" />
+            Itinéraire
+          </button>
+        )}
       </div>
+
+      {pendingActionNotice === 'phone' && (
+        <p role="status" className="mt-3 text-[13px] italic leading-relaxed text-[#1C1F21]/65">
+          Numéro direct de {agency.name} à compléter — standard joignable au{' '}
+          <a href={brand.phoneHref} className="not-italic font-semibold tabular-nums text-[#7D612D] hover:underline">
+            {brand.phoneDisplay}
+          </a>
+          .
+        </p>
+      )}
+      {pendingActionNotice === 'maps' && (
+        <p role="status" className="mt-3 text-[13px] italic leading-relaxed text-[#1C1F21]/65">
+          Adresse exacte de {agency.name} à compléter avant publication pour activer l’itinéraire.
+        </p>
+      )}
     </motion.article>
   );
 }
@@ -296,7 +220,7 @@ export function AgenciesSection({ config, brand }: AgenciesSectionProps) {
       id="10_Nos_Agences"
       data-section="10_Nos_Agences"
       aria-labelledby="10_Nos_Agences-title"
-      className="relative w-full overflow-hidden bg-[#F7F5F0] text-[#1C1F21] border-t border-[#B79A62]/45 scroll-mt-[74px] lg:scroll-mt-[88px]"
+      className="relative w-full overflow-hidden bg-[#F7F5F0] text-[#1C1F21] scroll-mt-[74px] lg:scroll-mt-[88px]"
     >
 
       <div className="relative mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-10 py-16 sm:py-20 lg:py-24">
@@ -320,8 +244,8 @@ export function AgenciesSection({ config, brand }: AgenciesSectionProps) {
           </p>
         </motion.div>
 
-        {/* Mise en page éditoriale ouverte en 2 colonnes séparées par un filet laiton (zéro carte rectangulaire) */}
-        <div className="mt-10 sm:mt-12 grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+        {/* Deux agences côte à côte (empilées sur mobile) */}
+        <div className="mt-10 sm:mt-12 grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
           {config.agencies.map((agency, index) => (
             <AgencyShowcase
               key={agency.id}

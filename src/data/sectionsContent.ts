@@ -152,7 +152,7 @@ export interface ZoneInterventionConfig {
 }
 
 export interface AgencyItem {
-  readonly id: 'republique' | 'lodi';
+  readonly id: 'republique' | 'rome';
   readonly name: string;
   readonly districtLabel: string;
   readonly imageSrc: string;
@@ -467,7 +467,7 @@ export const ZONE_INTERVENTION_CONFIG: ZoneInterventionConfig = {
   quoteCtaLabel: 'Demander un devis en ligne',
   // Encart de la carte. ⚠️ N'indiquer un délai (ex. « moins de 30 min ») que s'il est garanti.
   responseTimePrefix: '2 agences à Marseille',
-  responseTimeHighlight: 'République & Lodi',
+  responseTimeHighlight: 'République & Rome',
 };
 
 export const AGENCIES_CONFIG: AgenciesConfig = {
@@ -480,7 +480,8 @@ export const AGENCIES_CONFIG: AgenciesConfig = {
       id: 'republique',
       name: 'Agence République',
       districtLabel: 'Marseille 2e',
-      imageSrc: '',
+      // Vignette provisoire (découpée d'une maquette) : remplacer par une vraie photo de la façade.
+      imageSrc: '/src/assets/images/kb_facade_republique.jpg',
       imageAlt: 'Façade de l’Agence République — Serrurerie de la République à Marseille',
       photoPlaceholderLabel: 'Photo de la façade à venir',
       addressLines: ['48 rue de la République', '13002 Marseille'],
@@ -494,20 +495,20 @@ export const AGENCIES_CONFIG: AgenciesConfig = {
         'https://www.google.com/maps/search/?api=1&query=48+rue+de+la+R%C3%A9publique+13002+Marseille',
     },
     {
-      id: 'lodi',
-      name: 'Agence Lodi',
+      id: 'rome',
+      name: 'Agence Rome',
       districtLabel: 'Marseille 6e',
-      imageSrc: '',
-      imageAlt: 'Façade de l’Agence Lodi — Serrurerie de la République à Marseille',
+      imageSrc: '/src/assets/images/kb_facade_rome.jpg',
+      imageAlt: 'Façade de l’Agence Rome — Serrurerie de la République à Marseille',
       photoPlaceholderLabel: 'Photo de la façade à venir',
-      addressLines: ['Adresse à compléter'],
-      isAddressPending: true,
-      phoneDisplay: 'Téléphone à compléter',
-      phoneHref: '',
+      addressLines: ['124 rue de Rome', '13006 Marseille'],
+      isAddressPending: false,
+      phoneDisplay: '07 82 82 82 08',
+      phoneHref: 'tel:+33782828208',
       hoursTitle: 'Horaires d’ouverture',
       hoursLabel: 'Horaires à compléter',
       isHoursPending: true,
-      directionsUrl: '',
+      directionsUrl: 'https://www.google.com/maps/search/?api=1&query=124+rue+de+Rome+13006+Marseille',
     },
   ],
 };
@@ -662,7 +663,7 @@ export const KEYS_BADGES_PAGE_CONFIG: KeysBadgesPageConfig = {
     'Doubles de clés et de badges d’accès, réalisés en boutique à partir de votre original, dans nos agences de Marseille.',
   seoTitle: 'Double de clés et badges à Marseille | Serrurerie de la République',
   seoDescription:
-    'Reproduction de clés et de badges d’accès en boutique à Marseille, à partir de votre original. Agences République (2e) et Lodi (6e).',
+    'Reproduction de clés et de badges d’accès en boutique à Marseille, à partir de votre original. Agences République (2e) et Rome (6e).',
   servicesKicker: 'Nos services',
   servicesTitle: 'Deux savoir-faire au comptoir.',
   services: [
@@ -725,7 +726,7 @@ export const CONTACT_PAGE_CONFIG: ContactPageConfig = {
     'Retrouvez-nous en agence, appelez-nous ou décrivez votre besoin en ligne : nous vous répondons rapidement.',
   seoTitle: 'Agences et contact — Serrurerie à Marseille | Serrurerie de la République',
   seoDescription:
-    'Nos agences République (2e) et Lodi (6e) à Marseille : adresses, téléphone, WhatsApp, demande de devis et zone d’intervention.',
+    'Nos agences République (2e) et Rome (6e) à Marseille : adresses, téléphone, WhatsApp, demande de devis et zone d’intervention.',
   channelsKicker: 'Nous contacter',
   channelsTitle: 'Le moyen qui vous arrange.',
   channels: [
