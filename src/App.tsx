@@ -69,31 +69,44 @@ export default function App() {
   // Sur l'accueil, le lien de la section visible est mis en avant.
   const headerNav: readonly HeaderNavLink[] = [
     {
-      key: 'cles-badges',
-      label: 'Clés & badges',
-      href: pageHref('cles-badges'),
-      isActive: currentPageId === 'cles-badges' || (onHome && activeSectionId === '04_Cles_Badges'),
-    },
-    {
-      key: 'domaines',
-      label: 'Nos domaines',
+      key: 'services',
+      label: 'Nos services',
       href: sectionHref('05_Nos_Domaines'),
-      isActive: route.kind === 'domain' || (onHome && activeSectionId === '05_Nos_Domaines'),
-      children: DOMAINS_CONFIG.items.map((item) => ({
-        key: item.id,
-        label: item.title,
-        description: item.categoryTag,
-        href: domainHref(item.id),
-        imageSrc: item.imageSrc,
-        isActive: route.kind === 'domain' && route.id === item.id,
-      })),
-      overviewLink: { label: 'Voir tous nos domaines', href: sectionHref('05_Nos_Domaines') },
-    },
-    {
-      key: 'apres-sinistre',
-      label: 'Après sinistre',
-      href: pageHref('apres-sinistre'),
-      isActive: currentPageId === 'apres-sinistre' || (onHome && activeSectionId === '07_Apres_Sinistre'),
+      isActive:
+        route.kind === 'domain' ||
+        currentPageId === 'cles-badges' ||
+        currentPageId === 'apres-sinistre' ||
+        (onHome &&
+          (activeSectionId === '04_Cles_Badges' ||
+            activeSectionId === '05_Nos_Domaines' ||
+            activeSectionId === '07_Apres_Sinistre')),
+      children: [
+        ...DOMAINS_CONFIG.items.map((item) => ({
+          key: item.id,
+          label: item.title,
+          description: item.categoryTag,
+          href: domainHref(item.id),
+          imageSrc: item.imageSrc,
+          isActive: route.kind === 'domain' && route.id === item.id,
+        })),
+        {
+          key: 'cles-badges',
+          label: 'Clés & badges',
+          description: 'REPRODUCTION EN BOUTIQUE',
+          href: pageHref('cles-badges'),
+          imageSrc: KEYS_BADGES_CONFIG.imageSrc,
+          isActive: currentPageId === 'cles-badges',
+        },
+        {
+          key: 'apres-sinistre',
+          label: 'Après sinistre',
+          description: 'EFFRACTION · BRIS DE GLACE',
+          href: pageHref('apres-sinistre'),
+          imageSrc: AFTER_INCIDENT_CONFIG.imageSrc,
+          isActive: currentPageId === 'apres-sinistre',
+        },
+      ],
+      overviewLink: { label: 'Voir tous nos services', href: sectionHref('05_Nos_Domaines') },
     },
     {
       key: 'professionnels',
@@ -112,6 +125,12 @@ export default function App() {
         { key: 'devenir-partenaire', label: 'Devenir partenaire', description: 'Formulaire pro', href: pageHref('devenir-partenaire'), isActive: currentPageId === 'devenir-partenaire' },
       ],
       overviewLink: { label: 'Voir l’espace Professionnels', href: pageHref('professionnels') },
+    },
+    {
+      key: 'zone-intervention',
+      label: 'Zone d’intervention',
+      href: pageHref('zone-intervention'),
+      isActive: currentPageId === 'zone-intervention' || (onHome && activeSectionId === '09_Zone_Intervention'),
     },
     {
       key: 'agences-contact',
