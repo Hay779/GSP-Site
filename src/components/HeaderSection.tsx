@@ -34,8 +34,6 @@ interface HeaderSectionProps {
   readonly homeHref: string;
   /** Adresse de la page « Demander un devis ». */
   readonly quoteHref: string;
-  /** Vrai quand on est déjà sur la page devis (le bouton est alors mis en avant). */
-  readonly isQuotePage?: boolean;
 }
 
 const DESKTOP_LINK_CLASS =
@@ -210,7 +208,7 @@ function DesktopDropdown({
   );
 }
 
-export function HeaderSection({ brand, nav, homeHref, quoteHref, isQuotePage = false }: HeaderSectionProps) {
+export function HeaderSection({ brand, nav, homeHref, quoteHref }: HeaderSectionProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isHeaderHidden, setIsHeaderHidden] = useState(false);
   const [hasFocusWithin, setHasFocusWithin] = useState(false);
@@ -363,12 +361,7 @@ export function HeaderSection({ brand, nav, homeHref, quoteHref, isQuotePage = f
             {/* Bouton devis (grand écran) */}
             <a
               href={quoteHref}
-              aria-current={isQuotePage ? 'page' : undefined}
-              className={`hidden xl:inline-flex items-center gap-2 rounded-lg border px-4 py-2.5 text-[15px] font-medium whitespace-nowrap shrink-0 transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62] ${
-                isQuotePage
-                  ? 'border-[#B79A62] bg-[#B79A62]/15 text-[#F3F0E7]'
-                  : 'border-[#B79A62]/70 text-[#F3F0E7] hover:border-[#B79A62] hover:bg-[#B79A62]/10'
-              }`}
+              className="hidden xl:inline-flex items-center gap-2 rounded-lg border border-[#B79A62]/70 px-4 py-2.5 text-[15px] font-medium text-[#F3F0E7] whitespace-nowrap shrink-0 transition-colors duration-150 hover:border-[#B79A62] hover:bg-[#B79A62]/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62]"
             >
               <FileText className="h-[17px] w-[17px] shrink-0 text-[#B79A62]" strokeWidth={1.9} aria-hidden="true" />
               Demander un devis

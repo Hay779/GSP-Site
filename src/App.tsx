@@ -7,6 +7,7 @@ import { PageRenderer } from './components/PageRenderer';
 import { DomainsSection } from './components/DomainsSection';
 import { FaqSection } from './components/FaqSection';
 import { FooterSection } from './components/FooterSection';
+import { FocusHeader } from './components/FocusHeader';
 import { HeaderSection, type HeaderNavLink } from './components/HeaderSection';
 import { HeroSection } from './components/HeroSection';
 import { IncidentPhotoModal } from './components/IncidentPhotoModal';
@@ -42,7 +43,7 @@ import {
 } from './utils/navigation';
 import type { QuoteDomain } from './utils/quoteForm';
 import { useRouter, ROUTER_MODE } from './hooks/useRouter';
-import { hrefForDomain, hrefForHomeSection, hrefForPage, type PageId } from './utils/router';
+import { hrefForDomain, hrefForHome, hrefForHomeSection, hrefForPage, type PageId } from './utils/router';
 
 const NAV_TARGET_IDS: readonly SectionId[] = HEADER_NAV_ITEMS.map((item) => item.targetId);
 
@@ -60,6 +61,7 @@ export default function App() {
   const pageHref = (pageId: PageId) => hrefForPage(pageId, ROUTER_MODE);
   const currentPageId = route.kind === 'page' ? route.id : null;
   const onHome = route.kind === 'home';
+  const isQuotePage = route.kind === 'page' && route.id === 'devis';
 
   // Menu principal : pages dédiées + menu déroulant « Nos domaines ».
   // Sur l'accueil, le lien de la section visible est mis en avant.
@@ -156,13 +158,16 @@ export default function App() {
       </a>
 
       {/* 01_Entete */}
-      <HeaderSection
-        brand={BRAND_CONFIG}
-        nav={headerNav}
-        homeHref={sectionHref('02_Hero')}
-        quoteHref={pageHref('devis')}
-        isQuotePage={route.kind === 'page' && route.id === 'devis'}
-      />
+      {isQuotePage ? (
+        <FocusHeader brand={BRAND_CONFIG} homeHref={hrefForHome(ROUTER_MODE)} />
+      ) : (
+        <HeaderSection
+          brand={BRAND_CONFIG}
+          nav={headerNav}
+          homeHref={sectionHref('02_Hero')}
+          quoteHref={pageHref('devis')}
+        />
+      )}
 
       {route.kind === 'page' && route.id === 'devis' ? (
         <main className="flex-1 flex flex-col">
@@ -245,7 +250,7 @@ export default function App() {
         domainHref={domainHref}
         sectionHref={sectionHref}
         pageHref={pageHref}
-        hideCta={route.kind === 'page' && route.id === 'devis'}
+        hideCta={isQuotePage}
       />
 
 
