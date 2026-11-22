@@ -13,6 +13,7 @@ import { HeroSection } from './components/HeroSection';
 import { IncidentPhotoModal } from './components/IncidentPhotoModal';
 import { KeysBadgesSection } from './components/KeysBadgesSection';
 import { MobileActionBar } from './components/MobileActionBar';
+import { NotFoundPage } from './components/NotFoundPage';
 import { PartnerPage } from './components/PartnerPage';
 import { QuotePage } from './components/QuotePage';
 import { ReviewsSection } from './components/ReviewsSection';
@@ -46,7 +47,7 @@ import {
 } from './utils/navigation';
 import type { QuoteDomain } from './utils/quoteForm';
 import { useRouter, ROUTER_MODE } from './hooks/useRouter';
-import { hrefForDomain, hrefForHome, hrefForHomeSection, hrefForPage, type PageId } from './utils/router';
+import { hrefForDomain, hrefForHome, hrefForHomeSection, hrefForPage, routeKey, type PageId } from './utils/router';
 
 const NAV_TARGET_IDS: readonly SectionId[] = HEADER_NAV_ITEMS.map((item) => item.targetId);
 
@@ -222,11 +223,15 @@ export default function App() {
         <main className="flex-1 flex flex-col">
           <PartnerPage brand={BRAND_CONFIG} routerMode={ROUTER_MODE} />
         </main>
+      ) : route.kind === 'notFound' ? (
+        <main className="flex-1 flex flex-col">
+          <NotFoundPage brand={BRAND_CONFIG} routerMode={ROUTER_MODE} />
+        </main>
       ) : currentPage ? (
         /* Pages intérieures : assemblées à partir de blocs (voir data/pages.ts) */
         <main className="flex-1 flex flex-col">
           <PageRenderer
-            key={route.kind === 'home' ? 'home' : `${route.kind}-${route.id}`}
+            key={routeKey(route)}
             page={currentPage}
             ctx={{
               brand: BRAND_CONFIG,
@@ -320,7 +325,7 @@ export default function App() {
           whatsapp={WHATSAPP_CONFIG}
           quoteHref={pageHref('devis')}
           contactHref={pageHref('agences-contact')}
-          routeKey={route.kind === 'home' ? 'home' : `${route.kind}-${route.id}`}
+          routeKey={routeKey(route)}
         />
       )}
     </div>
