@@ -2,6 +2,7 @@ import { useEffect, useState, type ReactNode } from 'react';
 import { Check } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
 import { REVEAL_EASE } from '../utils/scrollReveal';
+import { HeroGoldWave } from './HeroGoldWave';
 
 interface PageHeroProps {
   readonly title: string;
@@ -14,6 +15,8 @@ interface PageHeroProps {
   readonly compact?: boolean;
   /** Petits points rassurants affichés sous l'introduction. */
   readonly highlights?: readonly string[];
+  /** Couleur de la section suivante (remplissage de la vague dorée du bas). */
+  readonly nextFill?: string;
   /** Raccourcis vers des sections de la page (pastilles). */
   readonly shortcuts?: readonly { readonly label: string; readonly targetId: string }[];
 }
@@ -46,6 +49,7 @@ export function PageHero({
   actions,
   highlights = [],
   shortcuts = [],
+  nextFill = '#F7F5F0',
   compact = false,
 }: PageHeroProps) {
   const prefersReducedMotion = Boolean(useReducedMotion());
@@ -126,11 +130,11 @@ export function PageHero({
       <section
         id="page-hero"
         aria-labelledby="page-hero-title"
-        className={`relative w-full overflow-hidden bg-[#1C1F21] bg-[radial-gradient(ellipse_at_75%_40%,rgba(183,154,98,0.16),rgba(41,45,47,0.45)_45%,rgba(28,31,33,1)_85%)] ${
+        className={`relative w-full overflow-hidden bg-[#24282B] bg-[radial-gradient(ellipse_at_78%_30%,rgba(183,154,98,0.22),rgba(54,58,61,0.4)_45%,rgba(36,40,43,1)_85%)] ${
           compact ? '' : 'lg:min-h-[420px] lg:flex lg:items-center'
         }`}
       >
-        <div className={`relative mx-auto w-full max-w-[1280px] px-5 sm:px-8 lg:px-10 ${compact ? 'pt-20 pb-12 lg:pb-14' : 'pt-24 pb-14 lg:py-20'}`}>
+        <div className={`relative mx-auto w-full max-w-[1280px] px-5 sm:px-8 lg:px-10 ${compact ? 'pt-20 pb-16 lg:pb-24' : 'pt-24 pb-20 lg:pt-20 lg:pb-28'}`}>
           <div className="max-w-[640px]">
             {text}
             {actions && (
@@ -140,18 +144,23 @@ export function PageHero({
             )}
           </div>
         </div>
+        <HeroGoldWave compact={compact} fillColor={nextFill} />
       </section>
     );
   }
 
   return (
-    <section id="page-hero" aria-labelledby="page-hero-title" className="relative w-full overflow-hidden bg-[#1C1F21]">
+    <section
+      id="page-hero"
+      aria-labelledby="page-hero-title"
+      className="relative w-full overflow-hidden bg-[#24282B] bg-[radial-gradient(ellipse_at_80%_35%,rgba(183,154,98,0.2),transparent_60%)]"
+    >
       {/* Mobile & tablette : photo en bandeau, bas arrondi avec filet doré */}
       <div aria-hidden="true" className="kb-curve relative h-[34svh] min-h-[210px] max-h-[320px] overflow-hidden lg:hidden">
         {photo('absolute inset-0')}
       </div>
 
-      <div className="relative mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-10 pt-6 pb-12 sm:pb-14 lg:grid lg:grid-cols-12 lg:items-center lg:gap-12 lg:py-16">
+      <div className="relative mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-10 pt-6 pb-16 sm:pb-20 lg:grid lg:grid-cols-12 lg:items-center lg:gap-12 lg:pt-16 lg:pb-28">
         <div className="lg:col-span-6">
           {text}
           {actions && (
@@ -167,6 +176,8 @@ export function PageHero({
           {photo('absolute inset-0')}
         </div>
       </div>
+      {/* Coupe vague dorée vers la section suivante */}
+      <HeroGoldWave fillColor={nextFill} />
     </section>
   );
 }

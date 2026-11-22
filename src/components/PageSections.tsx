@@ -68,7 +68,7 @@ export function PageSection({
     <section
       id={id}
       aria-labelledby={`${id}-title`}
-      className={`w-full border-t border-[#B79A62]/45 ${t.section}`}
+      className={`w-full ${t.section}`}
     >
       <div className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-10 py-12 sm:py-20 lg:py-24">
         <div className="max-w-2xl">

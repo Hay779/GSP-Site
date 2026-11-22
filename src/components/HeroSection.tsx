@@ -1,3 +1,4 @@
+import { HeroGoldWave } from './HeroGoldWave';
 import { useEffect, useRef, useState } from 'react';
 import { ClipboardCheck, KeyRound, Pause, Phone, Play, ShieldCheck } from 'lucide-react';
 import { motion, useReducedMotion, useScroll, useSpring, useTransform } from 'motion/react';
@@ -145,12 +146,12 @@ export function HeroSection({
       id="02_Hero"
       data-section="02_Hero"
       aria-labelledby="02_Hero-title"
-      className="relative w-full overflow-hidden bg-[#1C1F21] scroll-mt-[74px] lg:scroll-mt-[88px] flex flex-col h-[calc(100svh-74px)] min-h-[540px] sm:h-auto sm:min-h-0 lg:flex-row lg:min-h-[min(calc(100svh-88px),740px)] lg:items-center"
+      className="relative w-full overflow-hidden bg-[#24282B] scroll-mt-[74px] lg:scroll-mt-[88px] flex flex-col h-[calc(100svh-74px)] min-h-[540px] sm:h-auto sm:min-h-0 lg:flex-row lg:min-h-[min(calc(100svh-88px),740px)] lg:items-center"
     >
       {/* Couche média plein écran : vidéo HTML5 + poster artisanal avec parallaxe immersif au scroll */}
       <div
         data-testid="hero-media-layer"
-        className="relative min-h-[150px] flex-1 sm:h-[54svh] sm:max-h-[520px] sm:flex-none w-full lg:absolute lg:inset-0 lg:h-auto lg:min-h-0 lg:max-h-none z-0 overflow-hidden bg-[#1C1F21]"
+        className="relative min-h-[150px] flex-1 sm:h-[54svh] sm:max-h-[520px] sm:flex-none w-full lg:absolute lg:inset-0 lg:h-auto lg:min-h-0 lg:max-h-none z-0 overflow-hidden bg-[#24282B]"
         aria-hidden="true"
       >
         {/* Repli stylisé si ni vidéo ni poster ne chargent */}
@@ -213,11 +214,11 @@ export function HeroSection({
         </motion.div>
 
         {/* Voile directionnel calibré pour garantir un contraste WCAG AA sur tout contenu vidéo */}
-        <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#1C1F21] via-[#1C1F21]/45 to-transparent lg:hidden" />
-        <div className="hidden lg:block absolute inset-0 bg-[linear-gradient(90deg,#1C1F21_0%,#1C1F21_28%,rgba(28,31,33,0.92)_44%,rgba(28,31,33,0.48)_62%,rgba(28,31,33,0.12)_100%)]" />
+        <div className="absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-[#24282B] via-[#24282B]/30 to-transparent lg:hidden" />
+        <div className="hidden lg:block absolute inset-0 bg-[linear-gradient(90deg,rgba(36,40,43,0.94)_0%,rgba(36,40,43,0.82)_26%,rgba(36,40,43,0.55)_44%,rgba(36,40,43,0.18)_64%,rgba(36,40,43,0)_100%)]" />
         {/* Voile haut (mobile) pour la lisibilité de l'indicateur du diaporama */}
-        <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#1C1F21]/55 to-transparent lg:hidden" />
-        <div className="hidden lg:block absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#1C1F21]/90 via-[#1C1F21]/35 to-transparent" />
+        <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-[#24282B]/40 to-transparent lg:hidden" />
+        <div className="hidden lg:block absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#24282B]/50 via-[#24282B]/15 to-transparent" />
         {/* Assombrissement progressif subtil au défilement pour fondre 02_Hero vers la section suivante */}
         <motion.div
           style={prefersReducedMotion ? undefined : { opacity: depthScrimOpacity }}
@@ -229,7 +230,7 @@ export function HeroSection({
       <motion.div
         data-testid="hero-parallax-content"
         style={prefersReducedMotion ? undefined : { y: contentParallaxY }}
-        className="relative z-10 mx-auto w-full max-w-[1280px] shrink-0 px-5 sm:px-8 lg:px-10 pt-1 pb-6 sm:pt-2 sm:pb-14 lg:py-24 will-change-transform"
+        className="relative z-10 mx-auto w-full max-w-[1280px] shrink-0 px-5 sm:px-8 lg:px-10 pt-1 pb-12 sm:pt-2 sm:pb-20 lg:pt-24 lg:pb-32 will-change-transform"
       >
         <div className="flex flex-col items-start max-w-[640px]">
           {config.kicker && (
@@ -390,6 +391,9 @@ export function HeroSection({
           </div>
         </div>
       )}
+
+      {/* Coupe vague dorée vers la section suivante (bloc urgence, fond blanc) */}
+      <HeroGoldWave fillColor="#FFFFFF" />
     </section>
   );
 }

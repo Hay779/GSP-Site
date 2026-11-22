@@ -97,7 +97,7 @@ export function FaqSection({
       id={sectionId}
       data-section={sectionId}
       aria-labelledby={`${sectionId}-title`}
-      className={`w-full ${t.section} border-t border-[#B79A62]/45 scroll-mt-[74px] lg:scroll-mt-[88px]`}
+      className={`w-full ${t.section} scroll-mt-[74px] lg:scroll-mt-[88px]`}
     >
       <div className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-10 py-16 sm:py-20 lg:py-24">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">

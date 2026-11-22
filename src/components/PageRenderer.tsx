@@ -1,6 +1,6 @@
 import { ArrowRight, Building2, FileCheck, FileText, KeyRound, MessageCircle, Phone, ShieldCheck, Wrench } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
-import type { HeroAction, PageBlock, PageDefinition } from '../data/pages';
+import { blockTone, type HeroAction, type PageBlock, type PageDefinition } from '../data/pages';
 import {
   AFTER_INCIDENT_CONFIG,
   AGENCIES_CONFIG,
@@ -523,6 +523,16 @@ export function PageBlockView({ block, ctx }: { readonly block: PageBlock; reado
   }
 }
 
+/** Couleur de la section qui suit l'en-tête (remplissage de la vague dorée). */
+function heroNextFill(page: PageDefinition): string {
+  const first = page.blocks[0];
+  if (!first) {
+    return '#F7F5F0';
+  }
+  const tone = blockTone(first);
+  return tone === 'band' ? '#FFFFFF' : tone === 'dark' ? '#1C1F21' : '#F7F5F0';
+}
+
 /** Page intérieure complète : en-tête + blocs. */
 export function PageRenderer({ page, ctx }: { readonly page: PageDefinition; readonly ctx: PageContext }) {
   usePageMeta(page.seoTitle, page.seoDescription);
@@ -538,6 +548,7 @@ export function PageRenderer({ page, ctx }: { readonly page: PageDefinition; rea
         compact={page.hero.compact}
         highlights={page.hero.highlights}
         shortcuts={page.hero.shortcuts}
+        nextFill={heroNextFill(page)}
         actions={
           page.hero.actions.length > 0 ? (
             <>
