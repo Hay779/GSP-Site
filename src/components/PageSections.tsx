@@ -35,11 +35,12 @@ const TONE_CLASSES: Record<SectionTone, { section: string; kicker: string; title
     title: 'text-[#1C1F21]',
     subtitle: 'text-[#1C1F21]/70',
   },
+  // « dark » = variante claire sur fond blanc (alternance ivoire / blanc)
   dark: {
-    section: 'bg-[#1C1F21] text-[#F3F0E7]',
-    kicker: 'text-[#B79A62]',
-    title: 'text-[#F3F0E7]',
-    subtitle: 'text-[#F3F0E7]/76',
+    section: 'bg-white text-[#1C1F21]',
+    kicker: 'text-[#7D612D]',
+    title: 'text-[#1C1F21]',
+    subtitle: 'text-[#1C1F21]/70',
   },
 };
 
@@ -104,13 +105,13 @@ export function NumberedSteps({ steps }: { readonly steps: readonly NumberedStep
             delay: prefersReducedMotion ? 0 : index * 0.1,
             ease: REVEAL_EASE,
           }}
-          className={`flex flex-col gap-3 ${index > 0 ? 'lg:border-l lg:border-[#F3F0E7]/12 lg:pl-8' : ''} lg:pr-8`}
+          className={`flex flex-col gap-3 ${index > 0 ? 'lg:border-l lg:border-[#1C1F21]/12 lg:pl-8' : ''} lg:pr-8`}
         >
           <span className="font-display text-[34px] sm:text-[40px] font-semibold leading-none tabular-nums text-[#B79A62]">
             {formatStepIndex(index)}
           </span>
-          <h3 className="font-display text-[19px] sm:text-[20px] font-semibold text-[#F3F0E7]">{step.title}</h3>
-          {step.text && <p className="text-[15px] leading-[1.6] text-[#F3F0E7]/72">{step.text}</p>}
+          <h3 className="font-display text-[19px] sm:text-[20px] font-semibold text-[#1C1F21]">{step.title}</h3>
+          {step.text && <p className="text-[15px] leading-[1.6] text-[#1C1F21]/70">{step.text}</p>}
         </motion.li>
       ))}
     </ol>
@@ -211,7 +212,8 @@ export function ProcessSteps({
   readonly tone: SectionTone;
   readonly icons?: readonly ProcessIconKey[];
 }) {
-  const dark = tone === 'dark';
+  const dark = false; // toutes les sections sont claires
+  void tone;
   const iconList = icons ? icons.map((key) => PROCESS_ICON_MAP[key]) : DEFAULT_PROCESS_ICONS;
   return (
     <ol className={`grid grid-cols-2 ${steps.length >= 4 ? 'lg:grid-cols-4' : steps.length === 3 ? 'lg:grid-cols-3' : ''} gap-y-7`}>
@@ -301,13 +303,13 @@ export function BeforeAfterCases({ items }: { readonly items: readonly BeforeAft
           </div>
           <div className="lg:col-span-5">
             {item.illustrative && (
-              <p className="mb-3 inline-flex rounded-full border border-[#F3F0E7]/20 px-3 py-1 text-[12px] text-[#F3F0E7]/65">
+              <p className="mb-3 inline-flex rounded-full border border-[#1C1F21]/15 px-3 py-1 text-[12px] text-[#1C1F21]/60">
                 Photos d’illustration
               </p>
             )}
-            <h3 className="font-display text-[21px] sm:text-[24px] font-semibold leading-tight text-[#F3F0E7]">{item.title}</h3>
-            <p className="mt-2 text-[15px] sm:text-[16px] leading-[1.6] text-[#F3F0E7]/75">{item.text}</p>
-            <p className="mt-4 inline-flex items-center gap-2 text-[14px] text-[#B79A62]">
+            <h3 className="font-display text-[21px] sm:text-[24px] font-semibold leading-tight text-[#1C1F21]">{item.title}</h3>
+            <p className="mt-2 text-[15px] sm:text-[16px] leading-[1.6] text-[#1C1F21]/72">{item.text}</p>
+            <p className="mt-4 inline-flex items-center gap-2 text-[14px] text-[#7D612D]">
               <ChevronsLeftRight className="h-4 w-4" aria-hidden="true" />
               Faites glisser pour comparer
             </p>
