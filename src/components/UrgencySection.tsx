@@ -24,7 +24,7 @@ export function UrgencySection({ config, brand }: UrgencySectionProps) {
       id="03_Urgence"
       data-section="03_Urgence"
       aria-labelledby="03_Urgence-title"
-      className="urg-surface relative w-full bg-[var(--urg-bg)] [--urg-bg:#1C1F21] [--urg-card:#1C1F21] [--urg-card-ink:#F3F0E7] [--urg-card-text:rgba(243,240,231,0.75)] [--urg-ink:#F3F0E7] [--urg-text:rgba(243,240,231,0.78)] [--urg-accent:#B79A62] [--urg-line:rgba(243,240,231,0.12)] [--urg-cta:#B79A62] [--urg-cta-ink:#1C1F21] scroll-mt-[74px] lg:scroll-mt-[88px]"
+      className="urg-surface relative w-full bg-[var(--urg-bg)] [--urg-bg:#FFFFFF] [--urg-card:#F7F5F0] [--urg-card-ink:#1C1F21] [--urg-card-text:rgba(28,31,33,0.72)] [--urg-ink:#1C1F21] [--urg-text:rgba(28,31,33,0.72)] [--urg-accent:#7D612D] [--urg-line:rgba(28,31,33,0.12)] [--urg-cta:#1C1F21] [--urg-cta-ink:#F3F0E7] border-t-[3px] border-b border-t-[#B79A62] border-b-[#B79A62]/60 scroll-mt-[74px] lg:scroll-mt-[88px]"
     >
       <motion.div
         initial={prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 14 }}
