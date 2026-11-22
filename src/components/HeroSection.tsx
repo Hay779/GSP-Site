@@ -145,12 +145,12 @@ export function HeroSection({
       id="02_Hero"
       data-section="02_Hero"
       aria-labelledby="02_Hero-title"
-      className="relative w-full overflow-hidden bg-[#1C1F21] scroll-mt-[74px] lg:scroll-mt-[88px] flex flex-col lg:flex-row lg:min-h-[min(calc(100svh-88px),740px)] lg:items-center"
+      className="relative w-full overflow-hidden bg-[#1C1F21] scroll-mt-[74px] lg:scroll-mt-[88px] flex flex-col h-[calc(100svh-74px)] min-h-[540px] sm:h-auto sm:min-h-0 lg:flex-row lg:min-h-[min(calc(100svh-88px),740px)] lg:items-center"
     >
       {/* Couche média plein écran : vidéo HTML5 + poster artisanal avec parallaxe immersif au scroll */}
       <div
         data-testid="hero-media-layer"
-        className="relative h-[54svh] min-h-[300px] max-h-[520px] w-full shrink-0 lg:absolute lg:inset-0 lg:h-auto lg:min-h-0 lg:max-h-none z-0 overflow-hidden bg-[#1C1F21]"
+        className="relative min-h-[150px] flex-1 sm:h-[54svh] sm:max-h-[520px] sm:flex-none w-full lg:absolute lg:inset-0 lg:h-auto lg:min-h-0 lg:max-h-none z-0 overflow-hidden bg-[#1C1F21]"
         aria-hidden="true"
       >
         {/* Repli stylisé si ni vidéo ni poster ne chargent */}
@@ -229,7 +229,7 @@ export function HeroSection({
       <motion.div
         data-testid="hero-parallax-content"
         style={prefersReducedMotion ? undefined : { y: contentParallaxY }}
-        className="relative z-10 mx-auto w-full max-w-[1280px] px-5 sm:px-8 lg:px-10 pt-1 pb-12 sm:pt-2 sm:pb-14 lg:py-24 will-change-transform"
+        className="relative z-10 mx-auto w-full max-w-[1280px] shrink-0 px-5 sm:px-8 lg:px-10 pt-1 pb-6 sm:pt-2 sm:pb-14 lg:py-24 will-change-transform"
       >
         <div className="flex flex-col items-start max-w-[640px]">
           {config.kicker && (
@@ -285,13 +285,13 @@ export function HeroSection({
               delay: prefersReducedMotion ? 0 : 0.3,
               ease: REVEAL_EASE,
             }}
-            className="mt-5 max-w-[490px] text-[16px] sm:text-[18px] leading-[1.6] text-[#F3F0E7]/85"
+            className="mt-3 sm:mt-5 max-w-[490px] text-[15.5px] sm:text-[18px] leading-[1.6] text-[#F3F0E7]/85"
           >
             {config.subtitle}
           </motion.p>
 
           {/* Mobile : emplacement de la barre d'actions (Devis · SOS · Contact), qui se fixe en bas au défilement */}
-          <div id="hero-action-slot" className="mt-10 w-full sm:hidden" />
+          <div id="hero-action-slot" className="mt-9 w-full sm:hidden" />
 
           {/* Deux boutons d'appel à l'action (tablette & ordinateur) */}
           <motion.div
@@ -338,7 +338,7 @@ export function HeroSection({
               delay: prefersReducedMotion ? 0 : 0.5,
               ease: REVEAL_EASE,
             }}
-            className="mt-8 sm:mt-12 grid grid-cols-3 sm:flex sm:flex-wrap sm:items-center sm:gap-y-3 border-t border-[#F3F0E7]/15 pt-5 sm:pt-6 w-full"
+            className="mt-6 sm:mt-12 hidden [@media(min-height:780px)]:grid grid-cols-3 sm:flex sm:flex-wrap sm:items-center sm:gap-y-3 border-t border-[#F3F0E7]/15 pt-5 sm:pt-6 w-full"
           >
             {config.commitments.map((item, index) => (
               <li
@@ -357,7 +357,7 @@ export function HeroSection({
 
       {/* Indicateur du diaporama + contrôle lecture/pause (vidéo ou diaporama) */}
       {(hasSlideshow || hasVideoSource) && (
-        <div className="pointer-events-none absolute inset-x-0 top-[calc(min(max(54svh,300px),520px)-30px)] lg:top-auto lg:bottom-4 z-20">
+        <div className="pointer-events-none absolute inset-x-0 top-2 sm:top-[calc(min(54svh,520px)-30px)] lg:top-auto lg:bottom-4 z-20">
           <div className="pointer-events-auto mx-auto flex max-w-[1280px] items-center justify-center lg:justify-end gap-3 px-5 sm:px-8 lg:px-10">
             {hasSlideshow && (
               <HeroSlideshowIndicator
