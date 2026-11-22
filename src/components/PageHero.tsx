@@ -20,6 +20,11 @@ interface PageHeroProps {
   readonly actions?: ReactNode;
   /** En-tête réduit, sans photo (pages légales). */
   readonly compact?: boolean;
+  /**
+   * Style « application » (pages métiers) : photo au bas arrondi sur mobile et,
+   * à la place des boutons, la barre Devis · SOS · Contact (comme sur l'accueil).
+   */
+  readonly appStyle?: boolean;
 }
 
 /** Met à jour le titre de l'onglet et la description Google de la page. */
@@ -51,6 +56,7 @@ export function PageHero({
   breadcrumb,
   actions,
   compact = false,
+  appStyle = false,
 }: PageHeroProps) {
   const prefersReducedMotion = Boolean(useReducedMotion());
   const [imageFailed, setImageFailed] = useState(false);
@@ -82,7 +88,7 @@ export function PageHero({
         aria-hidden="true"
         className={
           hasPhoto
-            ? 'relative h-[38svh] min-h-[220px] max-h-[360px] w-full shrink-0 overflow-hidden lg:absolute lg:inset-0 lg:h-auto lg:min-h-0 lg:max-h-none'
+            ? `${appStyle ? 'kb-curve ' : ''}relative h-[38svh] min-h-[220px] max-h-[360px] w-full shrink-0 overflow-hidden lg:absolute lg:inset-0 lg:h-auto lg:min-h-0 lg:max-h-none`
             : 'absolute inset-0'
         }
       >
@@ -102,14 +108,14 @@ export function PageHero({
           />
         )}
         {/* Mobile : simple fondu en bas de la photo. Ordinateur : voile latéral sous le texte. */}
-        <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#1C1F21] to-transparent lg:hidden" />
+        {!appStyle && <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#1C1F21] to-transparent lg:hidden" />}
         <div className="hidden lg:block absolute inset-0 bg-[linear-gradient(90deg,#1C1F21_0%,#1C1F21_30%,rgba(28,31,33,0.85)_48%,rgba(28,31,33,0.3)_75%,rgba(28,31,33,0.15)_100%)]" />
-        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#1C1F21] to-transparent" />
+        <div className={`absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#1C1F21] to-transparent ${appStyle ? 'hidden lg:block' : ''}`} />
       </div>
 
       <div className={`relative z-10 mx-auto w-full max-w-[1280px] px-5 sm:px-8 lg:px-10 ${compact ? 'pt-20 pb-12 lg:pb-14' : hasPhoto ? 'pt-3 pb-12 sm:pb-14 lg:py-24' : 'pt-28 pb-14 sm:pb-16 lg:py-24'}`}>
-        <nav aria-label="Fil d’Ariane" className="mb-6">
-          <ol className="flex flex-wrap items-center gap-1.5 text-[13px] text-[#F3F0E7]/70">
+        <nav aria-label="Fil d’Ariane" className={appStyle ? 'mb-4 pt-2 lg:pt-0 lg:mb-6' : 'mb-6'}>
+          <ol className={`flex flex-wrap items-center gap-1.5 ${appStyle ? 'text-[12px] sm:text-[13px] text-[#F3F0E7]/55' : 'text-[13px] text-[#F3F0E7]/70'}`}>
             {breadcrumb.map((item, index) => (
               <li key={item.label} className="flex items-center gap-1.5">
                 {index > 0 && (
@@ -148,10 +154,12 @@ export function PageHero({
           </motion.p>
 
           {actions && (
-            <motion.div {...fadeUp(0.24)} className="mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4">
+            <motion.div {...fadeUp(0.24)} className={`mt-8 flex-col sm:flex-row gap-3 sm:gap-4 ${appStyle ? 'hidden sm:flex' : 'flex'}`}>
               {actions}
             </motion.div>
           )}
+          {/* Mobile : la barre Devis · SOS · Contact vient se placer ici (puis se fixe en bas en descendant). */}
+          {appStyle && <div id="hero-action-slot" className="mt-7 w-full sm:hidden" />}
         </div>
       </div>
     </section>
@@ -160,7 +168,7 @@ export function PageHero({
 
 /** Classes des deux boutons standard des en-têtes de page. */
 export const PAGE_HERO_PRIMARY_BUTTON =
-  'inline-flex min-h-[48px] items-center justify-center gap-2.5 rounded-lg bg-[#B79A62] hover:bg-[#C6AA73] active:bg-[#A68952] px-7 py-3 text-[15px] sm:text-[16px] font-semibold text-[#1C1F21] whitespace-nowrap transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F3F0E7] cursor-pointer';
+  'inline-flex min-h-[46px] items-center justify-center gap-2.5 rounded-full bg-[#B79A62] hover:bg-[#C6AA73] active:bg-[#A68952] px-7 py-3 text-[15px] sm:text-[16px] font-semibold text-[#1C1F21] whitespace-nowrap transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F3F0E7] cursor-pointer';
 
 export const PAGE_HERO_SECONDARY_BUTTON =
-  'inline-flex min-h-[48px] items-center justify-center gap-2.5 rounded-lg border border-[#F3F0E7]/65 bg-[#1C1F21]/35 hover:bg-[#F3F0E7]/10 hover:border-[#F3F0E7] px-7 py-3 text-[15px] sm:text-[16px] font-medium text-[#F3F0E7] tabular-nums whitespace-nowrap transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62] cursor-pointer';
+  'inline-flex min-h-[46px] items-center justify-center gap-2.5 rounded-full border border-[#F3F0E7]/65 bg-[#1C1F21]/35 hover:bg-[#F3F0E7]/10 hover:border-[#F3F0E7] px-7 py-3 text-[15px] sm:text-[16px] font-medium text-[#F3F0E7] tabular-nums whitespace-nowrap transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62] cursor-pointer';

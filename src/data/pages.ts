@@ -22,6 +22,7 @@ import {
   FAQ_ZONE,
 } from './faqContent';
 import { HERO_CONFIG } from './heroConfig';
+import { DOMAIN_PAGE_EXTRAS, type BeforeAfterCase, type FeatureCard } from './domainPagesContent';
 import {
   AFTER_INCIDENT_CONFIG,
   AFTER_INCIDENT_PAGE_CONFIG,
@@ -120,7 +121,16 @@ export type PageBlock =
       readonly tone: 'light';
       readonly items: readonly AudienceCard[];
     } & SectionHeading)
+  | ({ readonly type: 'features'; readonly id: string; readonly tone: 'light'; readonly items: readonly FeatureCard[] } & SectionHeading)
+  | ({
+      readonly type: 'process';
+      readonly id: string;
+      readonly tone: BlockTone;
+      readonly steps: readonly NumberedStep[];
+    } & SectionHeading)
+  | ({ readonly type: 'beforeAfter'; readonly id: string; readonly tone: 'dark'; readonly items: readonly BeforeAfterCase[] } & SectionHeading)
   /* Sections partagées avec l'accueil (fond fixe) */
+  | { readonly type: 'brands' }
   | { readonly type: 'urgency' }
   | { readonly type: 'agencies' }
   | { readonly type: 'zone' }
@@ -142,6 +152,7 @@ export function blockTone(block: PageBlock): BlockTone | 'band' {
     case 'reviews':
       return 'light';
     case 'zone':
+    case 'brands':
       return 'dark';
     default:
       return block.tone;
@@ -200,30 +211,66 @@ export function buildDomainPage(domain: DomainCardItem): PageDefinition {
       breadcrumbParent: 'domaines',
       actions: [{ kind: 'quote', domain: domain.quoteDomain }, { kind: 'phone' }],
     },
-    blocks: [
-      {
-        type: 'cards',
-        id: 'page-prestations',
-        tone: 'light',
-        kicker: c.prestationsKicker,
-        title: c.prestationsTitle,
-        subtitle: domain.summary,
-        items: domain.prestations,
-      },
-      { type: 'steps', id: 'page-methode', tone: 'dark', kicker: c.methodKicker, title: c.methodTitle, steps: c.methodSteps },
-      {
-        type: 'domains',
-        id: 'page-autres-domaines',
-        tone: 'light',
-        kicker: c.otherDomainsKicker,
-        title: c.otherDomainsTitle,
-        excludeId: domain.id,
-      },
-      faqBlock('page-faq', 'dark', DOMAIN_FAQS[domain.id], `Vos questions en ${domain.title.toLowerCase()}.`),
-      { type: 'urgency' },
-      { type: 'agencies' },
-    ],
+    blocks: domainPageBlocks(domain),
   };
+}
+
+/**
+ * Blocs d'une page métier : urgence, prestations, avant / après (si photos), méthode,
+ * marques (serrurerie), autres domaines, FAQ, agences — en alternant clair / sombre.
+ */
+function domainPageBlocks(domain: DomainCardItem): PageBlock[] {
+  const c = DOMAIN_PAGE_CONFIG;
+  const extras = DOMAIN_PAGE_EXTRAS[domain.id];
+  const hasCases = extras.beforeAfter.length > 0;
+  const blocks: PageBlock[] = [
+    { type: 'urgency' },
+    {
+      type: 'features',
+      id: 'page-prestations',
+      tone: 'light',
+      kicker: c.prestationsKicker,
+      title: c.prestationsTitle,
+      subtitle: domain.summary,
+      items: extras.features,
+    },
+  ];
+  if (hasCases) {
+    blocks.push({
+      type: 'beforeAfter',
+      id: 'page-avant-apres',
+      tone: 'dark',
+      kicker: c.casesKicker,
+      title: c.casesTitle,
+      items: extras.beforeAfter,
+    });
+  }
+  // La méthode prend le fond opposé au bloc précédent.
+  const processTone: BlockTone = hasCases ? 'light' : 'dark';
+  blocks.push({ type: 'process', id: 'page-methode', tone: processTone, kicker: c.methodKicker, title: c.methodTitle, steps: c.methodSteps });
+  const otherDomains: PageBlock = {
+    type: 'domains',
+    id: 'page-autres-domaines',
+    tone: 'light',
+    kicker: c.otherDomainsKicker,
+    title: c.otherDomainsTitle,
+    excludeId: domain.id,
+  };
+  const faq = faqBlock('page-faq', 'dark', DOMAIN_FAQS[domain.id], `Vos questions en ${domain.title.toLowerCase()}.`);
+  if (processTone === 'light') {
+    // … méthode (clair) → marques ou FAQ (sombre) → autres domaines (clair) → [FAQ (sombre)] → agences (clair)
+    if (extras.showBrands) {
+      blocks.push({ type: 'brands' }, otherDomains, faq);
+    } else {
+      // (pas de bloc sombre disponible entre « autres domaines » et les agences : on le retire)
+      blocks.push(faq);
+    }
+  } else {
+    // … méthode (sombre) → autres domaines (clair) → FAQ (sombre)
+    blocks.push(otherDomains, faq);
+  }
+  blocks.push({ type: 'agencies' });
+  return blocks;
 }
 
 /* ------------------------------------------------------------------ */

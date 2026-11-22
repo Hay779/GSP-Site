@@ -12,6 +12,7 @@ import {
   URGENCY_CONFIG,
   WHATSAPP_CONFIG,
   ZONE_INTERVENTION_CONFIG,
+  BRANDS_CONFIG,
 } from '../data/sectionsContent';
 import type { BrandConfig } from '../utils/navigation';
 import type { QuoteDomain } from '../utils/quoteForm';
@@ -37,7 +38,8 @@ import {
   usePageMeta,
   type BreadcrumbItem,
 } from './PageHero';
-import { NumberedCards, NumberedSteps, PageSection } from './PageSections';
+import { BeforeAfterCases, FeatureCards, NumberedCards, NumberedSteps, PageSection, ProcessSteps } from './PageSections';
+import { BrandsSection } from './BrandsSection';
 import { ReviewsSection } from './ReviewsSection';
 import { UrgencySection } from './UrgencySection';
 import { ZoneInterventionSection } from './ZoneInterventionSection';
@@ -108,7 +110,11 @@ function DomainCards({ excludeId, ctx }: { readonly excludeId?: string; readonly
   const prefersReducedMotion = Boolean(useReducedMotion());
   const items = DOMAINS_CONFIG.items.filter((item) => item.id !== excludeId);
   return (
-    <ul className={`grid grid-cols-1 md:grid-cols-2 ${items.length === 3 ? 'lg:grid-cols-3' : 'lg:grid-cols-4'} gap-5 lg:gap-6`}>
+    <ul
+      className={`-mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 [scrollbar-width:none] sm:mx-0 sm:grid sm:overflow-visible sm:px-0 sm:pb-0 sm:grid-cols-2 ${
+        items.length === 3 ? 'lg:grid-cols-3' : 'lg:grid-cols-4'
+      } sm:gap-5 lg:gap-6`}
+    >
       {items.map((item, index) => {
         const reveal = buildCardRevealMotion({
           index,
@@ -118,12 +124,18 @@ function DomainCards({ excludeId, ctx }: { readonly excludeId?: string; readonly
           reducedMotion: prefersReducedMotion,
         });
         return (
-          <motion.li key={item.id} initial={reveal.initial} whileInView={reveal.visible} viewport={REVEAL_VIEWPORT}>
+          <motion.li
+            key={item.id}
+            initial={reveal.initial}
+            whileInView={reveal.visible}
+            viewport={REVEAL_VIEWPORT}
+            className="w-[78%] shrink-0 snap-start sm:w-auto"
+          >
             <a
               href={hrefForDomain(item.id, ctx.routerMode)}
               className="group flex h-full flex-col overflow-hidden rounded-xl border border-[#1C1F21]/12 bg-[#FFFFFF] transition-colors duration-200 hover:border-[#B79A62] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7D612D]"
             >
-              <div className="relative h-[180px] overflow-hidden bg-[#1C1F21]">
+              <div className="relative h-[140px] sm:h-[180px] overflow-hidden bg-[#1C1F21]">
                 <img
                   src={item.imageSrc}
                   alt=""
@@ -132,7 +144,7 @@ function DomainCards({ excludeId, ctx }: { readonly excludeId?: string; readonly
                   className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.05]"
                 />
               </div>
-              <div className="flex flex-1 flex-col p-6">
+              <div className="flex flex-1 flex-col p-5 sm:p-6">
                 <p className="text-[11.5px] font-medium uppercase tracking-[0.16em] text-[#7D612D]">{item.categoryTag}</p>
                 <h3 className="mt-2 font-display text-[21px] font-semibold leading-[1.2] text-[#1C1F21]">{item.title}</h3>
                 <p className="mt-2 text-[15px] leading-[1.55] text-[#1C1F21]/70">{item.summary}</p>
@@ -404,6 +416,26 @@ export function PageBlockView({ block, ctx }: { readonly block: PageBlock; reado
           <AudienceCards items={block.items} ctx={ctx} />
         </PageSection>
       );
+    case 'features':
+      return (
+        <PageSection id={block.id} tone="light" kicker={block.kicker} title={block.title} subtitle={block.subtitle}>
+          <FeatureCards items={block.items} />
+        </PageSection>
+      );
+    case 'process':
+      return (
+        <PageSection id={block.id} tone={block.tone} kicker={block.kicker} title={block.title} subtitle={block.subtitle}>
+          <ProcessSteps steps={block.steps} tone={block.tone} />
+        </PageSection>
+      );
+    case 'beforeAfter':
+      return (
+        <PageSection id={block.id} tone="dark" kicker={block.kicker} title={block.title} subtitle={block.subtitle}>
+          <BeforeAfterCases items={block.items} />
+        </PageSection>
+      );
+    case 'brands':
+      return <BrandsSection config={BRANDS_CONFIG} contactHref={hrefForPage('devis', ctx.routerMode)} />;
     case 'urgency':
       return <UrgencySection config={URGENCY_CONFIG} brand={ctx.brand} />;
     case 'agencies':
@@ -443,6 +475,7 @@ export function PageRenderer({ page, ctx }: { readonly page: PageDefinition; rea
         imageSrc={page.hero.imageSrc}
         imagePosition={page.hero.imagePosition}
         compact={page.hero.compact}
+        appStyle={page.hero.breadcrumbParent === 'domaines'}
         breadcrumb={breadcrumb}
         actions={
           page.hero.actions.length > 0 ? (

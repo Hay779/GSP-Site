@@ -613,6 +613,8 @@ export interface DomainPageConfig {
   readonly breadcrumbHomeLabel: string;
   readonly breadcrumbDomainsLabel: string;
   readonly prestationsKicker: string;
+  readonly casesKicker: string;
+  readonly casesTitle: string;
   readonly prestationsTitle: string;
   readonly methodKicker: string;
   readonly methodTitle: string;
@@ -626,6 +628,8 @@ export const DOMAIN_PAGE_CONFIG: DomainPageConfig = {
   breadcrumbHomeLabel: 'Accueil',
   breadcrumbDomainsLabel: 'Nos domaines',
   prestationsKicker: 'Prestations',
+  casesKicker: 'Avant / après',
+  casesTitle: 'Une intervention en images.',
   prestationsTitle: 'Ce que nous réalisons pour vous.',
   methodKicker: 'Notre méthode',
   methodTitle: 'Une intervention claire, de A à Z.',
