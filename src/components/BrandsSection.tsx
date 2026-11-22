@@ -1,6 +1,7 @@
+import { useState } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
-import type { BrandsConfig } from '../data/sectionsContent';
+import type { BrandsConfig, PartnerBrandItem } from '../data/sectionsContent';
 import { REVEAL_EASE, REVEAL_VIEWPORT } from '../utils/scrollReveal';
 
 interface BrandsSectionProps {
@@ -9,10 +10,30 @@ interface BrandsSectionProps {
   readonly contactHref: string;
 }
 
-/**
- * Marques sur lesquelles nous intervenons, présentées en texte dans la typographie
- * du site (pas de reproduction des logos déposés des fabricants).
- */
+/** Logo officiel de la marque ; à défaut, son nom dans la typographie du site. */
+function BrandLogo({ partner }: { readonly partner: PartnerBrandItem }) {
+  const [failed, setFailed] = useState(false);
+  if (partner.logoSrc && !failed) {
+    return (
+      <span className="flex h-[64px] w-full items-center justify-center">
+        <img
+          src={partner.logoSrc}
+          alt={`Logo ${partner.name}`}
+          loading="lazy"
+          onError={() => setFailed(true)}
+          className="max-h-[56px] max-w-[85%] object-contain"
+        />
+      </span>
+    );
+  }
+  return (
+    <span className="flex h-[64px] items-center font-display text-[21px] sm:text-[22px] font-semibold uppercase tracking-[0.14em] text-[#1C1F21] transition-colors duration-200 group-hover:text-[#7D612D]">
+      {partner.name}
+    </span>
+  );
+}
+
+/** Marques sur lesquelles nous intervenons : une carte par marque (logo + spécialité). */
 export function BrandsSection({ config, contactHref }: BrandsSectionProps) {
   const prefersReducedMotion = useReducedMotion() ?? false;
 
@@ -40,7 +61,7 @@ export function BrandsSection({ config, contactHref }: BrandsSectionProps) {
 
         <ul
           aria-label="Marques sur lesquelles nous intervenons"
-          className="mt-10 sm:mt-12 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-px overflow-hidden rounded-xl border border-[#1C1F21]/12 bg-[#1C1F21]/10"
+          className="mt-10 sm:mt-12 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 lg:gap-5"
         >
           {config.partners.map((partner, index) => (
             <motion.li
@@ -49,13 +70,15 @@ export function BrandsSection({ config, contactHref }: BrandsSectionProps) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={REVEAL_VIEWPORT}
               transition={{ duration: prefersReducedMotion ? 0 : 0.45, delay: prefersReducedMotion ? 0 : index * 0.06, ease: REVEAL_EASE }}
-              className="group relative flex min-h-[150px] flex-col items-center justify-center gap-3 bg-[#FFFFFF] px-4 py-7 text-center transition-colors duration-200 hover:bg-[#FBFAF7]"
+              className="group flex min-h-[168px] flex-col items-center justify-between rounded-xl border border-[#1C1F21]/12 bg-[#FFFFFF] px-4 pt-7 pb-5 text-center transition-colors duration-200 hover:border-[#B79A62]"
             >
-              <span className="font-display text-[22px] sm:text-[24px] font-semibold uppercase tracking-[0.14em] text-[#1C1F21] transition-colors duration-200 group-hover:text-[#7D612D]">
-                {partner.name}
-              </span>
-              <span aria-hidden="true" className="h-px w-8 bg-[#B79A62] transition-all duration-300 group-hover:w-12" />
-              <span className="min-h-[2.6em] text-[12.5px] font-medium uppercase leading-[1.3] tracking-[0.12em] text-[#1C1F21]/55">{partner.specialty}</span>
+              <BrandLogo partner={partner} />
+              <div className="flex w-full flex-col items-center gap-2.5 pt-4">
+                <span aria-hidden="true" className="h-px w-8 bg-[#B79A62]/70 transition-all duration-300 group-hover:w-12" />
+                <span className="min-h-[2.6em] text-[12px] font-medium uppercase leading-[1.3] tracking-[0.12em] text-[#1C1F21]/55">
+                  {partner.specialty}
+                </span>
+              </div>
             </motion.li>
           ))}
         </ul>

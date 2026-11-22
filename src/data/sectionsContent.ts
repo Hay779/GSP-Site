@@ -57,6 +57,11 @@ export interface PartnerBrandItem {
   readonly id: PartnerBrandId;
   readonly name: string;
   readonly specialty: string;
+  /**
+   * Logo officiel (fichier dans public/assets/brands/). S'il est absent ou
+   * introuvable, le nom de la marque s'affiche à la place.
+   */
+  readonly logoSrc?: string;
 }
 
 export interface BrandsConfig {
@@ -64,8 +69,8 @@ export interface BrandsConfig {
   readonly title: string;
   readonly subtitle: string;
   /**
-   * Marques sur lesquelles l'entreprise intervient (noms affichés en texte,
-   * sans reproduire les logos déposés). ⚠️ Liste à confirmer par l'entreprise.
+   * Marques sur lesquelles l'entreprise intervient, avec leur logo officiel.
+   * ⚠️ Liste à confirmer par l'entreprise.
    */
   readonly partners: readonly PartnerBrandItem[];
   /** Phrase sous la grille (autres marques). */
@@ -317,12 +322,12 @@ export const BRANDS_CONFIG: BrandsConfig = {
   subtitle:
     'Nous posons, dépannons et entretenons les équipements des principaux fabricants de serrurerie et de fermeture.',
   partners: [
-    { id: 'vachette', name: 'Vachette', specialty: 'Cylindres & serrures' },
-    { id: 'bricard', name: 'Bricard', specialty: 'Haute sécurité A2P' },
-    { id: 'fichet', name: 'Fichet', specialty: 'Portes blindées' },
-    { id: 'picard', name: 'Picard', specialty: 'Serrures multipoints' },
-    { id: 'dom', name: 'DOM', specialty: 'Organigrammes & clés' },
-    { id: 'iseo', name: 'ISEO', specialty: 'Contrôle d’accès' },
+    { id: 'vachette', name: 'Vachette', specialty: 'Cylindres & serrures', logoSrc: '/assets/brands/vachette.svg' },
+    { id: 'bricard', name: 'Bricard', specialty: 'Haute sécurité A2P', logoSrc: '/assets/brands/bricard.svg' },
+    { id: 'fichet', name: 'Fichet', specialty: 'Portes blindées', logoSrc: '/assets/brands/fichet.svg' },
+    { id: 'picard', name: 'Picard', specialty: 'Serrures multipoints', logoSrc: '/assets/brands/picard.svg' },
+    { id: 'dom', name: 'DOM', specialty: 'Organigrammes & clés', logoSrc: '/assets/brands/dom.svg' },
+    { id: 'iseo', name: 'ISEO', specialty: 'Contrôle d’accès', logoSrc: '/assets/brands/iseo.svg' },
   ],
   otherBrandsLabel: 'Votre équipement est d’une autre marque ?',
   otherBrandsCta: 'Contactez-nous pour vérifier',
