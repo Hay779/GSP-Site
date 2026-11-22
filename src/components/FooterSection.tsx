@@ -43,28 +43,30 @@ export function FooterSection({
       data-section="11_Pied_De_Page"
       className="w-full bg-[#16191B] border-t border-[#B79A62]/65 scroll-mt-[74px] lg:scroll-mt-[88px]"
     >
-      {/* Bandeau d'appel à l'action */}
+      {/* Appel à l'action sur panneau clair */}
       {!hideCta && (
-        <div className="border-b border-[#F3F0E7]/10 bg-[radial-gradient(ellipse_70%_120%_at_85%_0%,rgba(183,154,98,0.14),transparent_70%)]">
-          <div className="mx-auto flex max-w-[1280px] flex-col gap-7 px-5 py-12 sm:px-8 sm:py-14 lg:flex-row lg:items-center lg:justify-between lg:px-10">
+        <div className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-10 pt-10 sm:pt-14">
+          <div className="flex flex-col gap-6 rounded-3xl bg-[#F7F5F0] p-6 sm:p-8 lg:flex-row lg:items-center lg:justify-between lg:px-10">
             <div className="max-w-xl">
-              <p className="section-kicker text-[#B79A62]">{config.ctaKicker}</p>
-              <p className="mt-3 section-title text-[#F3F0E7]">{config.ctaTitle}</p>
-              <p className="mt-3 text-[16px] leading-[1.6] text-[#F3F0E7]/72">{config.ctaSubtitle}</p>
+              <p className="section-kicker text-[#7D612D]">{config.ctaKicker}</p>
+              <p className="mt-2 font-display text-[28px] sm:text-[34px] font-semibold leading-[1.15] tracking-[-0.015em] text-[#1C1F21]">
+                {config.ctaTitle}
+              </p>
+              <p className="mt-2 text-[15.5px] leading-[1.6] text-[#1C1F21]/70">{config.ctaSubtitle}</p>
             </div>
-            <div className="flex flex-col gap-3 sm:flex-row sm:gap-4 shrink-0">
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-3 shrink-0">
               <a
                 href={pageHref('devis')}
-                className="inline-flex min-h-[52px] items-center justify-center gap-2.5 rounded-lg bg-[#B79A62] hover:bg-[#C6AA73] active:bg-[#A68952] px-7 py-3 text-[16px] font-semibold text-[#1C1F21] whitespace-nowrap transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F3F0E7]"
+                className="inline-flex h-11 items-center gap-2 rounded-full bg-[#1C1F21] px-5 text-[15px] font-semibold text-[#F3F0E7] hover:bg-[#292D2F] whitespace-nowrap transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62]"
               >
-                <FileText className="h-[18px] w-[18px]" strokeWidth={1.9} aria-hidden="true" />
+                <FileText className="h-4 w-4 text-[#B79A62]" strokeWidth={1.9} aria-hidden="true" />
                 {config.quoteCtaLabel}
               </a>
               <a
                 href={brand.phoneHref}
-                className="inline-flex min-h-[52px] items-center justify-center gap-2.5 rounded-lg border border-[#F3F0E7]/55 hover:border-[#F3F0E7] hover:bg-[#F3F0E7]/10 px-7 py-3 text-[16px] font-medium text-[#F3F0E7] tabular-nums whitespace-nowrap transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62]"
+                className="inline-flex items-center gap-2 text-[15.5px] font-semibold tabular-nums text-[#1C1F21] underline decoration-[#B79A62] decoration-2 underline-offset-[6px] hover:text-[#7D612D] whitespace-nowrap focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#B79A62] rounded"
               >
-                <Phone className="h-[18px] w-[18px] text-[#B79A62]" strokeWidth={1.9} aria-hidden="true" />
+                <Phone className="h-4 w-4 text-[#7D612D]" strokeWidth={1.9} aria-hidden="true" />
                 {brand.phoneDisplay}
               </a>
             </div>
@@ -73,9 +75,9 @@ export function FooterSection({
       )}
 
       <div className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-10 pt-12 sm:pt-14 pb-8 sm:pb-10">
-        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-12 lg:gap-0 items-start">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-10 lg:grid-cols-12 lg:gap-0 items-start">
           {/* Marque + contact */}
-          <div className="sm:col-span-2 lg:col-span-4 lg:pr-10">
+          <div className="col-span-2 lg:col-span-4 lg:pr-10">
             <a
               href={sectionHref('02_Hero')}
               aria-label={`${brand.name} — ${brand.city}, retour à l’accueil`}
@@ -103,7 +105,7 @@ export function FooterSection({
           {/* Nos métiers */}
           <nav aria-labelledby="footer-services" className="lg:col-span-3 lg:border-l lg:border-[#B79A62]/40 lg:pl-8">
             <h2 id="footer-services" className={HEADING_CLASS}>{config.servicesHeading}</h2>
-            <ul className="mt-4 flex flex-col gap-2.5 text-[15px]">
+            <ul className="mt-4 flex flex-col gap-2.5 text-[14.5px] sm:text-[15px]">
               {config.serviceLinks.map((link) => (
                 <li key={link.label}>
                   <a
@@ -128,7 +130,7 @@ export function FooterSection({
           {/* Informations */}
           <nav aria-labelledby="footer-info" className="lg:col-span-2 lg:border-l lg:border-[#B79A62]/40 lg:pl-8">
             <h2 id="footer-info" className={HEADING_CLASS}>{config.infoHeading}</h2>
-            <ul className="mt-4 flex flex-col gap-2.5 text-[15px]">
+            <ul className="mt-4 flex flex-col gap-2.5 text-[14.5px] sm:text-[15px]">
               {config.infoLinks.map((link) => (
                 <li key={link.label}>
                   <a
@@ -143,9 +145,9 @@ export function FooterSection({
           </nav>
 
           {/* Nos agences */}
-          <div className="lg:col-span-3 lg:border-l lg:border-[#B79A62]/40 lg:pl-8">
+          <div className="col-span-2 lg:col-span-3 lg:border-l lg:border-[#B79A62]/40 lg:pl-8">
             <h2 className={HEADING_CLASS}>{config.agenciesHeading}</h2>
-            <ul className="mt-4 flex flex-col gap-5">
+            <ul className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-5">
               {agencies.map((agency) => (
                 <li key={agency.id} className="flex gap-3">
                   <MapPin className="mt-0.5 h-[18px] w-[18px] shrink-0 text-[#B79A62]" strokeWidth={1.8} aria-hidden="true" />
@@ -162,7 +164,7 @@ export function FooterSection({
                   </div>
                 </li>
               ))}
-              <li>
+              <li className="sm:col-span-2 lg:col-span-1">
                 <a href={pageHref('agences-contact')} className={`text-[14.5px] font-medium ${LINK_CLASS} !text-[#B79A62] hover:!text-[#D2B478]`}>
                   Horaires & itinéraires →
                 </a>
