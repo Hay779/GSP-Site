@@ -8,7 +8,7 @@ import {
   DOMAINS_CONFIG,
   FAQ_CONFIG,
   REVIEWS_CONFIG,
-  URGENCY_CONFIG,
+  URGENCY_VARIANTS,
   WHATSAPP_CONFIG,
   ZONE_INTERVENTION_CONFIG,
   BRANDS_CONFIG,
@@ -507,7 +507,7 @@ export function PageBlockView({ block, ctx }: { readonly block: PageBlock; reado
     case 'brands':
       return <BrandsSection config={BRANDS_CONFIG} contactHref={hrefForPage('devis', ctx.routerMode)} />;
     case 'urgency':
-      return <UrgencySection config={URGENCY_CONFIG} brand={ctx.brand} />;
+      return <UrgencySection config={URGENCY_VARIANTS[block.variant ?? 'serrurerie']} brand={ctx.brand} />;
     case 'agencies':
       return <AgenciesSection config={AGENCIES_CONFIG} brand={ctx.brand} />;
     case 'zone':

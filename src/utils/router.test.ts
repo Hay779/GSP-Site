@@ -18,7 +18,11 @@ test('parses domain pages from the path in history mode', () => {
   });
   assert.deepEqual(parseLocation('/menuiserie/', '', 'history'), { kind: 'domain', id: 'menuiserie' });
   assert.deepEqual(parseLocation('/', '#05_Nos_Domaines', 'history'), { kind: 'home' });
-  assert.deepEqual(parseLocation('/inconnue', '', 'history'), { kind: 'home' });
+  assert.deepEqual(parseLocation('/inconnue', '', 'history'), { kind: 'notFound' });
+  assert.deepEqual(parseLocation('/', '', 'history'), { kind: 'home' });
+  // En mode « hash », une ancre inconnue reste sur l'accueil (sections de la page).
+  assert.deepEqual(parseLocation('/', '#inconnue', 'hash'), { kind: 'home' });
+  assert.deepEqual(parseLocation('/', '#404', 'hash'), { kind: 'notFound' });
 });
 
 test('parses domain pages from the hash in hash mode and keeps section anchors on home', () => {

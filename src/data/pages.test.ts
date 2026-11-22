@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { blockTone, DOMAIN_FAQS, resolvePageDefinition, type PageDefinition } from './pages';
 import { DOMAINS_CONFIG } from './sectionsContent';
-import { PAGE_SLUGS, type PageId, type Route } from '../utils/router';
+import { PAGE_SLUGS, routeKey, type PageId, type Route } from '../utils/router';
 
 const ALL_ROUTES: readonly Route[] = [
   ...DOMAINS_CONFIG.items.map((item) => ({ kind: 'domain', id: item.id }) as const),
@@ -12,7 +12,7 @@ const ALL_ROUTES: readonly Route[] = [
 ];
 
 function label(route: Route): string {
-  return route.kind === 'home' ? 'home' : `${route.kind}:${route.id}`;
+  return routeKey(route);
 }
 
 function definitionFor(route: Route): PageDefinition {

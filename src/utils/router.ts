@@ -31,7 +31,9 @@ export type PageId =
 export type Route =
   | { readonly kind: 'home' }
   | { readonly kind: 'domain'; readonly id: DomainId }
-  | { readonly kind: 'page'; readonly id: PageId };
+  | { readonly kind: 'page'; readonly id: PageId }
+  /** Adresse inconnue (mode « history » uniquement) : page 404. */
+  | { readonly kind: 'notFound' };
 
 export const DOMAIN_SLUGS: Readonly<Record<DomainId, string>> = {
   serrurerie: 'serrurerie-portes-blindees',
@@ -58,6 +60,12 @@ export const PAGE_SLUGS: Readonly<Record<PageId, string>> = {
 };
 
 export const HOME_ROUTE: Route = { kind: 'home' };
+export const NOT_FOUND_ROUTE: Route = { kind: 'notFound' };
+
+/** Clé stable d'une page (remontage des composants à chaque changement de page). */
+export function routeKey(route: Route): string {
+  return 'id' in route ? `${route.kind}-${route.id}` : route.kind;
+}
 
 function cleanSlug(slug: string): string {
   return slug.trim().toLowerCase().replace(/^\/+|\/+$/g, '');
@@ -85,6 +93,11 @@ export function parseLocation(pathname: string, hash: string, mode: RouterMode):
     if (value === clean) {
       return { kind: 'page', id };
     }
+  }
+  // En mode « hash », l'ancre peut être une section de l'accueil : on reste sur l'accueil
+  // (sauf « #404 », pour pouvoir afficher la page introuvable dans l'aperçu).
+  if (clean === '404' || (mode === 'history' && clean !== '' && clean !== 'index.html')) {
+    return NOT_FOUND_ROUTE;
   }
   return HOME_ROUTE;
 }
@@ -120,7 +133,7 @@ export function routesEqual(a: Route, b: Route): boolean {
   if (a.kind !== b.kind) {
     return false;
   }
-  if (a.kind === 'home') {
+  if (a.kind === 'home' || a.kind === 'notFound') {
     return true;
   }
   return 'id' in b && a.id === b.id;

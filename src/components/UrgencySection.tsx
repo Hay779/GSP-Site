@@ -1,4 +1,4 @@
-import { FileText, Lock, Phone, ShieldAlert, ShieldCheck, Timer } from 'lucide-react';
+import { AppWindow, Blinds, FileText, KeyRound, Lock, Nfc, PanelsTopLeft, Phone, ShieldAlert, ShieldCheck, Store, Timer, Warehouse } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
 import type { UrgencyConfig } from '../data/sectionsContent';
 import type { BrandConfig } from '../utils/navigation';
@@ -9,8 +9,18 @@ interface UrgencySectionProps {
   readonly brand: BrandConfig;
 }
 
-const CASE_ICONS = { lock: Lock, shield: ShieldAlert } as const;
-const ASSURANCE_ICONS = { timer: Timer, shield: ShieldCheck, file: FileText } as const;
+const CASE_ICONS = {
+  lock: Lock,
+  shield: ShieldAlert,
+  glass: PanelsTopLeft,
+  store: Store,
+  window: AppWindow,
+  shutter: Blinds,
+  garage: Warehouse,
+  key: KeyRound,
+  badge: Nfc,
+} as const;
+const ASSURANCE_ICONS = { timer: Timer, shield: ShieldCheck, file: FileText, store: Store } as const;
 
 /**
  * Bloc « Un problème de porte ? » : deux cas d'urgence illustrés (porte claquée, porte forcée),
