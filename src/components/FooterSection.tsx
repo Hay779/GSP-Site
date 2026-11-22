@@ -48,13 +48,13 @@ export function FooterSection({
     >
       {/* Appel à l'action sur fond clair : photo clés & badge en haut à droite, découpée en vague (filet doré) */}
       {!hideCta && (
-        <div className="relative overflow-hidden pt-8 pb-12 sm:pt-12 sm:pb-16">
-          <div aria-hidden="true" className="absolute right-0 top-0 h-[190px] w-[94%] sm:h-[250px] sm:w-[72%] lg:h-[300px] lg:w-[48%]">
-            <img src={CTA_IMAGE} alt="" loading="lazy" className="h-full w-full object-cover object-[45%_45%]" />
+        <div className="relative overflow-hidden pt-[30px] pb-12 sm:pt-10 sm:pb-16 lg:pt-12">
+          <div aria-hidden="true" className="absolute right-0 top-0 h-[190px] w-[94%] sm:h-[250px] sm:w-[72%] lg:h-[300px] lg:w-[55%]">
+            <img src={CTA_IMAGE} alt="" loading="lazy" className="h-full w-full object-cover object-[40%_50%] [mask-image:linear-gradient(to_right,transparent,black_22%)]" />
             <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 h-full w-full">
-              <path d="M0 0 C34 4 46 30 58 58 C68 82 80 96 100 100 V101 H-1 V0 Z" fill="#F3F0E7" />
+              <path d="M-1 16 L8 16 C34 16 46 30 58 54 C70 80 82 95 101 97 V101 H-1 Z" fill="#F3F0E7" />
               <path
-                d="M0 0 C34 4 46 30 58 58 C68 82 80 96 100 100"
+                d="M8 16 C34 16 46 30 58 54 C70 80 82 95 101 97"
                 fill="none"
                 stroke="#B79A62"
                 strokeWidth="2.5"
@@ -63,7 +63,7 @@ export function FooterSection({
             </svg>
           </div>
           <div className="relative mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-10">
-          <div className="relative rounded-3xl p-5 sm:p-8 lg:p-10 ring-1 ring-white/80 shadow-[0_18px_50px_-30px_rgba(28,31,33,0.35)]">
+          <div className="relative rounded-3xl p-5 sm:p-8 lg:p-10 shadow-[0_18px_50px_-30px_rgba(28,31,33,0.35)]">
             <div className="relative max-w-2xl pt-[130px] sm:pt-[180px] lg:pt-0 lg:max-w-[52%]">
               <p className="section-kicker flex items-center gap-3 text-[#7D612D]">
                 <span aria-hidden="true" className="h-0.5 w-8 bg-[#B79A62]" />
