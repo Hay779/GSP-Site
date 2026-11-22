@@ -14,6 +14,8 @@ interface PageHeroProps {
   readonly compact?: boolean;
   /** Petits points rassurants affichés sous l'introduction. */
   readonly highlights?: readonly string[];
+  /** Raccourcis vers des sections de la page (pastilles). */
+  readonly shortcuts?: readonly { readonly label: string; readonly targetId: string }[];
 }
 
 /** Met à jour le titre de l'onglet et la description Google de la page. */
@@ -43,6 +45,7 @@ export function PageHero({
   imagePosition = '60% 45%',
   actions,
   highlights = [],
+  shortcuts = [],
   compact = false,
 }: PageHeroProps) {
   const prefersReducedMotion = Boolean(useReducedMotion());
@@ -99,6 +102,20 @@ export function PageHero({
             </li>
           ))}
         </motion.ul>
+      )}
+      {shortcuts.length > 0 && (
+        <motion.nav {...fadeUp(0.18)} aria-label="Thèmes de la page" className="mt-6 flex flex-wrap gap-2">
+          {shortcuts.map((item) => (
+            <button
+              key={item.targetId}
+              type="button"
+              onClick={() => document.getElementById(item.targetId)?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+              className="rounded-full border border-[#F3F0E7]/25 px-3.5 py-1.5 text-[14px] text-[#F3F0E7]/90 hover:border-[#B79A62] hover:text-[#F3F0E7] transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62] cursor-pointer"
+            >
+              {item.label}
+            </button>
+          ))}
+        </motion.nav>
       )}
     </>
   );

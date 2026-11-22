@@ -515,10 +515,11 @@ export function PageBlockView({ block, ctx }: { readonly block: PageBlock; reado
         <ZoneInterventionSection
           config={ZONE_INTERVENTION_CONFIG}
           onRequestQuoteForDistrict={(district) => ctx.onOpenQuoteModal(undefined, district)}
+          embedded={block.embedded}
         />
       );
     case 'reviews':
-      return <ReviewsSection config={REVIEWS_CONFIG} layout="grid" />;
+      return <ReviewsSection config={REVIEWS_CONFIG} layout="grid" hideHeading={block.hideHeading} />;
   }
 }
 
@@ -536,6 +537,7 @@ export function PageRenderer({ page, ctx }: { readonly page: PageDefinition; rea
         imagePosition={page.hero.imagePosition}
         compact={page.hero.compact}
         highlights={page.hero.highlights}
+        shortcuts={page.hero.shortcuts}
         actions={
           page.hero.actions.length > 0 ? (
             <>

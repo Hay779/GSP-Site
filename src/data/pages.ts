@@ -56,6 +56,8 @@ export interface PageHeroDefinition {
   readonly imagePosition?: string;
   /** Petits points rassurants sous l'introduction (2 ou 3, courts). */
   readonly highlights?: readonly string[];
+  /** Raccourcis vers des sections de la page (pastilles cliquables). */
+  readonly shortcuts?: readonly { readonly label: string; readonly targetId: string }[];
   /** En-tête réduit (pages légales). */
   readonly compact?: boolean;
   /** Masque l'en-tête sur mobile et tablette (le contenu commence directement). */
@@ -138,8 +140,8 @@ export type PageBlock =
   | { readonly type: 'brands' }
   | { readonly type: 'urgency' }
   | { readonly type: 'agencies' }
-  | { readonly type: 'zone' }
-  | { readonly type: 'reviews' };
+  | { readonly type: 'zone'; readonly embedded?: boolean }
+  | { readonly type: 'reviews'; readonly hideHeading?: boolean };
 
 export interface PageDefinition {
   readonly seoTitle: string;
@@ -148,15 +150,15 @@ export interface PageDefinition {
   readonly blocks: readonly PageBlock[];
 }
 
-/** Fond d'un bloc : « band » = bandeau neutre (urgence) qui peut suivre n'importe quel bloc. */
+/** Fond d'un bloc : « band » = bandeau neutre (urgence, zone) qui peut suivre n'importe quel bloc. */
 export function blockTone(block: PageBlock): BlockTone | 'band' {
   switch (block.type) {
     case 'urgency':
+    case 'zone':
       return 'band';
     case 'agencies':
     case 'reviews':
       return 'light';
-    case 'zone':
     case 'brands':
       return 'dark';
     default:
@@ -663,11 +665,16 @@ export const THEMATIC_PAGES: Readonly<Record<BlockPageId, PageDefinition>> = {
       breadcrumbLabel: 'Zone d’intervention',
       intro:
         'Depuis nos agences République et Rome, nous intervenons dans les arrondissements de Marseille et dans plusieurs communes voisines.',
-      imageSrc: DOMAINS_CONFIG.items.find((d) => d.id === 'menuiserie')?.imageSrc,
-      imagePosition: '75% 40%',
+      imageSrc: ZONE_INTERVENTION_CONFIG.bannerSrc,
+      imagePosition: '30% 40%',
+      highlights: ['16 arrondissements', 'Communes voisines', '2 agences : République & Rome'],
       actions: [{ kind: 'quote' }, { kind: 'phone' }],
     },
     blocks: [
+      // La carte et la recherche d'abord : c'est l'objet de la page.
+      { type: 'zone', embedded: true },
+      { type: 'agencies' },
+      faqBlock('page-faq', 'dark', FAQ_ZONE),
       {
         type: 'domains',
         id: 'page-domaines',
@@ -675,9 +682,6 @@ export const THEMATIC_PAGES: Readonly<Record<BlockPageId, PageDefinition>> = {
         kicker: 'Nos domaines',
         title: 'Ce que nous faisons près de chez vous.',
       },
-      { type: 'zone' },
-      { type: 'agencies' },
-      faqBlock('page-faq', 'dark', FAQ_ZONE),
     ],
   },
 
@@ -693,7 +697,7 @@ export const THEMATIC_PAGES: Readonly<Record<BlockPageId, PageDefinition>> = {
       imagePosition: '65% 45%',
       actions: [{ kind: 'quote' }, { kind: 'phone' }],
     },
-    blocks: [{ type: 'reviews' }],
+    blocks: [{ type: 'reviews', hideHeading: true }],
   },
 
   'questions-frequentes': {
@@ -705,6 +709,15 @@ export const THEMATIC_PAGES: Readonly<Record<BlockPageId, PageDefinition>> = {
       title: 'Toutes nos réponses.',
       breadcrumbLabel: 'Questions fréquentes',
       intro: 'Retrouvez les questions les plus posées, classées par thème. Une question précise ? Appelez-nous.',
+      shortcuts: [
+        { label: 'Les essentiels', targetId: 'faq-general' },
+        { label: 'Serrurerie', targetId: 'faq-serrurerie' },
+        { label: 'Vitrerie', targetId: 'faq-vitrerie' },
+        { label: 'Menuiserie', targetId: 'faq-menuiserie' },
+        { label: 'Fermetures', targetId: 'faq-fermetures' },
+        { label: 'Clés & badges', targetId: 'faq-cles' },
+        { label: 'Après sinistre', targetId: 'faq-sinistre' },
+      ],
       actions: [{ kind: 'phone' }, { kind: 'quote' }],
     },
     blocks: [

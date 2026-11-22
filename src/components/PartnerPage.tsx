@@ -254,7 +254,7 @@ export function PartnerPage({ brand, routerMode }: { readonly brand: BrandConfig
                   </Group>
 
                   <div className="border-t border-[#1C1F21]/10 pt-6">
-                    <button type="submit" className="inline-flex min-h-[52px] w-full items-center justify-center gap-2.5 rounded-lg bg-[#B79A62] px-8 py-3 text-[16px] font-semibold text-[#1C1F21] hover:bg-[#C6AA73] active:bg-[#A68952] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1C1F21] sm:w-auto cursor-pointer">
+                    <button type="submit" className="inline-flex h-12 w-full items-center justify-center gap-2.5 rounded-full bg-[#1C1F21] px-7 text-[16px] font-semibold text-[#F3F0E7] hover:bg-[#292D2F] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62] sm:w-auto cursor-pointer [&_svg]:text-[#B79A62]">
                       <Send className="h-4 w-4" aria-hidden="true" />
                       Envoyer ma demande
                     </button>
