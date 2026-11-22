@@ -22,6 +22,9 @@ interface FooterSectionProps {
 
 const LINK_CLASS =
   'text-[#F3F0E7]/80 hover:text-[#B79A62] transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#B79A62] rounded-xs';
+/** Photo provisoire (découpée d'une maquette) : remplacer par une vraie photo clés & badge. */
+const CTA_IMAGE = '/src/assets/images/cta_cles_badge.jpg';
+
 const HEADING_CLASS = 'text-[12px] sm:text-[13px] font-semibold uppercase tracking-[0.16em] text-[#B79A62]';
 
 export function FooterSection({
@@ -43,76 +46,82 @@ export function FooterSection({
       data-section="11_Pied_De_Page"
       className="w-full bg-[#16191B] border-t border-[#B79A62]/65 scroll-mt-[74px] lg:scroll-mt-[88px]"
     >
-      {/* Appel à l'action sur panneau clair : trois façons de nous joindre + boutiques */}
+      {/* Appel à l'action sur panneau clair : photo clés & badge, trois façons de nous joindre, boutiques */}
       {!hideCta && (
         <div className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-10 pt-10 sm:pt-14">
-          <div className="rounded-3xl bg-[#F7F5F0] p-5 sm:p-8 lg:p-10">
-            <div className="max-w-2xl">
-              <p className="section-kicker text-[#7D612D]">{config.ctaKicker}</p>
-              <p className="mt-2 font-display text-[28px] sm:text-[36px] font-semibold leading-[1.12] tracking-[-0.015em] text-[#1C1F21]">
-                {config.ctaTitle}
-              </p>
-              <p className="mt-2 text-[15.5px] leading-[1.6] text-[#1C1F21]/70">{config.ctaSubtitle}</p>
+          <div className="relative overflow-hidden rounded-3xl bg-[#F7F5F0] p-5 sm:p-8 lg:p-10">
+            {/* Photo : bandeau courbé (mobile) / coin haut droit arrondi avec filet doré (bureau) */}
+            <div className="kb-curve relative -mx-5 -mt-5 mb-5 sm:-mx-8 sm:-mt-8 lg:hidden">
+              <img src={CTA_IMAGE} alt="" loading="lazy" className="h-[150px] sm:h-[200px] w-full object-cover" />
+            </div>
+            <div aria-hidden="true" className="hidden lg:block absolute right-0 top-0 h-[230px] w-[40%] bg-[#B79A62] [clip-path:ellipse(100%_100%_at_100%_0%)]">
+              <img
+                src={CTA_IMAGE}
+                alt=""
+                loading="lazy"
+                className="h-[226px] w-[calc(100%-4px)] ml-auto object-cover [clip-path:ellipse(100%_100%_at_100%_0%)]"
+              />
             </div>
 
-            <ul className="mt-6 grid gap-3 sm:gap-4 md:grid-cols-3">
+            <div className="relative max-w-2xl lg:max-w-[56%]">
+              <p className="section-kicker flex items-center gap-3 text-[#7D612D]">
+                <span aria-hidden="true" className="h-0.5 w-8 bg-[#B79A62]" />
+                {config.ctaKicker}
+              </p>
+              <p className="mt-2 font-display text-[32px] sm:text-[44px] font-semibold leading-[1.05] tracking-[-0.02em] text-[#1C1F21]">
+                {config.ctaTitle}
+              </p>
+              <p className="mt-3 text-[15.5px] leading-[1.6] text-[#1C1F21]/70">{config.ctaSubtitle}</p>
+            </div>
+
+            <ul className="relative mt-7 grid gap-3 sm:gap-4 md:grid-cols-3">
               {[
-                {
-                  href: brand.phoneHref,
-                  icon: KeyRound,
-                  tone: 'bg-[#C0392B] text-white',
-                  title: 'Urgence',
-                  text: 'Porte claquée, effraction, serrure bloquée.',
-                  action: brand.phoneDisplay,
-                  external: false,
-                },
-                {
-                  href: pageHref('devis'),
-                  icon: FileText,
-                  tone: 'bg-[#1C1F21] text-[#B79A62]',
-                  title: 'Devis en ligne',
-                  text: 'Décrivez votre besoin en quelques questions.',
-                  action: config.quoteCtaLabel,
-                  external: false,
-                },
-                {
-                  href: whatsappUrl,
-                  icon: MessageCircle,
-                  tone: 'bg-[#1FA855] text-white',
-                  title: 'WhatsApp',
-                  text: 'Envoyez une photo de votre porte ou de votre serrure.',
-                  action: 'Écrire sur WhatsApp',
-                  external: true,
-                },
+                { href: brand.phoneHref, icon: KeyRound, title: 'Urgence', text: 'Porte claquée, effraction, serrure bloquée.', action: brand.phoneDisplay, actionIcon: Phone, primary: true, external: false },
+                { href: pageHref('devis'), icon: FileText, title: 'Devis en ligne', text: 'Décrivez votre besoin en quelques questions.', action: config.quoteCtaLabel, actionIcon: null, primary: false, external: false },
+                { href: whatsappUrl, icon: MessageCircle, title: 'WhatsApp', text: 'Envoyez une photo de votre porte ou de votre serrure.', action: 'Écrire sur WhatsApp', actionIcon: null, primary: false, external: true },
               ].map((item) => (
-                <li key={item.title}>
+                <li key={item.title} className="flex flex-col rounded-2xl bg-gradient-to-b from-white to-[#FBFAF6] p-4 sm:p-5 shadow-[0_10px_28px_-18px_rgba(28,31,33,0.4)] ring-1 ring-[#1C1F21]/5">
+                  <div className="flex items-start gap-4">
+                    <span aria-hidden="true" className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-[#F1E8D6] text-[#9C7C40] ring-1 ring-[#B79A62]/25">
+                      <item.icon className="h-[22px] w-[22px]" strokeWidth={1.6} />
+                    </span>
+                    <div className="min-w-0">
+                      <p className="font-display text-[19px] font-semibold leading-tight text-[#1C1F21]">{item.title}</p>
+                      <p className="mt-1 text-[14.5px] leading-[1.45] text-[#1C1F21]/65">{item.text}</p>
+                    </div>
+                  </div>
                   <a
                     href={item.href}
                     {...(item.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                    className="group flex h-full items-start gap-4 rounded-2xl bg-white p-4 sm:p-5 shadow-[0_8px_24px_-16px_rgba(28,31,33,0.35)] transition-shadow duration-200 hover:shadow-[0_14px_30px_-14px_rgba(28,31,33,0.4)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62]"
+                    className={`group mt-4 sm:mt-5 flex h-11 items-center justify-center gap-2.5 rounded-full px-5 text-[15px] font-semibold tabular-nums transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62] ${
+                      item.primary
+                        ? 'bg-[#1C1F21] text-[#F3F0E7] hover:bg-[#292D2F]'
+                        : 'border border-[#B79A62]/60 bg-white/60 text-[#1C1F21] hover:border-[#B79A62] hover:bg-white'
+                    }`}
                   >
-                    <span aria-hidden="true" className={`grid h-11 w-11 shrink-0 place-items-center rounded-full ${item.tone}`}>
-                      <item.icon className="h-5 w-5" strokeWidth={1.8} />
-                    </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="block font-display text-[17px] font-semibold text-[#1C1F21]">{item.title}</span>
-                      <span className="mt-0.5 block text-[14px] leading-[1.45] text-[#1C1F21]/65">{item.text}</span>
-                      <span className="mt-2.5 inline-flex items-center gap-1.5 text-[14.5px] font-semibold tabular-nums text-[#1C1F21] underline decoration-[#B79A62] decoration-2 underline-offset-[5px] group-hover:text-[#7D612D]">
-                        {item.action}
-                        <ArrowRight className="h-4 w-4 transition-transform duration-150 group-hover:translate-x-0.5" aria-hidden="true" />
-                      </span>
-                    </span>
+                    {item.actionIcon && <item.actionIcon className="h-4 w-4 text-[#B79A62]" strokeWidth={1.9} aria-hidden="true" />}
+                    {item.action}
+                    <ArrowRight className="h-4 w-4 text-[#B79A62] transition-transform duration-150 group-hover:translate-x-0.5" aria-hidden="true" />
                   </a>
                 </li>
               ))}
             </ul>
 
-            <p className="mt-5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[14.5px] text-[#1C1F21]/70">
-              <Store className="h-4 w-4 text-[#7D612D]" strokeWidth={1.8} aria-hidden="true" />
+            <p className="relative mt-6 flex flex-wrap items-center gap-x-3 gap-y-2 text-[15px] text-[#1C1F21]/70">
+              <Store className="h-5 w-5 text-[#9C7C40]" strokeWidth={1.7} aria-hidden="true" />
               Ou passez en boutique :
-              <a href={pageHref('agences-contact')} className="font-semibold text-[#1C1F21] hover:text-[#7D612D] underline underline-offset-4 decoration-[#1C1F21]/30">
-                {agencies.map((agency) => `${agency.name.replace('Agence ', '')} (${agency.districtLabel.replace('Marseille ', '')})`).join(' · ')}
-              </a>
+              {agencies.map((agency, index) => (
+                <span key={agency.id} className="inline-flex items-center gap-3">
+                  {index > 0 && <span aria-hidden="true" className="h-1 w-1 rounded-full bg-[#B79A62]" />}
+                  <a
+                    href={agency.directionsUrl || pageHref('agences-contact')}
+                    {...(agency.directionsUrl ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                    className="font-semibold text-[#1C1F21] underline decoration-[#B79A62] decoration-2 underline-offset-[6px] hover:text-[#7D612D]"
+                  >
+                    {agency.name.replace('Agence ', '')} ({agency.districtLabel.replace('Marseille ', '')})
+                  </a>
+                </span>
+              ))}
             </p>
           </div>
         </div>
