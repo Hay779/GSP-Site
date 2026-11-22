@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { ArrowRight, ChevronDown, FileText, Menu, Phone, X } from 'lucide-react';
+import { ArrowRight, ChevronDown, FileText, Phone } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion, useScroll, useSpring } from 'motion/react';
 import { resolveHeaderHidden } from '../utils/headerVisibility';
 import type { BrandConfig } from '../utils/navigation';
@@ -376,15 +376,6 @@ export function HeaderSection({ brand, nav, homeHref, quoteHref }: HeaderSection
               <span>{brand.phoneDisplay}</span>
             </a>
 
-            {/* Accès appel direct 1 tap sur mobile étroit */}
-            <a
-              href={brand.phoneHref}
-              aria-label={`Appeler le ${brand.phoneDisplay}`}
-              className="inline-flex sm:hidden h-11 w-11 items-center justify-center rounded-lg bg-[#B79A62] hover:bg-[#C6AA73] active:bg-[#A68952] text-[#1C1F21] transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F3F0E7]"
-            >
-              <Phone className="h-[18px] w-[18px]" strokeWidth={2} aria-hidden="true" />
-            </a>
-
             {/* Bouton menu mobile / tablette */}
             <button
               ref={toggleButtonRef}
@@ -393,13 +384,26 @@ export function HeaderSection({ brand, nav, homeHref, quoteHref }: HeaderSection
               aria-expanded={mobileMenuOpen}
               aria-controls="mobile-navigation"
               aria-label={mobileMenuOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
-              className="inline-flex lg:hidden h-11 w-11 items-center justify-center rounded-lg border border-[#F3F0E7]/20 bg-[#292D2F]/60 text-[#F3F0E7] hover:border-[#B79A62]/70 hover:text-[#B79A62] transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62]"
+              className="group relative inline-flex lg:hidden h-11 w-11 items-center justify-center text-[#F3F0E7] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62] rounded-full cursor-pointer"
             >
-              {mobileMenuOpen ? (
-                <X className="h-5 w-5" strokeWidth={1.8} aria-hidden="true" />
-              ) : (
-                <Menu className="h-5 w-5" strokeWidth={1.8} aria-hidden="true" />
-              )}
+              {/* Trois traits fins (le dernier plus court), qui se croisent en X à l'ouverture */}
+              <span aria-hidden="true" className="relative block h-[14px] w-[24px]">
+                <span
+                  className={`absolute right-0 h-[1.5px] w-[24px] rounded-full bg-current transition-all duration-300 ${
+                    mobileMenuOpen ? 'top-[6px] rotate-45' : 'top-0'
+                  }`}
+                />
+                <span
+                  className={`absolute right-0 top-[6px] h-[1.5px] w-[24px] rounded-full bg-current transition-opacity duration-200 ${
+                    mobileMenuOpen ? 'opacity-0' : 'opacity-100'
+                  }`}
+                />
+                <span
+                  className={`absolute right-0 h-[1.5px] rounded-full transition-all duration-300 ${
+                    mobileMenuOpen ? 'top-[6px] w-[24px] -rotate-45 bg-current' : 'top-[12px] w-[15px] bg-[#B79A62] group-hover:w-[24px]'
+                  }`}
+                />
+              </span>
             </button>
           </div>
         </div>
