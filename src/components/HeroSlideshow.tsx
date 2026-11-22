@@ -144,13 +144,9 @@ export function HeroSlideshowIndicator({
   const active = slides[activeIndex];
   return (
     <div className="flex flex-col gap-2.5 lg:items-end">
-      <p className="flex items-baseline gap-3 text-[#F3F0E7]" aria-live="polite">
-        <span className="font-display text-[13px] font-semibold tabular-nums tracking-[0.08em] text-[#B79A62]">
-          {formatSlideCounter(activeIndex, slides.length)}
-        </span>
-        <span className="text-[12px] font-medium uppercase tracking-[0.18em] text-[#F3F0E7]/85">
-          {active?.label}
-        </span>
+      {/* Compteur masqué visuellement, annoncé aux lecteurs d'écran */}
+      <p className="sr-only" aria-live="polite">
+        Image {formatSlideCounter(activeIndex, slides.length)} : {active?.label}
       </p>
       <div className="flex items-center gap-1.5" role="group" aria-label="Choisir une image">
         {slides.map((slide, index) => {

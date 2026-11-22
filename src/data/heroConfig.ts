@@ -40,7 +40,8 @@ export interface HeroConfig {
 }
 
 export const HERO_CONFIG: HeroConfig = {
-  kicker: 'Serrurerie · Vitrerie · Menuiserie',
+  // Sur-titre au-dessus du titre (laisser vide pour ne rien afficher).
+  kicker: '',
   headlineLines: ['Votre serrurier', 'à Marseille.'],
   subtitle:
     'Dépannage, changement de serrure, doubles de clés et badges, vitrerie et fermetures — en boutique ou chez vous.',

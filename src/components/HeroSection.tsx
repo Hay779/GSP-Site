@@ -232,6 +232,7 @@ export function HeroSection({
         className="relative z-10 mx-auto w-full max-w-[1280px] px-5 sm:px-8 lg:px-10 pt-1 pb-12 sm:pt-2 sm:pb-14 lg:py-24 will-change-transform"
       >
         <div className="flex flex-col items-start max-w-[640px]">
+          {config.kicker && (
           <motion.p
             initial={prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
@@ -240,10 +241,11 @@ export function HeroSection({
           >
             {config.kicker}
           </motion.p>
+          )}
 
           <h1
             id="02_Hero-title"
-            className="mt-4 font-display text-[clamp(2.15rem,4vw,3.5rem)] font-semibold leading-[1.08] tracking-[-0.015em] text-[#F3F0E7]"
+            className={`${config.kicker ? 'mt-4' : 'mt-2'} font-display text-[clamp(2.15rem,4vw,3.5rem)] font-semibold leading-[1.08] tracking-[-0.015em] text-[#F3F0E7]`}
           >
             <span className="block overflow-hidden pb-1">
               <motion.span
