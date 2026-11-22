@@ -267,19 +267,19 @@ export function ContactCtaSection({
                     className="group mt-auto pt-5 block rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62]"
                   >
                     <span
-                      className={`flex h-[46px] w-full items-center justify-center gap-3 rounded-full px-5 text-[15.5px] font-semibold whitespace-nowrap tabular-nums transition-all duration-150 ${
+                      className={`flex h-11 w-full items-center justify-center gap-2 rounded-full px-5 text-[15px] font-semibold whitespace-nowrap tabular-nums transition-colors duration-150 ${
                         item.primary
-                          ? 'bg-gradient-to-b from-[#2A2D30] to-[#191C1E] text-white shadow-[0_6px_16px_-6px_rgba(24,27,29,0.55),inset_0_1px_0_rgba(255,255,255,0.12)] group-hover:brightness-110'
-                          : 'border border-[#D5BB8C] bg-gradient-to-b from-[#FBF8F2] to-[#F4EDE0] text-[#181B1D] group-hover:border-[#B79A62] group-hover:from-white group-hover:to-[#F8F3E8]'
+                          ? 'bg-[#1C1F21] text-[#F3F0E7] group-hover:bg-[#292D2F]'
+                          : 'border border-[#B79A62]/60 bg-white text-[#1C1F21] group-hover:border-[#B79A62] group-hover:text-[#7D612D]'
                       }`}
                     >
                       {item.actionIcon && (
-                        <item.actionIcon className="h-[17px] w-[17px] shrink-0 text-[#D4B370]" strokeWidth={1.85} aria-hidden="true" />
+                        <item.actionIcon className="h-4 w-4 shrink-0 text-[#B79A62]" strokeWidth={1.9} aria-hidden="true" />
                       )}
-                      <span className={item.primary ? 'tracking-[0.02em]' : undefined}>{item.action}</span>
+                      <span>{item.action}</span>
                       <ArrowRight
-                        className={`h-[17px] w-[17px] shrink-0 transition-transform duration-150 group-hover:translate-x-0.5 ${
-                          item.primary ? 'text-[#D4B370]' : 'text-[#B58A35]'
+                        className={`h-4 w-4 shrink-0 transition-transform duration-150 group-hover:translate-x-0.5 ${
+                          item.primary ? 'text-[#B79A62]' : 'text-[#7D612D]'
                         }`}
                         strokeWidth={2}
                         aria-hidden="true"
@@ -301,7 +301,7 @@ export function ContactCtaSection({
                     <a
                       href={agency.href}
                       {...(agency.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                      className="border-b-[2.5px] border-[#C4963A] pb-0.5 font-semibold text-[#181B1D] transition-colors duration-150 hover:border-[#9A722B] hover:text-[#7D612D] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#B79A62]"
+                      className="font-semibold text-[#1C1F21] underline decoration-[#B79A62] decoration-2 underline-offset-[6px] transition-colors duration-150 hover:text-[#7D612D] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#B79A62]"
                     >
                       {agency.label}
                     </a>
