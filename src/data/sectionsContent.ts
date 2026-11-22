@@ -18,6 +18,7 @@ export interface KeysBadgeService {
 export interface KeysBadgesConfig {
   readonly kicker: string;
   readonly headlineLines: readonly [string, string];
+  readonly subtitle: string;
   readonly services: readonly KeysBadgeService[];
   readonly note: string;
   readonly ctaLabel: string;
@@ -209,13 +210,14 @@ export const URGENCY_CONFIG: UrgencyConfig = {
 
 export const KEYS_BADGES_CONFIG: KeysBadgesConfig = {
   kicker: 'Reproduction en boutique',
-  headlineLines: ['Vos doubles de clés', 'et de badges, tout simplement.'],
+  headlineLines: ['Vos doubles de clés et', 'badges, en toute simplicité.'],
+  subtitle: 'Un service rapide et fiable en boutique, pour reproduire vos clés et badges en toute sécurité.',
   services: [
     { label: 'Reproduction de clés', icon: 'key' },
     { label: 'Reproduction de badges', icon: 'badge' },
   ],
   note: 'Retrouvez-nous en agence pour votre demande.',
-  ctaLabel: 'Trouver une agence',
+  ctaLabel: 'Voir nos agences',
   ctaTargetId: '10_Nos_Agences',
   ctaHref: '#10_Nos_Agences',
   imageSrc: '/src/assets/images/cles_badges_boutique_1795289681478.jpg',

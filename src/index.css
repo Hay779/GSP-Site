@@ -92,6 +92,24 @@
   }
 }
 
+/* Bloc Clés & badges : bas de photo arrondi avec filet doré (mobile & tablette) */
+@media (max-width: 1023px) {
+  .kb-curve {
+    clip-path: ellipse(120% 100% at 50% 0%);
+  }
+  .kb-curve::after {
+    content: '';
+    position: absolute;
+    left: -10%;
+    right: -10%;
+    bottom: 0;
+    height: 44px;
+    border-bottom: 2.5px solid #b79a62;
+    border-radius: 0 0 50% 50% / 0 0 100% 100%;
+    pointer-events: none;
+  }
+}
+
 @keyframes reviews-marquee-scroll {
   0% {
     transform: translate3d(0, 0, 0);
