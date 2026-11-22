@@ -3,7 +3,7 @@ import { MotionConfig } from 'motion/react';
 import { AfterIncidentSection } from './components/AfterIncidentSection';
 import { AgenciesSection } from './components/AgenciesSection';
 import { BrandsSection } from './components/BrandsSection';
-import { DomainDetailModal } from './components/DomainDetailModal';
+import { DomainPage } from './components/DomainPage';
 import { DomainsSection } from './components/DomainsSection';
 import { FaqSection } from './components/FaqSection';
 import { FooterSection } from './components/FooterSection';
@@ -23,6 +23,7 @@ import {
   AGENCIES_CONFIG,
   BRANDS_CONFIG,
   DOMAINS_CONFIG,
+  DOMAIN_PAGE_CONFIG,
   FAQ_CONFIG,
   FOOTER_CONFIG,
   KEYS_BADGES_CONFIG,
@@ -41,6 +42,8 @@ import {
   type SectionPosition,
 } from './utils/navigation';
 import type { QuoteDomain } from './utils/quoteForm';
+import { useRouter, ROUTER_MODE } from './hooks/useRouter';
+import { hrefForDomain, hrefForHomeSection } from './utils/router';
 
 const NAV_TARGET_IDS: readonly SectionId[] = HEADER_NAV_ITEMS.map((item) => item.targetId);
 
@@ -53,10 +56,14 @@ export default function App() {
   const [quoteInitialDistrict, setQuoteInitialDistrict] = useState<string | undefined>(
     undefined
   );
-  const [selectedDomain, setSelectedDomain] = useState<DomainCardItem | null>(null);
   const [photoModalOpen, setPhotoModalOpen] = useState(false);
   const [legalDocument, setLegalDocument] = useState<LegalDocumentType | null>(null);
   const quoteTriggerRef = useRef<HTMLButtonElement | null>(null);
+  const { route, navigate } = useRouter();
+  const currentDomain =
+    route.kind === 'domain' ? DOMAINS_CONFIG.items.find((item) => item.id === route.id) ?? null : null;
+  const sectionHref = (sectionId: SectionId) => hrefForHomeSection(sectionId, route, ROUTER_MODE);
+  const domainHref = (domainId: DomainCardItem['id']) => hrefForDomain(domainId, ROUTER_MODE);
 
   useEffect(() => {
     const updateActiveSection = () => {
@@ -82,7 +89,7 @@ export default function App() {
       window.removeEventListener('scroll', updateActiveSection);
       window.removeEventListener('resize', updateActiveSection);
     };
-  }, []);
+  }, [route]);
 
   const handleSelectSection = (sectionId: SectionId) => {
     if (NAV_TARGET_IDS.includes(sectionId)) {
@@ -93,7 +100,6 @@ export default function App() {
   };
 
   const handleOpenQuoteModal = (domain?: QuoteDomain, district?: string) => {
-    setSelectedDomain(null);
     setPhotoModalOpen(false);
     setLegalDocument(null);
     setQuoteInitialDomain(domain);
@@ -108,12 +114,6 @@ export default function App() {
     });
   };
 
-  const handleSelectDomainById = (domainId: DomainCardItem['id']) => {
-    const match = DOMAINS_CONFIG.items.find((item) => item.id === domainId);
-    if (match) {
-      setSelectedDomain(match);
-    }
-  };
 
   return (
     <MotionConfig reducedMotion="user">
@@ -134,9 +134,27 @@ export default function App() {
         navItems={HEADER_NAV_ITEMS}
         activeSectionId={activeSectionId}
         onSelectSection={handleSelectSection}
+        sectionHref={sectionHref}
       />
 
-      {/* 02_Hero -> 10_Nos_Agences */}
+      {currentDomain ? (
+        /* Page métier dédiée */
+        <main className="flex-1 flex flex-col">
+          <DomainPage
+            domain={currentDomain}
+            otherDomains={DOMAINS_CONFIG.items.filter((item) => item.id !== currentDomain.id)}
+            config={DOMAIN_PAGE_CONFIG}
+            brand={BRAND_CONFIG}
+            route={route}
+            routerMode={ROUTER_MODE}
+            onOpenQuoteModal={(domain) => handleOpenQuoteModal(domain)}
+            quoteTriggerRef={quoteTriggerRef}
+          />
+          <UrgencySection config={URGENCY_CONFIG} brand={BRAND_CONFIG} />
+          <AgenciesSection config={AGENCIES_CONFIG} brand={BRAND_CONFIG} />
+        </main>
+      ) : (
+      /* 02_Hero -> 10_Nos_Agences */
       <main className="flex-1 flex flex-col">
         <HeroSection
           config={HERO_CONFIG}
@@ -154,7 +172,7 @@ export default function App() {
 
         <DomainsSection
           config={DOMAINS_CONFIG}
-          onSelectDomain={(domain) => setSelectedDomain(domain)}
+          onSelectDomain={(domain) => navigate(domainHref(domain.id))}
         />
 
         <BrandsSection config={BRANDS_CONFIG} />
@@ -180,24 +198,19 @@ export default function App() {
           onOpenQuoteModal={() => handleOpenQuoteModal()}
         />
       </main>
+      )}
 
       {/* 11_Pied_De_Page */}
       <FooterSection
         brand={BRAND_CONFIG}
         config={FOOTER_CONFIG}
         onSelectSection={handleSelectSection}
-        onSelectDomainId={handleSelectDomainById}
+        domainHref={domainHref}
+        sectionHref={sectionHref}
         onOpenQuoteModal={() => handleOpenQuoteModal()}
         onOpenLegalModal={(docType) => setLegalDocument(docType)}
       />
 
-      {/* Détail d'un domaine d'intervention */}
-      <DomainDetailModal
-        domain={selectedDomain}
-        brand={BRAND_CONFIG}
-        onClose={() => setSelectedDomain(null)}
-        onRequestQuote={(domain) => handleOpenQuoteModal(domain)}
-      />
 
       {/* Formulaire de devis intégré */}
       <QuoteModal

@@ -11,13 +11,18 @@ interface HeaderSectionProps {
   readonly navItems: readonly HeaderNavItem[];
   readonly activeSectionId: SectionId | null;
   readonly onSelectSection: (sectionId: SectionId) => void;
+  /** Adresse d'une section de l'accueil (préfixée quand on est sur une page métier). */
+  readonly sectionHref?: (sectionId: SectionId) => string;
 }
+
+const defaultSectionHref = (sectionId: SectionId) => `#${sectionId}`;
 
 export function HeaderSection({
   brand,
   navItems,
   activeSectionId,
   onSelectSection,
+  sectionHref = defaultSectionHref,
 }: HeaderSectionProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isHeaderHidden, setIsHeaderHidden] = useState(false);
@@ -127,7 +132,7 @@ export function HeaderSection({
         <div className="mx-auto flex h-[74px] lg:h-[88px] max-w-[1280px] items-center justify-between gap-6 lg:gap-8 px-5 sm:px-8 lg:px-10">
           {/* Zone 1 : Logo / Nom */}
           <a
-            href="#02_Hero"
+            href={sectionHref('02_Hero')}
             onClick={() => handleNavClick('02_Hero')}
             aria-label={`${brand.name} — ${brand.city}, retour en haut de page`}
             className="inline-flex items-center rounded-md py-1 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#B79A62]"
@@ -145,7 +150,7 @@ export function HeaderSection({
               return (
                 <a
                   key={item.targetId}
-                  href={item.href}
+                  href={sectionHref(item.targetId)}
                   onClick={() => handleNavClick(item.targetId)}
                   aria-current={isActive ? 'location' : undefined}
                   className={`group relative py-2 text-[15px] tracking-[0.01em] whitespace-nowrap shrink-0 transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#B79A62] rounded-sm ${
@@ -236,7 +241,7 @@ export function HeaderSection({
                   return (
                     <a
                       key={item.targetId}
-                      href={item.href}
+                      href={sectionHref(item.targetId)}
                       onClick={() => handleNavClick(item.targetId)}
                       aria-current={isActive ? 'location' : undefined}
                       className={`flex min-h-[48px] items-center justify-between border-b border-[#F3F0E7]/10 px-2 py-3 text-[16px] transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62] rounded-sm ${

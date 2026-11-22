@@ -8,7 +8,10 @@ interface FooterSectionProps {
   readonly brand: BrandConfig;
   readonly config: FooterConfig;
   readonly onSelectSection: (sectionId: SectionId) => void;
-  readonly onSelectDomainId: (domainId: DomainCardItem['id']) => void;
+  /** Adresse de la page dédiée d'un domaine. */
+  readonly domainHref: (domainId: DomainCardItem['id']) => string;
+  /** Adresse d'une section de l'accueil (préfixée quand on est sur une page métier). */
+  readonly sectionHref: (sectionId: SectionId) => string;
   readonly onOpenQuoteModal: () => void;
   readonly onOpenLegalModal: (docType: LegalDocumentType) => void;
 }
@@ -17,7 +20,8 @@ export function FooterSection({
   brand,
   config,
   onSelectSection,
-  onSelectDomainId,
+  domainHref,
+  sectionHref,
   onOpenQuoteModal,
   onOpenLegalModal,
 }: FooterSectionProps) {
@@ -32,7 +36,7 @@ export function FooterSection({
           {/* Identité de marque */}
           <div className="sm:col-span-2 lg:col-span-4 lg:pr-8 lg:self-center">
             <a
-              href="#02_Hero"
+              href={sectionHref('02_Hero')}
               onClick={() => onSelectSection('02_Hero')}
               aria-label={`${brand.name} — ${brand.city}, retour en haut de page`}
               className="inline-flex rounded-md py-1 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#B79A62]"
@@ -50,16 +54,15 @@ export function FooterSection({
               {config.serviceLinks.map((link) => (
                 <li key={link.label}>
                   {link.domainId ? (
-                    <button
-                      type="button"
-                      onClick={() => onSelectDomainId(link.domainId!)}
-                      className="text-left text-[#F3F0E7]/85 hover:text-[#B79A62] transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#B79A62] rounded-xs cursor-pointer"
+                    <a
+                      href={domainHref(link.domainId)}
+                      className="text-[#F3F0E7]/85 hover:text-[#B79A62] transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#B79A62] rounded-xs"
                     >
                       {link.label}
-                    </button>
+                    </a>
                   ) : (
                     <a
-                      href={`#${link.targetId}`}
+                      href={link.targetId ? sectionHref(link.targetId) : '#'}
                       onClick={() => link.targetId && onSelectSection(link.targetId)}
                       className="text-[#F3F0E7]/85 hover:text-[#B79A62] transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#B79A62] rounded-xs"
                     >
@@ -80,7 +83,7 @@ export function FooterSection({
               {config.infoLinks.map((link) => (
                 <li key={link.targetId}>
                   <a
-                    href={`#${link.targetId}`}
+                    href={sectionHref(link.targetId)}
                     onClick={() => onSelectSection(link.targetId)}
                     className="text-[#F3F0E7]/85 hover:text-[#B79A62] transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#B79A62] rounded-xs"
                   >

@@ -36,6 +36,12 @@ export interface DomainCardItem {
   readonly ctaLabel: string;
   readonly imageSrc: string;
   readonly imageAlt: string;
+  /** Page dédiée : paragraphe d'introduction sous le titre. */
+  readonly pageIntro: string;
+  /** Page dédiée : titre de l'onglet / Google. */
+  readonly seoTitle: string;
+  /** Page dédiée : description affichée par Google. */
+  readonly seoDescription: string;
 }
 
 export interface DomainsConfig {
@@ -229,6 +235,11 @@ export const DOMAINS_CONFIG: DomainsConfig = {
       imageSrc: '/src/assets/images/domaine_serrurerie_1795289920360.jpg',
       imageAlt:
         'Cylindre de haute sécurité en acier brossé posé sur une porte blindée anthracite.',
+      pageIntro:
+        'Ouverture de porte, remplacement de serrure ou blindage : nous intervenons à Marseille et alentours pour sécuriser votre logement, votre commerce ou votre immeuble, avec un devis détaillé avant chaque intervention.',
+      seoTitle: 'Serrurier à Marseille — Serrurerie & portes blindées | Serrurerie de la République',
+      seoDescription:
+        'Ouverture de porte, remplacement de cylindres et serrures multipoints, blindage et portes blindées à Marseille. Devis détaillé avant intervention.',
     },
     {
       id: 'vitrerie',
@@ -246,6 +257,11 @@ export const DOMAINS_CONFIG: DomainsConfig = {
       imageSrc: '/src/assets/images/domaine_vitrerie_1795289921283.jpg',
       imageAlt:
         'Vitrier manipulant un double vitrage de vitrine à l’aide de ventouses professionnelles dans une rue de Marseille.',
+      pageIntro:
+        'Bris de glace, vitrine de commerce ou double vitrage à remplacer : nous mettons en sécurité, remplaçons à l’identique et posons vos vitrages et miroirs sur mesure à Marseille.',
+      seoTitle: 'Vitrier à Marseille — Vitrerie & miroiterie | Serrurerie de la République',
+      seoDescription:
+        'Mise en sécurité après bris de glace, remplacement de simple et double vitrage, vitrines commerciales et miroirs sur mesure à Marseille.',
     },
     {
       id: 'menuiserie',
@@ -263,6 +279,11 @@ export const DOMAINS_CONFIG: DomainsConfig = {
       imageSrc: '/src/assets/images/domaine_menuiserie_1795289934186.jpg',
       imageAlt:
         'Menuisier réglant la poignée et l’alignement d’une fenêtre en aluminium anthracite.',
+      pageIntro:
+        'Portes d’entrée, fenêtres et portes-fenêtres en aluminium, PVC, bois ou métal : fourniture, pose, réglage et réparation pour gagner en confort, en isolation et en sécurité.',
+      seoTitle: 'Menuiserie à Marseille — Portes & fenêtres alu, PVC, bois | Serrurerie de la République',
+      seoDescription:
+        'Fourniture, pose et réparation de portes d’entrée, fenêtres et portes-fenêtres en aluminium, PVC, bois et métal à Marseille.',
     },
     {
       id: 'fermetures',
@@ -280,6 +301,11 @@ export const DOMAINS_CONFIG: DomainsConfig = {
       imageSrc: '/src/assets/images/domaine_fermetures_1795289921534.jpg',
       imageAlt:
         'Rideau métallique motorisé et porte de garage sectionnelle anthracite intégrés dans une façade en pierre claire.',
+      pageIntro:
+        'Rideaux métalliques de commerce, volets roulants et portes de garage : dépannage, motorisation, installation et entretien pour des fermetures fiables au quotidien.',
+      seoTitle: 'Rideaux métalliques, volets & portes de garage à Marseille | Serrurerie de la République',
+      seoDescription:
+        'Dépannage et motorisation de rideaux métalliques, installation et réparation de volets roulants et de portes de garage à Marseille.',
     },
   ],
 };
@@ -543,4 +569,36 @@ export const WHATSAPP_CONFIG: WhatsAppConfig = {
   ariaLabel: 'Contacter Serrurerie de la République sur WhatsApp pour une urgence',
   prefilledMessage:
     'Bonjour Serrurerie de la République, j’ai besoin d’une intervention urgente à Marseille.',
+};
+
+/** Textes communs aux pages métiers (une page par domaine). */
+export interface DomainPageConfig {
+  readonly breadcrumbHomeLabel: string;
+  readonly breadcrumbDomainsLabel: string;
+  readonly prestationsKicker: string;
+  readonly prestationsTitle: string;
+  readonly methodKicker: string;
+  readonly methodTitle: string;
+  readonly methodSteps: readonly { readonly title: string; readonly text: string }[];
+  readonly otherDomainsKicker: string;
+  readonly otherDomainsTitle: string;
+  readonly quoteCtaLabel: string;
+}
+
+export const DOMAIN_PAGE_CONFIG: DomainPageConfig = {
+  breadcrumbHomeLabel: 'Accueil',
+  breadcrumbDomainsLabel: 'Nos domaines',
+  prestationsKicker: 'Prestations',
+  prestationsTitle: 'Ce que nous réalisons pour vous.',
+  methodKicker: 'Notre méthode',
+  methodTitle: 'Une intervention claire, de A à Z.',
+  methodSteps: [
+    { title: 'Écoute & diagnostic', text: 'Nous analysons votre besoin, en boutique ou sur place.' },
+    { title: 'Devis détaillé', text: 'Un devis clair, validé avec vous avant toute intervention.' },
+    { title: 'Intervention', text: 'Travaux réalisés avec soin, conformément au devis validé.' },
+    { title: 'Suivi', text: 'Conseils d’entretien et accompagnement, y compris auprès de votre assureur.' },
+  ],
+  otherDomainsKicker: 'Nos autres domaines',
+  otherDomainsTitle: 'Un même interlocuteur pour tous vos accès.',
+  quoteCtaLabel: 'Demander un devis',
 };
