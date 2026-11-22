@@ -50,20 +50,22 @@ export function FooterSection({
       {!hideCta && (
         <div className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-10 pt-10 sm:pt-14">
           <div className="relative overflow-hidden rounded-3xl bg-[#F7F5F0] p-5 sm:p-8 lg:p-10">
-            {/* Photo : bandeau courbé (mobile) / coin haut droit arrondi avec filet doré (bureau) */}
-            <div className="kb-curve relative -mx-5 -mt-5 mb-5 sm:-mx-8 sm:-mt-8 lg:hidden">
-              <img src={CTA_IMAGE} alt="" loading="lazy" className="h-[150px] sm:h-[200px] w-full object-cover" />
-            </div>
-            <div aria-hidden="true" className="hidden lg:block absolute right-0 top-0 h-[230px] w-[40%] bg-[#B79A62] [clip-path:ellipse(100%_100%_at_100%_0%)]">
-              <img
-                src={CTA_IMAGE}
-                alt=""
-                loading="lazy"
-                className="h-[226px] w-[calc(100%-4px)] ml-auto object-cover [clip-path:ellipse(100%_100%_at_100%_0%)]"
-              />
+            {/* Photo en haut à droite, découpée par une vague avec filet doré (mobile et bureau) */}
+            <div aria-hidden="true" className="absolute right-0 top-0 h-[150px] w-[90%] sm:h-[210px] sm:w-[70%] lg:h-[250px] lg:w-[50%]">
+              <img src={CTA_IMAGE} alt="" loading="lazy" className="h-full w-full object-cover object-[45%_45%]" />
+              <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 h-full w-full">
+                <path d="M0 0 V100 H100 C78 100 66 92 54 70 C42 46 30 26 0 18 Z" fill="#F7F5F0" />
+                <path
+                  d="M100 100 C78 100 66 92 54 70 C42 46 30 26 0 18"
+                  fill="none"
+                  stroke="#B79A62"
+                  strokeWidth="2"
+                  vectorEffect="non-scaling-stroke"
+                />
+              </svg>
             </div>
 
-            <div className="relative max-w-2xl lg:max-w-[56%]">
+            <div className="relative max-w-2xl pt-[150px] sm:pt-[196px] lg:pt-0 lg:max-w-[54%]">
               <p className="section-kicker flex items-center gap-3 text-[#7D612D]">
                 <span aria-hidden="true" className="h-0.5 w-8 bg-[#B79A62]" />
                 {config.ctaKicker}
