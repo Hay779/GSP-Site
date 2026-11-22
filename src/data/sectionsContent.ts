@@ -117,6 +117,16 @@ export interface AfterIncidentConfig {
   readonly imageAlt: string;
   readonly steps: readonly AfterIncidentStep[];
   readonly insuranceNotice: InsuranceNoticeConfig;
+  /** Bandeau photo du bloc d'accueil. */
+  readonly bannerSrc: string;
+  readonly bannerAlt: string;
+  readonly services: readonly {
+    readonly title: string;
+    readonly text: string;
+    readonly icon: 'shield' | 'wrench' | 'file';
+    readonly imageSrc: string;
+  }[];
+  readonly stepsTitle: string;
 }
 
 /** Textes du bloc avis (les avis eux-mêmes sont dans data/reviewsContent.ts). */
@@ -376,15 +386,16 @@ export const BRANDS_CONFIG: BrandsConfig = {
 
 export const AFTER_INCIDENT_CONFIG: AfterIncidentConfig = {
   kicker: 'Après sinistre',
-  headlineLines: ['Du premier diagnostic', 'à la remise en état.'],
-  subtitle: 'Effraction, vandalisme ou bris de glace : un accompagnement à chaque étape.',
+  headlineLines: ['Un sinistre ?', 'Nous vous accompagnons.'],
+  subtitle:
+    'Effraction, vandalisme ou bris de glace\u00A0: une prise en charge claire, rapide et structurée.',
   primaryCtaLabel: 'Décrire mon besoin',
   secondaryCtaLabel: 'Envoyer des photos',
   imageSrc: '/src/assets/images/apres_sinistre_diagnostic_1795291186729.jpg',
   imageAlt:
     'Artisan serrurier réalisant un diagnostic sur tablette devant une gâche de porte endommagée avec une cliente à Marseille.',
   steps: [
-    { number: '01', label: 'Diagnostic et mise en sécurité' },
+    { number: '01', label: 'Diagnostic et sécurisation' },
     { number: '02', label: 'Devis détaillé et reportage photo' },
     { number: '03', label: 'Réparation ou remplacement' },
     { number: '04', label: 'Suivi administratif du dossier' },
@@ -397,6 +408,29 @@ export const AFTER_INCIDENT_CONFIG: AfterIncidentConfig = {
       'Reportage photo, devis détaillé et facture conformes aux attentes de votre assureur.',
     ctaLabel: 'Envoyer mes photos',
   },
+  bannerSrc: '/src/assets/images/as_banniere.jpg',
+  bannerAlt: 'Porte d’entrée forcée à côté d’une fenêtre au vitrage brisé.',
+  services: [
+    {
+      title: 'Mise en sécurité',
+      text: 'Sécurisation rapide de vos accès.',
+      icon: 'shield',
+      imageSrc: '/src/assets/images/as_securite.jpg',
+    },
+    {
+      title: 'Réparation',
+      text: 'Serrure, porte, vitrage, fermeture.',
+      icon: 'wrench',
+      imageSrc: '/src/assets/images/as_reparation.jpg',
+    },
+    {
+      title: 'Dossier assurance',
+      text: 'Devis, photos et facture pour vos démarches.',
+      icon: 'file',
+      imageSrc: '/src/assets/images/as_assurance.jpg',
+    },
+  ],
+  stepsTitle: 'Notre accompagnement en 4 étapes',
 };
 
 export const REVIEWS_CONFIG: ReviewsConfig = {
