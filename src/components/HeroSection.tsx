@@ -110,7 +110,7 @@ export function HeroSection({
       id="02_Hero"
       data-section="02_Hero"
       aria-labelledby="02_Hero-title"
-      className="relative w-full overflow-hidden bg-[#1C1F21] scroll-mt-[74px] lg:scroll-mt-[88px] min-h-[560px] sm:min-h-[620px] lg:min-h-[min(calc(100svh-88px),740px)] flex items-center"
+      className="relative w-full overflow-hidden bg-[#1C1F21] scroll-mt-[74px] lg:scroll-mt-[88px] min-h-[640px] sm:min-h-[660px] lg:min-h-[min(calc(100svh-88px),740px)] flex items-end lg:items-center"
     >
       {/* Couche média plein écran : vidéo HTML5 + poster artisanal avec parallaxe immersif au scroll */}
       <div
@@ -139,7 +139,7 @@ export function HeroSection({
               alt={config.media.posterAlt}
               referrerPolicy="no-referrer"
               onError={() => setPosterFailed(true)}
-              className="h-full w-full object-cover object-[72%_32%] sm:object-[68%_38%] lg:object-[70%_40%]"
+              className="h-full w-full object-cover object-[80%_30%] sm:object-[72%_36%] lg:object-[70%_40%]"
             />
           )}
 
@@ -168,7 +168,7 @@ export function HeroSection({
         </motion.div>
 
         {/* Voile directionnel calibré pour garantir un contraste WCAG AA sur tout contenu vidéo */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#1C1F21] via-[#1C1F21]/82 to-[#1C1F21]/45 lg:hidden" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_top,#1C1F21_0%,#1C1F21_42%,rgba(28,31,33,0.78)_62%,rgba(28,31,33,0.15)_100%)] lg:hidden" />
         <div className="hidden lg:block absolute inset-0 bg-[linear-gradient(90deg,#1C1F21_0%,#1C1F21_28%,rgba(28,31,33,0.92)_44%,rgba(28,31,33,0.48)_62%,rgba(28,31,33,0.12)_100%)]" />
         <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#1C1F21]/90 via-[#1C1F21]/35 to-transparent" />
         {/* Assombrissement progressif subtil au défilement pour fondre 02_Hero vers la section suivante */}
@@ -182,7 +182,7 @@ export function HeroSection({
       <motion.div
         data-testid="hero-parallax-content"
         style={prefersReducedMotion ? undefined : { y: contentParallaxY }}
-        className="relative z-10 mx-auto w-full max-w-[1280px] px-5 sm:px-8 lg:px-10 py-16 sm:py-20 lg:py-24 will-change-transform"
+        className="relative z-10 mx-auto w-full max-w-[1280px] px-5 sm:px-8 lg:px-10 pt-32 pb-12 sm:pt-56 sm:pb-16 lg:py-24 will-change-transform"
       >
         <div className="flex flex-col items-start max-w-[640px]">
           <motion.p
