@@ -6,13 +6,13 @@ import {
   Blinds,
   Check,
   ChevronLeft,
-  ClipboardList,
   KeyRound,
   Lock,
   MapPin,
   Phone,
   ShieldAlert,
   ShieldCheck,
+  X,
   type LucideIcon,
 } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
@@ -35,6 +35,7 @@ import {
   type QuoteWizardErrors,
 } from '../utils/quoteWizard';
 import { hrefForHome, hrefForPage, type RouterMode } from '../utils/router';
+import { BrandMark } from './BrandMark';
 import { checkServiceSector } from '../utils/serviceArea';
 import { REVEAL_EASE } from '../utils/scrollReveal';
 import { PageHero, usePageMeta } from './PageHero';
@@ -219,7 +220,43 @@ export function QuotePage({ brand, routerMode, prefill }: QuotePageProps) {
 
   return (
     <>
-      {/* Ordinateur : en-tête de page. Mobile & tablette : en-tête compact dans le questionnaire. */}
+      {/* Mobile & tablette : barre du haut du questionnaire (titre, étape, progression, quitter) */}
+      <header className="lg:hidden sticky top-0 z-50 w-full bg-[#1C1F21]/95 backdrop-blur-md">
+        <div className="flex h-[60px] items-center gap-3 px-4 sm:px-8">
+          <a href={hrefForHome(routerMode)} aria-label={`${brand.name} — retour à l’accueil`} className="shrink-0">
+            <BrandMark brand={brand} compact />
+          </a>
+          <div className="min-w-0 flex-1 border-l border-[#F3F0E7]/15 pl-3">
+            <h1 className="truncate font-display text-[15px] font-semibold leading-tight text-[#F3F0E7]">Votre devis</h1>
+            <p className="text-[11.5px] font-medium uppercase tracking-[0.12em] text-[#B79A62]">
+              {reference ? 'Demande envoyée' : `Étape ${stepIndex + 1} / ${QUOTE_STEPS.length}`}
+            </p>
+          </div>
+          <a
+            href={brand.phoneHref}
+            aria-label={`Appeler le ${brand.phoneDisplay}`}
+            className="grid h-10 w-10 shrink-0 place-items-center rounded-full text-[#B79A62]"
+          >
+            <Phone className="h-[19px] w-[19px]" strokeWidth={1.9} aria-hidden="true" />
+          </a>
+          <a
+            href={hrefForHome(routerMode)}
+            aria-label="Quitter le devis"
+            className="grid h-10 w-10 shrink-0 place-items-center rounded-full text-[#F3F0E7]/80"
+          >
+            <X className="h-[22px] w-[22px]" strokeWidth={1.6} aria-hidden="true" />
+          </a>
+        </div>
+        {/* Progression : fin trait laiton */}
+        <div className="h-[2px] w-full bg-[#F3F0E7]/10" aria-hidden="true">
+          <div
+            className="h-full bg-[#B79A62] transition-[width] duration-300"
+            style={{ width: `${reference ? 100 : ((stepIndex + 1) / QUOTE_STEPS.length) * 100}%` }}
+          />
+        </div>
+      </header>
+
+      {/* Ordinateur : en-tête de page */}
       <div className="hidden lg:block">
       <PageHero
         compact
@@ -231,42 +268,23 @@ export function QuotePage({ brand, routerMode, prefill }: QuotePageProps) {
       </div>
 
       <section id="page-devis" aria-label="Questionnaire de devis" className="w-full lg:border-t lg:border-[#B79A62]/45 bg-[#F7F5F0] text-[#1C1F21]">
-        <div className="mx-auto grid max-w-[1280px] grid-cols-1 gap-4 px-4 pt-4 pb-10 sm:gap-5 sm:px-8 sm:pt-6 sm:pb-14 lg:grid-cols-12 lg:gap-12 lg:px-10 lg:py-20 lg:gap-12 lg:px-10 lg:py-20">
+        <div className="mx-auto grid max-w-[1280px] grid-cols-1 gap-3 px-4 pt-3 pb-10 sm:gap-5 sm:px-8 sm:pt-6 sm:pb-14 lg:grid-cols-12 lg:gap-12 lg:px-10 lg:py-20 lg:gap-12 lg:px-10 lg:py-20">
           {/* Étapes */}
           <aside className="lg:col-span-4">
-            {/* Mobile & tablette : en-tête compact + progression */}
-            <div className="lg:hidden">
-              <div className="flex items-center gap-3">
-                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#1C1F21] text-[#B79A62]">
-                  <ClipboardList className="h-5 w-5" strokeWidth={1.8} aria-hidden="true" />
-                </span>
-                <div className="min-w-0">
-                  <h1 className="font-display text-[20px] font-semibold leading-tight text-[#1C1F21]">Votre devis en ligne</h1>
-                  <p className="text-[13px] text-[#1C1F21]/65">5 questions, puis nous vous recontactons.</p>
-                </div>
-              </div>
-              <ul className="mt-2.5 flex flex-wrap gap-x-4 gap-y-1 text-[12.5px] text-[#1C1F21]/75">
-                <li className="inline-flex items-center gap-1.5">
-                  <ShieldCheck className="h-3.5 w-3.5 text-[#7D612D]" aria-hidden="true" />
-                  Devis validé avant intervention
-                </li>
-                <li className="inline-flex items-center gap-1.5">
-                  <Phone className="h-3.5 w-3.5 text-[#7D612D]" aria-hidden="true" />
-                  Urgence ?{' '}
-                  <a href={brand.phoneHref} className="font-semibold tabular-nums text-[#7D612D] underline">
-                    {brand.phoneDisplay}
-                  </a>
-                </li>
-              </ul>
-              <p className="mt-3 text-[12px] font-semibold uppercase tracking-[0.16em] text-[#7D612D]">
-                {reference ? 'Demande envoyée' : `Étape ${stepIndex + 1} sur ${QUOTE_STEPS.length}`}
-              </p>
-              <div className="mt-2 flex gap-1.5" aria-hidden="true">
-                {QUOTE_STEPS.map((s, i) => (
-                  <span key={s.id} className={`h-1 flex-1 rounded-full ${reference || i <= stepIndex ? 'bg-[#B79A62]' : 'bg-[#1C1F21]/12'}`} />
-                ))}
-              </div>
-            </div>
+            {/* Mobile & tablette : 2 repères seulement (titre et étape sont dans la barre du haut) */}
+            <ul className="lg:hidden flex flex-wrap gap-x-4 gap-y-1 text-[12.5px] text-[#1C1F21]/75">
+              <li className="inline-flex items-center gap-1.5">
+                <ShieldCheck className="h-3.5 w-3.5 text-[#7D612D]" aria-hidden="true" />
+                Devis validé avant intervention
+              </li>
+              <li className="inline-flex items-center gap-1.5">
+                <Phone className="h-3.5 w-3.5 text-[#7D612D]" aria-hidden="true" />
+                Urgence ?{' '}
+                <a href={brand.phoneHref} className="font-semibold tabular-nums text-[#7D612D] underline">
+                  {brand.phoneDisplay}
+                </a>
+              </li>
+            </ul>
 
             {/* Ordinateur : liste des étapes */}
             <ol className="hidden lg:flex lg:sticky lg:top-28 flex-col gap-1" aria-label="Étapes du questionnaire">

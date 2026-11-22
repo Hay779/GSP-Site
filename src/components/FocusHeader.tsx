@@ -11,7 +11,7 @@ export function FocusHeader({ brand, homeHref }: { readonly brand: BrandConfig; 
     <header
       id="01_Entete"
       data-section="01_Entete"
-      className="sticky top-0 z-50 w-full border-b border-[#F3F0E7]/14 bg-[#1C1F21]/95 backdrop-blur-md"
+      className="hidden lg:block sticky top-0 z-50 w-full border-b border-[#F3F0E7]/14 bg-[#1C1F21]/95 backdrop-blur-md"
     >
       <div className="mx-auto flex h-[74px] lg:h-[88px] max-w-[1280px] items-center justify-between gap-4 px-5 sm:px-8 lg:px-10">
         <a
@@ -33,10 +33,10 @@ export function FocusHeader({ brand, homeHref }: { readonly brand: BrandConfig; 
           </a>
           <a
             href={homeHref}
-            className="inline-flex h-11 items-center justify-center gap-2 rounded-lg border border-[#F3F0E7]/25 px-3.5 sm:px-4 text-[14.5px] font-medium text-[#F3F0E7]/85 hover:border-[#B79A62] hover:text-[#F3F0E7] transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62]"
+            className="inline-flex h-11 items-center gap-2 px-2 text-[14.5px] font-medium text-[#F3F0E7]/75 hover:text-[#F3F0E7] transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62] rounded-md"
           >
-            <X className="h-4 w-4" aria-hidden="true" />
-            <span>Quitter<span className="hidden sm:inline"> le devis</span></span>
+            <X className="h-[18px] w-[18px]" strokeWidth={1.6} aria-hidden="true" />
+            <span>Quitter le devis</span>
           </a>
         </div>
       </div>
