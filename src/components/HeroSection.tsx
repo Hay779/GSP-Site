@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { ClipboardCheck, KeyRound, Pause, Play, ShieldCheck } from 'lucide-react';
+import { ClipboardCheck, KeyRound, Pause, Phone, Play, ShieldCheck } from 'lucide-react';
 import { motion, useReducedMotion, useScroll, useSpring, useTransform } from 'motion/react';
 import type { CommitmentIconKey, HeroConfig } from '../data/heroConfig';
 import { HERO_PARALLAX_CONFIG } from '../utils/heroParallax';
@@ -314,10 +314,12 @@ export function HeroSection({
 
             <a
               href={config.secondaryCtaHref}
-              onClick={() => onSelectSection(config.secondaryCtaTargetId)}
-              className="inline-flex min-h-[50px] w-full sm:w-auto items-center justify-center rounded-lg border border-[#F3F0E7]/65 bg-[#1C1F21]/35 hover:bg-[#F3F0E7]/10 hover:border-[#F3F0E7] px-5 sm:px-7 py-3 text-[15px] sm:text-[16px] font-medium text-[#F3F0E7] whitespace-nowrap shrink-0 transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62]"
+              className="inline-flex min-h-[50px] w-full sm:w-auto items-center justify-center gap-2.5 rounded-lg border border-[#F3F0E7]/65 bg-[#1C1F21]/35 hover:bg-[#F3F0E7]/10 hover:border-[#F3F0E7] px-5 sm:px-7 py-3 text-[15px] sm:text-[16px] font-medium text-[#F3F0E7] whitespace-nowrap shrink-0 transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62]"
             >
-              {config.secondaryCtaLabel}
+              {config.secondaryCtaHref.startsWith('tel:') && (
+                <Phone className="h-4 w-4 shrink-0 text-[#B79A62]" strokeWidth={2} aria-hidden="true" />
+              )}
+              <span className="tabular-nums">{config.secondaryCtaLabel}</span>
             </a>
           </motion.div>
 

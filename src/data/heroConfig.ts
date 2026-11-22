@@ -1,5 +1,3 @@
-import type { SectionId } from '../utils/navigation';
-
 export type CommitmentIconKey = 'key' | 'clipboard' | 'shield';
 
 export interface HeroCommitment {
@@ -35,21 +33,20 @@ export interface HeroConfig {
   readonly subtitle: string;
   readonly primaryCtaLabel: string;
   readonly secondaryCtaLabel: string;
-  readonly secondaryCtaTargetId: SectionId;
-  readonly secondaryCtaHref: `#${SectionId}`;
+  /** Lien du second bouton (ex. téléphone « tel:… » ou ancre « #section »). */
+  readonly secondaryCtaHref: string;
   readonly commitments: readonly HeroCommitment[];
   readonly media: HeroMediaConfig;
 }
 
 export const HERO_CONFIG: HeroConfig = {
-  kicker: 'Serrurerie à Marseille',
-  headlineLines: ['Vos clés. Vos accès.', 'Notre savoir-faire.'],
+  kicker: 'Serrurerie · Vitrerie · Menuiserie',
+  headlineLines: ['Votre serrurier', 'à Marseille.'],
   subtitle:
-    'Serrurerie, vitrerie, menuiserie et fermetures. En boutique, chez vous et dans vos locaux.',
+    'Dépannage, changement de serrure, doubles de clés et badges, vitrerie et fermetures — en boutique (République & Lodi) ou chez vous.',
   primaryCtaLabel: 'Demander un devis',
-  secondaryCtaLabel: 'Trouver une agence',
-  secondaryCtaTargetId: '10_Nos_Agences',
-  secondaryCtaHref: '#10_Nos_Agences',
+  secondaryCtaLabel: 'Appeler le 04 91 90 51 65',
+  secondaryCtaHref: 'tel:+33491905165',
   commitments: [
     { label: 'Conseils en boutique', icon: 'key' },
     { label: 'Devis détaillé', icon: 'clipboard' },
