@@ -54,6 +54,8 @@ export interface PageHeroDefinition {
   readonly imagePosition?: string;
   /** En-tête réduit (pages légales). */
   readonly compact?: boolean;
+  /** Masque l'en-tête sur mobile et tablette (le contenu commence directement). */
+  readonly hideOnMobile?: boolean;
   /** Libellé de la page dans le fil d'Ariane (par défaut : le titre). */
   readonly breadcrumbLabel?: string;
   /** Niveau intermédiaire du fil d'Ariane (ex. « Nos domaines »). */
@@ -103,6 +105,7 @@ export type PageBlock =
   | ({ readonly type: 'insurance'; readonly id: string; readonly tone: 'dark' } & SectionHeading)
   | ({ readonly type: 'domains'; readonly id: string; readonly tone: 'light'; readonly excludeId?: DomainId } & SectionHeading)
   | ({ readonly type: 'contactChannels'; readonly id: string; readonly tone: 'light' } & SectionHeading)
+  | ({ readonly type: 'contactForm'; readonly id: string; readonly tone: 'light' } & SectionHeading)
   | ({ readonly type: 'legal'; readonly id: string; readonly tone: 'light'; readonly articles: readonly LegalArticle[] } & SectionHeading)
   | ({
       readonly type: 'cta';
@@ -528,18 +531,20 @@ export const THEMATIC_PAGES: Readonly<Record<BlockPageId, PageDefinition>> = {
       intro: CONTACT_PAGE_CONFIG.intro,
       imageSrc: HERO_CONFIG.media.slides[0]?.src,
       imagePosition: '72% 35%',
+      compact: true,
+      hideOnMobile: true,
       actions: [{ kind: 'quote' }, { kind: 'phone' }],
     },
     blocks: [
-      { type: 'agencies' },
-      { type: 'zone' },
       {
-        type: 'contactChannels',
+        type: 'contactForm',
         id: 'page-contact',
         tone: 'light',
-        kicker: CONTACT_PAGE_CONFIG.channelsKicker,
-        title: CONTACT_PAGE_CONFIG.channelsTitle,
+        kicker: 'Nous écrire',
+        title: 'Une question ? Écrivez-nous.',
       },
+      { type: 'zone' },
+      { type: 'agencies' },
       faqBlock('page-faq', 'dark', FAQ_CONFIG.items),
     ],
   },

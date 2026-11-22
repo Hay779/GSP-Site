@@ -26,6 +26,7 @@ import {
 import { buildCardRevealMotion, REVEAL_EASE, REVEAL_VIEWPORT } from '../utils/scrollReveal';
 import { buildWhatsAppUrl } from '../utils/whatsapp';
 import { AgenciesSection } from './AgenciesSection';
+import { ContactFormSection } from './ContactFormSection';
 import { FaqSection } from './FaqSection';
 import { InsuranceNotice } from './InsuranceNotice';
 import { ServiceIcon } from './KeysBadgesSection';
@@ -373,6 +374,18 @@ export function PageBlockView({ block, ctx }: { readonly block: PageBlock; reado
           <ContactChannels ctx={ctx} />
         </PageSection>
       );
+    case 'contactForm':
+      return (
+        <ContactFormSection
+          id={block.id}
+          kicker={block.kicker}
+          title={block.title}
+          brand={ctx.brand}
+          whatsapp={WHATSAPP_CONFIG}
+          agencies={AGENCIES_CONFIG.agencies}
+          routerMode={ctx.routerMode}
+        />
+      );
     case 'legal':
       return (
         <PageSection id={block.id} tone="light" kicker={block.kicker} title={block.title} subtitle={block.subtitle}>
@@ -422,6 +435,7 @@ export function PageRenderer({ page, ctx }: { readonly page: PageDefinition; rea
 
   return (
     <>
+      <div className={page.hero.hideOnMobile ? 'hidden lg:block' : undefined}>
       <PageHero
         kicker={page.hero.kicker}
         title={page.hero.title}
@@ -440,6 +454,7 @@ export function PageRenderer({ page, ctx }: { readonly page: PageDefinition; rea
           ) : undefined
         }
       />
+      </div>
       {page.blocks.map((block, index) => (
         <PageBlockView key={'id' in block ? block.id : `${block.type}-${index}`} block={block} ctx={ctx} />
       ))}
