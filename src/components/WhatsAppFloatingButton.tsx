@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import type { WhatsAppConfig } from '../data/sectionsContent';
 import { buildWhatsAppUrl } from '../utils/whatsapp';
@@ -22,11 +23,27 @@ function WhatsAppIcon({ className }: { readonly className?: string }) {
 export function WhatsAppFloatingButton({ config }: WhatsAppFloatingButtonProps) {
   const prefersReducedMotion = Boolean(useReducedMotion());
   const href = buildWhatsAppUrl(config.phoneDisplay, config.prefilledMessage);
+  // Sur mobile, le bouton n'apparaît qu'après un début de défilement
+  // (pour ne pas masquer le texte du haut de page).
+  const [revealed, setRevealed] = useState(false);
+
+  useEffect(() => {
+    const update = () => setRevealed(window.innerWidth >= 640 || window.scrollY > window.innerHeight * 0.5);
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    return () => {
+      window.removeEventListener('scroll', update);
+      window.removeEventListener('resize', update);
+    };
+  }, []);
 
   return (
     <div
       data-testid="whatsapp-floating-cta"
-      className="fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-40"
+      className={`fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 transition-all duration-300 ${
+        revealed ? 'opacity-100 translate-y-0' : 'pointer-events-none opacity-0 translate-y-4'
+      }`}
     >
       <div className="group relative inline-flex items-center">
         {/* Étiquette contextuelle au survol / focus (bureau) */}
@@ -37,7 +54,7 @@ export function WhatsAppFloatingButton({ config }: WhatsAppFloatingButtonProps) 
           {config.label}
         </span>
 
-        <div className="relative inline-flex h-14 w-14 items-center justify-center">
+        <div className="relative inline-flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center">
           {/* Anneau d'impulsion concentrique */}
           {!prefersReducedMotion && (
             <motion.span
@@ -61,9 +78,9 @@ export function WhatsAppFloatingButton({ config }: WhatsAppFloatingButtonProps) 
             aria-label={config.ariaLabel}
             whileHover={prefersReducedMotion ? undefined : { scale: 1.05 }}
             whileTap={prefersReducedMotion ? undefined : { scale: 0.96 }}
-            className="relative inline-flex h-14 w-14 items-center justify-center rounded-full bg-[#1FA855] hover:bg-[#23BC5F] active:bg-[#1A9249] text-white shadow-[0_10px_28px_rgba(0,0,0,0.45)] ring-1 ring-white/20 transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[#B79A62]"
+            className="relative inline-flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-[#1FA855] hover:bg-[#23BC5F] active:bg-[#1A9249] text-white shadow-[0_10px_28px_rgba(0,0,0,0.45)] ring-1 ring-white/20 transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[#B79A62]"
           >
-            <WhatsAppIcon className="h-[26px] w-[26px] shrink-0" />
+            <WhatsAppIcon className="h-6 w-6 sm:h-[26px] sm:w-[26px] shrink-0" />
           </motion.a>
         </div>
       </div>

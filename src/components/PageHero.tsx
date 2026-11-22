@@ -67,17 +67,27 @@ export function PageHero({
     },
   });
 
+  // Sur mobile, la photo s'affiche en bandeau au-dessus du texte (rien n'est posé sur l'image).
+  const hasPhoto = Boolean(imageSrc) && !compact && !imageFailed;
+
   return (
     <section
       id="page-hero"
       aria-labelledby="page-hero-title"
-      className={`relative w-full overflow-hidden bg-[#1C1F21] flex items-end ${
-        compact ? 'min-h-[340px] lg:min-h-[380px]' : 'min-h-[560px] lg:min-h-[620px]'
+      className={`relative w-full overflow-hidden bg-[#1C1F21] flex flex-col lg:flex-row lg:items-end ${
+        compact ? 'min-h-[300px] lg:min-h-[380px] justify-end' : hasPhoto ? 'lg:min-h-[620px]' : 'min-h-[460px] lg:min-h-[620px] justify-end'
       }`}
     >
-      <div aria-hidden="true" className="absolute inset-0">
+      <div
+        aria-hidden="true"
+        className={
+          hasPhoto
+            ? 'relative h-[38svh] min-h-[220px] max-h-[360px] w-full shrink-0 overflow-hidden lg:absolute lg:inset-0 lg:h-auto lg:min-h-0 lg:max-h-none'
+            : 'absolute inset-0'
+        }
+      >
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_75%_40%,rgba(183,154,98,0.16),rgba(41,45,47,0.45)_45%,rgba(28,31,33,1)_85%)]" />
-        {imageSrc && !compact && !imageFailed && (
+        {hasPhoto && imageSrc && (
           <motion.img
             key={imageSrc}
             src={imageSrc}
@@ -91,11 +101,13 @@ export function PageHero({
             className="absolute inset-0 h-full w-full object-cover will-change-transform"
           />
         )}
-        <div className="absolute inset-0 bg-[linear-gradient(to_top,#1C1F21_0%,#1C1F21_30%,rgba(28,31,33,0.7)_60%,rgba(28,31,33,0.35)_100%)] lg:bg-[linear-gradient(90deg,#1C1F21_0%,#1C1F21_30%,rgba(28,31,33,0.85)_48%,rgba(28,31,33,0.3)_75%,rgba(28,31,33,0.15)_100%)]" />
+        {/* Mobile : simple fondu en bas de la photo. Ordinateur : voile latéral sous le texte. */}
+        <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#1C1F21] to-transparent lg:hidden" />
+        <div className="hidden lg:block absolute inset-0 bg-[linear-gradient(90deg,#1C1F21_0%,#1C1F21_30%,rgba(28,31,33,0.85)_48%,rgba(28,31,33,0.3)_75%,rgba(28,31,33,0.15)_100%)]" />
         <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#1C1F21] to-transparent" />
       </div>
 
-      <div className={`relative z-10 mx-auto w-full max-w-[1280px] px-5 sm:px-8 lg:px-10 ${compact ? 'pt-20 pb-12 lg:pb-14' : 'pt-28 pb-14 sm:pb-16 lg:py-24'}`}>
+      <div className={`relative z-10 mx-auto w-full max-w-[1280px] px-5 sm:px-8 lg:px-10 ${compact ? 'pt-20 pb-12 lg:pb-14' : hasPhoto ? 'pt-3 pb-12 sm:pb-14 lg:py-24' : 'pt-28 pb-14 sm:pb-16 lg:py-24'}`}>
         <nav aria-label="Fil d’Ariane" className="mb-6">
           <ol className="flex flex-wrap items-center gap-1.5 text-[13px] text-[#F3F0E7]/70">
             {breadcrumb.map((item, index) => (

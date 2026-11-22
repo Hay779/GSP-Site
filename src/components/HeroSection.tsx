@@ -145,12 +145,12 @@ export function HeroSection({
       id="02_Hero"
       data-section="02_Hero"
       aria-labelledby="02_Hero-title"
-      className="relative w-full overflow-hidden bg-[#1C1F21] scroll-mt-[74px] lg:scroll-mt-[88px] min-h-[640px] sm:min-h-[660px] lg:min-h-[min(calc(100svh-88px),740px)] flex items-end lg:items-center"
+      className="relative w-full overflow-hidden bg-[#1C1F21] scroll-mt-[74px] lg:scroll-mt-[88px] flex flex-col lg:flex-row lg:min-h-[min(calc(100svh-88px),740px)] lg:items-center"
     >
       {/* Couche média plein écran : vidéo HTML5 + poster artisanal avec parallaxe immersif au scroll */}
       <div
         data-testid="hero-media-layer"
-        className="absolute inset-0 z-0 overflow-hidden bg-[#1C1F21]"
+        className="relative h-[54svh] min-h-[300px] max-h-[520px] w-full shrink-0 lg:absolute lg:inset-0 lg:h-auto lg:min-h-0 lg:max-h-none z-0 overflow-hidden bg-[#1C1F21]"
         aria-hidden="true"
       >
         {/* Repli stylisé si ni vidéo ni poster ne chargent */}
@@ -213,11 +213,11 @@ export function HeroSection({
         </motion.div>
 
         {/* Voile directionnel calibré pour garantir un contraste WCAG AA sur tout contenu vidéo */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_top,#1C1F21_0%,#1C1F21_42%,rgba(28,31,33,0.78)_62%,rgba(28,31,33,0.15)_100%)] lg:hidden" />
+        <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#1C1F21] via-[#1C1F21]/45 to-transparent lg:hidden" />
         <div className="hidden lg:block absolute inset-0 bg-[linear-gradient(90deg,#1C1F21_0%,#1C1F21_28%,rgba(28,31,33,0.92)_44%,rgba(28,31,33,0.48)_62%,rgba(28,31,33,0.12)_100%)]" />
         {/* Voile haut (mobile) pour la lisibilité de l'indicateur du diaporama */}
-        <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-[#1C1F21]/80 via-[#1C1F21]/35 to-transparent lg:hidden" />
-        <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#1C1F21]/90 via-[#1C1F21]/35 to-transparent" />
+        <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#1C1F21]/55 to-transparent lg:hidden" />
+        <div className="hidden lg:block absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#1C1F21]/90 via-[#1C1F21]/35 to-transparent" />
         {/* Assombrissement progressif subtil au défilement pour fondre 02_Hero vers la section suivante */}
         <motion.div
           style={prefersReducedMotion ? undefined : { opacity: depthScrimOpacity }}
@@ -229,7 +229,7 @@ export function HeroSection({
       <motion.div
         data-testid="hero-parallax-content"
         style={prefersReducedMotion ? undefined : { y: contentParallaxY }}
-        className="relative z-10 mx-auto w-full max-w-[1280px] px-5 sm:px-8 lg:px-10 pt-32 pb-12 sm:pt-56 sm:pb-16 lg:py-24 will-change-transform"
+        className="relative z-10 mx-auto w-full max-w-[1280px] px-5 sm:px-8 lg:px-10 pt-1 pb-12 sm:pt-2 sm:pb-14 lg:py-24 will-change-transform"
       >
         <div className="flex flex-col items-start max-w-[640px]">
           <motion.p
@@ -297,13 +297,13 @@ export function HeroSection({
               delay: prefersReducedMotion ? 0 : 0.4,
               ease: REVEAL_EASE,
             }}
-            className="mt-8 flex flex-wrap items-center gap-3 sm:gap-4 w-full sm:w-auto"
+            className="mt-7 sm:mt-8 flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-3 sm:gap-4 w-full sm:w-auto"
           >
             <button
               ref={quoteTriggerRef}
               type="button"
               onClick={onOpenQuoteModal}
-              className="group relative overflow-hidden inline-flex min-h-[48px] flex-1 sm:flex-initial items-center justify-center rounded-lg bg-[#B79A62] hover:bg-[#C6AA73] active:bg-[#A68952] px-5 sm:px-7 py-3 text-[15px] sm:text-[16px] font-semibold text-[#1C1F21] whitespace-nowrap shrink-0 transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F3F0E7] cursor-pointer"
+              className="group relative overflow-hidden inline-flex min-h-[50px] w-full sm:w-auto items-center justify-center rounded-lg bg-[#B79A62] hover:bg-[#C6AA73] active:bg-[#A68952] px-5 sm:px-7 py-3 text-[15px] sm:text-[16px] font-semibold text-[#1C1F21] whitespace-nowrap shrink-0 transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F3F0E7] cursor-pointer"
             >
               <span
                 aria-hidden="true"
@@ -315,7 +315,7 @@ export function HeroSection({
             <a
               href={config.secondaryCtaHref}
               onClick={() => onSelectSection(config.secondaryCtaTargetId)}
-              className="inline-flex min-h-[48px] flex-1 sm:flex-initial items-center justify-center rounded-lg border border-[#F3F0E7]/65 bg-[#1C1F21]/35 hover:bg-[#F3F0E7]/10 hover:border-[#F3F0E7] px-5 sm:px-7 py-3 text-[15px] sm:text-[16px] font-medium text-[#F3F0E7] whitespace-nowrap shrink-0 transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62]"
+              className="inline-flex min-h-[50px] w-full sm:w-auto items-center justify-center rounded-lg border border-[#F3F0E7]/65 bg-[#1C1F21]/35 hover:bg-[#F3F0E7]/10 hover:border-[#F3F0E7] px-5 sm:px-7 py-3 text-[15px] sm:text-[16px] font-medium text-[#F3F0E7] whitespace-nowrap shrink-0 transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62]"
             >
               {config.secondaryCtaLabel}
             </a>
@@ -331,12 +331,12 @@ export function HeroSection({
               delay: prefersReducedMotion ? 0 : 0.5,
               ease: REVEAL_EASE,
             }}
-            className="mt-10 sm:mt-12 flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-3.5 sm:gap-y-3 sm:gap-x-0 border-t border-[#F3F0E7]/15 pt-6 w-full"
+            className="mt-8 sm:mt-12 flex flex-wrap items-center gap-x-5 gap-y-2.5 sm:gap-y-3 sm:gap-x-0 border-t border-[#F3F0E7]/15 pt-5 sm:pt-6 w-full"
           >
             {config.commitments.map((item, index) => (
               <li
                 key={item.label}
-                className={`flex items-center gap-2.5 text-[14px] sm:text-[15px] text-[#F3F0E7]/90 whitespace-nowrap ${
+                className={`flex items-center gap-2 sm:gap-2.5 text-[13.5px] sm:text-[15px] text-[#F3F0E7]/85 whitespace-nowrap ${
                   index > 0
                     ? 'sm:border-l sm:border-[#F3F0E7]/20 sm:pl-5 sm:ml-5'
                     : ''
@@ -352,7 +352,7 @@ export function HeroSection({
 
       {/* Indicateur du diaporama + contrôle lecture/pause (vidéo ou diaporama) */}
       {(hasSlideshow || hasVideoSource) && (
-        <div className="pointer-events-none absolute inset-x-0 top-5 lg:top-auto lg:bottom-8 z-20">
+        <div className="pointer-events-none absolute inset-x-0 top-[calc(min(max(54svh,300px),520px)-62px)] lg:top-auto lg:bottom-8 z-20">
           <div className="pointer-events-auto mx-auto flex max-w-[1280px] items-center justify-between lg:justify-end gap-5 px-5 sm:px-8 lg:px-10">
             {hasSlideshow && (
               <HeroSlideshowIndicator
