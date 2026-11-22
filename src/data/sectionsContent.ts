@@ -92,25 +92,11 @@ export interface AfterIncidentConfig {
   readonly insuranceNotice: InsuranceNoticeConfig;
 }
 
-export interface ReviewItem {
-  readonly id: string;
-  readonly serviceTag?: string;
-  readonly title: string;
-  readonly quote: string;
-  readonly author: string;
-  readonly date: string;
-  readonly source: string;
-  readonly isPlaceholder?: boolean;
-}
-
+/** Textes du bloc avis (les avis eux-mêmes sont dans data/reviewsContent.ts). */
 export interface ReviewsConfig {
   readonly kicker: string;
   readonly title: string;
   readonly subtitle: string;
-  readonly items: readonly ReviewItem[];
-  readonly ctaLabel: string;
-  readonly externalUrl: string;
-  readonly pendingUrlNotice: string;
 }
 
 export interface ZoneInterventionConfig {
@@ -357,73 +343,7 @@ export const AFTER_INCIDENT_CONFIG: AfterIncidentConfig = {
 export const REVIEWS_CONFIG: ReviewsConfig = {
   kicker: 'Avis clients',
   title: 'L’expérience de nos clients.',
-  subtitle: 'Emplacements des avis vérifiés à intégrer',
-  items: [
-    {
-      id: 'avis-1',
-      serviceTag: 'Ouverture de porte',
-      title: 'Avis client à intégrer',
-      quote: 'Texte de l’avis vérifié',
-      author: 'Nom du client',
-      date: 'Date',
-      source: 'Source de l’avis',
-      isPlaceholder: true,
-    },
-    {
-      id: 'avis-2',
-      serviceTag: 'Porte blindée',
-      title: 'Avis client à intégrer',
-      quote: 'Texte de l’avis vérifié',
-      author: 'Nom du client',
-      date: 'Date',
-      source: 'Source de l’avis',
-      isPlaceholder: true,
-    },
-    {
-      id: 'avis-3',
-      serviceTag: 'Vitrerie & bris de glace',
-      title: 'Avis client à intégrer',
-      quote: 'Texte de l’avis vérifié',
-      author: 'Nom du client',
-      date: 'Date',
-      source: 'Source de l’avis',
-      isPlaceholder: true,
-    },
-    {
-      id: 'avis-4',
-      serviceTag: 'Menuiserie',
-      title: 'Avis client à intégrer',
-      quote: 'Texte de l’avis vérifié',
-      author: 'Nom du client',
-      date: 'Date',
-      source: 'Source de l’avis',
-      isPlaceholder: true,
-    },
-    {
-      id: 'avis-5',
-      serviceTag: 'Fermetures',
-      title: 'Avis client à intégrer',
-      quote: 'Texte de l’avis vérifié',
-      author: 'Nom du client',
-      date: 'Date',
-      source: 'Source de l’avis',
-      isPlaceholder: true,
-    },
-    {
-      id: 'avis-6',
-      serviceTag: 'Après sinistre',
-      title: 'Avis client à intégrer',
-      quote: 'Texte de l’avis vérifié',
-      author: 'Nom du client',
-      date: 'Date',
-      source: 'Source de l’avis',
-      isPlaceholder: true,
-    },
-  ],
-  ctaLabel: 'Consulter les avis',
-  externalUrl: '',
-  pendingUrlNotice:
-    'Lien vers votre page d’avis vérifiés (ex. fiche Google) à renseigner avant publication.',
+  subtitle: 'Ce que nos clients disent de nos interventions et de notre accueil en boutique.',
 };
 
 export const ZONE_INTERVENTION_CONFIG: ZoneInterventionConfig = {

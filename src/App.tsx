@@ -219,7 +219,7 @@ export default function App() {
           onSendPhotos={() => setPhotoModalOpen(true)}
         />
 
-        <ReviewsSection config={REVIEWS_CONFIG} />
+        <ReviewsSection config={REVIEWS_CONFIG} allReviewsHref={pageHref('avis-clients')} />
 
         <ZoneInterventionSection
           config={ZONE_INTERVENTION_CONFIG}

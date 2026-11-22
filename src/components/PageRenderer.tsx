@@ -341,7 +341,7 @@ export function PageBlockView({ block, ctx }: { readonly block: PageBlock; reado
         />
       );
     case 'reviews':
-      return <ReviewsSection config={REVIEWS_CONFIG} />;
+      return <ReviewsSection config={REVIEWS_CONFIG} layout="grid" />;
   }
 }
 
