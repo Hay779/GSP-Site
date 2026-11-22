@@ -134,7 +134,7 @@ function ReviewActions({ allReviewsHref, showAllLink }: { readonly allReviewsHre
       {showAllLink && allReviewsHref && (
         <a
           href={allReviewsHref}
-          className="group inline-flex min-h-[48px] items-center justify-center gap-2.5 rounded-lg bg-[#1C1F21] px-7 py-3 text-[15px] font-medium text-[#F3F0E7] hover:bg-[#292D2F] transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7D612D]"
+          className="group inline-flex h-11 items-center justify-center gap-2.5 rounded-full bg-[#1C1F21] px-5 text-[15px] font-medium text-[#F3F0E7] hover:bg-[#292D2F] transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7D612D]"
         >
           Voir tous les avis
           <ArrowRight className="h-[18px] w-[18px] text-[#B79A62] transition-transform duration-150 group-hover:translate-x-1" aria-hidden="true" />
@@ -145,7 +145,7 @@ function ReviewActions({ allReviewsHref, showAllLink }: { readonly allReviewsHre
           href={REVIEWS_SOURCE.leaveReviewUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex min-h-[48px] items-center justify-center gap-2.5 rounded-lg border border-[#1C1F21]/25 px-7 py-3 text-[15px] font-medium text-[#1C1F21] hover:border-[#1C1F21] transition-colors duration-150"
+          className="inline-flex h-11 items-center justify-center gap-2.5 rounded-full border border-[#1C1F21]/25 px-5 text-[15px] font-medium text-[#1C1F21] hover:border-[#1C1F21] transition-colors duration-150"
         >
           <Star className="h-4 w-4 text-[#7D612D]" aria-hidden="true" />
           Laisser un avis
@@ -180,7 +180,7 @@ function EmptyState() {
           href={REVIEWS_SOURCE.leaveReviewUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-6 inline-flex min-h-[48px] items-center justify-center gap-2.5 rounded-lg bg-[#B79A62] px-7 py-3 text-[15px] font-semibold text-[#1C1F21] hover:bg-[#C6AA73]"
+          className="mt-6 inline-flex h-11 items-center justify-center gap-2.5 rounded-full bg-[#B79A62] px-5 text-[15px] font-semibold text-[#1C1F21] hover:bg-[#C6AA73]"
         >
           <Star className="h-4 w-4" aria-hidden="true" />
           Laisser un avis Google

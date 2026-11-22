@@ -118,7 +118,7 @@ export function ContactFormSection({ id, kicker, title, brand, whatsapp, agencie
                     setDraft(INITIAL_CONTACT_DRAFT);
                     setReference(null);
                   }}
-                  className="mt-6 inline-flex min-h-[46px] items-center rounded-lg border border-[#1C1F21]/25 px-5 text-[15px] font-medium hover:border-[#1C1F21] cursor-pointer"
+                  className="mt-6 inline-flex h-11 items-center rounded-full border border-[#1C1F21]/25 px-5 text-[15px] font-medium hover:border-[#1C1F21] cursor-pointer"
                 >
                   Envoyer un autre message
                 </button>

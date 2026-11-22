@@ -361,10 +361,10 @@ export function QuotePage({ brand, routerMode, prefill }: QuotePageProps) {
                       </p>
                     )}
                     <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-                      <a href={hrefForHome(routerMode)} className="inline-flex min-h-[48px] items-center justify-center rounded-lg bg-[#1C1F21] px-6 py-3 text-[15px] font-semibold text-[#F3F0E7] hover:bg-[#292D2F]">
+                      <a href={hrefForHome(routerMode)} className="inline-flex h-11 items-center justify-center rounded-full bg-[#1C1F21] px-5 text-[15px] font-semibold text-[#F3F0E7] hover:bg-[#292D2F]">
                         Retour à l’accueil
                       </a>
-                      <button type="button" onClick={restart} className="inline-flex min-h-[48px] items-center justify-center rounded-lg border border-[#1C1F21]/25 px-6 py-3 text-[15px] font-medium text-[#1C1F21] hover:border-[#1C1F21] cursor-pointer">
+                      <button type="button" onClick={restart} className="inline-flex h-11 items-center justify-center rounded-full border border-[#1C1F21]/25 px-5 text-[15px] font-medium text-[#1C1F21] hover:border-[#1C1F21] cursor-pointer">
                         Faire une autre demande
                       </button>
                     </div>
@@ -571,7 +571,7 @@ export function QuotePage({ brand, routerMode, prefill }: QuotePageProps) {
                     <div className="mt-9 flex flex-col-reverse gap-3 border-t border-[#1C1F21]/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
                       {stepIndex > 0 ? (
                         <button type="button" onClick={() => goTo(QUOTE_STEPS[stepIndex - 1].id)}
-                          className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-lg px-4 py-3 text-[15px] font-medium text-[#1C1F21]/75 hover:text-[#1C1F21] cursor-pointer">
+                          className="inline-flex h-11 items-center justify-center gap-2 rounded-full px-4 text-[15px] font-medium text-[#1C1F21]/75 hover:text-[#1C1F21] cursor-pointer">
                           <ChevronLeft className="h-4 w-4" aria-hidden="true" />
                           Retour
                         </button>
@@ -580,13 +580,13 @@ export function QuotePage({ brand, routerMode, prefill }: QuotePageProps) {
                       )}
                       {step === 'recap' ? (
                         <button type="button" onClick={submit}
-                          className="inline-flex min-h-[52px] items-center justify-center gap-2.5 rounded-lg bg-[#B79A62] px-8 py-3 text-[16px] font-semibold text-[#1C1F21] hover:bg-[#C6AA73] active:bg-[#A68952] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1C1F21] cursor-pointer">
+                          className="inline-flex h-11 items-center justify-center gap-2.5 rounded-full bg-[#B79A62] px-5 text-[15px] font-semibold text-[#1C1F21] hover:bg-[#C6AA73] active:bg-[#A68952] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1C1F21] cursor-pointer">
                           Envoyer ma demande
                           <ArrowRight className="h-4 w-4" aria-hidden="true" />
                         </button>
                       ) : (
                         <button type="button" onClick={() => next()}
-                          className="inline-flex min-h-[52px] items-center justify-center gap-2.5 rounded-lg bg-[#1C1F21] px-8 py-3 text-[16px] font-semibold text-[#F3F0E7] hover:bg-[#292D2F] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62] cursor-pointer">
+                          className="inline-flex h-11 items-center justify-center gap-2.5 rounded-full bg-[#1C1F21] px-5 text-[15px] font-semibold text-[#F3F0E7] hover:bg-[#292D2F] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62] cursor-pointer">
                           Continuer
                           <ArrowRight className="h-4 w-4 text-[#B79A62]" aria-hidden="true" />
                         </button>

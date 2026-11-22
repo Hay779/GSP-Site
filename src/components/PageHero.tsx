@@ -98,10 +98,13 @@ export function PageHero({
         {intro}
       </motion.p>
       {highlights.length > 0 && (
-        <motion.ul {...fadeUp(0.18)} className="mt-5 flex flex-wrap gap-x-5 gap-y-2">
+        <motion.ul {...fadeUp(0.18)} className="mt-5 flex flex-wrap gap-2">
           {highlights.map((item) => (
-            <li key={item} className="inline-flex items-center gap-2 text-[14px] sm:text-[15px] text-[#F3F0E7]/80">
-              <Check className="h-4 w-4 shrink-0 text-[#B79A62]" strokeWidth={2.2} aria-hidden="true" />
+            <li
+              key={item}
+              className="inline-flex items-center gap-2 rounded-full bg-[#F3F0E7]/[0.08] px-3.5 py-1.5 text-[13.5px] sm:text-[14px] text-[#F3F0E7]/90 ring-1 ring-[#F3F0E7]/12"
+            >
+              <Check className="h-3.5 w-3.5 shrink-0 text-[#B79A62]" strokeWidth={2.4} aria-hidden="true" />
               {item}
             </li>
           ))}
@@ -164,7 +167,7 @@ export function PageHero({
         <div className="lg:col-span-6">
           {text}
           {actions && (
-            <motion.div {...fadeUp(0.24)} className="mt-8 hidden sm:flex flex-row flex-wrap gap-3 sm:gap-4">
+            <motion.div {...fadeUp(0.24)} className="mt-7 hidden sm:flex flex-row flex-wrap gap-3">
               {actions}
             </motion.div>
           )}
@@ -184,7 +187,7 @@ export function PageHero({
 
 /** Classes des deux boutons standard des en-têtes de page. */
 export const PAGE_HERO_PRIMARY_BUTTON =
-  'inline-flex min-h-[46px] items-center justify-center gap-2.5 rounded-full bg-[#B79A62] hover:bg-[#C6AA73] active:bg-[#A68952] px-7 py-3 text-[15px] sm:text-[16px] font-semibold text-[#1C1F21] whitespace-nowrap transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F3F0E7] cursor-pointer';
+  'inline-flex h-11 items-center justify-center gap-2 rounded-full bg-[#B79A62] hover:bg-[#C6AA73] active:bg-[#A68952] px-5 text-[15px] font-semibold text-[#1C1F21] whitespace-nowrap shrink-0 transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F3F0E7] cursor-pointer';
 
 export const PAGE_HERO_SECONDARY_BUTTON =
-  'inline-flex min-h-[46px] items-center justify-center gap-2.5 rounded-full border border-[#F3F0E7]/65 bg-[#1C1F21]/35 hover:bg-[#F3F0E7]/10 hover:border-[#F3F0E7] px-7 py-3 text-[15px] sm:text-[16px] font-medium text-[#F3F0E7] tabular-nums whitespace-nowrap transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62] cursor-pointer';
+  'inline-flex h-11 items-center justify-center gap-2 rounded-full border border-[#F3F0E7]/40 hover:border-[#F3F0E7] hover:bg-[#F3F0E7]/10 px-5 text-[15px] font-medium text-[#F3F0E7] tabular-nums whitespace-nowrap shrink-0 transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62] cursor-pointer';

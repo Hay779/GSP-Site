@@ -265,14 +265,14 @@ export function IncidentPhotoModal({
                 <button
                   type="button"
                   onClick={handleReset}
-                  className="inline-flex min-h-[44px] items-center justify-center rounded-lg border border-[#F3F0E7]/25 px-5 py-2.5 text-[14px] font-medium text-[#F3F0E7] hover:border-[#F3F0E7]/60 transition-colors duration-150 cursor-pointer"
+                  className="inline-flex h-11 items-center justify-center rounded-full border border-[#F3F0E7]/25 px-5 text-[14px] font-medium text-[#F3F0E7] hover:border-[#F3F0E7]/60 transition-colors duration-150 cursor-pointer"
                 >
                   Nouvel envoi
                 </button>
                 <button
                   type="button"
                   onClick={onClose}
-                  className="inline-flex min-h-[44px] items-center justify-center rounded-lg bg-[#B79A62] hover:bg-[#C6AA73] px-6 py-2.5 text-[14px] font-semibold text-[#1C1F21] transition-colors duration-150 cursor-pointer"
+                  className="inline-flex h-11 items-center justify-center rounded-full bg-[#B79A62] hover:bg-[#C6AA73] px-5 text-[14px] font-semibold text-[#1C1F21] transition-colors duration-150 cursor-pointer"
                 >
                   Fermer
                 </button>
@@ -487,13 +487,13 @@ export function IncidentPhotoModal({
                   <button
                     type="button"
                     onClick={onClose}
-                    className="inline-flex min-h-[44px] items-center justify-center rounded-lg border border-[#F3F0E7]/20 px-4 py-2.5 text-[14px] font-medium text-[#F3F0E7]/85 hover:border-[#F3F0E7]/50 hover:text-[#F3F0E7] transition-colors duration-150 cursor-pointer"
+                    className="inline-flex h-11 items-center justify-center rounded-full border border-[#F3F0E7]/20 px-4 text-[14px] font-medium text-[#F3F0E7]/85 hover:border-[#F3F0E7]/50 hover:text-[#F3F0E7] transition-colors duration-150 cursor-pointer"
                   >
                     Annuler
                   </button>
                   <button
                     type="submit"
-                    className="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-lg bg-[#B79A62] hover:bg-[#C6AA73] active:bg-[#A68952] px-6 py-2.5 text-[14px] font-semibold text-[#1C1F21] whitespace-nowrap transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F3F0E7] cursor-pointer"
+                    className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-[#B79A62] hover:bg-[#C6AA73] active:bg-[#A68952] px-5 text-[14px] font-semibold text-[#1C1F21] whitespace-nowrap transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F3F0E7] cursor-pointer"
                   >
                     <Camera className="h-4 w-4 shrink-0" aria-hidden="true" />
                     <span>Transmettre mes photos</span>

@@ -1,4 +1,4 @@
-import { ArrowRight, Building2, FileCheck, FileText, KeyRound, MessageCircle, Phone, ShieldCheck, Wrench } from 'lucide-react';
+import { ArrowRight, Building2, FileText, KeyRound, MessageCircle, Phone, ShieldCheck } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
 import { blockTone, type HeroAction, type PageBlock, type PageDefinition } from '../data/pages';
 import {
@@ -36,6 +36,7 @@ import {
 } from './PageHero';
 import { BeforeAfterCases, FeatureCards, NumberedCards, NumberedSteps, PageSection, ProcessSteps } from './PageSections';
 import { BrandsSection } from './BrandsSection';
+import { IncidentServiceGrid } from './AfterIncidentSection';
 import { ReviewsSection } from './ReviewsSection';
 import { UrgencySection } from './UrgencySection';
 import { ZoneInterventionSection } from './ZoneInterventionSection';
@@ -203,37 +204,6 @@ function AudienceCards({
   );
 }
 
-const INCIDENT_ICONS = { shield: ShieldCheck, wrench: Wrench, file: FileCheck } as const;
-
-/** Les trois prises en charge après sinistre : photo, icône, titre, texte. */
-function IncidentServiceCards() {
-  return (
-    <ul className="grid grid-cols-1 sm:grid-cols-3 gap-4 lg:gap-6">
-      {AFTER_INCIDENT_CONFIG.services.map((service) => {
-        const Icon = INCIDENT_ICONS[service.icon];
-        return (
-          <li
-            key={service.title}
-            className="flex sm:flex-col overflow-hidden rounded-2xl bg-white shadow-[0_10px_28px_-20px_rgba(28,31,33,0.4)]"
-          >
-            <img src={service.imageSrc} alt="" loading="lazy" className="w-[38%] sm:w-full sm:h-[170px] object-cover" />
-            <div className="relative flex-1 p-4 sm:p-6 sm:pt-9 sm:text-center">
-              <span
-                aria-hidden="true"
-                className="grid h-11 w-11 place-items-center rounded-full bg-[#F3EBDD] text-[#7D612D] ring-4 ring-white sm:absolute sm:left-1/2 sm:-top-7 sm:h-14 sm:w-14 sm:-translate-x-1/2"
-              >
-                <Icon className="h-5 w-5 sm:h-6 sm:w-6" strokeWidth={1.6} />
-              </span>
-              <h3 className="mt-2 sm:mt-0 font-display text-[18px] sm:text-[20px] font-semibold text-[#1C1F21]">{service.title}</h3>
-              <p className="mt-1 text-[14px] sm:text-[15px] leading-[1.45] text-[#1C1F21]/68">{service.text}</p>
-            </div>
-          </li>
-        );
-      })}
-    </ul>
-  );
-}
-
 const SERVICE_IMAGES = { key: '/src/assets/images/kb_cles.jpg', badge: '/src/assets/images/kb_badge.jpg' } as const;
 
 function ServiceCards({ services }: { readonly services: Extract<PageBlock, { type: 'services' }>['services'] }) {
@@ -271,7 +241,7 @@ const CHANNEL_ICONS = { phone: Phone, whatsapp: MessageCircle, quote: FileText }
 function ContactChannels({ ctx }: { readonly ctx: PageContext }) {
   const whatsappUrl = buildWhatsAppUrl(WHATSAPP_CONFIG.phoneDisplay, WHATSAPP_CONFIG.prefilledMessage);
   const base =
-    'inline-flex w-full min-h-[48px] items-center justify-center gap-2.5 rounded-lg px-6 py-3 text-[15px] whitespace-nowrap transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7D612D] cursor-pointer';
+    'inline-flex w-full h-11 items-center justify-center gap-2.5 rounded-full px-5 text-[15px] whitespace-nowrap transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7D612D] cursor-pointer';
   const primary = `${base} bg-[#B79A62] hover:bg-[#C6AA73] active:bg-[#A68952] text-[#1C1F21] font-semibold`;
   const secondary = `${base} border border-[#1C1F21]/25 hover:border-[#1C1F21] hover:bg-[#1C1F21]/5 text-[#1C1F21] font-medium`;
   return (
@@ -495,7 +465,7 @@ export function PageBlockView({ block, ctx }: { readonly block: PageBlock; reado
     case 'incidentServices':
       return (
         <PageSection id={block.id} tone="light" kicker={block.kicker} title={block.title} subtitle={block.subtitle}>
-          <IncidentServiceCards />
+          <IncidentServiceGrid services={AFTER_INCIDENT_CONFIG.services} />
         </PageSection>
       );
     case 'beforeAfter':

@@ -714,6 +714,7 @@ export const FOOTER_CONFIG: FooterConfig = {
     { label: 'Demander un devis', pageId: 'devis' },
     { label: 'Professionnels', pageId: 'professionnels' },
     { label: 'Devenir partenaire', pageId: 'devenir-partenaire' },
+    { label: 'Contact', pageId: 'agences-contact' },
   ],
   agenciesHeading: 'Nos agences',
   contactHeading: 'Contact',

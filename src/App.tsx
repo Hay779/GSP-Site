@@ -134,12 +134,7 @@ export default function App() {
       href: pageHref('zone-intervention'),
       isActive: currentPageId === 'zone-intervention' || (onHome && activeSectionId === '09_Zone_Intervention'),
     },
-    {
-      key: 'agences-contact',
-      label: 'Contact',
-      href: pageHref('agences-contact'),
-      isActive: currentPageId === 'agences-contact' || (onHome && activeSectionId === '10_Nos_Agences'),
-    },
+    // « Contact » n'est plus dans le menu du haut : il reste dans le pied de page.
   ];
 
   useEffect(() => {
