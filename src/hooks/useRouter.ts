@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { HOME_ROUTE, parseLocation, routesEqual, type Route, type RouterMode } from '../utils/router';
 
 /** Mode choisi à la compilation : VITE_ROUTER_MODE=hash pour les aperçus. */
@@ -32,6 +32,8 @@ function scrollOnce(route: Route) {
 
 export function useRouter() {
   const [route, setRoute] = useState<Route>(currentRoute);
+  const routeRef = useRef<Route>(route);
+  routeRef.current = route;
 
   // Change de page : défilement en haut (ou jusqu'à la section demandée).
   const applyLocation = useCallback((scroll: boolean) => {
@@ -61,9 +63,19 @@ export function useRouter() {
   );
 
   useEffect(() => {
-    const onPop = () => applyLocation(false);
+    // Mode « history » : boutons précédent / suivant du navigateur.
+    // (En mode « hash », le navigateur émet aussi « popstate » sur chaque ancre :
+    // on laisse alors « hashchange » tout gérer, sinon la page change trop tôt.)
+    const onPop = () => {
+      if (ROUTER_MODE === 'history') {
+        applyLocation(false);
+      }
+    };
     const onHash = () => {
-      const before = route;
+      if (ROUTER_MODE !== 'hash') {
+        return;
+      }
+      const before = routeRef.current;
       const next = currentRoute();
       setRoute((prev) => (routesEqual(prev, next) ? prev : next));
       // Changement de page via l'ancre (mode aperçu) : on remet le défilement en ordre.
@@ -77,7 +89,7 @@ export function useRouter() {
       window.removeEventListener('popstate', onPop);
       window.removeEventListener('hashchange', onHash);
     };
-  }, [applyLocation, route]);
+  }, [applyLocation]);
 
   // En mode « history » : les liens internes qui changent de page sont gérés
   // sans recharger le site.
