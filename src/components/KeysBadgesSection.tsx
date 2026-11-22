@@ -8,7 +8,7 @@ interface KeysBadgesSectionProps {
   readonly onSelectSection: (sectionId: SectionId) => void;
 }
 
-function ServiceIcon({ icon }: { readonly icon: KeysBadgeIconKey }) {
+export function ServiceIcon({ icon }: { readonly icon: KeysBadgeIconKey }) {
   if (icon === 'key') {
     return (
       <KeyRound

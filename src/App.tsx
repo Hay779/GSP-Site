@@ -7,12 +7,13 @@ import { DomainPage } from './components/DomainPage';
 import { DomainsSection } from './components/DomainsSection';
 import { FaqSection } from './components/FaqSection';
 import { FooterSection } from './components/FooterSection';
-import { HeaderSection } from './components/HeaderSection';
+import { HeaderSection, type HeaderNavLink } from './components/HeaderSection';
 import { HeroSection } from './components/HeroSection';
 import { IncidentPhotoModal } from './components/IncidentPhotoModal';
 import { KeysBadgesSection } from './components/KeysBadgesSection';
 import { LegalNoticeModal, type LegalDocumentType } from './components/LegalNoticeModal';
 import { QuoteModal } from './components/QuoteModal';
+import { AfterIncidentPage, ContactPage, KeysBadgesPage } from './components/ThematicPages';
 import { ReviewsSection } from './components/ReviewsSection';
 import { UrgencySection } from './components/UrgencySection';
 import { WhatsAppFloatingButton } from './components/WhatsAppFloatingButton';
@@ -20,6 +21,9 @@ import { ZoneInterventionSection } from './components/ZoneInterventionSection';
 import { HERO_CONFIG } from './data/heroConfig';
 import {
   AFTER_INCIDENT_CONFIG,
+  AFTER_INCIDENT_PAGE_CONFIG,
+  CONTACT_PAGE_CONFIG,
+  KEYS_BADGES_PAGE_CONFIG,
   AGENCIES_CONFIG,
   BRANDS_CONFIG,
   DOMAINS_CONFIG,
@@ -43,7 +47,7 @@ import {
 } from './utils/navigation';
 import type { QuoteDomain } from './utils/quoteForm';
 import { useRouter, ROUTER_MODE } from './hooks/useRouter';
-import { hrefForDomain, hrefForHomeSection } from './utils/router';
+import { hrefForDomain, hrefForHomeSection, hrefForPage, type PageId } from './utils/router';
 
 const NAV_TARGET_IDS: readonly SectionId[] = HEADER_NAV_ITEMS.map((item) => item.targetId);
 
@@ -64,6 +68,47 @@ export default function App() {
     route.kind === 'domain' ? DOMAINS_CONFIG.items.find((item) => item.id === route.id) ?? null : null;
   const sectionHref = (sectionId: SectionId) => hrefForHomeSection(sectionId, route, ROUTER_MODE);
   const domainHref = (domainId: DomainCardItem['id']) => hrefForDomain(domainId, ROUTER_MODE);
+  const pageHref = (pageId: PageId) => hrefForPage(pageId, ROUTER_MODE);
+  const currentPageId = route.kind === 'page' ? route.id : null;
+  const onHome = route.kind === 'home';
+
+  // Menu principal : pages dédiées + menu déroulant « Nos domaines ».
+  // Sur l'accueil, le lien de la section visible est mis en avant.
+  const headerNav: readonly HeaderNavLink[] = [
+    {
+      key: 'cles-badges',
+      label: 'Clés & badges',
+      href: pageHref('cles-badges'),
+      isActive: currentPageId === 'cles-badges' || (onHome && activeSectionId === '04_Cles_Badges'),
+    },
+    {
+      key: 'domaines',
+      label: 'Nos domaines',
+      href: sectionHref('05_Nos_Domaines'),
+      isActive: route.kind === 'domain' || (onHome && activeSectionId === '05_Nos_Domaines'),
+      children: DOMAINS_CONFIG.items.map((item) => ({
+        key: item.id,
+        label: item.title,
+        description: item.categoryTag,
+        href: domainHref(item.id),
+        imageSrc: item.imageSrc,
+        isActive: route.kind === 'domain' && route.id === item.id,
+      })),
+      overviewLink: { label: 'Voir tous nos domaines', href: sectionHref('05_Nos_Domaines') },
+    },
+    {
+      key: 'apres-sinistre',
+      label: 'Après sinistre',
+      href: pageHref('apres-sinistre'),
+      isActive: currentPageId === 'apres-sinistre' || (onHome && activeSectionId === '07_Apres_Sinistre'),
+    },
+    {
+      key: 'agences-contact',
+      label: 'Agences & contact',
+      href: pageHref('agences-contact'),
+      isActive: currentPageId === 'agences-contact' || (onHome && activeSectionId === '10_Nos_Agences'),
+    },
+  ];
 
   useEffect(() => {
     const updateActiveSection = () => {
@@ -131,13 +176,61 @@ export default function App() {
       {/* 01_Entete */}
       <HeaderSection
         brand={BRAND_CONFIG}
-        navItems={HEADER_NAV_ITEMS}
-        activeSectionId={activeSectionId}
-        onSelectSection={handleSelectSection}
-        sectionHref={sectionHref}
+        nav={headerNav}
+        homeHref={sectionHref('02_Hero')}
       />
 
-      {currentDomain ? (
+      {currentPageId === 'cles-badges' ? (
+        <main className="flex-1 flex flex-col">
+          <KeysBadgesPage
+            config={KEYS_BADGES_PAGE_CONFIG}
+            imageSrc={KEYS_BADGES_CONFIG.imageSrc}
+            brand={BRAND_CONFIG}
+            routerMode={ROUTER_MODE}
+            agenciesHref={pageHref('agences-contact')}
+          />
+          <AgenciesSection config={AGENCIES_CONFIG} brand={BRAND_CONFIG} />
+        </main>
+      ) : currentPageId === 'apres-sinistre' ? (
+        <main className="flex-1 flex flex-col">
+          <AfterIncidentPage
+            config={AFTER_INCIDENT_PAGE_CONFIG}
+            sectionConfig={AFTER_INCIDENT_CONFIG}
+            brand={BRAND_CONFIG}
+            routerMode={ROUTER_MODE}
+            quoteTriggerRef={quoteTriggerRef}
+            onOpenQuoteModal={(domain) => handleOpenQuoteModal(domain)}
+            onSendPhotos={() => setPhotoModalOpen(true)}
+          />
+          <UrgencySection config={URGENCY_CONFIG} brand={BRAND_CONFIG} />
+          <AgenciesSection config={AGENCIES_CONFIG} brand={BRAND_CONFIG} />
+        </main>
+      ) : currentPageId === 'agences-contact' ? (
+        <main className="flex-1 flex flex-col">
+          <ContactPage
+            config={CONTACT_PAGE_CONFIG}
+            whatsapp={WHATSAPP_CONFIG}
+            brand={BRAND_CONFIG}
+            routerMode={ROUTER_MODE}
+            quoteTriggerRef={quoteTriggerRef}
+            onOpenQuoteModal={() => handleOpenQuoteModal()}
+            afterHero={
+              <>
+                <AgenciesSection config={AGENCIES_CONFIG} brand={BRAND_CONFIG} />
+                <ZoneInterventionSection
+                  config={ZONE_INTERVENTION_CONFIG}
+                  onRequestQuoteForDistrict={(district) => handleOpenQuoteModal(undefined, district)}
+                />
+              </>
+            }
+          />
+          <FaqSection
+            config={FAQ_CONFIG}
+            brand={BRAND_CONFIG}
+            onOpenQuoteModal={() => handleOpenQuoteModal()}
+          />
+        </main>
+      ) : currentDomain ? (
         /* Page métier dédiée */
         <main className="flex-1 flex flex-col">
           <DomainPage
@@ -207,6 +300,7 @@ export default function App() {
         onSelectSection={handleSelectSection}
         domainHref={domainHref}
         sectionHref={sectionHref}
+        pageHref={pageHref}
         onOpenQuoteModal={() => handleOpenQuoteModal()}
         onOpenLegalModal={(docType) => setLegalDocument(docType)}
       />

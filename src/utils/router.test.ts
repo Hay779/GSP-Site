@@ -5,6 +5,8 @@ import {
   hrefForDomain,
   hrefForHome,
   hrefForHomeSection,
+  hrefForPage,
+  PAGE_SLUGS,
   parseLocation,
   routesEqual,
 } from './router';
@@ -39,8 +41,16 @@ test('section links go back to the home page when needed', () => {
   assert.equal(hrefForHomeSection('FAQ', domain, 'hash'), '#FAQ');
 });
 
+test('parses and links thematic pages', () => {
+  assert.deepEqual(parseLocation('/cles-badges', '', 'history'), { kind: 'page', id: 'cles-badges' });
+  assert.deepEqual(parseLocation('/x', '#apres-sinistre', 'hash'), { kind: 'page', id: 'apres-sinistre' });
+  assert.equal(hrefForPage('agences-contact', 'history'), '/agences-contact');
+  assert.equal(hrefForPage('agences-contact', 'hash'), '#agences-contact');
+  assert.ok(!routesEqual({ kind: 'page', id: 'cles-badges' }, { kind: 'page', id: 'apres-sinistre' }));
+});
+
 test('slugs are unique, URL-safe and never collide with section ids', () => {
-  const slugs = Object.values(DOMAIN_SLUGS);
+  const slugs = [...Object.values(DOMAIN_SLUGS), ...Object.values(PAGE_SLUGS)];
   assert.equal(new Set(slugs).size, slugs.length);
   for (const slug of slugs) {
     assert.match(slug, /^[a-z0-9-]+$/);

@@ -1,5 +1,6 @@
 import type { SectionId } from '../utils/navigation';
 import type { QuoteDomain } from '../utils/quoteForm';
+import type { PageId } from '../utils/router';
 
 export interface UrgencyConfig {
   readonly title: string;
@@ -168,12 +169,14 @@ export interface FaqConfig {
 
 export interface FooterServiceLink {
   readonly label: string;
+  readonly pageId?: PageId;
   readonly targetId?: SectionId;
   readonly domainId?: DomainCardItem['id'];
 }
 
 export interface FooterInfoLink {
   readonly label: string;
+  readonly pageId?: PageId;
   readonly targetId: SectionId;
 }
 
@@ -545,7 +548,7 @@ export const FAQ_CONFIG: FaqConfig = {
 export const FOOTER_CONFIG: FooterConfig = {
   servicesHeading: 'Nos services',
   serviceLinks: [
-    { label: 'Clés & badges', targetId: '04_Cles_Badges' },
+    { label: 'Clés & badges', pageId: 'cles-badges' },
     { label: 'Serrurerie', domainId: 'serrurerie' },
     { label: 'Vitrerie', domainId: 'vitrerie' },
     { label: 'Menuiserie', domainId: 'menuiserie' },
@@ -553,10 +556,10 @@ export const FOOTER_CONFIG: FooterConfig = {
   ],
   infoHeading: 'Informations',
   infoLinks: [
-    { label: 'Après sinistre', targetId: '07_Apres_Sinistre' },
+    { label: 'Après sinistre', pageId: 'apres-sinistre', targetId: '07_Apres_Sinistre' },
     { label: 'Avis clients', targetId: '08_Avis_Clients' },
     { label: 'Zone d’intervention', targetId: '09_Zone_Intervention' },
-    { label: 'Nos agences', targetId: '10_Nos_Agences' },
+    { label: 'Agences & contact', pageId: 'agences-contact', targetId: '10_Nos_Agences' },
     { label: 'Questions fréquentes', targetId: 'FAQ' },
   ],
   contactHeading: 'Contact',
@@ -601,4 +604,127 @@ export const DOMAIN_PAGE_CONFIG: DomainPageConfig = {
   otherDomainsKicker: 'Nos autres domaines',
   otherDomainsTitle: 'Un même interlocuteur pour tous vos accès.',
   quoteCtaLabel: 'Demander un devis',
+};
+
+/** Une étape numérotée (méthode, parcours…). */
+export interface NumberedStep {
+  readonly title: string;
+  readonly text: string;
+}
+
+/** Contenu commun d'une page thématique (en-tête + référencement). */
+export interface ThematicPageBase {
+  readonly kicker: string;
+  readonly title: string;
+  readonly intro: string;
+  readonly seoTitle: string;
+  readonly seoDescription: string;
+}
+
+export interface KeysBadgesPageConfig extends ThematicPageBase {
+  readonly servicesKicker: string;
+  readonly servicesTitle: string;
+  readonly services: readonly {
+    readonly icon: KeysBadgeIconKey;
+    readonly title: string;
+    readonly text: string;
+  }[];
+  readonly stepsKicker: string;
+  readonly stepsTitle: string;
+  readonly steps: readonly NumberedStep[];
+}
+
+export const KEYS_BADGES_PAGE_CONFIG: KeysBadgesPageConfig = {
+  kicker: 'Reproduction en boutique',
+  title: 'Clés & badges',
+  intro:
+    'Doubles de clés et de badges d’accès, réalisés en boutique à partir de votre original, dans nos agences de Marseille.',
+  seoTitle: 'Double de clés et badges à Marseille | Serrurerie de la République',
+  seoDescription:
+    'Reproduction de clés et de badges d’accès en boutique à Marseille, à partir de votre original. Agences République (2e) et Lodi (6e).',
+  servicesKicker: 'Nos services',
+  servicesTitle: 'Deux savoir-faire au comptoir.',
+  services: [
+    {
+      icon: 'key',
+      title: 'Reproduction de clés',
+      text: 'Un double réalisé à partir de votre clé d’origine, vérifié avant de vous être remis.',
+    },
+    {
+      icon: 'badge',
+      title: 'Reproduction de badges',
+      text: 'Copie de badges d’accès à partir de votre badge d’origine, selon la compatibilité du modèle.',
+    },
+  ],
+  stepsKicker: 'Comment ça marche',
+  stepsTitle: 'Simple, en trois étapes.',
+  steps: [
+    { title: 'Venez avec l’original', text: 'Apportez la clé ou le badge à reproduire dans l’une de nos agences.' },
+    { title: 'Vérification du modèle', text: 'Nous identifions le modèle et vous indiquons le délai et le tarif.' },
+    { title: 'Reproduction & essai', text: 'Votre double est réalisé et contrôlé avant de vous être remis.' },
+  ],
+};
+
+export interface AfterIncidentPageConfig extends ThematicPageBase {
+  readonly stepsKicker: string;
+  readonly stepsTitle: string;
+  readonly insuranceKicker: string;
+  readonly insuranceTitle: string;
+}
+
+export const AFTER_INCIDENT_PAGE_CONFIG: AfterIncidentPageConfig = {
+  kicker: 'Après sinistre',
+  title: 'Du premier diagnostic à la remise en état.',
+  intro:
+    'Effraction, vandalisme ou bris de glace : nous sécurisons les lieux, établissons un devis détaillé avec reportage photo et assurons la remise en état.',
+  seoTitle: 'Après effraction ou bris de glace à Marseille | Serrurerie de la République',
+  seoDescription:
+    'Mise en sécurité, devis détaillé et reportage photo pour votre assurance, réparation ou remplacement après effraction, vandalisme ou bris de glace à Marseille.',
+  stepsKicker: 'Notre accompagnement',
+  stepsTitle: 'Quatre étapes, un seul interlocuteur.',
+  insuranceKicker: 'Assurance',
+  insuranceTitle: 'Un dossier complet pour votre assureur.',
+};
+
+export interface ContactPageConfig extends ThematicPageBase {
+  readonly channelsKicker: string;
+  readonly channelsTitle: string;
+  readonly channels: readonly {
+    readonly id: 'phone' | 'whatsapp' | 'quote';
+    readonly title: string;
+    readonly text: string;
+    readonly ctaLabel: string;
+  }[];
+}
+
+export const CONTACT_PAGE_CONFIG: ContactPageConfig = {
+  kicker: 'Agences & contact',
+  title: 'Deux boutiques au cœur de Marseille.',
+  intro:
+    'Retrouvez-nous en agence, appelez-nous ou décrivez votre besoin en ligne : nous vous répondons rapidement.',
+  seoTitle: 'Agences et contact — Serrurerie à Marseille | Serrurerie de la République',
+  seoDescription:
+    'Nos agences République (2e) et Lodi (6e) à Marseille : adresses, téléphone, WhatsApp, demande de devis et zone d’intervention.',
+  channelsKicker: 'Nous contacter',
+  channelsTitle: 'Le moyen qui vous arrange.',
+  channels: [
+    {
+      id: 'phone',
+      title: 'Par téléphone',
+      text: 'Le plus rapide pour une urgence ou une question.',
+      ctaLabel: 'Appeler',
+    },
+    {
+      id: 'whatsapp',
+      title: 'Par WhatsApp',
+      text: 'Envoyez un message et des photos de votre problème.',
+      ctaLabel: 'Écrire sur WhatsApp',
+    },
+    {
+      id: 'quote',
+      title: 'Devis en ligne',
+      text: 'Décrivez votre besoin, nous revenons vers vous avec un devis.',
+      ctaLabel: 'Demander un devis',
+    },
+  ],
 };

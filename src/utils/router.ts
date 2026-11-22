@@ -11,7 +11,13 @@ export type DomainId = 'serrurerie' | 'vitrerie' | 'menuiserie' | 'fermetures';
 
 export type RouterMode = 'history' | 'hash';
 
-export type Route = { readonly kind: 'home' } | { readonly kind: 'domain'; readonly id: DomainId };
+/** Pages thématiques (hors domaines métiers). */
+export type PageId = 'cles-badges' | 'apres-sinistre' | 'agences-contact';
+
+export type Route =
+  | { readonly kind: 'home' }
+  | { readonly kind: 'domain'; readonly id: DomainId }
+  | { readonly kind: 'page'; readonly id: PageId };
 
 export const DOMAIN_SLUGS: Readonly<Record<DomainId, string>> = {
   serrurerie: 'serrurerie-portes-blindees',
@@ -20,10 +26,20 @@ export const DOMAIN_SLUGS: Readonly<Record<DomainId, string>> = {
   fermetures: 'fermetures',
 };
 
+export const PAGE_SLUGS: Readonly<Record<PageId, string>> = {
+  'cles-badges': 'cles-badges',
+  'apres-sinistre': 'apres-sinistre',
+  'agences-contact': 'agences-contact',
+};
+
 export const HOME_ROUTE: Route = { kind: 'home' };
 
+function cleanSlug(slug: string): string {
+  return slug.trim().toLowerCase().replace(/^\/+|\/+$/g, '');
+}
+
 function domainIdFromSlug(slug: string): DomainId | null {
-  const clean = slug.trim().toLowerCase().replace(/^\/+|\/+$/g, '');
+  const clean = cleanSlug(slug);
   for (const [id, value] of Object.entries(DOMAIN_SLUGS) as [DomainId, string][]) {
     if (value === clean) {
       return id;
@@ -35,8 +51,22 @@ function domainIdFromSlug(slug: string): DomainId | null {
 /** Détermine la page à afficher à partir de l'adresse courante. */
 export function parseLocation(pathname: string, hash: string, mode: RouterMode): Route {
   const source = mode === 'hash' ? hash.replace(/^#/, '') : pathname;
-  const id = domainIdFromSlug(source);
-  return id ? { kind: 'domain', id } : HOME_ROUTE;
+  const domainId = domainIdFromSlug(source);
+  if (domainId) {
+    return { kind: 'domain', id: domainId };
+  }
+  const clean = cleanSlug(source);
+  for (const [id, value] of Object.entries(PAGE_SLUGS) as [PageId, string][]) {
+    if (value === clean) {
+      return { kind: 'page', id };
+    }
+  }
+  return HOME_ROUTE;
+}
+
+/** Adresse d'une page thématique. */
+export function hrefForPage(id: PageId, mode: RouterMode): string {
+  return mode === 'hash' ? `#${PAGE_SLUGS[id]}` : `/${PAGE_SLUGS[id]}`;
 }
 
 /** Adresse d'une page de domaine. */
@@ -65,5 +95,8 @@ export function routesEqual(a: Route, b: Route): boolean {
   if (a.kind !== b.kind) {
     return false;
   }
-  return a.kind === 'home' || (b.kind === 'domain' && a.id === b.id);
+  if (a.kind === 'home') {
+    return true;
+  }
+  return 'id' in b && a.id === b.id;
 }

@@ -1,6 +1,7 @@
 import { FileText, Phone } from 'lucide-react';
 import type { DomainCardItem, FooterConfig } from '../data/sectionsContent';
 import type { BrandConfig, SectionId } from '../utils/navigation';
+import type { PageId } from '../utils/router';
 import { BrandMark } from './BrandMark';
 import type { LegalDocumentType } from './LegalNoticeModal';
 
@@ -12,6 +13,8 @@ interface FooterSectionProps {
   readonly domainHref: (domainId: DomainCardItem['id']) => string;
   /** Adresse d'une section de l'accueil (préfixée quand on est sur une page métier). */
   readonly sectionHref: (sectionId: SectionId) => string;
+  /** Adresse d'une page thématique. */
+  readonly pageHref: (pageId: PageId) => string;
   readonly onOpenQuoteModal: () => void;
   readonly onOpenLegalModal: (docType: LegalDocumentType) => void;
 }
@@ -22,6 +25,7 @@ export function FooterSection({
   onSelectSection,
   domainHref,
   sectionHref,
+  pageHref,
   onOpenQuoteModal,
   onOpenLegalModal,
 }: FooterSectionProps) {
@@ -62,7 +66,7 @@ export function FooterSection({
                     </a>
                   ) : (
                     <a
-                      href={link.targetId ? sectionHref(link.targetId) : '#'}
+                      href={link.pageId ? pageHref(link.pageId) : link.targetId ? sectionHref(link.targetId) : '#'}
                       onClick={() => link.targetId && onSelectSection(link.targetId)}
                       className="text-[#F3F0E7]/85 hover:text-[#B79A62] transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#B79A62] rounded-xs"
                     >
@@ -83,7 +87,7 @@ export function FooterSection({
               {config.infoLinks.map((link) => (
                 <li key={link.targetId}>
                   <a
-                    href={sectionHref(link.targetId)}
+                    href={link.pageId ? pageHref(link.pageId) : sectionHref(link.targetId)}
                     onClick={() => onSelectSection(link.targetId)}
                     className="text-[#F3F0E7]/85 hover:text-[#B79A62] transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#B79A62] rounded-xs"
                   >
