@@ -5,7 +5,7 @@ import type { PageId } from '../utils/router';
 export interface UrgencyCase {
   readonly title: string;
   readonly text: string;
-  readonly icon: 'lock' | 'shield';
+  readonly icon: 'lock' | 'shield' | 'glass' | 'store' | 'window' | 'shutter' | 'garage' | 'key' | 'badge';
   readonly imageSrc: string;
   readonly imageAlt: string;
   /** Cadrage CSS (object-position) de la photo dans la carte. */
@@ -17,7 +17,7 @@ export interface UrgencyConfig {
   readonly title: string;
   readonly subtitle: string;
   readonly cases: readonly UrgencyCase[];
-  readonly assurances: readonly { readonly label: string; readonly icon: 'timer' | 'shield' | 'file' }[];
+  readonly assurances: readonly { readonly label: string; readonly icon: 'timer' | 'shield' | 'file' | 'store' }[];
   readonly ctaPrefix: string;
 }
 
@@ -260,6 +260,127 @@ export const URGENCY_CONFIG: UrgencyConfig = {
     { label: 'Devis clair avant intervention', icon: 'file' },
   ],
   ctaPrefix: 'Appeler le',
+};
+
+const STANDARD_ASSURANCES: UrgencyConfig['assurances'] = [
+  { label: 'Intervention rapide', icon: 'timer' },
+  { label: 'Mise en sécurité', icon: 'shield' },
+  { label: 'Devis clair avant intervention', icon: 'file' },
+];
+
+/** Bloc « urgence » adapté à chaque service (la version serrurerie est URGENCY_CONFIG). */
+export type UrgencyVariant = 'serrurerie' | 'vitrerie' | 'menuiserie' | 'fermetures' | 'cles';
+
+export const URGENCY_VARIANTS: Readonly<Record<UrgencyVariant, UrgencyConfig>> = {
+  serrurerie: URGENCY_CONFIG,
+  vitrerie: {
+    kicker: 'Dépannage en urgence',
+    title: 'Un problème de vitre ?',
+    subtitle: 'Vitre cassée, vitrine brisée ou vitrage fissuré\u00A0: notre équipe vous accompagne rapidement à Marseille.',
+    cases: [
+      {
+        title: 'Vitre cassée',
+        text: 'Fenêtre ou porte vitrée brisée, vitrage fissuré.',
+        icon: 'glass',
+        imageSrc: '/src/assets/images/as_banniere.jpg',
+        imageAlt: 'Vitrage de fenêtre brisé.',
+        imagePosition: '96% 40%',
+      },
+      {
+        title: 'Vitrine brisée',
+        text: 'Vitrine de commerce endommagée ou vandalisée.',
+        icon: 'store',
+        imageSrc: '/src/assets/images/domaine_vitrerie_1795289921283.jpg',
+        imageAlt: 'Artisan intervenant sur la vitrine d’un commerce.',
+        imagePosition: '55% 40%',
+      },
+    ],
+    assurances: STANDARD_ASSURANCES,
+    ctaPrefix: 'Appeler le',
+  },
+  menuiserie: {
+    kicker: 'Dépannage',
+    title: 'Une fenêtre ou une porte qui ferme mal ?',
+    subtitle: 'Ouvrant bloqué, poignée cassée ou porte qui frotte\u00A0: nous réglons, réparons ou remplaçons.',
+    cases: [
+      {
+        title: 'Fenêtre bloquée',
+        text: 'Ouvrant qui ne ferme plus, poignée ou crémone cassée.',
+        icon: 'window',
+        imageSrc: '/src/assets/images/domaine_menuiserie_1795289934186.jpg',
+        imageAlt: 'Artisan réglant une fenêtre.',
+        imagePosition: '45% 40%',
+      },
+      {
+        title: 'Porte qui ferme mal',
+        text: 'Porte d’entrée ou porte-fenêtre qui frotte ou se déforme.',
+        icon: 'lock',
+        imageSrc: '/src/assets/images/hero_serrurier_marseille_1795288791942.jpg',
+        imageAlt: 'Artisan intervenant sur une porte d’entrée.',
+        imagePosition: '70% 40%',
+      },
+    ],
+    assurances: [
+      { label: 'Intervention rapide', icon: 'timer' },
+      { label: 'Réglage ou remplacement', icon: 'shield' },
+      { label: 'Devis clair avant intervention', icon: 'file' },
+    ],
+    ctaPrefix: 'Appeler le',
+  },
+  fermetures: {
+    kicker: 'Dépannage en urgence',
+    title: 'Un rideau ou un volet bloqué ?',
+    subtitle: 'Rideau métallique coincé, volet roulant en panne ou porte de garage bloquée\u00A0: nous intervenons à Marseille.',
+    cases: [
+      {
+        title: 'Rideau métallique bloqué',
+        text: 'Commerce impossible à ouvrir ou à fermer.',
+        icon: 'shutter',
+        imageSrc: '/src/assets/images/domaine_fermetures_1795289921534.jpg',
+        imageAlt: 'Volet roulant métallique fermé.',
+        imagePosition: '20% 50%',
+      },
+      {
+        title: 'Volet ou porte de garage',
+        text: 'Volet roulant ou porte de garage en panne.',
+        icon: 'garage',
+        imageSrc: '/src/assets/images/domaine_fermetures_1795289921534.jpg',
+        imageAlt: 'Porte de garage sectionnelle.',
+        imagePosition: '80% 55%',
+      },
+    ],
+    assurances: STANDARD_ASSURANCES,
+    ctaPrefix: 'Appeler le',
+  },
+  cles: {
+    kicker: 'Besoin d’un double ?',
+    title: 'Une clé ou un badge en moins ?',
+    subtitle: 'Clé abîmée ou badge qui ne fonctionne plus\u00A0: passez en boutique avec un exemplaire en bon état.',
+    cases: [
+      {
+        title: 'Clé à refaire',
+        text: 'Clé tordue, usée ou un exemplaire en moins.',
+        icon: 'key',
+        imageSrc: '/src/assets/images/kb_cles.jpg',
+        imageAlt: 'Deux clés sur un anneau.',
+        imagePosition: '50% 50%',
+      },
+      {
+        title: 'Badge à copier',
+        text: 'Badge d’accès en plus, selon la compatibilité du modèle.',
+        icon: 'badge',
+        imageSrc: '/src/assets/images/kb_badge.jpg',
+        imageAlt: 'Badge d’accès d’immeuble.',
+        imagePosition: '50% 50%',
+      },
+    ],
+    assurances: [
+      { label: 'En boutique', icon: 'store' },
+      { label: 'À partir de votre original', icon: 'file' },
+      { label: 'Contrôlé avant remise', icon: 'shield' },
+    ],
+    ctaPrefix: 'Appeler le',
+  },
 };
 
 export const KEYS_BADGES_CONFIG: KeysBadgesConfig = {

@@ -37,6 +37,7 @@ import {
   type FaqItem,
   type KeysBadgeIconKey,
   type NumberedStep,
+  type UrgencyVariant,
 } from './sectionsContent';
 
 export type BlockTone = 'light' | 'dark';
@@ -138,7 +139,7 @@ export type PageBlock =
   | ({ readonly type: 'beforeAfter'; readonly id: string; readonly tone: 'dark'; readonly items: readonly BeforeAfterCase[] } & SectionHeading)
   /* Sections partagées avec l'accueil (fond fixe) */
   | { readonly type: 'brands' }
-  | { readonly type: 'urgency' }
+  | { readonly type: 'urgency'; readonly variant?: UrgencyVariant }
   | { readonly type: 'agencies' }
   | { readonly type: 'zone'; readonly embedded?: boolean }
   | { readonly type: 'reviews'; readonly hideHeading?: boolean };
@@ -232,7 +233,8 @@ function domainPageBlocks(domain: DomainCardItem): PageBlock[] {
   const extras = DOMAIN_PAGE_EXTRAS[domain.id];
   const hasCases = extras.beforeAfter.length > 0;
   const blocks: PageBlock[] = [
-    { type: 'urgency' },
+    // Bloc urgence adapté au métier (porte pour la serrurerie, vitre, fenêtre, rideau…)
+    { type: 'urgency', variant: domain.id },
     {
       type: 'features',
       id: 'page-prestations',
@@ -550,6 +552,7 @@ export const THEMATIC_PAGES: Readonly<Record<BlockPageId, PageDefinition>> = {
       actions: [{ kind: 'page', label: 'Trouver une agence', page: 'agences-contact' }, { kind: 'phone' }],
     },
     blocks: [
+      { type: 'urgency', variant: 'cles' },
       {
         type: 'services',
         id: 'page-services',
