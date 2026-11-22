@@ -63,8 +63,14 @@ export interface BrandsConfig {
   readonly kicker: string;
   readonly title: string;
   readonly subtitle: string;
+  /**
+   * Marques sur lesquelles l'entreprise intervient (noms affichés en texte,
+   * sans reproduire les logos déposés). ⚠️ Liste à confirmer par l'entreprise.
+   */
   readonly partners: readonly PartnerBrandItem[];
-  readonly note: string;
+  /** Phrase sous la grille (autres marques). */
+  readonly otherBrandsLabel: string;
+  readonly otherBrandsCta: string;
 }
 
 export interface AfterIncidentStep {
@@ -306,10 +312,10 @@ export const DOMAINS_CONFIG: DomainsConfig = {
 };
 
 export const BRANDS_CONFIG: BrandsConfig = {
-  kicker: 'Nos partenaires',
-  title: 'Des fabricants reconnus pour la fiabilité de vos accès.',
+  kicker: 'Les marques',
+  title: 'Les grandes marques, entre de bonnes mains.',
   subtitle:
-    'Nous posons, dépannons et entretenons les équipements des plus grandes maisons de serrurerie et de fermeture.',
+    'Nous posons, dépannons et entretenons les équipements des principaux fabricants de serrurerie et de fermeture.',
   partners: [
     { id: 'vachette', name: 'Vachette', specialty: 'Cylindres & serrures' },
     { id: 'bricard', name: 'Bricard', specialty: 'Haute sécurité A2P' },
@@ -318,7 +324,8 @@ export const BRANDS_CONFIG: BrandsConfig = {
     { id: 'dom', name: 'DOM', specialty: 'Organigrammes & clés' },
     { id: 'iseo', name: 'ISEO', specialty: 'Contrôle d’accès' },
   ],
-  note: 'Sélection illustrative de nos partenaires fabricants — liste définitive à confirmer',
+  otherBrandsLabel: 'Votre équipement est d’une autre marque ?',
+  otherBrandsCta: 'Contactez-nous pour vérifier',
 };
 
 export const AFTER_INCIDENT_CONFIG: AfterIncidentConfig = {
