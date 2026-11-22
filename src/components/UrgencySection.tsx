@@ -24,7 +24,7 @@ export function UrgencySection({ config, brand }: UrgencySectionProps) {
       id="03_Urgence"
       data-section="03_Urgence"
       aria-labelledby="03_Urgence-title"
-      className="urg-surface relative w-full bg-[var(--urg-bg)] [--urg-bg:#1C1F21] [--urg-card:#1C1F21] [--urg-ink:#F3F0E7] [--urg-text:rgba(243,240,231,0.78)] [--urg-accent:#B79A62] [--urg-line:rgba(243,240,231,0.12)] [--urg-cta:#B79A62] [--urg-cta-ink:#1C1F21] scroll-mt-[74px] lg:scroll-mt-[88px]"
+      className="urg-surface relative w-full bg-[var(--urg-bg)] [--urg-bg:#1C1F21] [--urg-card:#1C1F21] [--urg-card-ink:#F3F0E7] [--urg-card-text:rgba(243,240,231,0.75)] [--urg-ink:#F3F0E7] [--urg-text:rgba(243,240,231,0.78)] [--urg-accent:#B79A62] [--urg-line:rgba(243,240,231,0.12)] [--urg-cta:#B79A62] [--urg-cta-ink:#1C1F21] scroll-mt-[74px] lg:scroll-mt-[88px]"
     >
       <motion.div
         initial={prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 14 }}
@@ -53,12 +53,13 @@ export function UrgencySection({ config, brand }: UrgencySectionProps) {
             return (
               <li
                 key={item.title}
-                className="relative isolate overflow-hidden rounded-2xl border border-[#B79A62]/40 bg-[var(--urg-card)] min-h-[190px] sm:min-h-[210px]"
+                className="relative isolate overflow-hidden rounded-2xl border border-[var(--urg-line)] bg-[var(--urg-card)] min-h-[190px] sm:min-h-[210px]"
               >
                 <img
                   src={item.imageSrc}
                   alt={item.imageAlt}
                   loading="lazy"
+                  style={item.imagePosition ? { objectPosition: item.imagePosition } : undefined}
                   className="absolute inset-y-0 right-0 -z-10 h-full w-[55%] object-cover"
                 />
                 <span
@@ -72,10 +73,10 @@ export function UrgencySection({ config, brand }: UrgencySectionProps) {
                   >
                     <Icon className="h-5 w-5" strokeWidth={1.6} />
                   </span>
-                  <h3 className="mt-3 font-display text-[22px] sm:text-[24px] font-semibold leading-tight text-[#F3F0E7]">
+                  <h3 className="mt-3 font-display text-[22px] sm:text-[24px] font-semibold leading-tight text-[var(--urg-card-ink)]">
                     {item.title}
                   </h3>
-                  <p className="mt-1.5 text-[14.5px] leading-[1.5] text-[#F3F0E7]/75">{item.text}</p>
+                  <p className="mt-1.5 text-[14.5px] leading-[1.5] text-[var(--urg-card-text)]">{item.text}</p>
                   <span aria-hidden="true" className="mt-4 h-0.5 w-9 bg-[var(--urg-accent)]" />
                 </div>
               </li>

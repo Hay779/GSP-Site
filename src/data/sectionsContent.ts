@@ -8,6 +8,8 @@ export interface UrgencyCase {
   readonly icon: 'lock' | 'shield';
   readonly imageSrc: string;
   readonly imageAlt: string;
+  /** Cadrage CSS (object-position) de la photo dans la carte. */
+  readonly imagePosition?: string;
 }
 
 export interface UrgencyConfig {
@@ -223,15 +225,16 @@ export const URGENCY_CONFIG: UrgencyConfig = {
       title: 'Porte claquée',
       text: 'Clés oubliées, porte fermée par inadvertance.',
       icon: 'lock',
-      imageSrc: '/src/assets/images/urg_porte_claquee.jpg',
-      imageAlt: 'Poignée et serrure d’une porte d’entrée sombre.',
+      imageSrc: '/src/assets/images/domaine_serrurerie_1795289920360.jpg',
+      imageAlt: 'Cylindre de serrure sur une porte d’entrée, mur en pierre claire.',
     },
     {
       title: 'Porte forcée',
       text: 'Serrure endommagée, tentative d’effraction ou intrusion.',
       icon: 'shield',
-      imageSrc: '/src/assets/images/urg_porte_forcee.jpg',
-      imageAlt: 'Cylindre de serrure abîmé après une tentative d’effraction.',
+      imageSrc: '/src/assets/images/apres_sinistre_diagnostic_1795291186729.jpg',
+      imageAlt: 'Serrurier examinant une porte d’entrée après une tentative d’effraction.',
+      imagePosition: '92% 50%',
     },
   ],
   assurances: [
