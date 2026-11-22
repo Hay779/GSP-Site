@@ -23,16 +23,16 @@ interface FaqSectionProps {
 
 /** Couleurs du bloc FAQ selon le fond. */
 const FAQ_TONES = {
+  // « dark » = variante claire sur fond blanc (le site est entièrement clair entre le haut et le pied de page)
   dark: {
-    section: 'bg-[#1C1F21] text-[#F3F0E7]',
-    kicker: 'text-[#B79A62]',
-    title: 'text-[#F3F0E7]',
-    subtitle: 'text-[#F3F0E7]/76',
-    rule: 'border-[#F3F0E7]/12',
-    prompt: 'text-[#F3F0E7]/75',
-    phone: 'text-[#B79A62] hover:text-[#F3F0E7]',
-    outline: 'focus-visible:outline-[#B79A62]',
-    // Questions/réponses sur un panneau clair, même sur fond sombre (lisibilité)
+    section: 'bg-white text-[#1C1F21]',
+    kicker: 'text-[#7D612D]',
+    title: 'text-[#1C1F21]',
+    subtitle: 'text-[#1C1F21]/70',
+    rule: 'border-[#1C1F21]/12',
+    prompt: 'text-[#1C1F21]/75',
+    phone: 'text-[#7D612D] hover:text-[#1C1F21]',
+    outline: 'focus-visible:outline-[#7D612D]',
     list: 'border-transparent bg-[#F7F5F0] divide-[#1C1F21]/10',
     rowHover: 'hover:bg-white',
     number: 'text-[#7D612D]',
@@ -97,7 +97,7 @@ export function FaqSection({
       id={sectionId}
       data-section={sectionId}
       aria-labelledby={`${sectionId}-title`}
-      className={`w-full ${t.section} border-t border-[#B79A62]/45 scroll-mt-[74px] lg:scroll-mt-[88px]`}
+      className={`w-full ${t.section} scroll-mt-[74px] lg:scroll-mt-[88px]`}
     >
       <div className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-10 py-16 sm:py-20 lg:py-24">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">

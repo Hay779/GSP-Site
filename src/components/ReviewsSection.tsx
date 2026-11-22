@@ -295,7 +295,7 @@ export function ReviewsSection({ config, layout = 'marquee', allReviewsHref, hid
       id="08_Avis_Clients"
       data-section="08_Avis_Clients"
       aria-labelledby="08_Avis_Clients-title"
-      className="w-full bg-[#F7F5F0] text-[#1C1F21] border-t border-[#B79A62]/45 scroll-mt-[74px] lg:scroll-mt-[88px] overflow-x-clip"
+      className="w-full bg-[#F7F5F0] text-[#1C1F21] scroll-mt-[74px] lg:scroll-mt-[88px] overflow-x-clip"
     >
       <div className="py-16 sm:py-20 lg:py-24">
         <motion.div

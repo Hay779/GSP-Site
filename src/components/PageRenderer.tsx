@@ -1,6 +1,6 @@
 import { ArrowRight, Building2, FileCheck, FileText, KeyRound, MessageCircle, Phone, ShieldCheck, Wrench } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
-import type { HeroAction, PageBlock, PageDefinition } from '../data/pages';
+import { blockTone, type HeroAction, type PageBlock, type PageDefinition } from '../data/pages';
 import {
   AFTER_INCIDENT_CONFIG,
   AGENCIES_CONFIG,
@@ -343,7 +343,7 @@ function LegalArticles({ articles }: { readonly articles: Extract<PageBlock, { t
 /** Appel à l'action final : panneau clair (photo en coin, vague dorée) sur fond sombre. */
 function CtaPanel({ block, ctx }: { readonly block: Extract<PageBlock, { type: 'cta' }>; readonly ctx: PageContext }) {
   return (
-    <section id={block.id} aria-labelledby={`${block.id}-title`} className="w-full bg-[#1C1F21]">
+    <section id={block.id} aria-labelledby={`${block.id}-title`} className="w-full bg-white">
       <div className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-10 py-12 sm:py-16 lg:py-20">
         <div className="relative overflow-hidden rounded-3xl bg-[#FAF7F1] p-6 sm:p-8 lg:p-12">
           <div aria-hidden="true" className="absolute right-0 top-0 h-[140px] w-[92%] sm:h-[180px] sm:w-[60%] lg:h-full lg:w-[42%]">
@@ -523,6 +523,16 @@ export function PageBlockView({ block, ctx }: { readonly block: PageBlock; reado
   }
 }
 
+/** Couleur de la section qui suit l'en-tête (remplissage de la vague dorée). */
+function heroNextFill(page: PageDefinition): string {
+  const first = page.blocks[0];
+  if (!first) {
+    return '#F7F5F0';
+  }
+  const tone = blockTone(first);
+  return tone === 'band' ? '#FFFFFF' : tone === 'dark' ? '#1C1F21' : '#F7F5F0';
+}
+
 /** Page intérieure complète : en-tête + blocs. */
 export function PageRenderer({ page, ctx }: { readonly page: PageDefinition; readonly ctx: PageContext }) {
   usePageMeta(page.seoTitle, page.seoDescription);
@@ -538,6 +548,7 @@ export function PageRenderer({ page, ctx }: { readonly page: PageDefinition; rea
         compact={page.hero.compact}
         highlights={page.hero.highlights}
         shortcuts={page.hero.shortcuts}
+        nextFill={heroNextFill(page)}
         actions={
           page.hero.actions.length > 0 ? (
             <>
