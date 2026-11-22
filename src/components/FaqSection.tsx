@@ -1,10 +1,9 @@
 import { useRef, useState, type KeyboardEvent } from 'react';
-import { ArrowRight, Phone, Plus } from 'lucide-react';
+import { ArrowRight, Flame, Phone, Plus } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import type { FaqConfig } from '../data/sectionsContent';
 import type { BrandConfig } from '../utils/navigation';
 import {
-  formatFaqNumber,
   resolveNextFaqFocusIndex,
   toggleFaqItemId,
 } from '../utils/faqAccordion';
@@ -70,11 +69,13 @@ export function FaqSection({
   showContact = true,
 }: FaqSectionProps) {
   const t = FAQ_TONES[tone];
-  const [openId, setOpenId] = useState<string | null>(config.items[0]?.id ?? null);
+  // Les questions « très demandées » passent en premier (ordre d'origine conservé sinon).
+  const items = [...config.items].sort((a, b) => Number(Boolean(b.popular)) - Number(Boolean(a.popular)));
+  const [openId, setOpenId] = useState<string | null>(items[0]?.id ?? null);
   const triggerRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const prefersReducedMotion = useReducedMotion() ?? false;
 
-  const validIds = config.items.map((item) => item.id);
+  const validIds = items.map((item) => item.id);
 
   const handleToggle = (itemId: string) => {
     setOpenId((current) => toggleFaqItemId(current, itemId, validIds));
@@ -84,7 +85,7 @@ export function FaqSection({
     event: KeyboardEvent<HTMLButtonElement>,
     index: number
   ) => {
-    const nextIndex = resolveNextFaqFocusIndex(index, event.key, config.items.length);
+    const nextIndex = resolveNextFaqFocusIndex(index, event.key, items.length);
     if (nextIndex !== null) {
       event.preventDefault();
       triggerRefs.current[nextIndex]?.focus();
@@ -168,12 +169,11 @@ export function FaqSection({
             className="lg:col-span-8"
           >
             <div className={`rounded-3xl border divide-y overflow-hidden ${t.list}`}>
-              {config.items.map((item, index) => {
+              {items.map((item, index) => {
                 const isOpen = openId === item.id;
                 const triggerId = `faq-trigger-${item.id}`;
                 const panelId = `faq-panel-${item.id}`;
-                const itemNumber = formatFaqNumber(index);
-
+                
                 return (
                   <div key={item.id}>
                     <h3>
@@ -189,14 +189,14 @@ export function FaqSection({
                         onKeyDown={(event) => handleTriggerKeyDown(event, index)}
                         className={`group flex w-full min-h-[68px] items-center justify-between gap-4 px-5 sm:px-7 py-5 text-left transition-colors duration-150 ${t.rowHover} focus-visible:outline-2 focus-visible:outline-offset-[-2px] ${t.outline} cursor-pointer`}
                       >
-                        <span className="flex items-baseline gap-4 min-w-0">
-                          <span
-                            aria-hidden="true"
-                            className={`shrink-0 font-display text-[13px] font-semibold tracking-[0.06em] tabular-nums ${t.number}`}
-                          >
-                            {itemNumber}
-                          </span>
-                          <span className={`font-display text-[16.5px] sm:text-[18px] font-semibold leading-[1.35] ${t.question} transition-colors duration-150`}>
+                        <span className="min-w-0">
+                          {item.popular && (
+                            <span className="mb-1.5 inline-flex items-center gap-1.5 rounded-full bg-[#B79A62]/15 px-2.5 py-0.5 text-[11.5px] font-semibold uppercase tracking-[0.08em] text-[#7D612D]">
+                              <Flame className="h-3.5 w-3.5" strokeWidth={2} aria-hidden="true" />
+                              Très demandée
+                            </span>
+                          )}
+                          <span className={`block font-display text-[16.5px] sm:text-[18px] font-semibold leading-[1.35] ${t.question} transition-colors duration-150`}>
                             {item.question}
                           </span>
                         </span>
@@ -242,7 +242,7 @@ export function FaqSection({
                           }}
                           className="overflow-hidden"
                         >
-                          <div className="px-5 sm:px-7 pb-6 pt-0 pl-[52px] sm:pl-[66px] pr-6 sm:pr-14">
+                          <div className="px-5 sm:px-7 pb-6 pt-0  pr-6 sm:pr-14">
                             <p className={`text-[15px] sm:text-[15.5px] leading-[1.7] ${t.answer}`}>
                               {item.answer}
                             </p>

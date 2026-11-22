@@ -9,6 +9,7 @@ import type { FaqItem } from './sectionsContent';
 export const FAQ_SERRURERIE: readonly FaqItem[] = [
   {
     id: 'serr-porte-claquee',
+    popular: true,
     question: 'Ma porte est claquée : pouvez-vous l’ouvrir sans abîmer la serrure ?',
     answer:
       'Lorsque la porte est simplement claquée (non fermée à clé), nous privilégions une ouverture fine, sans dégradation. Si la serrure est verrouillée ou endommagée, nous vous expliquons les solutions possibles avant d’intervenir.',
@@ -42,6 +43,7 @@ export const FAQ_SERRURERIE: readonly FaqItem[] = [
 export const FAQ_VITRERIE: readonly FaqItem[] = [
   {
     id: 'vitr-bris',
+    popular: true,
     question: 'Que faire juste après un bris de glace ?',
     answer:
       'Mettez-vous en sécurité et éloignez les éclats, prenez des photos des dégâts puis contactez-nous : nous assurons la mise en sécurité et, si besoin, une fermeture provisoire en attendant le remplacement.',
@@ -75,6 +77,7 @@ export const FAQ_MENUISERIE: readonly FaqItem[] = [
   },
   {
     id: 'menu-reglage',
+    popular: true,
     question: 'Ma fenêtre ferme mal : faut-il la changer ?',
     answer:
       'Pas forcément. Un réglage ou le remplacement de pièces de quincaillerie (crémone, paumelles) suffit souvent. Nous évaluons la situation avant de proposer un remplacement.',
@@ -96,6 +99,7 @@ export const FAQ_MENUISERIE: readonly FaqItem[] = [
 export const FAQ_FERMETURES: readonly FaqItem[] = [
   {
     id: 'ferm-rideau-bloque',
+    popular: true,
     question: 'Mon rideau métallique est bloqué : que faire ?',
     answer:
       'Évitez de le forcer, cela peut aggraver la panne. Contactez-nous : nous intervenons pour le dépannage et le déblocage des rideaux métalliques de commerces.',
@@ -123,6 +127,7 @@ export const FAQ_FERMETURES: readonly FaqItem[] = [
 export const FAQ_CLES_BADGES: readonly FaqItem[] = [
   {
     id: 'cles-apporter',
+    popular: true,
     question: 'Que dois-je apporter pour faire un double ?',
     answer: 'Apportez la clé ou le badge d’origine dans l’une de nos agences.',
   },
@@ -148,6 +153,7 @@ export const FAQ_CLES_BADGES: readonly FaqItem[] = [
 export const FAQ_APRES_SINISTRE: readonly FaqItem[] = [
   {
     id: 'sin-premiers-gestes',
+    popular: true,
     question: 'Que faire juste après une effraction ?',
     answer:
       'Mettez-vous en sécurité, évitez de toucher aux traces, prenez des photos et prévenez les autorités ainsi que votre assureur. Appelez-nous ensuite pour sécuriser les accès.',

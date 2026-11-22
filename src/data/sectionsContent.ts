@@ -179,6 +179,11 @@ export interface FaqItem {
   readonly id: string;
   readonly question: string;
   readonly answer: string;
+  /**
+   * Question parmi les plus posées par les clients (à choisir selon ce que l'équipe entend
+   * vraiment au téléphone et en boutique) : affichée en premier avec un badge.
+   */
+  readonly popular?: boolean;
 }
 
 export interface FaqConfig {
@@ -523,12 +528,14 @@ export const FAQ_CONFIG: FaqConfig = {
   items: [
     {
       id: 'porte-claquee',
+      popular: true,
       question: 'Ma porte est claquée : intervenez-vous sans abîmer la serrure ?',
       answer:
         'Oui, dès lors que la porte est simplement claquée et non fermée à clé, nous privilégions systématiquement une ouverture fine non destructive. Le remplacement du cylindre n’est envisagé que si la serrure est verrouillée, défectueuse ou endommagée.',
     },
     {
       id: 'devis-prealable',
+      popular: true,
       question: 'Un devis est-il établi avant le début de l’intervention ?',
       answer:
         'Un devis détaillé vous est toujours présenté et validé avant la réalisation des travaux, qu’il s’agisse d’un dépannage en urgence, d’un changement de cylindre, d’un blindage de porte ou d’un remplacement de vitrage.',
