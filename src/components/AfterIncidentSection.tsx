@@ -58,31 +58,7 @@ export function AfterIncidentSection({ config, onDescribeNeed, onSendPhotos }: A
 
         <div className="px-5 sm:px-8 lg:px-0 pb-12 sm:pb-14 lg:pb-0">
           {/* Trois prises en charge */}
-          <ul className="mt-7 lg:mt-12 grid grid-cols-3 gap-2.5 sm:gap-4 lg:gap-6">
-            {config.services.map((service) => {
-              const Icon = SERVICE_ICONS[service.icon];
-              return (
-                <li
-                  key={service.title}
-                  className="overflow-hidden rounded-2xl bg-white shadow-[0_6px_20px_-12px_rgba(28,31,33,0.35)] text-center"
-                >
-                  <img src={service.imageSrc} alt="" loading="lazy" className="h-[78px] sm:h-[120px] lg:h-[150px] w-full object-cover" />
-                  <span
-                    aria-hidden="true"
-                    className="relative mx-auto -mt-6 sm:-mt-7 grid h-12 w-12 sm:h-14 sm:w-14 place-items-center rounded-full bg-[#F3EBDD] text-[#7D612D] ring-4 ring-white"
-                  >
-                    <Icon className="h-5 w-5 sm:h-6 sm:w-6" strokeWidth={1.6} />
-                  </span>
-                  <div className="px-2 sm:px-4 pt-2 pb-4 sm:pb-5">
-                    <h3 className="font-display text-[14px] sm:text-[18px] lg:text-[20px] font-semibold leading-tight text-[#1C1F21]">
-                      {service.title}
-                    </h3>
-                    <p className="mt-1 text-[12px] sm:text-[14px] leading-[1.4] text-[#1C1F21]/65">{service.text}</p>
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
+          <IncidentServiceGrid services={config.services} className="mt-7 lg:mt-12" />
 
           {/* Parcours en 4 étapes */}
           <div className="mt-9 lg:mt-12 flex items-center gap-4">
@@ -136,5 +112,43 @@ export function AfterIncidentSection({ config, onDescribeNeed, onSendPhotos }: A
         </div>
       </div>
     </section>
+  );
+}
+
+/**
+ * Les trois prises en charge (accueil et page Après sinistre) : photo, icône centrée à cheval
+ * sur la photo, titre et texte centrés. Mobile : une carte par ligne ; tablette et ordinateur : 3 colonnes.
+ */
+export function IncidentServiceGrid({
+  services,
+  className = '',
+}: {
+  readonly services: AfterIncidentConfig['services'];
+  readonly className?: string;
+}) {
+  return (
+    <ul className={`grid grid-cols-1 gap-4 sm:grid-cols-3 lg:gap-6 ${className}`}>
+      {services.map((service) => {
+        const Icon = SERVICE_ICONS[service.icon];
+        return (
+          <li
+            key={service.title}
+            className="flex flex-col items-center overflow-hidden rounded-2xl bg-white text-center shadow-[0_10px_28px_-20px_rgba(28,31,33,0.4)]"
+          >
+            <img src={service.imageSrc} alt="" loading="lazy" className="h-[120px] sm:h-[130px] lg:h-[160px] w-full object-cover" />
+            <span
+              aria-hidden="true"
+              className="relative -mt-7 grid h-14 w-14 shrink-0 place-items-center rounded-full bg-[#F3EBDD] text-[#7D612D] ring-4 ring-white"
+            >
+              <Icon className="h-6 w-6" strokeWidth={1.6} />
+            </span>
+            <div className="w-full px-4 pt-3 pb-5 sm:px-3 lg:px-5 lg:pb-6">
+              <h3 className="font-display text-[18px] lg:text-[20px] font-semibold leading-tight text-[#1C1F21]">{service.title}</h3>
+              <p className="mx-auto mt-1.5 max-w-[30ch] text-[14px] lg:text-[15px] leading-[1.45] text-[#1C1F21]/68">{service.text}</p>
+            </div>
+          </li>
+        );
+      })}
+    </ul>
   );
 }
