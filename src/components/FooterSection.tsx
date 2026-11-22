@@ -44,28 +44,27 @@ export function FooterSection({
     <footer
       id="11_Pied_De_Page"
       data-section="11_Pied_De_Page"
-      className="w-full bg-[#16191B] border-t border-[#B79A62]/65 scroll-mt-[74px] lg:scroll-mt-[88px]"
+      className={`w-full scroll-mt-[74px] lg:scroll-mt-[88px] ${hideCta ? 'bg-[#16191B] border-t border-[#B79A62]/65' : 'bg-[#F3F0E7]'}`}
     >
-      {/* Appel à l'action sur panneau clair : photo clés & badge, trois façons de nous joindre, boutiques */}
+      {/* Appel à l'action sur fond clair : photo clés & badge en haut à droite, découpée en vague (filet doré) */}
       {!hideCta && (
-        <div className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-10 pt-10 sm:pt-14">
-          <div className="relative overflow-hidden rounded-3xl bg-[#F7F5F0] p-5 sm:p-8 lg:p-10">
-            {/* Photo en haut à droite, découpée par une vague avec filet doré (mobile et bureau) */}
-            <div aria-hidden="true" className="absolute right-0 top-0 h-[150px] w-[90%] sm:h-[210px] sm:w-[70%] lg:h-[250px] lg:w-[50%]">
-              <img src={CTA_IMAGE} alt="" loading="lazy" className="h-full w-full object-cover object-[45%_45%]" />
-              <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 h-full w-full">
-                <path d="M0 0 V100 H100 C78 100 66 92 54 70 C42 46 30 26 0 18 Z" fill="#F7F5F0" />
-                <path
-                  d="M100 100 C78 100 66 92 54 70 C42 46 30 26 0 18"
-                  fill="none"
-                  stroke="#B79A62"
-                  strokeWidth="2"
-                  vectorEffect="non-scaling-stroke"
-                />
-              </svg>
-            </div>
-
-            <div className="relative max-w-2xl pt-[150px] sm:pt-[196px] lg:pt-0 lg:max-w-[54%]">
+        <div className="relative overflow-hidden pt-8 pb-12 sm:pt-12 sm:pb-16">
+          <div aria-hidden="true" className="absolute right-0 top-0 h-[190px] w-[94%] sm:h-[250px] sm:w-[72%] lg:h-[300px] lg:w-[48%]">
+            <img src={CTA_IMAGE} alt="" loading="lazy" className="h-full w-full object-cover object-[45%_45%]" />
+            <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 h-full w-full">
+              <path d="M0 0 C34 4 46 30 58 58 C68 82 80 96 100 100 V101 H-1 V0 Z" fill="#F3F0E7" />
+              <path
+                d="M0 0 C34 4 46 30 58 58 C68 82 80 96 100 100"
+                fill="none"
+                stroke="#B79A62"
+                strokeWidth="2.5"
+                vectorEffect="non-scaling-stroke"
+              />
+            </svg>
+          </div>
+          <div className="relative mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-10">
+          <div className="relative rounded-3xl p-5 sm:p-8 lg:p-10 ring-1 ring-white/80 shadow-[0_18px_50px_-30px_rgba(28,31,33,0.35)]">
+            <div className="relative max-w-2xl pt-[130px] sm:pt-[180px] lg:pt-0 lg:max-w-[52%]">
               <p className="section-kicker flex items-center gap-3 text-[#7D612D]">
                 <span aria-hidden="true" className="h-0.5 w-8 bg-[#B79A62]" />
                 {config.ctaKicker}
@@ -126,9 +125,11 @@ export function FooterSection({
               ))}
             </p>
           </div>
+          </div>
         </div>
       )}
 
+      <div className={hideCta ? '' : 'rounded-t-[28px] sm:rounded-t-[40px] bg-[#16191B]'}>
       <div className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-10 pt-12 sm:pt-14 pb-8 sm:pb-10">
         <div className="grid grid-cols-2 gap-x-6 gap-y-10 lg:grid-cols-12 lg:gap-0 items-start">
           {/* Marque + contact */}
@@ -242,6 +243,7 @@ export function FooterSection({
             </a>
           </div>
         </div>
+      </div>
       </div>
     </footer>
   );
