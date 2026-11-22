@@ -1,13 +1,6 @@
 import { useEffect, useState, type ReactNode } from 'react';
-import { ChevronRight } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
 import { REVEAL_EASE } from '../utils/scrollReveal';
-
-export interface BreadcrumbItem {
-  readonly label: string;
-  /** Absent pour la page courante. */
-  readonly href?: string;
-}
 
 interface PageHeroProps {
   readonly kicker: string;
@@ -16,7 +9,6 @@ interface PageHeroProps {
   readonly imageSrc?: string;
   /** Cadrage de la photo (CSS object-position). */
   readonly imagePosition?: string;
-  readonly breadcrumb: readonly BreadcrumbItem[];
   readonly actions?: ReactNode;
   /** En-tête réduit, sans photo (pages légales). */
   readonly compact?: boolean;
@@ -46,14 +38,13 @@ export function usePageMeta(title: string, description: string) {
   }, [title, description]);
 }
 
-/** En-tête commun des pages intérieures : photo plein cadre, fil d'Ariane, titre, actions. */
+/** En-tête commun des pages intérieures : photo plein cadre, titre, actions. */
 export function PageHero({
   kicker,
   title,
   intro,
   imageSrc,
   imagePosition = '60% 45%',
-  breadcrumb,
   actions,
   compact = false,
   appStyle = false,
@@ -114,26 +105,6 @@ export function PageHero({
       </div>
 
       <div className={`relative z-10 mx-auto w-full max-w-[1280px] px-5 sm:px-8 lg:px-10 ${compact ? 'pt-20 pb-12 lg:pb-14' : hasPhoto ? 'pt-3 pb-12 sm:pb-14 lg:py-24' : 'pt-28 pb-14 sm:pb-16 lg:py-24'}`}>
-        <nav aria-label="Fil d’Ariane" className={appStyle ? 'mb-4 pt-2 lg:pt-0 lg:mb-6' : 'mb-6'}>
-          <ol className={`flex flex-wrap items-center gap-1.5 ${appStyle ? 'text-[12px] sm:text-[13px] text-[#F3F0E7]/55' : 'text-[13px] text-[#F3F0E7]/70'}`}>
-            {breadcrumb.map((item, index) => (
-              <li key={item.label} className="flex items-center gap-1.5">
-                {index > 0 && (
-                  <ChevronRight aria-hidden="true" className="h-3.5 w-3.5 text-[#F3F0E7]/40" />
-                )}
-                {item.href ? (
-                  <a href={item.href} className="hover:text-[#B79A62] transition-colors duration-150">
-                    {item.label}
-                  </a>
-                ) : (
-                  <span aria-current="page" className="text-[#F3F0E7]">
-                    {item.label}
-                  </span>
-                )}
-              </li>
-            ))}
-          </ol>
-        </nav>
 
         <div className="max-w-[640px]">
           <motion.p {...fadeUp(0)} className="section-kicker text-[#B79A62]">

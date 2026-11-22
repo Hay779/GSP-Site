@@ -12,7 +12,7 @@ import {
   type PartnerDraft,
   type PartnerErrors,
 } from '../utils/partnerForm';
-import { hrefForHome, hrefForPage, type RouterMode } from '../utils/router';
+import { hrefForPage, type RouterMode } from '../utils/router';
 import { PageHero, usePageMeta } from './PageHero';
 
 const ORG_ICONS: Readonly<Record<OrganizationType, typeof Building2>> = {
@@ -131,11 +131,6 @@ export function PartnerPage({ brand, routerMode }: { readonly brand: BrandConfig
         kicker="Professionnels"
         title="Devenir partenaire."
         intro="Syndics, assureurs, experts, agences immobilières et bailleurs : présentez-nous votre structure et vos besoins, nous revenons vers vous pour organiser notre collaboration."
-        breadcrumb={[
-          { label: 'Accueil', href: hrefForHome(routerMode) },
-          { label: 'Professionnels', href: hrefForPage('professionnels', routerMode) },
-          { label: 'Devenir partenaire' },
-        ]}
       />
 
       <section aria-label="Formulaire partenaire" className="w-full border-t border-[#B79A62]/45 bg-[#F7F5F0] text-[#1C1F21]">

@@ -5,7 +5,6 @@ import {
   AFTER_INCIDENT_CONFIG,
   AGENCIES_CONFIG,
   CONTACT_PAGE_CONFIG,
-  DOMAIN_PAGE_CONFIG,
   DOMAINS_CONFIG,
   FAQ_CONFIG,
   REVIEWS_CONFIG,
@@ -18,8 +17,6 @@ import type { BrandConfig } from '../utils/navigation';
 import type { QuoteDomain } from '../utils/quoteForm';
 import {
   hrefForDomain,
-  hrefForHome,
-  hrefForHomeSection,
   hrefForPage,
   type Route,
   type RouterMode,
@@ -36,7 +33,6 @@ import {
   PAGE_HERO_SECONDARY_BUTTON,
   PageHero,
   usePageMeta,
-  type BreadcrumbItem,
 } from './PageHero';
 import { BeforeAfterCases, FeatureCards, NumberedCards, NumberedSteps, PageSection, ProcessSteps } from './PageSections';
 import { BrandsSection } from './BrandsSection';
@@ -456,15 +452,6 @@ export function PageBlockView({ block, ctx }: { readonly block: PageBlock; reado
 export function PageRenderer({ page, ctx }: { readonly page: PageDefinition; readonly ctx: PageContext }) {
   usePageMeta(page.seoTitle, page.seoDescription);
 
-  const breadcrumb: BreadcrumbItem[] = [{ label: DOMAIN_PAGE_CONFIG.breadcrumbHomeLabel, href: hrefForHome(ctx.routerMode) }];
-  if (page.hero.breadcrumbParent === 'domaines') {
-    breadcrumb.push({
-      label: DOMAIN_PAGE_CONFIG.breadcrumbDomainsLabel,
-      href: hrefForHomeSection('05_Nos_Domaines', ctx.route, ctx.routerMode),
-    });
-  }
-  breadcrumb.push({ label: page.hero.breadcrumbLabel ?? page.hero.title.replace(/\.$/, '') });
-
   return (
     <>
       <div className={page.hero.hideOnMobile ? 'hidden lg:block' : undefined}>
@@ -476,7 +463,6 @@ export function PageRenderer({ page, ctx }: { readonly page: PageDefinition; rea
         imagePosition={page.hero.imagePosition}
         compact={page.hero.compact}
         appStyle={page.hero.breadcrumbParent === 'domaines'}
-        breadcrumb={breadcrumb}
         actions={
           page.hero.actions.length > 0 ? (
             <>
