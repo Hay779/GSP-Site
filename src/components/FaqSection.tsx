@@ -33,13 +33,14 @@ const FAQ_TONES = {
     prompt: 'text-[#F3F0E7]/75',
     phone: 'text-[#B79A62] hover:text-[#F3F0E7]',
     outline: 'focus-visible:outline-[#B79A62]',
-    list: 'border-[#F3F0E7]/12 bg-[#292D2F]/55 divide-[#F3F0E7]/10',
-    rowHover: 'hover:bg-[#F3F0E7]/[0.04]',
-    number: 'text-[#B79A62]',
-    question: 'text-[#F3F0E7] group-hover:text-[#D2B478]',
-    iconOpen: 'border-[#B79A62] bg-[#B79A62] text-[#1C1F21]',
-    iconClosed: 'border-[#F3F0E7]/22 bg-transparent text-[#B79A62] group-hover:border-[#B79A62]',
-    answer: 'text-[#F3F0E7]/78',
+    // Questions/réponses sur un panneau clair, même sur fond sombre (lisibilité)
+    list: 'border-transparent bg-[#F7F5F0] divide-[#1C1F21]/10',
+    rowHover: 'hover:bg-white',
+    number: 'text-[#7D612D]',
+    question: 'text-[#1C1F21] group-hover:text-[#7D612D]',
+    iconOpen: 'border-[#1C1F21] bg-[#1C1F21] text-[#B79A62]',
+    iconClosed: 'border-[#1C1F21]/16 bg-white text-[#7D612D] group-hover:border-[#B79A62]',
+    answer: 'text-[#1C1F21]/76',
   },
   light: {
     section: 'bg-[#F7F5F0] text-[#1C1F21]',
@@ -132,7 +133,7 @@ export function FaqSection({
                 <button
                   type="button"
                   onClick={onOpenQuoteModal}
-                  className="group inline-flex min-h-[46px] items-center justify-center gap-2.5 rounded-lg bg-[#B79A62] hover:bg-[#C6AA73] active:bg-[#A68952] px-5 py-2.5 text-[14.5px] font-semibold text-[#1C1F21] whitespace-nowrap transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62] cursor-pointer"
+                  className="group inline-flex h-10 items-center justify-center gap-2 rounded-full bg-[#B79A62] hover:bg-[#C6AA73] active:bg-[#A68952] px-4 text-[14px] font-semibold text-[#1C1F21] whitespace-nowrap transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62] cursor-pointer"
                 >
                   <span>{config.quoteCtaLabel}</span>
                   <ArrowRight
@@ -154,7 +155,7 @@ export function FaqSection({
             )}
           </motion.div>
 
-          {/* Colonne droite : accordéon éditorial sur carte blanche unifiée */}
+          {/* Colonne droite : accordéon sur panneau clair */}
           <motion.div
             initial={prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -166,7 +167,7 @@ export function FaqSection({
             }}
             className="lg:col-span-8"
           >
-            <div className={`rounded-xl border divide-y overflow-hidden ${t.list}`}>
+            <div className={`rounded-3xl border divide-y overflow-hidden ${t.list}`}>
               {config.items.map((item, index) => {
                 const isOpen = openId === item.id;
                 const triggerId = `faq-trigger-${item.id}`;
