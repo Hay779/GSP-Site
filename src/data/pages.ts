@@ -131,6 +131,7 @@ export type PageBlock =
       readonly steps: readonly NumberedStep[];
       readonly icons?: readonly ProcessIconKey[];
     } & SectionHeading)
+  | ({ readonly type: 'incidentServices'; readonly id: string; readonly tone: 'light' } & SectionHeading)
   | ({ readonly type: 'beforeAfter'; readonly id: string; readonly tone: 'dark'; readonly items: readonly BeforeAfterCase[] } & SectionHeading)
   /* Sections partagées avec l'accueil (fond fixe) */
   | { readonly type: 'brands' }
@@ -546,20 +547,37 @@ export const THEMATIC_PAGES: Readonly<Record<BlockPageId, PageDefinition>> = {
       intro: AFTER_INCIDENT_PAGE_CONFIG.intro,
       imageSrc: AFTER_INCIDENT_CONFIG.imageSrc,
       imagePosition: '70% 35%',
+      highlights: ['Mise en sécurité rapide', 'Reportage photo', 'Dossier assurance'],
       actions: [
         { kind: 'quote', label: AFTER_INCIDENT_CONFIG.primaryCtaLabel, domain: 'Après sinistre' },
         { kind: 'photos', label: AFTER_INCIDENT_CONFIG.secondaryCtaLabel },
       ],
     },
     blocks: [
+      { type: 'urgency' },
       {
-        type: 'cards',
+        type: 'incidentServices',
+        id: 'page-prise-en-charge',
+        tone: 'light',
+        kicker: AFTER_INCIDENT_PAGE_CONFIG.servicesKicker,
+        title: AFTER_INCIDENT_PAGE_CONFIG.servicesTitle,
+      },
+      {
+        type: 'beforeAfter',
+        id: 'page-avant-apres',
+        tone: 'dark',
+        kicker: AFTER_INCIDENT_PAGE_CONFIG.casesKicker,
+        title: AFTER_INCIDENT_PAGE_CONFIG.casesTitle,
+        items: DOMAIN_PAGE_EXTRAS.serrurerie.beforeAfter,
+      },
+      {
+        type: 'process',
         id: 'page-accompagnement',
         tone: 'light',
         kicker: AFTER_INCIDENT_PAGE_CONFIG.stepsKicker,
         title: AFTER_INCIDENT_PAGE_CONFIG.stepsTitle,
-        items: AFTER_INCIDENT_CONFIG.steps.map((step) => step.label),
-        columns: 4,
+        steps: AFTER_INCIDENT_CONFIG.steps.map((step) => ({ title: step.label, text: '' })),
+        icons: ['search', 'file', 'wrench', 'folder'],
       },
       {
         type: 'insurance',
@@ -568,9 +586,8 @@ export const THEMATIC_PAGES: Readonly<Record<BlockPageId, PageDefinition>> = {
         kicker: AFTER_INCIDENT_PAGE_CONFIG.insuranceKicker,
         title: AFTER_INCIDENT_PAGE_CONFIG.insuranceTitle,
       },
-      faqBlock('page-faq', 'light', FAQ_APRES_SINISTRE),
-      { type: 'urgency' },
       { type: 'agencies' },
+      faqBlock('page-faq', 'dark', FAQ_APRES_SINISTRE),
     ],
   },
 

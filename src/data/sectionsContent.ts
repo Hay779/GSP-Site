@@ -100,8 +100,8 @@ export interface AfterIncidentStep {
 }
 
 export interface InsuranceNoticeConfig {
-  readonly partnerName: string;
-  readonly partnerNote: string;
+  /** Documents fournis pour l'assurance (liste à puces). */
+  readonly documents: readonly string[];
   readonly title: string;
   readonly subtitle: string;
   readonly ctaLabel: string;
@@ -408,8 +408,7 @@ export const AFTER_INCIDENT_CONFIG: AfterIncidentConfig = {
     { number: '04', label: 'Suivi administratif du dossier' },
   ],
   insuranceNotice: {
-    partnerName: 'Allianz',
-    partnerNote: 'Lien avec Allianz à confirmer',
+    documents: ['Reportage photo avant / après', 'Devis détaillé', 'Facture conforme'],
     title: 'Vous êtes assuré ? Nous préparons votre dossier.',
     subtitle:
       'Reportage photo, devis détaillé et facture conformes aux attentes de votre assureur.',
@@ -706,20 +705,28 @@ export const KEYS_BADGES_PAGE_CONFIG: KeysBadgesPageConfig = {
 export interface AfterIncidentPageConfig extends ThematicPageBase {
   readonly stepsKicker: string;
   readonly stepsTitle: string;
+  readonly servicesKicker: string;
+  readonly servicesTitle: string;
+  readonly casesKicker: string;
+  readonly casesTitle: string;
   readonly insuranceKicker: string;
   readonly insuranceTitle: string;
 }
 
 export const AFTER_INCIDENT_PAGE_CONFIG: AfterIncidentPageConfig = {
   kicker: 'Après sinistre',
-  title: 'Du premier diagnostic à la remise en état.',
+  title: 'Un sinistre ? Nous vous accompagnons.',
   intro:
     'Effraction, vandalisme ou bris de glace : nous sécurisons les lieux, établissons un devis détaillé avec reportage photo et assurons la remise en état.',
   seoTitle: 'Après effraction ou bris de glace à Marseille | Serrurerie de la République',
   seoDescription:
     'Mise en sécurité, devis détaillé et reportage photo pour votre assurance, réparation ou remplacement après effraction, vandalisme ou bris de glace à Marseille.',
   stepsKicker: 'Notre accompagnement',
-  stepsTitle: 'Quatre étapes, un seul interlocuteur.',
+  stepsTitle: 'Notre accompagnement en 4 étapes.',
+  servicesKicker: 'Prise en charge',
+  servicesTitle: 'Sécuriser, réparer, documenter.',
+  casesKicker: 'Avant / après',
+  casesTitle: 'Une remise en état en images.',
   insuranceKicker: 'Assurance',
   insuranceTitle: 'Un dossier complet pour votre assureur.',
 };
