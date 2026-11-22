@@ -4,12 +4,12 @@ Déposez ici les logos officiels des marques, avec exactement ces noms de fichie
 
 | Marque   | Fichier         |
 |----------|-----------------|
-| Vachette | `vachette.svg`  |
-| Bricard  | `bricard.svg`   |
-| Fichet   | `fichet.svg`    |
-| Picard   | `picard.svg`    |
-| DOM      | `dom.svg`       |
-| ISEO     | `iseo.svg`      |
+| Vachette | `vachette.svg` (à fournir) |
+| Bricard  | `bricard.png` ✅ |
+| Fichet   | `fichet.png` ✅ |
+| Picard   | `picard.png` ✅ |
+| DOM      | `dom.svg` (à fournir) |
+| ISEO     | `iseo.png` ✅ |
 
 - Format conseillé : **SVG** (net à toutes les tailles). Un PNG à fond transparent
   fonctionne aussi : changez alors l'extension dans `src/data/sectionsContent.ts`

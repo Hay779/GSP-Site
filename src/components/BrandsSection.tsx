@@ -15,13 +15,14 @@ function BrandLogo({ partner }: { readonly partner: PartnerBrandItem }) {
   const [failed, setFailed] = useState(false);
   if (partner.logoSrc && !failed) {
     return (
-      <span className="flex h-[64px] w-full items-center justify-center">
+      <span className="flex h-[72px] w-full items-center justify-center">
         <img
           src={partner.logoSrc}
           alt={`Logo ${partner.name}`}
           loading="lazy"
           onError={() => setFailed(true)}
-          className="max-h-[56px] max-w-[85%] object-contain"
+          style={{ maxHeight: `${partner.logoHeight ?? 56}px` }}
+          className="w-auto max-w-[92%] object-contain"
         />
       </span>
     );

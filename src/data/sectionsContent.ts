@@ -62,6 +62,8 @@ export interface PartnerBrandItem {
    * introuvable, le nom de la marque s'affiche à la place.
    */
   readonly logoSrc?: string;
+  /** Hauteur max du logo en px (équilibre visuel entre logos larges et carrés). */
+  readonly logoHeight?: number;
 }
 
 export interface BrandsConfig {
@@ -323,11 +325,11 @@ export const BRANDS_CONFIG: BrandsConfig = {
     'Nous posons, dépannons et entretenons les équipements des principaux fabricants de serrurerie et de fermeture.',
   partners: [
     { id: 'vachette', name: 'Vachette', specialty: 'Cylindres & serrures', logoSrc: '/assets/brands/vachette.svg' },
-    { id: 'bricard', name: 'Bricard', specialty: 'Haute sécurité A2P', logoSrc: '/assets/brands/bricard.svg' },
-    { id: 'fichet', name: 'Fichet', specialty: 'Portes blindées', logoSrc: '/assets/brands/fichet.svg' },
-    { id: 'picard', name: 'Picard', specialty: 'Serrures multipoints', logoSrc: '/assets/brands/picard.svg' },
+    { id: 'bricard', name: 'Bricard', specialty: 'Haute sécurité A2P', logoSrc: '/assets/brands/bricard.png', logoHeight: 62 },
+    { id: 'fichet', name: 'Fichet', specialty: 'Portes blindées', logoSrc: '/assets/brands/fichet.png', logoHeight: 42 },
+    { id: 'picard', name: 'Picard', specialty: 'Serrures multipoints', logoSrc: '/assets/brands/picard.png', logoHeight: 52 },
     { id: 'dom', name: 'DOM', specialty: 'Organigrammes & clés', logoSrc: '/assets/brands/dom.svg' },
-    { id: 'iseo', name: 'ISEO', specialty: 'Contrôle d’accès', logoSrc: '/assets/brands/iseo.svg' },
+    { id: 'iseo', name: 'ISEO', specialty: 'Contrôle d’accès', logoSrc: '/assets/brands/iseo.png', logoHeight: 40 },
   ],
   otherBrandsLabel: 'Votre équipement est d’une autre marque ?',
   otherBrandsCta: 'Contactez-nous pour vérifier',
