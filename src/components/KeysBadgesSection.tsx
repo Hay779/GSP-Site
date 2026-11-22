@@ -1,11 +1,18 @@
 import { useState } from 'react';
-import { ArrowRight, KeyRound } from 'lucide-react';
-import type { KeysBadgeIconKey, KeysBadgesConfig } from '../data/sectionsContent';
-import type { SectionId } from '../utils/navigation';
+import { ArrowRight, KeyRound, MapPin, Store } from 'lucide-react';
+import { motion, useReducedMotion } from 'motion/react';
+import type { AgencyItem, KeysBadgeIconKey, KeysBadgesConfig, KeysBadgesPageConfig } from '../data/sectionsContent';
+import { REVEAL_EASE, REVEAL_VIEWPORT } from '../utils/scrollReveal';
 
 interface KeysBadgesSectionProps {
   readonly config: KeysBadgesConfig;
-  readonly onSelectSection: (sectionId: SectionId) => void;
+  /** Services détaillés et étapes (partagés avec la page Clés & badges). */
+  readonly details: KeysBadgesPageConfig;
+  readonly agencies: readonly AgencyItem[];
+  /** Lien vers la page Clés & badges. */
+  readonly pageHref: string;
+  /** Lien vers la page Agences & contact. */
+  readonly agenciesHref: string;
 }
 
 export function ServiceIcon({ icon }: { readonly icon: KeysBadgeIconKey }) {
@@ -43,11 +50,15 @@ export function ServiceIcon({ icon }: { readonly icon: KeysBadgeIconKey }) {
   );
 }
 
-export function KeysBadgesSection({
-  config,
-  onSelectSection,
-}: KeysBadgesSectionProps) {
+export function KeysBadgesSection({ config, details, agencies, pageHref, agenciesHref }: KeysBadgesSectionProps) {
   const [imageFailed, setImageFailed] = useState(false);
+  const prefersReducedMotion = Boolean(useReducedMotion());
+  const reveal = (delay: number) => ({
+    initial: prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: REVEAL_VIEWPORT,
+    transition: { duration: prefersReducedMotion ? 0 : 0.5, delay: prefersReducedMotion ? 0 : delay, ease: REVEAL_EASE },
+  });
 
   return (
     <section
@@ -57,81 +68,96 @@ export function KeysBadgesSection({
       className="w-full bg-[#F7F5F0] text-[#1C1F21] border-b border-[#B79A62]/45 scroll-mt-[74px] lg:scroll-mt-[88px]"
     >
       <div className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-10 py-16 sm:py-20 lg:py-24">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
-          {/* Colonne gauche : photo lumineuse en boutique */}
-          <div className="lg:col-span-6">
-            <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl border border-[#1C1F21]/12 bg-[#EAE6DC]">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-stretch">
+          {/* Photo en boutique */}
+          <motion.div {...reveal(0)} className="lg:col-span-5">
+            <div className="group relative h-full min-h-[300px] w-full overflow-hidden rounded-xl border border-[#1C1F21]/12 bg-[#EAE6DC]">
               {!imageFailed ? (
                 <img
                   src={config.imageSrc}
                   alt={config.imageAlt}
                   referrerPolicy="no-referrer"
                   onError={() => setImageFailed(true)}
-                  className="h-full w-full object-cover object-center"
+                  className="absolute inset-0 h-full w-full object-cover object-[45%_50%] transition-transform duration-700 ease-out group-hover:scale-[1.04]"
                 />
               ) : (
-                <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-[#EAE6DC] px-6 text-center">
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 px-6 text-center">
                   <KeyRound className="h-10 w-10 text-[#7D612D]" strokeWidth={1.5} aria-hidden="true" />
-                  <p className="font-display text-lg font-medium text-[#1C1F21]">
-                    Reproduction de clés &amp; badges en boutique
-                  </p>
+                  <p className="font-display text-lg font-medium text-[#1C1F21]">Reproduction de clés &amp; badges en boutique</p>
                 </div>
               )}
+              <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#1C1F21]/70 to-transparent" />
+              <span className="absolute bottom-4 left-4 inline-flex items-center gap-2 rounded-lg bg-[#1C1F21]/85 px-3.5 py-2 text-[13px] font-medium text-[#F3F0E7] backdrop-blur-sm">
+                <Store className="h-4 w-4 text-[#B79A62]" aria-hidden="true" />
+                En boutique · République &amp; Lodi
+              </span>
             </div>
-          </div>
+          </motion.div>
 
-          {/* Colonne droite : promesse, deux services et bouton vers les agences */}
-          <div className="lg:col-span-6 flex flex-col items-start">
-            <p className="section-kicker text-[#7D612D]">
-              {config.kicker}
-            </p>
+          {/* Contenu */}
+          <div className="lg:col-span-7 flex flex-col">
+            <motion.div {...reveal(0.05)}>
+              <p className="section-kicker text-[#7D612D]">{config.kicker}</p>
+              <h2 id="04_Cles_Badges-title" className="mt-3 section-title text-[#1C1F21]">
+                <span className="block">{config.headlineLines[0]}</span>
+                <span className="block">{config.headlineLines[1]}</span>
+              </h2>
+            </motion.div>
 
-            <h2
-              id="04_Cles_Badges-title"
-              className="mt-3 section-title text-[#1C1F21]"
-            >
-              <span className="block">{config.headlineLines[0]}</span>
-              <span className="block">{config.headlineLines[1]}</span>
-            </h2>
-
-            {/* Deux services clés avec séparateur vertical discret */}
-            <ul
-              aria-label="Services de reproduction en boutique"
-              className="mt-7 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-0 w-full"
-            >
-              {config.services.map((service, index) => (
-                <li
-                  key={service.label}
-                  className={`flex items-center gap-3.5 text-[16px] sm:text-[17px] font-medium text-[#1C1F21] ${
-                    index > 0
-                      ? 'sm:border-l sm:border-[#1C1F21]/16 sm:pl-7 sm:ml-7'
-                      : ''
-                  }`}
-                >
-                  <ServiceIcon icon={service.icon} />
-                  <span>{service.label}</span>
+            {/* Deux services */}
+            <motion.ul {...reveal(0.1)} aria-label="Services de reproduction en boutique" className="mt-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {details.services.map((service) => (
+                <li key={service.title} className="flex gap-4 rounded-xl border border-[#1C1F21]/12 bg-[#FFFFFF] p-5 transition-colors duration-200 hover:border-[#B79A62]">
+                  <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full border border-[#B79A62]/45 bg-[#F7F5F0]">
+                    <ServiceIcon icon={service.icon} />
+                  </span>
+                  <div>
+                    <p className="font-display text-[17px] font-semibold text-[#1C1F21]">{service.title}</p>
+                    <p className="mt-1 text-[14.5px] leading-[1.55] text-[#1C1F21]/70">{service.text}</p>
+                  </div>
                 </li>
               ))}
-            </ul>
+            </motion.ul>
 
-            <p className="mt-6 text-[16px] sm:text-[17px] leading-[1.6] text-[#1C1F21]/72">
-              {config.note}
-            </p>
+            {/* Comment ça marche (version courte) */}
+            <motion.ol {...reveal(0.15)} aria-label={details.stepsKicker} className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-0 border-y border-[#1C1F21]/10 py-5">
+              {details.steps.map((step, index) => (
+                <li key={step.title} className={`flex items-center gap-3 ${index > 0 ? 'sm:border-l sm:border-[#1C1F21]/10 sm:pl-5' : ''} sm:pr-4`}>
+                  <span className="font-display text-[22px] font-semibold leading-none tabular-nums text-[#B79A62]">
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
+                  <span className="text-[14.5px] font-medium leading-snug text-[#1C1F21]/85">{step.title}</span>
+                </li>
+              ))}
+            </motion.ol>
 
-            <div className="mt-8">
-              <a
-                href={config.ctaHref}
-                onClick={() => onSelectSection(config.ctaTargetId)}
-                className="group inline-flex min-h-[48px] items-center justify-center gap-2.5 rounded-lg bg-[#1C1F21] hover:bg-[#292D2F] active:bg-[#171A1C] px-7 py-3.5 text-[15px] sm:text-[16px] font-semibold text-[#F3F0E7] whitespace-nowrap transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7D612D]"
-              >
-                <span>{config.ctaLabel}</span>
-                <ArrowRight
-                  className="h-[18px] w-[18px] shrink-0 text-[#B79A62] transition-transform duration-150 group-hover:translate-x-1"
-                  strokeWidth={2}
-                  aria-hidden="true"
-                />
-              </a>
-            </div>
+            {/* Agences + actions */}
+            <motion.div {...reveal(0.2)} className="mt-6 flex flex-col gap-6">
+              <ul aria-label="Nos boutiques" className="flex flex-wrap gap-2.5">
+                {agencies.map((agency) => (
+                  <li key={agency.id} className="inline-flex items-center gap-2 rounded-full border border-[#1C1F21]/15 bg-[#FFFFFF] px-3.5 py-1.5 text-[14px] text-[#1C1F21]/80">
+                    <MapPin className="h-4 w-4 text-[#7D612D]" aria-hidden="true" />
+                    <span className="font-medium text-[#1C1F21]">{agency.name}</span>
+                    <span className="text-[#1C1F21]/55">· {agency.districtLabel}</span>
+                  </li>
+                ))}
+              </ul>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <a
+                  href={pageHref}
+                  className="group inline-flex min-h-[48px] items-center justify-center gap-2.5 rounded-lg bg-[#1C1F21] hover:bg-[#292D2F] active:bg-[#171A1C] px-7 py-3 text-[15px] sm:text-[16px] font-semibold text-[#F3F0E7] whitespace-nowrap transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7D612D]"
+                >
+                  Découvrir Clés &amp; badges
+                  <ArrowRight className="h-[18px] w-[18px] shrink-0 text-[#B79A62] transition-transform duration-150 group-hover:translate-x-1" strokeWidth={2} aria-hidden="true" />
+                </a>
+                <a
+                  href={agenciesHref}
+                  className="inline-flex min-h-[48px] items-center justify-center gap-2.5 rounded-lg border border-[#1C1F21]/25 hover:border-[#1C1F21] hover:bg-[#1C1F21]/5 px-7 py-3 text-[15px] sm:text-[16px] font-medium text-[#1C1F21] whitespace-nowrap transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7D612D]"
+                >
+                  {config.ctaLabel}
+                </a>
+              </div>
+            </motion.div>
           </div>
         </div>
       </div>

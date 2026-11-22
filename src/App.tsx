@@ -27,6 +27,7 @@ import {
   FAQ_CONFIG,
   FOOTER_CONFIG,
   KEYS_BADGES_CONFIG,
+  KEYS_BADGES_PAGE_CONFIG,
   REVIEWS_CONFIG,
   URGENCY_CONFIG,
   WHATSAPP_CONFIG,
@@ -208,7 +209,10 @@ export default function App() {
 
         <KeysBadgesSection
           config={KEYS_BADGES_CONFIG}
-          onSelectSection={handleSelectSection}
+          details={KEYS_BADGES_PAGE_CONFIG}
+          agencies={AGENCIES_CONFIG.agencies}
+          pageHref={pageHref('cles-badges')}
+          agenciesHref={pageHref('agences-contact')}
         />
 
         <DomainsSection

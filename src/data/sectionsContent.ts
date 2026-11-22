@@ -202,7 +202,7 @@ export const KEYS_BADGES_CONFIG: KeysBadgesConfig = {
     { label: 'Reproduction de badges', icon: 'badge' },
   ],
   note: 'Retrouvez-nous en agence pour votre demande.',
-  ctaLabel: 'Voir nos agences',
+  ctaLabel: 'Trouver une agence',
   ctaTargetId: '10_Nos_Agences',
   ctaHref: '#10_Nos_Agences',
   imageSrc: '/src/assets/images/cles_badges_boutique_1795289681478.jpg',
