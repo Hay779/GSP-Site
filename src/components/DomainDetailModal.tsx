@@ -65,9 +65,10 @@ export function DomainDetailModal({
         aria-modal="true"
         aria-labelledby="domain-modal-title"
         data-testid="domain-detail-modal"
-        className="relative z-10 w-full max-w-[600px] max-h-[90vh] overflow-y-auto rounded-xl border border-[#F3F0E7]/15 bg-[#292D2F] shadow-2xl"
+        className="relative z-10 flex w-full max-w-[600px] max-h-[90vh] flex-col overflow-hidden rounded-xl border border-[#F3F0E7]/15 bg-[#292D2F] shadow-2xl"
       >
-        <div className="relative aspect-[16/8] w-full overflow-hidden bg-[#1C1F21]">
+        <div className="min-h-0 flex-1 overflow-y-auto">
+        <div className="relative aspect-[16/9] sm:aspect-[16/8] w-full overflow-hidden bg-[#1C1F21]">
           <img
             src={domain.imageSrc}
             alt={domain.imageAlt}
@@ -87,9 +88,9 @@ export function DomainDetailModal({
           </button>
         </div>
 
-        <div className="px-6 pb-6 pt-2 sm:px-7 sm:pb-7">
-          <p className="text-[12px] font-medium tracking-[0.16em] text-[#B79A62]">
-            Prestations essentielles
+        <div className="px-6 pb-6 pt-2 sm:px-7">
+          <p className="text-[12px] font-medium uppercase tracking-[0.18em] text-[#B79A62]">
+            {domain.categoryTag}
           </p>
           <h2
             id="domain-modal-title"
@@ -103,7 +104,7 @@ export function DomainDetailModal({
 
           <ul
             aria-label={`Prestations en ${domain.title}`}
-            className="mt-5 flex flex-col gap-3 border-y border-[#F3F0E7]/10 py-5"
+            className="mt-5 flex flex-col gap-3 border-t border-[#F3F0E7]/10 pt-5"
           >
             {domain.prestations.map((line) => (
               <li
@@ -120,10 +121,15 @@ export function DomainDetailModal({
             ))}
           </ul>
 
-          <div className="mt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        </div>
+        </div>
+
+        {/* Barre d'actions toujours visible (même quand le contenu défile sur mobile) */}
+        <div className="shrink-0 border-t border-[#F3F0E7]/10 bg-[#292D2F] px-6 py-4 sm:px-7 sm:py-5">
+          <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-3">
             <a
               href={brand.phoneHref}
-              className="inline-flex min-h-[46px] items-center justify-center gap-2 rounded-lg border border-[#F3F0E7]/25 px-5 py-2.5 text-[14px] font-medium text-[#F3F0E7] hover:border-[#B79A62] hover:text-[#B79A62] tabular-nums whitespace-nowrap transition-colors duration-150"
+              className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-lg border border-[#F3F0E7]/40 px-5 py-2.5 text-[14px] font-medium text-[#F3F0E7] hover:border-[#B79A62] hover:text-[#B79A62] tabular-nums whitespace-nowrap transition-colors duration-150"
             >
               <Phone className="h-4 w-4 shrink-0" aria-hidden="true" />
               <span>Appeler le {brand.phoneDisplay}</span>
@@ -132,7 +138,7 @@ export function DomainDetailModal({
             <button
               type="button"
               onClick={() => onRequestQuote(domain.quoteDomain)}
-              className="inline-flex min-h-[46px] items-center justify-center rounded-lg bg-[#B79A62] hover:bg-[#C6AA73] active:bg-[#A68952] px-6 py-2.5 text-[14px] sm:text-[15px] font-semibold text-[#1C1F21] whitespace-nowrap transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F3F0E7] cursor-pointer"
+              className="inline-flex min-h-[48px] items-center justify-center rounded-lg bg-[#B79A62] hover:bg-[#C6AA73] active:bg-[#A68952] px-6 py-2.5 text-[14px] sm:text-[15px] font-semibold text-[#1C1F21] whitespace-nowrap transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F3F0E7] cursor-pointer"
             >
               Demander un devis
             </button>

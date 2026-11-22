@@ -76,19 +76,21 @@ function PortraitPeelDomainCard({
         }
       }}
       data-peel-active={isActive ? 'true' : 'false'}
-      className={`relative w-full min-w-0 aspect-[0.78] overflow-hidden rounded-xl border border-[#F3F0E7]/12 bg-[#B79A62] isolate will-change-transform select-none ${
+      className={`relative w-full min-w-0 aspect-[0.78] overflow-hidden rounded-xl border bg-[#292D2F] isolate transition-colors duration-300 ${
+        isActive ? 'border-[#B79A62]/70' : 'border-[#F3F0E7]/12'
+      } will-change-transform select-none ${
         isFocused ? 'outline-2 outline-offset-3 outline-[#F3F0E7]' : ''
       }`}
     >
-      {/* Face révélée (sous la couverture photo) : laiton brossé + encre anthracite */}
+      {/* Face révélée (sous la couverture photo) : anthracite + accents laiton */}
       <div
         id={detailId}
         aria-hidden={!isActive}
-        className={`absolute inset-0 z-10 flex flex-col p-5 sm:p-6 text-[#1C1F21] transition-opacity duration-200 ${
+        className={`absolute inset-0 z-10 flex flex-col p-5 sm:p-6 text-[#F3F0E7] bg-[radial-gradient(ellipse_90%_60%_at_100%_0%,rgba(183,154,98,0.16),transparent_65%)] transition-opacity duration-200 ${
           isActive ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
         }`}
       >
-        <div className="flex items-center justify-between gap-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#1C1F21]/75">
+        <div className="flex items-center justify-between gap-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#B79A62]">
           <span className="truncate">{item.categoryTag}</span>
           <div className="flex items-center gap-2 shrink-0">
             <span className="tabular-nums">{number}</span>
@@ -97,7 +99,7 @@ function PortraitPeelDomainCard({
               onClick={onCloseCard}
               tabIndex={isActive ? 0 : -1}
               aria-label={`Refermer la carte ${item.title}`}
-              className="inline-flex sm:hidden h-7 w-7 items-center justify-center rounded-full border border-[#1C1F21]/30 text-[#1C1F21] hover:bg-[#1C1F21]/10 cursor-pointer"
+              className="inline-flex sm:hidden h-7 w-7 items-center justify-center rounded-full border border-[#F3F0E7]/30 text-[#F3F0E7] hover:bg-[#F3F0E7]/10 cursor-pointer"
             >
               <X className="h-3.5 w-3.5" aria-hidden="true" />
             </button>
@@ -107,18 +109,18 @@ function PortraitPeelDomainCard({
         <div className="flex-1 min-h-3" />
 
         <div className="flex flex-col gap-3">
-          <h3 className="font-display text-[22px] sm:text-[24px] xl:text-[26px] font-semibold leading-[1.15] tracking-[-0.015em] text-[#1C1F21]">
+          <h3 className="font-display text-[22px] sm:text-[24px] xl:text-[26px] font-semibold leading-[1.15] tracking-[-0.015em] text-[#F3F0E7]">
             {item.title}
           </h3>
-          <p className="text-[14px] leading-[1.52] text-[#1C1F21]/84">
+          <p className="text-[14px] leading-[1.52] text-[#F3F0E7]/80">
             {item.summary}
           </p>
-          <ul className="mt-0.5 flex flex-col gap-1.5 text-[12.5px] leading-[1.4] text-[#1C1F21]/78">
+          <ul className="mt-0.5 flex flex-col gap-1.5 text-[12.5px] leading-[1.4] text-[#F3F0E7]/72">
             {item.prestations.slice(0, 2).map((prestation) => (
               <li key={prestation} className="flex items-start gap-2">
                 <span
                   aria-hidden="true"
-                  className="mt-[6px] h-1 w-1 shrink-0 rounded-full bg-[#1C1F21]/75"
+                  className="mt-[6px] h-1 w-1 shrink-0 rounded-full bg-[#B79A62]"
                 />
                 <span className="line-clamp-2">{prestation}</span>
               </li>
@@ -133,7 +135,7 @@ function PortraitPeelDomainCard({
           onBlur={onBlurCard}
           tabIndex={isActive ? 0 : -1}
           aria-label={`En savoir plus sur ${item.title}`}
-          className="mt-5 flex w-full items-center justify-between gap-3 border-t border-[#1C1F21]/30 pt-3.5 text-left font-display text-[14px] font-semibold text-[#1C1F21] hover:opacity-75 transition-opacity duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1C1F21] rounded-xs cursor-pointer"
+          className="mt-5 flex w-full items-center justify-between gap-3 border-t border-[#B79A62]/40 pt-3.5 text-left font-display text-[14px] font-semibold text-[#B79A62] hover:text-[#D2B478] transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62] rounded-xs cursor-pointer"
         >
           <span>{item.ctaLabel}</span>
           <ArrowRight className="h-[18px] w-[18px] shrink-0" strokeWidth={2} aria-hidden="true" />
@@ -147,7 +149,14 @@ function PortraitPeelDomainCard({
         aria-expanded={isActive}
         aria-controls={detailId}
         tabIndex={isActive ? -1 : 0}
-        onClick={onToggleOpen}
+        onClick={() => {
+          // Écrans tactiles (sans survol) : un seul appui ouvre directement la fiche.
+          if (typeof window !== 'undefined' && window.matchMedia('(hover: none)').matches) {
+            onSelectDomain(item);
+            return;
+          }
+          onToggleOpen();
+        }}
         onFocus={onFocusCard}
         onBlur={onBlurCard}
         initial={false}
