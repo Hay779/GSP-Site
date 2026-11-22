@@ -168,29 +168,32 @@ function AudienceCards({
 }) {
   const prefersReducedMotion = Boolean(useReducedMotion());
   return (
-    <ul className="grid grid-cols-1 gap-5 md:grid-cols-3 lg:gap-6">
+    <ul className="grid grid-cols-1 gap-3 sm:gap-5 md:grid-cols-3 lg:gap-6">
       {items.map((item, index) => {
         const Icon = AUDIENCE_ICONS[item.icon];
         return (
           <motion.li
             key={item.page}
-            initial={prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 22 }}
+            initial={prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={REVEAL_VIEWPORT}
-            transition={{ duration: prefersReducedMotion ? 0 : 0.5, delay: prefersReducedMotion ? 0 : index * 0.08, ease: REVEAL_EASE }}
+            transition={{ duration: prefersReducedMotion ? 0 : 0.45, delay: prefersReducedMotion ? 0 : index * 0.07, ease: REVEAL_EASE }}
           >
+            {/* Mobile : ligne compacte (icône, titre, phrase, flèche) — Ordinateur : carte */}
             <a
               href={hrefForPage(item.page, ctx.routerMode)}
-              className="group flex h-full flex-col gap-4 rounded-xl border border-[#1C1F21]/12 bg-[#FFFFFF] p-7 transition-colors duration-200 hover:border-[#B79A62] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7D612D]"
+              className="group flex h-full items-center gap-4 rounded-2xl bg-white p-4 shadow-[0_10px_28px_-20px_rgba(28,31,33,0.4)] transition-shadow duration-200 hover:shadow-[0_16px_34px_-18px_rgba(28,31,33,0.45)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7D612D] md:flex-col md:items-start md:gap-4 md:p-7"
             >
-              <span className="grid h-14 w-14 place-items-center rounded-full border border-[#B79A62]/45 bg-[#F7F5F0] text-[#7D612D]">
+              <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-[#F1E8D6] text-[#9C7C40] md:h-14 md:w-14">
                 <Icon className="h-6 w-6" strokeWidth={1.6} aria-hidden="true" />
               </span>
-              <h3 className="font-display text-[22px] font-semibold leading-[1.2] text-[#1C1F21]">{item.title}</h3>
-              <p className="text-[15.5px] leading-[1.6] text-[#1C1F21]/72">{item.text}</p>
-              <span className="mt-auto pt-2 inline-flex items-center gap-2 text-[15px] font-semibold text-[#1C1F21] group-hover:text-[#7D612D] transition-colors duration-150">
-                Découvrir
-                <ArrowRight className="h-4 w-4 transition-transform duration-150 group-hover:translate-x-1" aria-hidden="true" />
+              <span className="min-w-0 flex-1">
+                <span className="block font-display text-[17px] md:text-[22px] font-semibold leading-[1.2] text-[#1C1F21]">{item.title}</span>
+                <span className="mt-1 block text-[14px] md:mt-3 md:text-[15.5px] leading-[1.5] text-[#1C1F21]/68">{item.text}</span>
+              </span>
+              <span className="shrink-0 inline-flex items-center gap-2 text-[15px] font-semibold text-[#1C1F21] group-hover:text-[#7D612D] transition-colors duration-150 md:mt-auto md:pt-2">
+                <span className="hidden md:inline underline decoration-[#B79A62] decoration-2 underline-offset-[6px]">Découvrir</span>
+                <ArrowRight className="h-5 w-5 text-[#B79A62] transition-transform duration-150 group-hover:translate-x-1" aria-hidden="true" />
               </span>
             </a>
           </motion.li>
@@ -337,30 +340,60 @@ function LegalArticles({ articles }: { readonly articles: Extract<PageBlock, { t
   );
 }
 
-function CtaActions({
-  ctx,
-  primary,
-}: {
-  readonly ctx: PageContext;
-  readonly primary?: Extract<PageBlock, { type: 'cta' }>['primary'];
-}) {
+/** Appel à l'action final : panneau clair (photo en coin, vague dorée) sur fond sombre. */
+function CtaPanel({ block, ctx }: { readonly block: Extract<PageBlock, { type: 'cta' }>; readonly ctx: PageContext }) {
   return (
-    <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-      {primary ? (
-        <a href={hrefForPage(primary.page, ctx.routerMode)} className={PAGE_HERO_PRIMARY_BUTTON}>
-          {primary.label}
-          <ArrowRight className="h-4 w-4" aria-hidden="true" />
-        </a>
-      ) : (
-        <button type="button" onClick={() => ctx.onOpenQuoteModal()} className={PAGE_HERO_PRIMARY_BUTTON}>
-          Demander un devis
-        </button>
-      )}
-      <a href={ctx.brand.phoneHref} className={PAGE_HERO_SECONDARY_BUTTON}>
-        <Phone className="h-4 w-4 shrink-0 text-[#B79A62]" aria-hidden="true" />
-        Appeler le {ctx.brand.phoneDisplay}
-      </a>
-    </div>
+    <section id={block.id} aria-labelledby={`${block.id}-title`} className="w-full bg-[#1C1F21]">
+      <div className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-10 py-12 sm:py-16 lg:py-20">
+        <div className="relative overflow-hidden rounded-3xl bg-[#FAF7F1] p-6 sm:p-8 lg:p-12">
+          <div aria-hidden="true" className="absolute right-0 top-0 h-[140px] w-[92%] sm:h-[180px] sm:w-[60%] lg:h-full lg:w-[42%]">
+            <img src={ZONE_INTERVENTION_CONFIG.bannerSrc} alt="" loading="lazy" className="h-full w-full object-cover object-[30%_40%]" />
+            <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 h-full w-full">
+              <path d="M-1 -1 L2 -1 C30 0 42 22 55 52 C66 80 80 97 101 100 V101 H-1 Z" className="lg:hidden" fill="#FAF7F1" />
+              <path d="M2 -1 C30 0 42 22 55 52 C66 80 80 97 101 100" className="lg:hidden" fill="none" stroke="#B79A62" strokeWidth="2.5" vectorEffect="non-scaling-stroke" />
+              <path d="M-1 -1 H18 C6 30 6 70 22 101 H-1 Z" className="hidden lg:block" fill="#FAF7F1" />
+              <path d="M18 -1 C6 30 6 70 22 101" className="hidden lg:block" fill="none" stroke="#B79A62" strokeWidth="2.5" vectorEffect="non-scaling-stroke" />
+            </svg>
+          </div>
+          <div className="relative max-w-[560px] pt-[110px] sm:pt-[150px] lg:pt-0">
+            <p className="section-kicker flex items-center gap-3 font-semibold text-[#9C7C40]">
+              <span aria-hidden="true" className="h-0.5 w-8 bg-[#B79A62]" />
+              {block.kicker}
+            </p>
+            <h2 id={`${block.id}-title`} className="mt-3 font-display text-[28px] sm:text-[38px] font-bold leading-[1.1] tracking-[-0.015em] text-[#1C1F21]">
+              {block.title}
+            </h2>
+            {block.subtitle && <p className="mt-3 text-[15.5px] sm:text-[17px] leading-[1.6] text-[#1C1F21]/70">{block.subtitle}</p>}
+            <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-4">
+              {block.primary ? (
+                <a
+                  href={hrefForPage(block.primary.page, ctx.routerMode)}
+                  className="group inline-flex h-12 items-center gap-2 rounded-full bg-[#B79A62] px-6 text-[15.5px] font-semibold text-[#1C1F21] hover:bg-[#C6AA73] transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1C1F21]"
+                >
+                  {block.primary.label}
+                  <ArrowRight className="h-4 w-4 transition-transform duration-150 group-hover:translate-x-0.5" aria-hidden="true" />
+                </a>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => ctx.onOpenQuoteModal()}
+                  className="inline-flex h-12 items-center gap-2 rounded-full bg-[#B79A62] px-6 text-[15.5px] font-semibold text-[#1C1F21] hover:bg-[#C6AA73] transition-colors duration-150 cursor-pointer"
+                >
+                  Demander un devis
+                </button>
+              )}
+              <a
+                href={ctx.brand.phoneHref}
+                className="inline-flex items-center gap-2 text-[15.5px] font-semibold tabular-nums text-[#1C1F21] underline decoration-[#B79A62] decoration-2 underline-offset-[6px] hover:text-[#7D612D]"
+              >
+                <Phone className="h-4 w-4 text-[#7D612D]" strokeWidth={1.9} aria-hidden="true" />
+                {ctx.brand.phoneDisplay}
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -440,11 +473,7 @@ export function PageBlockView({ block, ctx }: { readonly block: PageBlock; reado
         </PageSection>
       );
     case 'cta':
-      return (
-        <PageSection id={block.id} tone="dark" kicker={block.kicker} title={block.title} subtitle={block.subtitle}>
-          <CtaActions ctx={ctx} primary={block.primary} />
-        </PageSection>
-      );
+      return <CtaPanel block={block} ctx={ctx} />;
     case 'audiences':
       return (
         <PageSection id={block.id} tone="light" kicker={block.kicker} title={block.title} subtitle={block.subtitle}>

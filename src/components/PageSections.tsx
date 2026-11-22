@@ -2,6 +2,7 @@ import { useState, type ReactNode } from 'react';
 import {
   AppWindow,
   Blinds,
+  Check,
   ChevronsLeftRight,
   Cog,
   DoorOpen,
@@ -116,7 +117,7 @@ export function NumberedSteps({ steps }: { readonly steps: readonly NumberedStep
   );
 }
 
-/** Cartes blanches numérotées (fond clair). */
+/** Liste de prestations sur cartes blanches, avec une coche laiton (fond clair). */
 export function NumberedCards({
   items,
   columns = 2,
@@ -126,28 +127,20 @@ export function NumberedCards({
 }) {
   const prefersReducedMotion = Boolean(useReducedMotion());
   return (
-    <ul
-      className={`grid grid-cols-1 md:grid-cols-2 ${columns === 4 ? 'lg:grid-cols-4' : ''} gap-5 lg:gap-6`}
-    >
+    <ul className={`grid grid-cols-1 md:grid-cols-2 ${columns === 4 ? 'lg:grid-cols-4' : ''} gap-3 sm:gap-4 lg:gap-5`}>
       {items.map((item, index) => (
         <motion.li
           key={item}
-          initial={prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 22 }}
+          initial={prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={REVEAL_VIEWPORT}
-          transition={{
-            duration: prefersReducedMotion ? 0 : 0.5,
-            delay: prefersReducedMotion ? 0 : index * 0.08,
-            ease: REVEAL_EASE,
-          }}
-          className={`flex rounded-xl border border-[#1C1F21]/12 bg-[#FFFFFF] p-6 sm:p-7 transition-colors duration-200 hover:border-[#B79A62] ${
-            columns === 4 ? 'flex-col gap-4' : 'gap-5'
-          }`}
+          transition={{ duration: prefersReducedMotion ? 0 : 0.45, delay: prefersReducedMotion ? 0 : index * 0.06, ease: REVEAL_EASE }}
+          className="flex items-start gap-3.5 rounded-2xl bg-white p-4 sm:p-5 shadow-[0_10px_28px_-20px_rgba(28,31,33,0.4)]"
         >
-          <span className="font-display text-[28px] sm:text-[32px] font-semibold leading-none tabular-nums text-[#B79A62]">
-            {formatStepIndex(index)}
+          <span aria-hidden="true" className="mt-0.5 grid h-8 w-8 shrink-0 place-items-center rounded-full bg-[#F1E8D6] text-[#9C7C40]">
+            <Check className="h-4 w-4" strokeWidth={2.4} />
           </span>
-          <p className="pt-1 text-[16px] sm:text-[17px] leading-[1.55] text-[#1C1F21]/88">{item}</p>
+          <p className="text-[15px] sm:text-[16px] leading-[1.5] text-[#1C1F21]/85">{item}</p>
         </motion.li>
       ))}
     </ul>
