@@ -456,7 +456,6 @@ export function PageRenderer({ page, ctx }: { readonly page: PageDefinition; rea
     <>
       <div className={page.hero.hideOnMobile ? 'hidden lg:block' : undefined}>
       <PageHero
-        kicker={page.hero.kicker}
         title={page.hero.title}
         intro={page.hero.intro}
         imageSrc={page.hero.imageSrc}

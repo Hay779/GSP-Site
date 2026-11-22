@@ -3,7 +3,6 @@ import { motion, useReducedMotion } from 'motion/react';
 import { REVEAL_EASE } from '../utils/scrollReveal';
 
 interface PageHeroProps {
-  readonly kicker: string;
   readonly title: string;
   readonly intro: string;
   readonly imageSrc?: string;
@@ -40,7 +39,6 @@ export function usePageMeta(title: string, description: string) {
 
 /** En-tête commun des pages intérieures : photo plein cadre, titre, actions. */
 export function PageHero({
-  kicker,
   title,
   intro,
   imageSrc,
@@ -104,16 +102,13 @@ export function PageHero({
         <div className={`absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#1C1F21] to-transparent ${appStyle ? 'hidden lg:block' : ''}`} />
       </div>
 
-      <div className={`relative z-10 mx-auto w-full max-w-[1280px] px-5 sm:px-8 lg:px-10 ${compact ? 'pt-20 pb-12 lg:pb-14' : hasPhoto ? 'pt-3 pb-12 sm:pb-14 lg:py-24' : 'pt-28 pb-14 sm:pb-16 lg:py-24'}`}>
+      <div className={`relative z-10 mx-auto w-full max-w-[1280px] px-5 sm:px-8 lg:px-10 ${compact ? 'pt-20 pb-12 lg:pb-14' : hasPhoto ? `${appStyle ? 'pt-6' : 'pt-3'} pb-12 sm:pb-14 lg:py-24` : 'pt-28 pb-14 sm:pb-16 lg:py-24'}`}>
 
         <div className="max-w-[640px]">
-          <motion.p {...fadeUp(0)} className="section-kicker text-[#B79A62]">
-            {kicker}
-          </motion.p>
           <motion.h1
             {...fadeUp(0.08)}
             id="page-hero-title"
-            className="mt-4 font-display text-[clamp(2.15rem,4.4vw,3.6rem)] font-semibold leading-[1.06] tracking-[-0.015em] text-[#F3F0E7]"
+            className="font-display text-[clamp(2.15rem,4.4vw,3.6rem)] font-semibold leading-[1.06] tracking-[-0.015em] text-[#F3F0E7]"
           >
             {title}
           </motion.h1>

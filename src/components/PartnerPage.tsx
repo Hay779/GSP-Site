@@ -128,7 +128,6 @@ export function PartnerPage({ brand, routerMode }: { readonly brand: BrandConfig
     <>
       <PageHero
         compact
-        kicker="Professionnels"
         title="Devenir partenaire."
         intro="Syndics, assureurs, experts, agences immobilières et bailleurs : présentez-nous votre structure et vos besoins, nous revenons vers vous pour organiser notre collaboration."
       />
