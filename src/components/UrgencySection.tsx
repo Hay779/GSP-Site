@@ -24,7 +24,7 @@ export function UrgencySection({ config, brand }: UrgencySectionProps) {
       id="03_Urgence"
       data-section="03_Urgence"
       aria-labelledby="03_Urgence-title"
-      className="w-full bg-[#1C1F21] scroll-mt-[74px] lg:scroll-mt-[88px]"
+      className="urg-surface relative w-full bg-[var(--urg-bg)] [--urg-bg:#1C1F21] scroll-mt-[74px] lg:scroll-mt-[88px]"
     >
       <motion.div
         initial={prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 14 }}
@@ -34,8 +34,7 @@ export function UrgencySection({ config, brand }: UrgencySectionProps) {
         className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-10 py-12 sm:py-14 lg:py-20"
       >
         {/* En-tête : kicker, titre, sous-titre — et l'appel à droite sur grand écran */}
-        <div className="lg:flex lg:items-end lg:justify-between lg:gap-12">
-          <div className="max-w-[640px]">
+        <div className="max-w-[640px]">
             <p className="section-kicker flex items-center gap-3 text-[#B79A62]">
               <span aria-hidden="true" className="h-px w-8 bg-[#B79A62]" />
               {config.kicker}
@@ -44,8 +43,7 @@ export function UrgencySection({ config, brand }: UrgencySectionProps) {
               {config.title}
             </h2>
             <p className="section-subtitle mt-3 text-[#F3F0E7]/78">{config.subtitle}</p>
-          </div>
-          <CallButton brand={brand} prefix={config.ctaPrefix} className="hidden lg:inline-flex" />
+            <CallButton brand={brand} prefix={config.ctaPrefix} className="mt-6 flex w-full sm:inline-flex sm:w-auto" />
         </div>
 
         {/* Deux cas d'urgence : texte à gauche, photo en fondu à droite */}
@@ -55,7 +53,7 @@ export function UrgencySection({ config, brand }: UrgencySectionProps) {
             return (
               <li
                 key={item.title}
-                className="relative isolate overflow-hidden rounded-2xl border border-[#B79A62]/40 bg-[#1C1F21] min-h-[190px] sm:min-h-[210px]"
+                className="relative isolate overflow-hidden rounded-2xl border border-[#B79A62]/40 bg-[var(--urg-bg)] min-h-[190px] sm:min-h-[210px]"
               >
                 <img
                   src={item.imageSrc}
@@ -65,7 +63,7 @@ export function UrgencySection({ config, brand }: UrgencySectionProps) {
                 />
                 <span
                   aria-hidden="true"
-                  className="absolute inset-y-0 right-0 -z-10 w-[55%] bg-gradient-to-r from-[#1C1F21] via-[#1C1F21]/45 to-transparent"
+                  className="absolute inset-y-0 right-0 -z-10 w-[55%] bg-gradient-to-r from-[var(--urg-bg)] via-[color-mix(in_srgb,var(--urg-bg)_45%,transparent)] to-transparent"
                 />
                 <div className="flex h-full max-w-[62%] flex-col justify-center p-5 sm:p-6">
                   <span
@@ -103,7 +101,6 @@ export function UrgencySection({ config, brand }: UrgencySectionProps) {
           })}
         </ul>
 
-        <CallButton brand={brand} prefix={config.ctaPrefix} className="mt-8 flex w-full lg:hidden" />
       </motion.div>
     </section>
   );
