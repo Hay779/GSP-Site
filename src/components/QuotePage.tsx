@@ -38,7 +38,7 @@ import { hrefForHome, hrefForPage, type RouterMode } from '../utils/router';
 import { BrandMark } from './BrandMark';
 import { checkServiceSector } from '../utils/serviceArea';
 import { REVEAL_EASE } from '../utils/scrollReveal';
-import { PageHero, usePageMeta } from './PageHero';
+import { usePageMeta } from './PageHero';
 
 const DOMAIN_ICONS: Readonly<Record<QuoteDomain, LucideIcon>> = {
   'Serrurerie & portes blindées': Lock,
@@ -256,17 +256,8 @@ export function QuotePage({ brand, routerMode, prefill }: QuotePageProps) {
         </div>
       </header>
 
-      {/* Ordinateur : en-tête de page */}
-      <div className="hidden lg:block">
-      <PageHero
-        compact
-        title="Demander un devis."
-        intro="Quelques questions, deux minutes : nous revenons vers vous avec un devis détaillé, validé avec vous avant toute intervention."
-      />
-      </div>
-
       <section id="page-devis" aria-label="Questionnaire de devis" className="w-full lg:border-t lg:border-[#B79A62]/45 bg-[#F7F5F0] text-[#1C1F21]">
-        <div className="mx-auto grid max-w-[1280px] grid-cols-1 gap-3 px-4 pt-3 pb-10 sm:gap-5 sm:px-8 sm:pt-6 sm:pb-14 lg:grid-cols-12 lg:gap-12 lg:px-10 lg:py-20 lg:gap-12 lg:px-10 lg:py-20">
+        <div className="mx-auto grid max-w-[1280px] grid-cols-1 gap-3 px-4 pt-3 pb-10 sm:gap-5 sm:px-8 sm:pt-6 sm:pb-14 lg:grid-cols-12 lg:gap-10 lg:px-10 lg:py-12">
           {/* Étapes */}
           <aside className="lg:col-span-4">
             {/* Mobile & tablette : 2 repères seulement (titre et étape sont dans la barre du haut) */}
@@ -284,8 +275,19 @@ export function QuotePage({ brand, routerMode, prefill }: QuotePageProps) {
               </li>
             </ul>
 
-            {/* Ordinateur : liste des étapes */}
-            <ol className="hidden lg:flex lg:sticky lg:top-28 flex-col gap-1" aria-label="Étapes du questionnaire">
+            {/* Ordinateur : panneau sombre (titre, progression, étapes, urgence) — le questionnaire est visible tout de suite */}
+            <div className="hidden lg:block lg:sticky lg:top-28 rounded-3xl bg-[#1C1F21] p-8 text-[#F3F0E7]">
+              <h1 className="font-display text-[34px] font-semibold leading-[1.08] tracking-[-0.015em]">Demander un devis.</h1>
+              <p className="mt-3 text-[15.5px] leading-[1.6] text-[#F3F0E7]/75">
+                Quelques questions, deux minutes : un devis détaillé, validé avec vous avant toute intervention.
+              </p>
+              <div className="mt-6 h-1 w-full overflow-hidden rounded-full bg-[#F3F0E7]/10" aria-hidden="true">
+                <div
+                  className="h-full rounded-full bg-[#B79A62] transition-[width] duration-300"
+                  style={{ width: `${reference ? 100 : ((stepIndex + 1) / QUOTE_STEPS.length) * 100}%` }}
+                />
+              </div>
+            <ol className="mt-5 flex flex-col gap-0.5" aria-label="Étapes du questionnaire">
               {QUOTE_STEPS.map((s, i) => {
                 const done = Boolean(reference) || i < stepIndex;
                 const current = !reference && i === stepIndex;
@@ -296,37 +298,41 @@ export function QuotePage({ brand, routerMode, prefill }: QuotePageProps) {
                       disabled={!done || Boolean(reference)}
                       onClick={() => goTo(s.id)}
                       aria-current={current ? 'step' : undefined}
-                      className={`flex w-full items-center gap-4 rounded-lg px-3 py-3 text-left transition-colors duration-150 ${
-                        done && !reference ? 'hover:bg-[#1C1F21]/[0.04] cursor-pointer' : 'cursor-default'
-                      }`}
+                      className={`flex w-full items-center gap-4 rounded-xl px-3 py-2.5 text-left transition-colors duration-150 ${
+                        current ? 'bg-[#F3F0E7]/[0.06]' : ''
+                      } ${done && !reference ? 'hover:bg-[#F3F0E7]/[0.06] cursor-pointer' : 'cursor-default'}`}
                     >
                       <span
                         className={`grid h-9 w-9 shrink-0 place-items-center rounded-full border font-display text-[14px] font-semibold tabular-nums ${
                           current
-                            ? 'border-[#1C1F21] bg-[#1C1F21] text-[#B79A62]'
+                            ? 'border-[#B79A62] bg-[#B79A62] text-[#1C1F21]'
                             : done
-                              ? 'border-[#B79A62] bg-[#B79A62] text-[#1C1F21]'
-                              : 'border-[#1C1F21]/20 text-[#1C1F21]/45'
+                              ? 'border-[#B79A62]/70 text-[#B79A62]'
+                              : 'border-[#F3F0E7]/20 text-[#F3F0E7]/45'
                         }`}
                       >
                         {done ? <Check className="h-4 w-4" strokeWidth={2.6} aria-hidden="true" /> : i + 1}
                       </span>
-                      <span className={`text-[15.5px] ${current ? 'font-semibold text-[#1C1F21]' : done ? 'text-[#1C1F21]/80' : 'text-[#1C1F21]/45'}`}>
+                      <span className={`text-[15.5px] ${current ? 'font-semibold text-[#F3F0E7]' : done ? 'text-[#F3F0E7]/80' : 'text-[#F3F0E7]/45'}`}>
                         {s.label}
                       </span>
                     </button>
                   </li>
                 );
               })}
-              <li className="mt-6 rounded-xl border border-[#1C1F21]/12 bg-[#FFFFFF] p-5">
-                <p className="font-display text-[16px] font-semibold text-[#1C1F21]">Une urgence ?</p>
-                <p className="mt-1 text-[14px] leading-[1.55] text-[#1C1F21]/70">Pour une porte claquée ou une effraction, appelez-nous directement.</p>
-                <a href={brand.phoneHref} className="mt-3 inline-flex items-center gap-2 text-[15px] font-semibold tabular-nums text-[#7D612D] hover:text-[#1C1F21]">
+            </ol>
+              <div className="mt-6 border-t border-[#F3F0E7]/12 pt-5">
+                <p className="font-display text-[16px] font-semibold">Une urgence ?</p>
+                <p className="mt-1 text-[14px] leading-[1.55] text-[#F3F0E7]/70">Porte claquée, effraction, vitre cassée : appelez-nous directement.</p>
+                <a
+                  href={brand.phoneHref}
+                  className="mt-3 inline-flex h-10 items-center gap-2 rounded-full bg-[#B79A62] px-4 text-[14.5px] font-semibold tabular-nums text-[#1C1F21] hover:bg-[#C6AA73] transition-colors duration-150"
+                >
                   <Phone className="h-4 w-4" aria-hidden="true" />
                   {brand.phoneDisplay}
                 </a>
-              </li>
-            </ol>
+              </div>
+            </div>
           </aside>
 
           {/* Carte du questionnaire */}
