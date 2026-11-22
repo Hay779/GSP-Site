@@ -570,7 +570,7 @@ export const FAQ_CONFIG: FaqConfig = {
 export const FOOTER_CONFIG: FooterConfig = {
   ctaKicker: 'Un projet, une urgence ?',
   ctaTitle: 'Parlons-en.',
-  ctaSubtitle: 'Appelez-nous ou décrivez votre besoin en ligne : nous revenons vers vous rapidement.',
+  ctaSubtitle: 'Choisissez le moyen le plus simple pour vous : téléphone, devis en ligne ou WhatsApp.',
   tagline: 'Serrurerie, vitrerie, menuiserie et fermetures à Marseille. En boutique, chez vous et dans vos locaux.',
   servicesHeading: 'Nos métiers',
   serviceLinks: [
