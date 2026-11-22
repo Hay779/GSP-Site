@@ -43,7 +43,7 @@ export function FaqSection({ config, brand, onOpenQuoteModal }: FaqSectionProps)
       id="FAQ"
       data-section="FAQ"
       aria-labelledby="FAQ-title"
-      className="w-full bg-[#F7F5F0] text-[#1C1F21] border-t border-b border-[#B79A62]/45 scroll-mt-[74px] lg:scroll-mt-[88px]"
+      className="w-full bg-[#1C1F21] text-[#F3F0E7] border-t border-[#B79A62]/45 scroll-mt-[74px] lg:scroll-mt-[88px]"
     >
       <div className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-10 py-16 sm:py-20 lg:py-24">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
@@ -55,21 +55,21 @@ export function FaqSection({ config, brand, onOpenQuoteModal }: FaqSectionProps)
             transition={{ duration: prefersReducedMotion ? 0 : 0.52, ease: REVEAL_EASE }}
             className="lg:col-span-4 lg:sticky lg:top-28"
           >
-            <p className="section-kicker text-[#7D612D]">
+            <p className="section-kicker text-[#B79A62]">
               {config.kicker}
             </p>
             <h2
               id="FAQ-title"
-              className="mt-3 section-title text-[#1C1F21]"
+              className="mt-3 section-title text-[#F3F0E7]"
             >
               {config.title}
             </h2>
-            <p className="mt-4 section-subtitle text-[#1C1F21]/70">
+            <p className="mt-4 section-subtitle text-[#F3F0E7]/76">
               {config.subtitle}
             </p>
 
-            <div className="mt-7 border-t border-[#1C1F21]/12 pt-6">
-              <p className="text-[14px] leading-[1.55] text-[#1C1F21]/75">
+            <div className="mt-7 border-t border-[#F3F0E7]/12 pt-6">
+              <p className="text-[14px] leading-[1.55] text-[#F3F0E7]/75">
                 {config.contactPrompt}
               </p>
 
@@ -77,11 +77,11 @@ export function FaqSection({ config, brand, onOpenQuoteModal }: FaqSectionProps)
                 <button
                   type="button"
                   onClick={onOpenQuoteModal}
-                  className="group inline-flex min-h-[46px] items-center justify-center gap-2.5 rounded-lg bg-[#1C1F21] hover:bg-[#292D2F] active:bg-[#171A1C] px-5 py-2.5 text-[14.5px] font-semibold text-[#F3F0E7] whitespace-nowrap transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7D612D] cursor-pointer"
+                  className="group inline-flex min-h-[46px] items-center justify-center gap-2.5 rounded-lg bg-[#B79A62] hover:bg-[#C6AA73] active:bg-[#A68952] px-5 py-2.5 text-[14.5px] font-semibold text-[#1C1F21] whitespace-nowrap transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62] cursor-pointer"
                 >
                   <span>{config.quoteCtaLabel}</span>
                   <ArrowRight
-                    className="h-4 w-4 shrink-0 text-[#B79A62] transition-transform duration-150 group-hover:translate-x-1"
+                    className="h-4 w-4 shrink-0 text-[#1C1F21] transition-transform duration-150 group-hover:translate-x-1"
                     strokeWidth={2}
                     aria-hidden="true"
                   />
@@ -89,7 +89,7 @@ export function FaqSection({ config, brand, onOpenQuoteModal }: FaqSectionProps)
 
                 <a
                   href={brand.phoneHref}
-                  className="inline-flex min-h-[46px] items-center gap-2 px-1 py-2 text-[14.5px] font-semibold text-[#7D612D] hover:text-[#1C1F21] whitespace-nowrap tabular-nums transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7D612D]"
+                  className="inline-flex min-h-[46px] items-center gap-2 px-1 py-2 text-[14.5px] font-semibold text-[#B79A62] hover:text-[#F3F0E7] whitespace-nowrap tabular-nums transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62]"
                 >
                   <Phone className="h-4 w-4 shrink-0" strokeWidth={2} aria-hidden="true" />
                   <span>{brand.phoneDisplay}</span>
@@ -110,7 +110,7 @@ export function FaqSection({ config, brand, onOpenQuoteModal }: FaqSectionProps)
             }}
             className="lg:col-span-8"
           >
-            <div className="rounded-xl border border-[#1C1F21]/12 bg-[#FFFFFF] divide-y divide-[#1C1F21]/10 overflow-hidden">
+            <div className="rounded-xl border border-[#F3F0E7]/12 bg-[#292D2F]/55 divide-y divide-[#F3F0E7]/10 overflow-hidden">
               {config.items.map((item, index) => {
                 const isOpen = openId === item.id;
                 const triggerId = `faq-trigger-${item.id}`;
@@ -118,7 +118,7 @@ export function FaqSection({ config, brand, onOpenQuoteModal }: FaqSectionProps)
                 const itemNumber = formatFaqNumber(index);
 
                 return (
-                  <div key={item.id} className="bg-[#FFFFFF]">
+                  <div key={item.id}>
                     <h3>
                       <button
                         ref={(el) => {
@@ -130,16 +130,16 @@ export function FaqSection({ config, brand, onOpenQuoteModal }: FaqSectionProps)
                         aria-controls={panelId}
                         onClick={() => handleToggle(item.id)}
                         onKeyDown={(event) => handleTriggerKeyDown(event, index)}
-                        className="group flex w-full min-h-[68px] items-center justify-between gap-4 px-5 sm:px-7 py-5 text-left transition-colors duration-150 hover:bg-[#F7F5F0]/60 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[#7D612D] cursor-pointer"
+                        className="group flex w-full min-h-[68px] items-center justify-between gap-4 px-5 sm:px-7 py-5 text-left transition-colors duration-150 hover:bg-[#F3F0E7]/[0.04] focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[#B79A62] cursor-pointer"
                       >
                         <span className="flex items-baseline gap-4 min-w-0">
                           <span
                             aria-hidden="true"
-                            className="shrink-0 font-display text-[13px] font-semibold tracking-[0.06em] tabular-nums text-[#7D612D]"
+                            className="shrink-0 font-display text-[13px] font-semibold tracking-[0.06em] tabular-nums text-[#B79A62]"
                           >
                             {itemNumber}
                           </span>
-                          <span className="font-display text-[16.5px] sm:text-[18px] font-semibold leading-[1.35] text-[#1C1F21] group-hover:text-[#7D612D] transition-colors duration-150">
+                          <span className="font-display text-[16.5px] sm:text-[18px] font-semibold leading-[1.35] text-[#F3F0E7] group-hover:text-[#D2B478] transition-colors duration-150">
                             {item.question}
                           </span>
                         </span>
@@ -148,8 +148,8 @@ export function FaqSection({ config, brand, onOpenQuoteModal }: FaqSectionProps)
                           aria-hidden="true"
                           className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border transition-colors duration-200 ${
                             isOpen
-                              ? 'border-[#7D612D] bg-[#1C1F21] text-[#B79A62]'
-                              : 'border-[#1C1F21]/16 bg-[#F7F5F0] text-[#7D612D] group-hover:border-[#B79A62]'
+                              ? 'border-[#B79A62] bg-[#B79A62] text-[#1C1F21]'
+                              : 'border-[#F3F0E7]/22 bg-transparent text-[#B79A62] group-hover:border-[#B79A62]'
                           }`}
                         >
                           <Plus
@@ -186,7 +186,7 @@ export function FaqSection({ config, brand, onOpenQuoteModal }: FaqSectionProps)
                           className="overflow-hidden"
                         >
                           <div className="px-5 sm:px-7 pb-6 pt-0 pl-[52px] sm:pl-[66px] pr-6 sm:pr-14">
-                            <p className="text-[15px] sm:text-[15.5px] leading-[1.7] text-[#1C1F21]/76">
+                            <p className="text-[15px] sm:text-[15.5px] leading-[1.7] text-[#F3F0E7]/78">
                               {item.answer}
                             </p>
                           </div>

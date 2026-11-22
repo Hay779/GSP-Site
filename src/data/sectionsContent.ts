@@ -67,8 +67,10 @@ export interface AfterIncidentStep {
 
 export interface InsuranceNoticeConfig {
   readonly partnerName: string;
+  readonly partnerNote: string;
   readonly title: string;
   readonly subtitle: string;
+  readonly ctaLabel: string;
 }
 
 export interface AfterIncidentConfig {
@@ -315,8 +317,11 @@ export const AFTER_INCIDENT_CONFIG: AfterIncidentConfig = {
   ],
   insuranceNotice: {
     partnerName: 'Allianz',
-    title: 'Mention d’assurance à confirmer',
-    subtitle: 'Lien avec Allianz à préciser avant publication',
+    partnerNote: 'Lien avec Allianz à confirmer',
+    title: 'Vous êtes assuré ? Nous préparons votre dossier.',
+    subtitle:
+      'Reportage photo, devis détaillé et facture conformes aux attentes de votre assureur.',
+    ctaLabel: 'Envoyer mes photos',
   },
 };
 
@@ -434,7 +439,7 @@ export const AGENCIES_CONFIG: AgenciesConfig = {
       districtLabel: 'Marseille 2e',
       imageSrc: '',
       imageAlt: 'Façade de l’Agence République — Serrurerie de la République à Marseille',
-      photoPlaceholderLabel: 'Photo de la façade à intégrer',
+      photoPlaceholderLabel: 'Photo de la façade à venir',
       addressLines: ['48 rue de la République', '13002 Marseille'],
       isAddressPending: false,
       phoneDisplay: '04 91 90 51 65',
@@ -451,7 +456,7 @@ export const AGENCIES_CONFIG: AgenciesConfig = {
       districtLabel: 'Marseille 6e',
       imageSrc: '',
       imageAlt: 'Façade de l’Agence Lodi — Serrurerie de la République à Marseille',
-      photoPlaceholderLabel: 'Photo de la façade à intégrer',
+      photoPlaceholderLabel: 'Photo de la façade à venir',
       addressLines: ['Adresse à compléter'],
       isAddressPending: true,
       phoneDisplay: 'Téléphone à compléter',
