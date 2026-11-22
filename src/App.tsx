@@ -240,11 +240,12 @@ export default function App() {
       <FooterSection
         brand={BRAND_CONFIG}
         config={FOOTER_CONFIG}
-        onSelectSection={handleSelectSection}
+        agencies={AGENCIES_CONFIG.agencies}
+        whatsapp={WHATSAPP_CONFIG}
         domainHref={domainHref}
         sectionHref={sectionHref}
         pageHref={pageHref}
-        onOpenQuoteModal={() => handleOpenQuoteModal()}
+        hideCta={route.kind === 'page' && route.id === 'devis'}
       />
 
 

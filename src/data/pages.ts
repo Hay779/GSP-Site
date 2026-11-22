@@ -125,14 +125,6 @@ export function blockTone(block: PageBlock): BlockTone | 'band' {
 /* Blocs réutilisables                                                 */
 /* ------------------------------------------------------------------ */
 
-const CTA_BLOCK: PageBlock = {
-  type: 'cta',
-  id: 'page-cta',
-  tone: 'dark',
-  kicker: 'Un projet, une urgence ?',
-  title: 'Parlons-en.',
-  subtitle: 'Appelez-nous ou décrivez votre besoin : nous revenons vers vous rapidement.',
-};
 
 function faqBlock(
   id: string,
@@ -393,7 +385,7 @@ export const THEMATIC_PAGES: Readonly<Record<BlockPageId, PageDefinition>> = {
       imagePosition: '65% 45%',
       actions: [{ kind: 'quote' }, { kind: 'phone' }],
     },
-    blocks: [{ type: 'reviews' }, CTA_BLOCK],
+    blocks: [{ type: 'reviews' }],
   },
 
   'questions-frequentes': {
@@ -415,7 +407,6 @@ export const THEMATIC_PAGES: Readonly<Record<BlockPageId, PageDefinition>> = {
       faqGroup('faq-fermetures', 'light', FAQ_FERMETURES, 'Fermetures.', 'Métier'),
       faqGroup('faq-cles', 'dark', FAQ_CLES_BADGES, 'Clés & badges.', 'En boutique'),
       faqGroup('faq-sinistre', 'light', FAQ_APRES_SINISTRE, 'Après sinistre.', 'Accompagnement'),
-      CTA_BLOCK,
     ],
   },
 

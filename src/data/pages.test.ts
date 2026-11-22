@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { blockTone, DOMAIN_FAQS, resolvePageDefinition, THEMATIC_PAGES, type PageDefinition } from './pages';
+import { blockTone, DOMAIN_FAQS, resolvePageDefinition, type PageDefinition } from './pages';
 import { DOMAINS_CONFIG } from './sectionsContent';
 import { PAGE_SLUGS, type PageId, type Route } from '../utils/router';
 
@@ -66,18 +66,5 @@ test('each trade page has its own FAQ with unique question ids', () => {
     }
     const blocks = definitionFor({ kind: 'domain', id: domain.id }).blocks;
     assert.ok(blocks.some((b) => b.type === 'faq'), `${domain.id} page shows its FAQ`);
-  }
-});
-
-test('every non-legal page ends with a way to act (FAQ, contact, agencies or call to action)', () => {
-  for (const [id, def] of Object.entries(THEMATIC_PAGES)) {
-    if (id === 'mentions-legales' || id === 'confidentialite') {
-      continue;
-    }
-    const types = def.blocks.map((b) => b.type);
-    assert.ok(
-      types.some((t) => ['faq', 'contactChannels', 'agencies', 'cta'].includes(t)),
-      `${id} needs an action block`
-    );
   }
 });

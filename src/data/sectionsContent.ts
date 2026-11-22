@@ -163,14 +163,20 @@ export interface FooterServiceLink {
 export interface FooterInfoLink {
   readonly label: string;
   readonly pageId?: PageId;
-  readonly targetId: SectionId;
+  readonly targetId?: SectionId;
 }
 
 export interface FooterConfig {
+  /** Bandeau d'appel à l'action en haut du pied de page. */
+  readonly ctaKicker: string;
+  readonly ctaTitle: string;
+  readonly ctaSubtitle: string;
+  readonly tagline: string;
   readonly servicesHeading: string;
   readonly serviceLinks: readonly FooterServiceLink[];
   readonly infoHeading: string;
   readonly infoLinks: readonly FooterInfoLink[];
+  readonly agenciesHeading: string;
   readonly contactHeading: string;
   readonly quoteCtaLabel: string;
 }
@@ -466,11 +472,15 @@ export const FAQ_CONFIG: FaqConfig = {
 };
 
 export const FOOTER_CONFIG: FooterConfig = {
-  servicesHeading: 'Nos services',
+  ctaKicker: 'Un projet, une urgence ?',
+  ctaTitle: 'Parlons-en.',
+  ctaSubtitle: 'Appelez-nous ou décrivez votre besoin en ligne : nous revenons vers vous rapidement.',
+  tagline: 'Serrurerie, vitrerie, menuiserie et fermetures à Marseille. En boutique, chez vous et dans vos locaux.',
+  servicesHeading: 'Nos métiers',
   serviceLinks: [
     { label: 'Clés & badges', pageId: 'cles-badges' },
-    { label: 'Serrurerie', domainId: 'serrurerie' },
-    { label: 'Vitrerie', domainId: 'vitrerie' },
+    { label: 'Serrurerie & portes blindées', domainId: 'serrurerie' },
+    { label: 'Vitrerie & miroiterie', domainId: 'vitrerie' },
     { label: 'Menuiserie', domainId: 'menuiserie' },
     { label: 'Fermetures', domainId: 'fermetures' },
   ],
@@ -479,9 +489,10 @@ export const FOOTER_CONFIG: FooterConfig = {
     { label: 'Après sinistre', pageId: 'apres-sinistre', targetId: '07_Apres_Sinistre' },
     { label: 'Avis clients', pageId: 'avis-clients', targetId: '08_Avis_Clients' },
     { label: 'Zone d’intervention', pageId: 'zone-intervention', targetId: '09_Zone_Intervention' },
-    { label: 'Agences & contact', pageId: 'agences-contact', targetId: '10_Nos_Agences' },
     { label: 'Questions fréquentes', pageId: 'questions-frequentes', targetId: 'FAQ' },
+    { label: 'Demander un devis', pageId: 'devis' },
   ],
+  agenciesHeading: 'Nos agences',
   contactHeading: 'Contact',
   quoteCtaLabel: 'Demander un devis',
 };
