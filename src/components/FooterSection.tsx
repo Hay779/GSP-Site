@@ -1,9 +1,10 @@
-import { ArrowRight, FileText, KeyRound, MapPin, MessageCircle, Phone, Store } from 'lucide-react';
+import { MapPin, MessageCircle, Phone } from 'lucide-react';
 import type { AgencyItem, DomainCardItem, FooterConfig, WhatsAppConfig } from '../data/sectionsContent';
 import type { BrandConfig, SectionId } from '../utils/navigation';
 import type { PageId } from '../utils/router';
 import { buildWhatsAppUrl } from '../utils/whatsapp';
 import { BrandMark } from './BrandMark';
+import { ContactCtaSection } from './ContactCtaSection';
 
 interface FooterSectionProps {
   readonly brand: BrandConfig;
@@ -44,88 +45,27 @@ export function FooterSection({
     <footer
       id="11_Pied_De_Page"
       data-section="11_Pied_De_Page"
-      className={`w-full scroll-mt-[74px] lg:scroll-mt-[88px] ${hideCta ? 'bg-[#16191B] border-t border-[#B79A62]/65' : 'bg-[#F3F0E7]'}`}
+      className={`w-full scroll-mt-[74px] lg:scroll-mt-[88px] ${hideCta ? 'bg-[#16191B] border-t border-[#B79A62]/65' : 'bg-[#F6F2EA]'}`}
     >
-      {/* Appel à l'action sur fond clair : photo clés & badge en haut à droite, découpée en vague (filet doré) */}
+      {/* Appel à l'action « Parlons-en » (photo clés & badge en vague dorée) */}
       {!hideCta && (
-        <div className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-10 pt-8 pb-12 sm:pt-12 sm:pb-16">
-          <div className="relative overflow-hidden rounded-3xl bg-[#FAF7F1] p-5 sm:p-8 lg:p-10 shadow-[0_18px_50px_-28px_rgba(28,31,33,0.35)] ring-1 ring-[#1C1F21]/5">
-            {/* Photo dans le coin haut droit du panneau, découpée en vague avec filet doré */}
-            <div aria-hidden="true" className="absolute right-0 top-0 h-[150px] w-[92%] sm:h-[190px] sm:w-[62%] lg:h-[168px] lg:w-[46%]">
-              <img src={CTA_IMAGE} alt="" loading="lazy" className="absolute right-0 top-0 h-full w-[78%] object-cover object-[30%_40%] [mask-image:linear-gradient(to_right,transparent,black_18%)]" />
-              <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 h-full w-full">
-                <path d="M-1 -1 L2 -1 C30 0 42 22 55 52 C66 80 80 97 101 100 V101 H-1 Z" fill="#FAF7F1" />
-                <path
-                  d="M2 -1 C30 0 42 22 55 52 C66 80 80 97 101 100"
-                  fill="none"
-                  stroke="#B79A62"
-                  strokeWidth="2.5"
-                  vectorEffect="non-scaling-stroke"
-                />
-              </svg>
-            </div>
-            <div className="relative max-w-2xl pt-[118px] sm:pt-[150px] lg:pt-0 lg:max-w-[54%]">
-              <p className="section-kicker flex items-center gap-3 font-semibold text-[#9C7C40]">
-                <span aria-hidden="true" className="h-0.5 w-8 bg-[#B79A62]" />
-                {config.ctaKicker}
-              </p>
-              <p className="mt-2 font-display text-[34px] sm:text-[46px] font-bold leading-[1.05] tracking-[-0.02em] text-[#1C1F21]">
-                {config.ctaTitle}
-              </p>
-              <p className="mt-3 text-[15.5px] leading-[1.6] text-[#1C1F21]/70">{config.ctaSubtitle}</p>
-            </div>
-
-            <ul className="relative mt-7 grid gap-3 sm:gap-4 md:grid-cols-3">
-              {[
-                { href: brand.phoneHref, icon: KeyRound, title: 'Urgence', text: 'Porte claquée, effraction, serrure bloquée.', action: brand.phoneDisplay, actionIcon: Phone, primary: true, external: false },
-                { href: pageHref('devis'), icon: FileText, title: 'Devis en ligne', text: 'Décrivez votre besoin en quelques questions.', action: config.quoteCtaLabel, actionIcon: null, primary: false, external: false },
-                { href: whatsappUrl, icon: MessageCircle, title: 'WhatsApp', text: 'Envoyez une photo de votre porte ou de votre serrure.', action: 'Écrire sur WhatsApp', actionIcon: null, primary: false, external: true },
-              ].map((item) => (
-                <li key={item.title} className="flex flex-col rounded-2xl bg-gradient-to-b from-white to-[#FBFAF6] p-4 sm:p-5 shadow-[0_10px_28px_-18px_rgba(28,31,33,0.4)] ring-1 ring-[#1C1F21]/5">
-                  <div className="flex items-start gap-4">
-                    <span aria-hidden="true" className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-[#F1E8D6] text-[#9C7C40] ring-1 ring-[#B79A62]/25">
-                      <item.icon className="h-[22px] w-[22px]" strokeWidth={1.6} />
-                    </span>
-                    <div className="min-w-0">
-                      <p className="font-display text-[20px] font-bold leading-tight text-[#1C1F21]">{item.title}</p>
-                      <p className="mt-1 text-[14.5px] leading-[1.45] text-[#1C1F21]/65">{item.text}</p>
-                    </div>
-                  </div>
-                  <a
-                    href={item.href}
-                    {...(item.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                    className={`group mt-4 sm:mt-5 flex h-11 items-center justify-center gap-2.5 rounded-full px-5 text-[15px] font-semibold tabular-nums transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62] ${
-                      item.primary
-                        ? 'bg-[#1C1F21] text-[#F3F0E7] hover:bg-[#292D2F]'
-                        : 'border border-[#B79A62]/60 bg-white/60 text-[#1C1F21] hover:border-[#B79A62] hover:bg-white'
-                    }`}
-                  >
-                    {item.actionIcon && <item.actionIcon className="h-4 w-4 text-[#B79A62]" strokeWidth={1.9} aria-hidden="true" />}
-                    {item.action}
-                    <ArrowRight className="h-4 w-4 text-[#B79A62] transition-transform duration-150 group-hover:translate-x-0.5" aria-hidden="true" />
-                  </a>
-                </li>
-              ))}
-            </ul>
-
-            <p className="relative mt-6 flex flex-wrap items-center gap-x-3 gap-y-2 text-[15px] text-[#1C1F21]/70">
-              <Store className="h-5 w-5 text-[#9C7C40]" strokeWidth={1.7} aria-hidden="true" />
-              Ou passez en boutique :
-              {agencies.map((agency, index) => (
-                <span key={agency.id} className="inline-flex items-center gap-3">
-                  {index > 0 && <span aria-hidden="true" className="h-1 w-1 rounded-full bg-[#B79A62]" />}
-                  <a
-                    href={agency.directionsUrl || pageHref('agences-contact')}
-                    {...(agency.directionsUrl ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                    className="font-semibold text-[#1C1F21] underline decoration-[#B79A62] decoration-2 underline-offset-[6px] hover:text-[#7D612D]"
-                  >
-                    {agency.name.replace('Agence ', '')} ({agency.districtLabel.replace('Marseille ', '')})
-                  </a>
-                </span>
-              ))}
-            </p>
-          </div>
-        </div>
+        <ContactCtaSection
+          kicker={config.ctaKicker}
+          title={config.ctaTitle}
+          subtitle={config.ctaSubtitle}
+          imageSrc={CTA_IMAGE}
+          phoneDisplay={brand.phoneDisplay}
+          phoneHref={brand.phoneHref}
+          quoteHref={pageHref('devis')}
+          quoteLabel={config.quoteCtaLabel}
+          whatsappHref={whatsappUrl}
+          agencies={agencies.map((agency) => ({
+            id: agency.id,
+            label: `${agency.name.replace('Agence ', '')} (${agency.districtLabel.replace('Marseille ', '')})`,
+            href: agency.directionsUrl || pageHref('agences-contact'),
+            external: Boolean(agency.directionsUrl),
+          }))}
+        />
       )}
 
       <div className={hideCta ? '' : 'rounded-t-[28px] sm:rounded-t-[40px] bg-[#16191B]'}>
