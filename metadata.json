@@ -1,0 +1,6 @@
+{
+  "name": "Serrurerie de la République — Marseille",
+  "description": "Structure du site de Serrurerie de la République à Marseille : serrurerie, clés et badges, vitrerie, menuiserie, fermetures et accompagnement après sinistre.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
