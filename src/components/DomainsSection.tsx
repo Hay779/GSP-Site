@@ -90,7 +90,7 @@ function PortraitPeelDomainCard({
           isActive ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
         }`}
       >
-        <div className="flex items-center justify-between gap-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#7D612D]">
+        <div className="flex items-center justify-between gap-2 text-[12px] font-semibold uppercase tracking-[0.12em] text-[#7D612D]">
           <span className="truncate">{item.categoryTag}</span>
           <div className="flex items-center gap-2 shrink-0">
             <span className="tabular-nums">{number}</span>
@@ -193,7 +193,7 @@ function PortraitPeelDomainCard({
         {/* Contenu de la face portrait */}
         <div className="relative z-10 flex h-full w-full flex-col justify-between p-5 sm:p-6 text-[#F3F0E7]">
           <div className="flex items-center justify-between gap-2">
-            <span className="text-[11px] font-medium uppercase tracking-[0.14em] text-[#F3F0E7]/90 tabular-nums">
+            <span className="text-[12px] font-medium uppercase tracking-[0.12em] text-[#F3F0E7]/90 tabular-nums">
               {number} / DOMAINE
             </span>
             <span
@@ -208,10 +208,10 @@ function PortraitPeelDomainCard({
             <p className="font-display text-[22px] sm:text-[24px] xl:text-[26px] font-semibold leading-[1.15] tracking-[-0.015em] text-[#F3F0E7]">
               {item.title}
             </p>
-            <p className="mt-2 text-[11px] font-medium uppercase tracking-[0.14em] text-[#B79A62]">
+            <p className="mt-2 text-[12px] font-medium uppercase tracking-[0.12em] text-[#B79A62]">
               {item.categoryTag}
             </p>
-            <p className="mt-4 text-[10px] font-medium uppercase tracking-[0.1em] text-[#F3F0E7]/75">
+            <p className="mt-4 text-[12px] font-medium uppercase tracking-[0.1em] text-[#F3F0E7]/75">
               Voir les prestations →
             </p>
           </div>

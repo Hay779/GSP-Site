@@ -96,6 +96,8 @@
 @media (max-width: 1023px) {
   .kb-curve {
     clip-path: ellipse(120% 100% at 50% 0%);
+    /* le filet doré (::after) dépasse la boîte : on l'empêche de créer un défilement horizontal */
+    overflow: clip;
   }
   .kb-curve::after {
     content: '';
@@ -133,3 +135,9 @@
   }
 }
 
+
+/* Aucun élément décoratif ne doit provoquer de défilement horizontal sur mobile */
+html,
+body {
+  overflow-x: clip;
+}

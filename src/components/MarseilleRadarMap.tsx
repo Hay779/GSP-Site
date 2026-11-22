@@ -406,7 +406,7 @@ export function MarseilleRadarMap({
       <div className="pointer-events-none absolute left-3 bottom-3 sm:bottom-auto sm:left-4 sm:top-4 z-10 flex items-center gap-2.5 rounded-xl bg-[#1C1F21]/92 px-3 py-2 sm:px-4 sm:py-2.5 shadow-md">
         <Store className="h-5 w-5 shrink-0 text-[#B79A62]" strokeWidth={1.7} aria-hidden="true" />
         <div>
-          <p className="text-[11px] sm:text-[12px] leading-snug text-[#F3F0E7]/70">{responseTimePrefix}</p>
+          <p className="text-[12px] leading-snug text-[#F3F0E7]/70">{responseTimePrefix}</p>
           <p className="font-display text-[13px] sm:text-[15px] font-semibold leading-snug text-[#F3F0E7]">{responseTimeHighlight}</p>
         </div>
       </div>
