@@ -320,6 +320,7 @@ export default function App() {
           whatsapp={WHATSAPP_CONFIG}
           quoteHref={pageHref('devis')}
           contactHref={pageHref('agences-contact')}
+          routeKey={route.kind === 'home' ? 'home' : `${route.kind}-${route.id}`}
         />
       )}
     </div>

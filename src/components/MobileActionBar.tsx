@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { FileText, KeyRound, MessageCircle, Phone, X } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import type { WhatsAppConfig } from '../data/sectionsContent';
@@ -12,6 +13,8 @@ interface MobileActionBarProps {
   readonly whatsapp: WhatsAppConfig;
   readonly quoteHref: string;
   readonly contactHref: string;
+  /** Change à chaque changement de page (pour retrouver l'emplacement du haut de page). */
+  readonly routeKey: string;
 }
 
 function WhatsAppIcon({ className }: { readonly className?: string }) {
@@ -27,51 +30,58 @@ const ITEM =
 
 /**
  * Barre d'actions mobile (Devis · SOS · Contact), façon application.
- * Cachée en haut de page et pendant qu'on fait défiler vers le bas ;
- * elle réapparaît quand on remonte ou dès que le défilement s'arrête.
+ * Sur l'accueil, elle remplace les boutons du haut de page puis se fixe en bas
+ * de l'écran quand on descend. Ailleurs, elle apparaît après le haut de page.
+ * Masquée sur le pied de page (qui a déjà ses boutons).
  */
-export function MobileActionBar({ brand, whatsapp, quoteHref, contactHref }: MobileActionBarProps) {
+export function MobileActionBar({ brand, whatsapp, quoteHref, contactHref, routeKey }: MobileActionBarProps) {
   const prefersReducedMotion = Boolean(useReducedMotion());
   const [visible, setVisible] = useState(false);
   const [sosOpen, setSosOpen] = useState(false);
-  const lastY = useRef(0);
+  /** Emplacement dans le haut de page (accueil) : la barre y est affichée tant qu'il est visible. */
+  const [slot, setSlot] = useState<HTMLElement | null>(null);
+  const [slotInView, setSlotInView] = useState(false);
   const sosButtonRef = useRef<HTMLButtonElement | null>(null);
 
+  // Recherche l'emplacement du haut de page à chaque changement de page.
   useEffect(() => {
-    lastY.current = window.scrollY;
-    const onScroll = () => {
-      const y = window.scrollY;
+    const id = window.requestAnimationFrame(() => setSlot(document.getElementById('hero-action-slot')));
+    return () => window.cancelAnimationFrame(id);
+  }, [routeKey]);
+
+  useEffect(() => {
+    if (!slot) {
+      setSlotInView(false);
+      return;
+    }
+    const observer = new IntersectionObserver(([entry]) => setSlotInView(entry.isIntersecting), {
+      rootMargin: '0px 0px -24px 0px',
+    });
+    observer.observe(slot);
+    return () => observer.disconnect();
+  }, [slot]);
+
+  // Barre fixe : visible dès qu'on a quitté le haut de page, sauf sur le pied de page.
+  useEffect(() => {
+    const update = () => {
       const footer = document.getElementById('11_Pied_De_Page');
       const nearFooter = footer ? footer.getBoundingClientRect().top < window.innerHeight - 40 : false;
-      setVisible((was) =>
+      setVisible(
         resolveActionBarVisible({
-          currentY: y,
-          previousY: lastY.current,
-          revealAfterY: window.innerHeight * 0.5,
+          scrollY: window.scrollY,
+          revealAfterY: window.innerHeight * 0.35,
           nearFooter,
-          wasVisible: was,
         })
       );
-      lastY.current = y;
     };
-    // Réapparaît dès que le défilement s'arrête (sauf en haut de page / près du pied de page).
-    let idleTimer: number | undefined;
-    const onScrollIdle = () => {
-      window.clearTimeout(idleTimer);
-      idleTimer = window.setTimeout(() => {
-        const footer = document.getElementById('11_Pied_De_Page');
-        const nearFooter = footer ? footer.getBoundingClientRect().top < window.innerHeight - 40 : false;
-        setVisible(window.scrollY >= window.innerHeight * 0.5 && !nearFooter);
-      }, 450);
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('scroll', onScrollIdle, { passive: true });
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
     return () => {
-      window.clearTimeout(idleTimer);
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('scroll', onScrollIdle);
+      window.removeEventListener('scroll', update);
+      window.removeEventListener('resize', update);
     };
-  }, []);
+  }, [routeKey]);
 
   useEffect(() => {
     if (!sosOpen) {
@@ -87,11 +97,49 @@ export function MobileActionBar({ brand, whatsapp, quoteHref, contactHref }: Mob
     return () => window.removeEventListener('keydown', onKey);
   }, [sosOpen]);
 
-  const shown = visible || sosOpen;
+  const inlineActive = Boolean(slot) && slotInView;
+  const shown = (slot ? !slotInView && visible : visible) || (sosOpen && !inlineActive);
   const whatsappUrl = buildWhatsAppUrl(whatsapp.phoneDisplay, whatsapp.prefilledMessage);
+
+  const renderButtons = (focusable: boolean, inline: boolean) => (
+        <div className="flex items-center justify-between">
+          <a href={quoteHref} tabIndex={focusable ? 0 : -1} className={ITEM}>
+            <FileText className="h-[21px] w-[21px] text-[#E5C57B] drop-shadow" strokeWidth={1.9} aria-hidden="true" />
+            Devis
+          </a>
+          <button
+            ref={inline === inlineActive ? sosButtonRef : undefined}
+            type="button"
+            tabIndex={focusable ? 0 : -1}
+            onClick={() => setSosOpen((o) => !o)}
+            aria-expanded={sosOpen}
+            aria-label="SOS urgence : appeler ou envoyer une photo"
+            className={`${ITEM} cursor-pointer`}
+          >
+            <span className="-mt-7 grid h-[54px] w-[54px] place-items-center rounded-full border-[3px] border-[#F3F0E7]/90 bg-[#C0392B] text-white shadow-[0_8px_20px_rgba(192,57,43,0.5)]">
+              <KeyRound className="h-6 w-6" strokeWidth={2} aria-hidden="true" />
+            </span>
+            SOS
+          </button>
+          <a href={contactHref} tabIndex={focusable ? 0 : -1} className={ITEM}>
+            <MessageCircle className="h-[21px] w-[21px] text-[#E5C57B] drop-shadow" strokeWidth={1.9} aria-hidden="true" />
+            Contact
+          </a>
+        </div>
+  );
+
+  const PILL =
+    'rounded-full border border-[#F3F0E7]/20 bg-[#16191B]/35 px-3.5 py-1.5 shadow-[0_10px_30px_rgba(0,0,0,0.25)] backdrop-blur-xl backdrop-saturate-150';
 
   return (
     <div className="sm:hidden">
+      {slot &&
+        createPortal(
+          <nav aria-label="Actions rapides (haut de page)" className={`mx-auto w-[min(320px,100%)] ${PILL} bg-[#F3F0E7]/[0.06]`}>
+            {renderButtons(true, true)}
+          </nav>,
+          slot
+        )}
       <AnimatePresence>
         {sosOpen && (
           <>
@@ -153,34 +201,11 @@ export function MobileActionBar({ brand, whatsapp, quoteHref, contactHref }: Mob
       <nav
         aria-label="Actions rapides"
         aria-hidden={!shown}
-        className={`fixed bottom-3.5 left-1/2 z-[60] w-[min(320px,calc(100%-40px))] -translate-x-1/2 rounded-full border border-[#F3F0E7]/20 bg-[#16191B]/35 px-3.5 py-1.5 shadow-[0_10px_30px_rgba(0,0,0,0.25)] backdrop-blur-xl backdrop-saturate-150 transition-all duration-300 ${
+        className={`fixed bottom-3.5 left-1/2 z-[60] w-[min(320px,calc(100%-40px))] -translate-x-1/2 ${PILL} transition-all duration-300 ${
           shown ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-[140%] opacity-0'
         }`}
       >
-        <div className="flex items-center justify-between">
-          <a href={quoteHref} tabIndex={shown ? 0 : -1} className={ITEM}>
-            <FileText className="h-[21px] w-[21px] text-[#E5C57B] drop-shadow" strokeWidth={1.9} aria-hidden="true" />
-            Devis
-          </a>
-          <button
-            ref={sosButtonRef}
-            type="button"
-            tabIndex={shown ? 0 : -1}
-            onClick={() => setSosOpen((o) => !o)}
-            aria-expanded={sosOpen}
-            aria-label="SOS urgence : appeler ou envoyer une photo"
-            className={`${ITEM} cursor-pointer`}
-          >
-            <span className="-mt-7 grid h-[54px] w-[54px] place-items-center rounded-full border-[3px] border-[#F3F0E7]/90 bg-[#C0392B] text-white shadow-[0_8px_20px_rgba(192,57,43,0.5)]">
-              <KeyRound className="h-6 w-6" strokeWidth={2} aria-hidden="true" />
-            </span>
-            SOS
-          </button>
-          <a href={contactHref} tabIndex={shown ? 0 : -1} className={ITEM}>
-            <MessageCircle className="h-[21px] w-[21px] text-[#E5C57B] drop-shadow" strokeWidth={1.9} aria-hidden="true" />
-            Contact
-          </a>
-        </div>
+        {renderButtons(shown, false)}
       </nav>
     </div>
   );

@@ -290,7 +290,10 @@ export function HeroSection({
             {config.subtitle}
           </motion.p>
 
-          {/* Deux boutons d'appel à l'action */}
+          {/* Mobile : emplacement de la barre d'actions (Devis · SOS · Contact), qui se fixe en bas au défilement */}
+          <div id="hero-action-slot" className="mt-10 w-full sm:hidden" />
+
+          {/* Deux boutons d'appel à l'action (tablette & ordinateur) */}
           <motion.div
             initial={prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
@@ -299,7 +302,7 @@ export function HeroSection({
               delay: prefersReducedMotion ? 0 : 0.4,
               ease: REVEAL_EASE,
             }}
-            className="mt-7 sm:mt-8 flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-3 sm:gap-4 w-full sm:w-auto"
+            className="mt-8 hidden sm:flex sm:flex-row sm:flex-wrap sm:items-center gap-4 w-auto"
           >
             <button
               ref={quoteTriggerRef}
