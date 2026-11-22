@@ -171,11 +171,11 @@ export const SITE_SECTIONS: readonly SiteSectionSpec[] = [
     indexLabel: '10',
     provisionalTitle: 'Retrouvez-nous en boutique.',
     summary:
-      'Fiches Agence République et Agence Lodi avec emplacement photo, coordonnées, horaires à compléter et boutons Appeler / Itinéraire.',
+      'Fiches Agence République et Agence Rome avec emplacement photo, coordonnées, horaires à compléter et boutons Appeler / Itinéraire.',
     toComplete: [
       'Photos des agences à intégrer',
       'Horaires Agence République à compléter',
-      'Adresse, téléphone et horaires Agence Lodi à compléter',
+      'Horaires des agences et photos des façades à compléter',
     ],
     surface: 'primary',
     density: 'standard',

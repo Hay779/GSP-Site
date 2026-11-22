@@ -45,6 +45,8 @@ test('resolves interactive map focus pin accurately for Marseille districts and 
   assert.equal(resolveZoneMapFocusPin(null), 'marseille');
   assert.equal(resolveZoneMapFocusPin('Lodi'), 'marseille');
   assert.equal(resolveZoneMapFocusPin('1er au 16ème arrondissements'), 'marseille');
+  assert.equal(resolveZoneMapFocusPin('Les 16 arrondissements'), 'marseille');
+  assert.equal(checkServiceSector('Les 16 arrondissements').status, 'covered');
   assert.equal(resolveZoneMapFocusPin('Septèmes-les-Vallons'), 'septemes');
   assert.equal(resolveZoneMapFocusPin('Plan-de-Cuques'), 'plan-de-cuques');
   assert.equal(resolveZoneMapFocusPin('Allauch'), 'allauch');
@@ -56,4 +58,22 @@ test('resolves interactive map focus pin accurately for Marseille districts and 
 test('returns empty or unconfirmed status cleanly for blank or outside queries', () => {
   assert.equal(checkServiceSector(' ').status, 'empty');
   assert.equal(checkServiceSector('Lyon').status, 'unconfirmed');
+});
+
+test('does not confuse « marseille 13006 » with « marseille 1 » (Vieux-Port)', () => {
+  const result = checkServiceSector('Marseille 13006');
+  assert.equal(result.status, 'covered');
+  assert.ok(result.matchedLabel?.includes('13006'), result.matchedLabel ?? '');
+  assert.ok(!result.matchedLabel?.includes('Vieux-Port'));
+});
+
+test('plain « Marseille » is covered without picking a random district', () => {
+  const result = checkServiceSector('Marseille');
+  assert.equal(result.status, 'covered');
+  assert.ok(!result.matchedLabel?.includes('République'), result.matchedLabel ?? '');
+});
+
+test('still matches partial place names while typing', () => {
+  assert.equal(checkServiceSector('aubag').status, 'covered');
+  assert.equal(checkServiceSector('13190').matchedLabel, 'Allauch (13190)');
 });

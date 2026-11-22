@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import { ClipboardCheck, KeyRound, Pause, Play, ShieldCheck } from 'lucide-react';
+import { ClipboardCheck, KeyRound, Pause, Phone, Play, ShieldCheck } from 'lucide-react';
 import { motion, useReducedMotion, useScroll, useSpring, useTransform } from 'motion/react';
 import type { CommitmentIconKey, HeroConfig } from '../data/heroConfig';
 import { HERO_PARALLAX_CONFIG } from '../utils/heroParallax';
+import { HERO_SLIDESHOW_TIMING, nextSlideIndex } from '../utils/heroSlideshow';
+import { HeroSlideshowIndicator, HeroSlideshowMedia } from './HeroSlideshow';
 import type { SectionId } from '../utils/navigation';
 import { REVEAL_EASE } from '../utils/scrollReveal';
 
@@ -37,6 +39,11 @@ export function HeroSection({
   const [videoFailed, setVideoFailed] = useState(false);
   const [isVideoPaused, setIsVideoPaused] = useState(false);
   const prefersReducedMotion = useReducedMotion() ?? false;
+  const slides = config.media.slides;
+  const posterSlide = slides[0];
+  const [activeSlide, setActiveSlide] = useState(0);
+  const [isSlideshowToggled, setIsSlideshowToggled] = useState(false);
+  const [isPageHidden, setIsPageHidden] = useState(false);
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -70,6 +77,30 @@ export function HeroSection({
     !videoFailed &&
     Boolean(config.media.videoSrc.trim() || config.media.videoWebmSrc?.trim());
 
+  const hasSlideshow = !hasVideoSource && slides.length > 1;
+  // Si l'utilisateur préfère réduire les animations, le diaporama démarre en pause
+  // (il peut quand même le lancer avec le bouton lecture).
+  const isSlideshowPausedByChoice = prefersReducedMotion ? !isSlideshowToggled : isSlideshowToggled;
+  const isSlideshowPaused = isSlideshowPausedByChoice || isPageHidden;
+
+  // Met le diaporama en pause quand l'onglet n'est pas visible.
+  useEffect(() => {
+    const onVisibility = () => setIsPageHidden(document.hidden);
+    document.addEventListener('visibilitychange', onVisibility);
+    return () => document.removeEventListener('visibilitychange', onVisibility);
+  }, []);
+
+  // Passe à l'image suivante après la durée d'affichage.
+  useEffect(() => {
+    if (!hasSlideshow || isSlideshowPaused) {
+      return;
+    }
+    const timer = window.setTimeout(() => {
+      setActiveSlide((current) => nextSlideIndex(current, slides.length));
+    }, HERO_SLIDESHOW_TIMING.slideDurationMs);
+    return () => window.clearTimeout(timer);
+  }, [hasSlideshow, isSlideshowPaused, activeSlide, slides.length]);
+
   useEffect(() => {
     if (!hasVideoSource || !videoRef.current) {
       return;
@@ -91,6 +122,10 @@ export function HeroSection({
   }, [hasVideoSource]);
 
   const handleTogglePlayback = () => {
+    if (hasSlideshow) {
+      setIsSlideshowToggled((toggled) => !toggled);
+      return;
+    }
     const videoEl = videoRef.current;
     if (!videoEl) {
       return;
@@ -110,12 +145,12 @@ export function HeroSection({
       id="02_Hero"
       data-section="02_Hero"
       aria-labelledby="02_Hero-title"
-      className="relative w-full overflow-hidden bg-[#1C1F21] scroll-mt-[74px] lg:scroll-mt-[88px] min-h-[560px] sm:min-h-[620px] lg:min-h-[min(calc(100svh-88px),740px)] flex items-center"
+      className="relative w-full overflow-hidden bg-[#1C1F21] scroll-mt-[74px] lg:scroll-mt-[88px] flex flex-col h-[calc(100svh-74px)] min-h-[540px] sm:h-auto sm:min-h-0 lg:flex-row lg:min-h-[min(calc(100svh-88px),740px)] lg:items-center"
     >
       {/* Couche média plein écran : vidéo HTML5 + poster artisanal avec parallaxe immersif au scroll */}
       <div
         data-testid="hero-media-layer"
-        className="absolute inset-0 z-0 overflow-hidden bg-[#1C1F21]"
+        className="relative min-h-[150px] flex-1 sm:h-[54svh] sm:max-h-[520px] sm:flex-none w-full lg:absolute lg:inset-0 lg:h-auto lg:min-h-0 lg:max-h-none z-0 overflow-hidden bg-[#1C1F21]"
         aria-hidden="true"
       >
         {/* Repli stylisé si ni vidéo ni poster ne chargent */}
@@ -132,14 +167,24 @@ export function HeroSection({
           }
           className="absolute -top-[18%] -bottom-[18%] inset-x-0 origin-center will-change-transform"
         >
-          {/* Image poster haute qualité (affichée immédiatement et en repli vidéo) */}
-          {!posterFailed && (
+          {/* Diaporama cinéma (fondus enchaînés + mouvements de caméra lents) */}
+          {hasSlideshow && (
+            <HeroSlideshowMedia
+              slides={slides}
+              activeIndex={activeSlide}
+              isPaused={isSlideshowPaused}
+              reducedMotion={prefersReducedMotion}
+            />
+          )}
+
+          {/* Image unique haute qualité (poster de la vidéo ou image seule) */}
+          {!hasSlideshow && posterSlide && !posterFailed && (
             <img
-              src={config.media.posterSrc}
-              alt={config.media.posterAlt}
+              src={posterSlide.src}
+              alt={posterSlide.alt}
               referrerPolicy="no-referrer"
               onError={() => setPosterFailed(true)}
-              className="h-full w-full object-cover object-[72%_32%] sm:object-[68%_38%] lg:object-[70%_40%]"
+              className="h-full w-full object-cover object-[80%_30%] sm:object-[72%_36%] lg:object-[70%_40%]"
             />
           )}
 
@@ -153,7 +198,7 @@ export function HeroSection({
               loop
               playsInline
               preload="metadata"
-              poster={config.media.posterSrc}
+              poster={posterSlide?.src}
               onError={() => setVideoFailed(true)}
               className="absolute inset-0 h-full w-full object-cover object-center"
             >
@@ -168,9 +213,11 @@ export function HeroSection({
         </motion.div>
 
         {/* Voile directionnel calibré pour garantir un contraste WCAG AA sur tout contenu vidéo */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#1C1F21] via-[#1C1F21]/82 to-[#1C1F21]/45 lg:hidden" />
+        <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#1C1F21] via-[#1C1F21]/45 to-transparent lg:hidden" />
         <div className="hidden lg:block absolute inset-0 bg-[linear-gradient(90deg,#1C1F21_0%,#1C1F21_28%,rgba(28,31,33,0.92)_44%,rgba(28,31,33,0.48)_62%,rgba(28,31,33,0.12)_100%)]" />
-        <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#1C1F21]/90 via-[#1C1F21]/35 to-transparent" />
+        {/* Voile haut (mobile) pour la lisibilité de l'indicateur du diaporama */}
+        <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#1C1F21]/55 to-transparent lg:hidden" />
+        <div className="hidden lg:block absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#1C1F21]/90 via-[#1C1F21]/35 to-transparent" />
         {/* Assombrissement progressif subtil au défilement pour fondre 02_Hero vers la section suivante */}
         <motion.div
           style={prefersReducedMotion ? undefined : { opacity: depthScrimOpacity }}
@@ -182,21 +229,23 @@ export function HeroSection({
       <motion.div
         data-testid="hero-parallax-content"
         style={prefersReducedMotion ? undefined : { y: contentParallaxY }}
-        className="relative z-10 mx-auto w-full max-w-[1280px] px-5 sm:px-8 lg:px-10 py-16 sm:py-20 lg:py-24 will-change-transform"
+        className="relative z-10 mx-auto w-full max-w-[1280px] shrink-0 px-5 sm:px-8 lg:px-10 pt-1 pb-6 sm:pt-2 sm:pb-14 lg:py-24 will-change-transform"
       >
         <div className="flex flex-col items-start max-w-[640px]">
+          {config.kicker && (
           <motion.p
             initial={prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: prefersReducedMotion ? 0 : 0.45, ease: REVEAL_EASE }}
-            className="text-[13px] sm:text-[14px] font-medium tracking-[0.16em] text-[#B79A62]"
+            className="section-kicker text-[#B79A62]"
           >
             {config.kicker}
           </motion.p>
+          )}
 
           <h1
             id="02_Hero-title"
-            className="mt-4 font-display text-[clamp(2.15rem,4vw,3.5rem)] font-semibold leading-[1.08] tracking-[-0.015em] text-[#F3F0E7]"
+            className={`${config.kicker ? 'mt-4' : 'mt-2'} font-display text-[clamp(2.15rem,4vw,3.5rem)] font-semibold leading-[1.08] tracking-[-0.015em] text-[#F3F0E7]`}
           >
             <span className="block overflow-hidden pb-1">
               <motion.span
@@ -236,12 +285,15 @@ export function HeroSection({
               delay: prefersReducedMotion ? 0 : 0.3,
               ease: REVEAL_EASE,
             }}
-            className="mt-5 max-w-[490px] text-[16px] sm:text-[18px] leading-[1.6] text-[#F3F0E7]/85"
+            className="mt-3 sm:mt-5 max-w-[490px] text-[15.5px] sm:text-[18px] leading-[1.6] text-[#F3F0E7]/85"
           >
             {config.subtitle}
           </motion.p>
 
-          {/* Deux boutons d'appel à l'action */}
+          {/* Mobile : emplacement de la barre d'actions (Devis · SOS · Contact), qui se fixe en bas au défilement */}
+          <div id="hero-action-slot" className="mt-9 w-full sm:hidden" />
+
+          {/* Deux boutons d'appel à l'action (tablette & ordinateur) */}
           <motion.div
             initial={prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
@@ -250,13 +302,13 @@ export function HeroSection({
               delay: prefersReducedMotion ? 0 : 0.4,
               ease: REVEAL_EASE,
             }}
-            className="mt-8 flex flex-wrap items-center gap-3 sm:gap-4 w-full sm:w-auto"
+            className="mt-8 hidden sm:flex sm:flex-row sm:flex-wrap sm:items-center gap-4 w-auto"
           >
             <button
               ref={quoteTriggerRef}
               type="button"
               onClick={onOpenQuoteModal}
-              className="group relative overflow-hidden inline-flex min-h-[48px] flex-1 sm:flex-initial items-center justify-center rounded-lg bg-[#B79A62] hover:bg-[#C6AA73] active:bg-[#A68952] px-5 sm:px-7 py-3 text-[15px] sm:text-[16px] font-semibold text-[#1C1F21] whitespace-nowrap shrink-0 transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F3F0E7] cursor-pointer"
+              className="group relative overflow-hidden inline-flex min-h-[50px] w-full sm:w-auto items-center justify-center rounded-lg bg-[#B79A62] hover:bg-[#C6AA73] active:bg-[#A68952] px-5 sm:px-7 py-3 text-[15px] sm:text-[16px] font-semibold text-[#1C1F21] whitespace-nowrap shrink-0 transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F3F0E7] cursor-pointer"
             >
               <span
                 aria-hidden="true"
@@ -267,10 +319,12 @@ export function HeroSection({
 
             <a
               href={config.secondaryCtaHref}
-              onClick={() => onSelectSection(config.secondaryCtaTargetId)}
-              className="inline-flex min-h-[48px] flex-1 sm:flex-initial items-center justify-center rounded-lg border border-[#F3F0E7]/65 bg-[#1C1F21]/35 hover:bg-[#F3F0E7]/10 hover:border-[#F3F0E7] px-5 sm:px-7 py-3 text-[15px] sm:text-[16px] font-medium text-[#F3F0E7] whitespace-nowrap shrink-0 transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62]"
+              className="inline-flex min-h-[50px] w-full sm:w-auto items-center justify-center gap-2.5 rounded-lg border border-[#F3F0E7]/65 bg-[#1C1F21]/35 hover:bg-[#F3F0E7]/10 hover:border-[#F3F0E7] px-5 sm:px-7 py-3 text-[15px] sm:text-[16px] font-medium text-[#F3F0E7] whitespace-nowrap shrink-0 transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62]"
             >
-              {config.secondaryCtaLabel}
+              {config.secondaryCtaHref.startsWith('tel:') && (
+                <Phone className="h-4 w-4 shrink-0 text-[#B79A62]" strokeWidth={2} aria-hidden="true" />
+              )}
+              <span className="tabular-nums">{config.secondaryCtaLabel}</span>
             </a>
           </motion.div>
 
@@ -284,15 +338,13 @@ export function HeroSection({
               delay: prefersReducedMotion ? 0 : 0.5,
               ease: REVEAL_EASE,
             }}
-            className="mt-10 sm:mt-12 flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-3.5 sm:gap-y-3 sm:gap-x-0 border-t border-[#F3F0E7]/15 pt-6 w-full"
+            className="mt-6 sm:mt-12 hidden [@media(min-height:780px)]:grid grid-cols-3 sm:flex sm:flex-wrap sm:items-center sm:gap-y-3 border-t border-[#F3F0E7]/15 pt-5 sm:pt-6 w-full"
           >
             {config.commitments.map((item, index) => (
               <li
                 key={item.label}
-                className={`flex items-center gap-2.5 text-[14px] sm:text-[15px] text-[#F3F0E7]/90 whitespace-nowrap ${
-                  index > 0
-                    ? 'sm:border-l sm:border-[#F3F0E7]/20 sm:pl-5 sm:ml-5'
-                    : ''
+                className={`flex flex-col items-center gap-2 px-1 text-center text-[12.5px] leading-[1.3] text-[#F3F0E7]/85 sm:flex-row sm:gap-2.5 sm:px-0 sm:text-left sm:text-[15px] sm:whitespace-nowrap ${
+                  index > 0 ? 'border-l border-[#F3F0E7]/15 sm:border-[#F3F0E7]/20 sm:pl-5 sm:ml-5' : ''
                 }`}
               >
                 <CommitmentIcon icon={item.icon} />
@@ -303,24 +355,40 @@ export function HeroSection({
         </div>
       </motion.div>
 
-      {/* Contrôle discret lecture/pause lorsqu'une vidéo plein écran est branchée */}
-      {hasVideoSource && (
-        <button
-          type="button"
-          onClick={handleTogglePlayback}
-          aria-label={
-            isVideoPaused
-              ? 'Lancer la vidéo d’arrière-plan'
-              : 'Mettre en pause la vidéo d’arrière-plan'
-          }
-          className="absolute bottom-5 right-5 z-20 inline-flex h-11 w-11 items-center justify-center rounded-lg border border-[#F3F0E7]/25 bg-[#1C1F21]/70 text-[#F3F0E7] backdrop-blur-sm hover:border-[#B79A62] hover:text-[#B79A62] transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62] cursor-pointer"
-        >
-          {isVideoPaused ? (
-            <Play className="h-4 w-4" aria-hidden="true" />
-          ) : (
-            <Pause className="h-4 w-4" aria-hidden="true" />
-          )}
-        </button>
+      {/* Indicateur du diaporama + contrôle lecture/pause (vidéo ou diaporama) */}
+      {(hasSlideshow || hasVideoSource) && (
+        <div className="pointer-events-none absolute inset-x-0 top-2 sm:top-[calc(min(54svh,520px)-30px)] lg:top-auto lg:bottom-4 z-20">
+          <div className="pointer-events-auto mx-auto flex max-w-[1280px] items-center justify-center lg:justify-end gap-3 px-5 sm:px-8 lg:px-10">
+            {hasSlideshow && (
+              <HeroSlideshowIndicator
+                slides={slides}
+                activeIndex={activeSlide}
+                isPaused={isSlideshowPaused}
+                onSelect={setActiveSlide}
+              />
+            )}
+            <button
+              type="button"
+              onClick={handleTogglePlayback}
+              aria-label={
+                (hasSlideshow ? isSlideshowPausedByChoice : isVideoPaused)
+                  ? hasSlideshow
+                    ? 'Relancer le diaporama'
+                    : 'Lancer la vidéo d’arrière-plan'
+                  : hasSlideshow
+                    ? 'Mettre en pause le diaporama'
+                    : 'Mettre en pause la vidéo d’arrière-plan'
+              }
+              className="sr-only focus:not-sr-only focus:inline-flex focus:h-10 focus:w-10 focus:shrink-0 focus:items-center focus:justify-center focus:rounded-full focus:border focus:border-[#B79A62] focus:bg-[#1C1F21]/80 focus:text-[#F3F0E7] focus:outline-2 focus:outline-offset-2 focus:outline-[#B79A62] cursor-pointer"
+            >
+              {(hasSlideshow ? isSlideshowPausedByChoice : isVideoPaused) ? (
+                <Play className="h-4 w-4" aria-hidden="true" />
+              ) : (
+                <Pause className="h-4 w-4" aria-hidden="true" />
+              )}
+            </button>
+          </div>
+        </div>
       )}
     </section>
   );

@@ -1,9 +1,23 @@
 import type { SectionId } from '../utils/navigation';
 import type { QuoteDomain } from '../utils/quoteForm';
+import type { PageId } from '../utils/router';
+
+export interface UrgencyCase {
+  readonly title: string;
+  readonly text: string;
+  readonly icon: 'lock' | 'shield';
+  readonly imageSrc: string;
+  readonly imageAlt: string;
+  /** Cadrage CSS (object-position) de la photo dans la carte. */
+  readonly imagePosition?: string;
+}
 
 export interface UrgencyConfig {
+  readonly kicker: string;
   readonly title: string;
   readonly subtitle: string;
+  readonly cases: readonly UrgencyCase[];
+  readonly assurances: readonly { readonly label: string; readonly icon: 'timer' | 'shield' | 'file' }[];
   readonly ctaPrefix: string;
 }
 
@@ -17,6 +31,7 @@ export interface KeysBadgeService {
 export interface KeysBadgesConfig {
   readonly kicker: string;
   readonly headlineLines: readonly [string, string];
+  readonly subtitle: string;
   readonly services: readonly KeysBadgeService[];
   readonly note: string;
   readonly ctaLabel: string;
@@ -36,6 +51,12 @@ export interface DomainCardItem {
   readonly ctaLabel: string;
   readonly imageSrc: string;
   readonly imageAlt: string;
+  /** Page dédiée : paragraphe d'introduction sous le titre. */
+  readonly pageIntro: string;
+  /** Page dédiée : titre de l'onglet / Google. */
+  readonly seoTitle: string;
+  /** Page dédiée : description affichée par Google. */
+  readonly seoDescription: string;
 }
 
 export interface DomainsConfig {
@@ -50,14 +71,27 @@ export interface PartnerBrandItem {
   readonly id: PartnerBrandId;
   readonly name: string;
   readonly specialty: string;
+  /**
+   * Logo officiel (fichier dans public/assets/brands/). S'il est absent ou
+   * introuvable, le nom de la marque s'affiche à la place.
+   */
+  readonly logoSrc?: string;
+  /** Hauteur max du logo en px (équilibre visuel entre logos larges et carrés). */
+  readonly logoHeight?: number;
 }
 
 export interface BrandsConfig {
   readonly kicker: string;
   readonly title: string;
   readonly subtitle: string;
+  /**
+   * Marques sur lesquelles l'entreprise intervient, avec leur logo officiel.
+   * ⚠️ Liste à confirmer par l'entreprise.
+   */
   readonly partners: readonly PartnerBrandItem[];
-  readonly note: string;
+  /** Phrase sous la grille (autres marques). */
+  readonly otherBrandsLabel: string;
+  readonly otherBrandsCta: string;
 }
 
 export interface AfterIncidentStep {
@@ -67,8 +101,10 @@ export interface AfterIncidentStep {
 
 export interface InsuranceNoticeConfig {
   readonly partnerName: string;
+  readonly partnerNote: string;
   readonly title: string;
   readonly subtitle: string;
+  readonly ctaLabel: string;
 }
 
 export interface AfterIncidentConfig {
@@ -81,33 +117,31 @@ export interface AfterIncidentConfig {
   readonly imageAlt: string;
   readonly steps: readonly AfterIncidentStep[];
   readonly insuranceNotice: InsuranceNoticeConfig;
+  /** Bandeau photo du bloc d'accueil. */
+  readonly bannerSrc: string;
+  readonly bannerAlt: string;
+  readonly services: readonly {
+    readonly title: string;
+    readonly text: string;
+    readonly icon: 'shield' | 'wrench' | 'file';
+    readonly imageSrc: string;
+  }[];
+  readonly stepsTitle: string;
 }
 
-export interface ReviewItem {
-  readonly id: string;
-  readonly serviceTag?: string;
-  readonly title: string;
-  readonly quote: string;
-  readonly author: string;
-  readonly date: string;
-  readonly source: string;
-  readonly isPlaceholder?: boolean;
-}
-
+/** Textes du bloc avis (les avis eux-mêmes sont dans data/reviewsContent.ts). */
 export interface ReviewsConfig {
   readonly kicker: string;
   readonly title: string;
   readonly subtitle: string;
-  readonly items: readonly ReviewItem[];
-  readonly ctaLabel: string;
-  readonly externalUrl: string;
-  readonly pendingUrlNotice: string;
 }
 
 export interface ZoneInterventionConfig {
   readonly kicker: string;
   readonly title: string;
   readonly subtitle: string;
+  readonly bannerSrc: string;
+  readonly bannerAlt: string;
   readonly marseilleLabel: string;
   readonly marseilleRangeLabel: string;
   readonly marseilleSectors: readonly string[];
@@ -120,7 +154,7 @@ export interface ZoneInterventionConfig {
 }
 
 export interface AgencyItem {
-  readonly id: 'republique' | 'lodi';
+  readonly id: 'republique' | 'rome';
   readonly name: string;
   readonly districtLabel: string;
   readonly imageSrc: string;
@@ -147,6 +181,11 @@ export interface FaqItem {
   readonly id: string;
   readonly question: string;
   readonly answer: string;
+  /**
+   * Question parmi les plus posées par les clients (à choisir selon ce que l'équipe entend
+   * vraiment au téléphone et en boutique) : affichée en premier avec un badge.
+   */
+  readonly popular?: boolean;
 }
 
 export interface FaqConfig {
@@ -160,20 +199,28 @@ export interface FaqConfig {
 
 export interface FooterServiceLink {
   readonly label: string;
+  readonly pageId?: PageId;
   readonly targetId?: SectionId;
   readonly domainId?: DomainCardItem['id'];
 }
 
 export interface FooterInfoLink {
   readonly label: string;
-  readonly targetId: SectionId;
+  readonly pageId?: PageId;
+  readonly targetId?: SectionId;
 }
 
 export interface FooterConfig {
+  /** Bandeau d'appel à l'action en haut du pied de page. */
+  readonly ctaKicker: string;
+  readonly ctaTitle: string;
+  readonly ctaSubtitle: string;
+  readonly tagline: string;
   readonly servicesHeading: string;
   readonly serviceLinks: readonly FooterServiceLink[];
   readonly infoHeading: string;
   readonly infoLinks: readonly FooterInfoLink[];
+  readonly agenciesHeading: string;
   readonly contactHeading: string;
   readonly quoteCtaLabel: string;
 }
@@ -186,14 +233,39 @@ export interface WhatsAppConfig {
 }
 
 export const URGENCY_CONFIG: UrgencyConfig = {
-  title: 'Porte claquée ? Porte forcée ?',
-  subtitle: 'Contactez-nous pour organiser votre dépannage.',
+  kicker: 'Dépannage en urgence',
+  title: 'Un problème de porte ?',
+  subtitle:
+    'Porte claquée, serrure forcée ou endommagée\u00A0: notre équipe vous accompagne rapidement à Marseille.',
+  cases: [
+    {
+      title: 'Porte claquée',
+      text: 'Clés oubliées, porte fermée par inadvertance.',
+      icon: 'lock',
+      imageSrc: '/src/assets/images/domaine_serrurerie_1795289920360.jpg',
+      imageAlt: 'Cylindre de serrure sur une porte d’entrée, mur en pierre claire.',
+    },
+    {
+      title: 'Porte forcée',
+      text: 'Serrure endommagée, tentative d’effraction ou intrusion.',
+      icon: 'shield',
+      imageSrc: '/src/assets/images/apres_sinistre_diagnostic_1795291186729.jpg',
+      imageAlt: 'Serrurier examinant une porte d’entrée après une tentative d’effraction.',
+      imagePosition: '92% 50%',
+    },
+  ],
+  assurances: [
+    { label: 'Intervention rapide', icon: 'timer' },
+    { label: 'Mise en sécurité', icon: 'shield' },
+    { label: 'Devis clair avant intervention', icon: 'file' },
+  ],
   ctaPrefix: 'Appeler le',
 };
 
 export const KEYS_BADGES_CONFIG: KeysBadgesConfig = {
   kicker: 'Reproduction en boutique',
-  headlineLines: ['Vos doubles de clés', 'et de badges, tout simplement.'],
+  headlineLines: ['Vos doubles de clés et', 'badges, en toute simplicité.'],
+  subtitle: 'Un service rapide et fiable en boutique, pour reproduire vos clés et badges en toute sécurité.',
   services: [
     { label: 'Reproduction de clés', icon: 'key' },
     { label: 'Reproduction de badges', icon: 'badge' },
@@ -227,6 +299,11 @@ export const DOMAINS_CONFIG: DomainsConfig = {
       imageSrc: '/src/assets/images/domaine_serrurerie_1795289920360.jpg',
       imageAlt:
         'Cylindre de haute sécurité en acier brossé posé sur une porte blindée anthracite.',
+      pageIntro:
+        'Ouverture de porte, remplacement de serrure ou blindage : nous intervenons à Marseille et alentours pour sécuriser votre logement, votre commerce ou votre immeuble, avec un devis détaillé avant chaque intervention.',
+      seoTitle: 'Serrurier à Marseille — Serrurerie & portes blindées | Serrurerie de la République',
+      seoDescription:
+        'Ouverture de porte, remplacement de cylindres et serrures multipoints, blindage et portes blindées à Marseille. Devis détaillé avant intervention.',
     },
     {
       id: 'vitrerie',
@@ -244,6 +321,11 @@ export const DOMAINS_CONFIG: DomainsConfig = {
       imageSrc: '/src/assets/images/domaine_vitrerie_1795289921283.jpg',
       imageAlt:
         'Vitrier manipulant un double vitrage de vitrine à l’aide de ventouses professionnelles dans une rue de Marseille.',
+      pageIntro:
+        'Bris de glace, vitrine de commerce ou double vitrage à remplacer : nous mettons en sécurité, remplaçons à l’identique et posons vos vitrages et miroirs sur mesure à Marseille.',
+      seoTitle: 'Vitrier à Marseille — Vitrerie & miroiterie | Serrurerie de la République',
+      seoDescription:
+        'Mise en sécurité après bris de glace, remplacement de simple et double vitrage, vitrines commerciales et miroirs sur mesure à Marseille.',
     },
     {
       id: 'menuiserie',
@@ -261,6 +343,11 @@ export const DOMAINS_CONFIG: DomainsConfig = {
       imageSrc: '/src/assets/images/domaine_menuiserie_1795289934186.jpg',
       imageAlt:
         'Menuisier réglant la poignée et l’alignement d’une fenêtre en aluminium anthracite.',
+      pageIntro:
+        'Portes d’entrée, fenêtres et portes-fenêtres en aluminium, PVC, bois ou métal : fourniture, pose, réglage et réparation pour gagner en confort, en isolation et en sécurité.',
+      seoTitle: 'Menuiserie à Marseille — Portes & fenêtres alu, PVC, bois | Serrurerie de la République',
+      seoDescription:
+        'Fourniture, pose et réparation de portes d’entrée, fenêtres et portes-fenêtres en aluminium, PVC, bois et métal à Marseille.',
     },
     {
       id: 'fermetures',
@@ -278,127 +365,94 @@ export const DOMAINS_CONFIG: DomainsConfig = {
       imageSrc: '/src/assets/images/domaine_fermetures_1795289921534.jpg',
       imageAlt:
         'Rideau métallique motorisé et porte de garage sectionnelle anthracite intégrés dans une façade en pierre claire.',
+      pageIntro:
+        'Rideaux métalliques de commerce, volets roulants et portes de garage : dépannage, motorisation, installation et entretien pour des fermetures fiables au quotidien.',
+      seoTitle: 'Rideaux métalliques, volets & portes de garage à Marseille | Serrurerie de la République',
+      seoDescription:
+        'Dépannage et motorisation de rideaux métalliques, installation et réparation de volets roulants et de portes de garage à Marseille.',
     },
   ],
 };
 
 export const BRANDS_CONFIG: BrandsConfig = {
-  kicker: 'Nos partenaires',
-  title: 'Des fabricants reconnus pour la fiabilité de vos accès.',
+  kicker: 'Les marques',
+  title: 'Les grandes marques, entre de bonnes mains.',
   subtitle:
-    'Nous posons, dépannons et entretenons les équipements des plus grandes maisons de serrurerie et de fermeture.',
+    'Nous posons, dépannons et entretenons les équipements des principaux fabricants de serrurerie et de fermeture.',
   partners: [
-    { id: 'vachette', name: 'Vachette', specialty: 'Cylindres & serrures' },
-    { id: 'bricard', name: 'Bricard', specialty: 'Haute sécurité A2P' },
-    { id: 'fichet', name: 'Fichet', specialty: 'Portes blindées' },
-    { id: 'picard', name: 'Picard', specialty: 'Serrures multipoints' },
-    { id: 'dom', name: 'DOM', specialty: 'Organigrammes & clés' },
-    { id: 'iseo', name: 'ISEO', specialty: 'Contrôle d’accès' },
+    { id: 'vachette', name: 'Vachette', specialty: 'Cylindres & serrures', logoSrc: '/assets/brands/vachette.png', logoHeight: 40 },
+    { id: 'bricard', name: 'Bricard', specialty: 'Haute sécurité A2P', logoSrc: '/assets/brands/bricard.png', logoHeight: 62 },
+    { id: 'fichet', name: 'Fichet', specialty: 'Portes blindées', logoSrc: '/assets/brands/fichet.png', logoHeight: 42 },
+    { id: 'picard', name: 'Picard', specialty: 'Serrures multipoints', logoSrc: '/assets/brands/picard.png', logoHeight: 52 },
+    { id: 'dom', name: 'DOM', specialty: 'Organigrammes & clés', logoSrc: '/assets/brands/dom.png', logoHeight: 50 },
+    { id: 'iseo', name: 'ISEO', specialty: 'Contrôle d’accès', logoSrc: '/assets/brands/iseo.png', logoHeight: 40 },
   ],
-  note: 'Sélection illustrative de nos partenaires fabricants — liste définitive à confirmer',
+  otherBrandsLabel: 'Votre équipement est d’une autre marque ?',
+  otherBrandsCta: 'Contactez-nous pour vérifier',
 };
 
 export const AFTER_INCIDENT_CONFIG: AfterIncidentConfig = {
   kicker: 'Après sinistre',
-  headlineLines: ['Du premier diagnostic', 'à la remise en état.'],
-  subtitle: 'Effraction, vandalisme ou bris de glace : un accompagnement à chaque étape.',
+  headlineLines: ['Un sinistre ?', 'Nous vous accompagnons.'],
+  subtitle:
+    'Effraction, vandalisme ou bris de glace\u00A0: une prise en charge claire, rapide et structurée.',
   primaryCtaLabel: 'Décrire mon besoin',
   secondaryCtaLabel: 'Envoyer des photos',
   imageSrc: '/src/assets/images/apres_sinistre_diagnostic_1795291186729.jpg',
   imageAlt:
     'Artisan serrurier réalisant un diagnostic sur tablette devant une gâche de porte endommagée avec une cliente à Marseille.',
   steps: [
-    { number: '01', label: 'Diagnostic et mise en sécurité' },
+    { number: '01', label: 'Diagnostic et sécurisation' },
     { number: '02', label: 'Devis détaillé et reportage photo' },
     { number: '03', label: 'Réparation ou remplacement' },
     { number: '04', label: 'Suivi administratif du dossier' },
   ],
   insuranceNotice: {
     partnerName: 'Allianz',
-    title: 'Mention d’assurance à confirmer',
-    subtitle: 'Lien avec Allianz à préciser avant publication',
+    partnerNote: 'Lien avec Allianz à confirmer',
+    title: 'Vous êtes assuré ? Nous préparons votre dossier.',
+    subtitle:
+      'Reportage photo, devis détaillé et facture conformes aux attentes de votre assureur.',
+    ctaLabel: 'Envoyer mes photos',
   },
+  bannerSrc: '/src/assets/images/as_banniere.jpg',
+  bannerAlt: 'Porte d’entrée forcée à côté d’une fenêtre au vitrage brisé.',
+  services: [
+    {
+      title: 'Mise en sécurité',
+      text: 'Sécurisation rapide de vos accès.',
+      icon: 'shield',
+      imageSrc: '/src/assets/images/as_securite.jpg',
+    },
+    {
+      title: 'Réparation',
+      text: 'Serrure, porte, vitrage, fermeture.',
+      icon: 'wrench',
+      imageSrc: '/src/assets/images/as_reparation.jpg',
+    },
+    {
+      title: 'Dossier assurance',
+      text: 'Devis, photos et facture pour vos démarches.',
+      icon: 'file',
+      imageSrc: '/src/assets/images/as_assurance.jpg',
+    },
+  ],
+  stepsTitle: 'Notre accompagnement en 4 étapes',
 };
 
 export const REVIEWS_CONFIG: ReviewsConfig = {
   kicker: 'Avis clients',
   title: 'L’expérience de nos clients.',
-  subtitle: 'Emplacements des avis vérifiés à intégrer',
-  items: [
-    {
-      id: 'avis-1',
-      serviceTag: 'Ouverture de porte',
-      title: 'Avis client à intégrer',
-      quote: 'Texte de l’avis vérifié',
-      author: 'Nom du client',
-      date: 'Date',
-      source: 'Source de l’avis',
-      isPlaceholder: true,
-    },
-    {
-      id: 'avis-2',
-      serviceTag: 'Porte blindée',
-      title: 'Avis client à intégrer',
-      quote: 'Texte de l’avis vérifié',
-      author: 'Nom du client',
-      date: 'Date',
-      source: 'Source de l’avis',
-      isPlaceholder: true,
-    },
-    {
-      id: 'avis-3',
-      serviceTag: 'Vitrerie & bris de glace',
-      title: 'Avis client à intégrer',
-      quote: 'Texte de l’avis vérifié',
-      author: 'Nom du client',
-      date: 'Date',
-      source: 'Source de l’avis',
-      isPlaceholder: true,
-    },
-    {
-      id: 'avis-4',
-      serviceTag: 'Menuiserie',
-      title: 'Avis client à intégrer',
-      quote: 'Texte de l’avis vérifié',
-      author: 'Nom du client',
-      date: 'Date',
-      source: 'Source de l’avis',
-      isPlaceholder: true,
-    },
-    {
-      id: 'avis-5',
-      serviceTag: 'Fermetures',
-      title: 'Avis client à intégrer',
-      quote: 'Texte de l’avis vérifié',
-      author: 'Nom du client',
-      date: 'Date',
-      source: 'Source de l’avis',
-      isPlaceholder: true,
-    },
-    {
-      id: 'avis-6',
-      serviceTag: 'Après sinistre',
-      title: 'Avis client à intégrer',
-      quote: 'Texte de l’avis vérifié',
-      author: 'Nom du client',
-      date: 'Date',
-      source: 'Source de l’avis',
-      isPlaceholder: true,
-    },
-  ],
-  ctaLabel: 'Consulter les avis',
-  externalUrl: '',
-  pendingUrlNotice:
-    'Lien vers votre page d’avis vérifiés (ex. fiche Google) à renseigner avant publication.',
+  subtitle: 'Ce que nos clients disent de nos interventions et de notre accueil en boutique.',
 };
 
 export const ZONE_INTERVENTION_CONFIG: ZoneInterventionConfig = {
   kicker: 'Zone d’intervention',
-  title: 'Zone d’Intervention',
+  title: 'Marseille et ses alentours.',
   subtitle:
-    'Serrurerie, vitrerie et menuiserie à Marseille et dans sa région. Intervention rapide 24h/7j.',
-  marseilleLabel: 'Marseille & Arrondissements',
-  marseilleRangeLabel: '1er au 16ème arrondissements',
+    'Serrurerie, vitrerie, menuiserie et fermetures dans tous les arrondissements de Marseille et les communes voisines.',
+  marseilleLabel: 'Marseille',
+  marseilleRangeLabel: 'Les 16 arrondissements',
   marseilleSectors: [
     'République',
     'Lodi',
@@ -407,7 +461,7 @@ export const ZONE_INTERVENTION_CONFIG: ZoneInterventionConfig = {
     'Vieux-Port',
     'La Timone',
   ],
-  neighboringLabel: 'Villes & Communes Voisines',
+  neighboringLabel: 'Communes voisines',
   neighboringCommunes: [
     'Allauch',
     'Septèmes-les-Vallons',
@@ -418,8 +472,12 @@ export const ZONE_INTERVENTION_CONFIG: ZoneInterventionConfig = {
   ],
   ctaLabel: 'Vérifier votre secteur',
   quoteCtaLabel: 'Demander un devis en ligne',
-  responseTimePrefix: 'Intervention en',
-  responseTimeHighlight: 'moins de 30 min',
+  // Encart de la carte. ⚠️ N'indiquer un délai (ex. « moins de 30 min ») que s'il est garanti.
+  responseTimePrefix: '2 agences à Marseille',
+  responseTimeHighlight: 'République & Rome',
+  // Bandeau provisoire (découpé d'une maquette) : remplacer par une vraie photo de Marseille.
+  bannerSrc: '/src/assets/images/zone_marseille.jpg',
+  bannerAlt: 'Vue de Marseille avec Notre-Dame-de-la-Garde et le Vieux-Port.',
 };
 
 export const AGENCIES_CONFIG: AgenciesConfig = {
@@ -432,9 +490,10 @@ export const AGENCIES_CONFIG: AgenciesConfig = {
       id: 'republique',
       name: 'Agence République',
       districtLabel: 'Marseille 2e',
-      imageSrc: '',
+      // Vignette provisoire (découpée d'une maquette) : remplacer par une vraie photo de la façade.
+      imageSrc: '/src/assets/images/kb_facade_republique.jpg',
       imageAlt: 'Façade de l’Agence République — Serrurerie de la République à Marseille',
-      photoPlaceholderLabel: 'Photo de la façade à intégrer',
+      photoPlaceholderLabel: 'Photo de la façade à venir',
       addressLines: ['48 rue de la République', '13002 Marseille'],
       isAddressPending: false,
       phoneDisplay: '04 91 90 51 65',
@@ -446,20 +505,20 @@ export const AGENCIES_CONFIG: AgenciesConfig = {
         'https://www.google.com/maps/search/?api=1&query=48+rue+de+la+R%C3%A9publique+13002+Marseille',
     },
     {
-      id: 'lodi',
-      name: 'Agence Lodi',
+      id: 'rome',
+      name: 'Agence Rome',
       districtLabel: 'Marseille 6e',
-      imageSrc: '',
-      imageAlt: 'Façade de l’Agence Lodi — Serrurerie de la République à Marseille',
-      photoPlaceholderLabel: 'Photo de la façade à intégrer',
-      addressLines: ['Adresse à compléter'],
-      isAddressPending: true,
-      phoneDisplay: 'Téléphone à compléter',
-      phoneHref: '',
+      imageSrc: '/src/assets/images/kb_facade_rome.jpg',
+      imageAlt: 'Façade de l’Agence Rome — Serrurerie de la République à Marseille',
+      photoPlaceholderLabel: 'Photo de la façade à venir',
+      addressLines: ['124 rue de Rome', '13006 Marseille'],
+      isAddressPending: false,
+      phoneDisplay: '07 82 82 82 08',
+      phoneHref: 'tel:+33782828208',
       hoursTitle: 'Horaires d’ouverture',
       hoursLabel: 'Horaires à compléter',
       isHoursPending: true,
-      directionsUrl: '',
+      directionsUrl: 'https://www.google.com/maps/search/?api=1&query=124+rue+de+Rome+13006+Marseille',
     },
   ],
 };
@@ -474,12 +533,14 @@ export const FAQ_CONFIG: FaqConfig = {
   items: [
     {
       id: 'porte-claquee',
+      popular: true,
       question: 'Ma porte est claquée : intervenez-vous sans abîmer la serrure ?',
       answer:
         'Oui, dès lors que la porte est simplement claquée et non fermée à clé, nous privilégions systématiquement une ouverture fine non destructive. Le remplacement du cylindre n’est envisagé que si la serrure est verrouillée, défectueuse ou endommagée.',
     },
     {
       id: 'devis-prealable',
+      popular: true,
       question: 'Un devis est-il établi avant le début de l’intervention ?',
       answer:
         'Un devis détaillé vous est toujours présenté et validé avant la réalisation des travaux, qu’il s’agisse d’un dépannage en urgence, d’un changement de cylindre, d’un blindage de porte ou d’un remplacement de vitrage.',
@@ -512,22 +573,29 @@ export const FAQ_CONFIG: FaqConfig = {
 };
 
 export const FOOTER_CONFIG: FooterConfig = {
-  servicesHeading: 'Nos services',
+  ctaKicker: 'Un projet, une urgence ?',
+  ctaTitle: 'Parlons-en.',
+  ctaSubtitle: 'Choisissez le moyen le plus simple pour vous : téléphone, devis en ligne ou WhatsApp.',
+  tagline: 'Serrurerie, vitrerie, menuiserie et fermetures à Marseille. En boutique, chez vous et dans vos locaux.',
+  servicesHeading: 'Nos métiers',
   serviceLinks: [
-    { label: 'Clés & badges', targetId: '04_Cles_Badges' },
-    { label: 'Serrurerie', domainId: 'serrurerie' },
-    { label: 'Vitrerie', domainId: 'vitrerie' },
+    { label: 'Clés & badges', pageId: 'cles-badges' },
+    { label: 'Serrurerie & portes blindées', domainId: 'serrurerie' },
+    { label: 'Vitrerie & miroiterie', domainId: 'vitrerie' },
     { label: 'Menuiserie', domainId: 'menuiserie' },
     { label: 'Fermetures', domainId: 'fermetures' },
   ],
   infoHeading: 'Informations',
   infoLinks: [
-    { label: 'Après sinistre', targetId: '07_Apres_Sinistre' },
-    { label: 'Avis clients', targetId: '08_Avis_Clients' },
-    { label: 'Zone d’intervention', targetId: '09_Zone_Intervention' },
-    { label: 'Nos agences', targetId: '10_Nos_Agences' },
-    { label: 'Questions fréquentes', targetId: 'FAQ' },
+    { label: 'Après sinistre', pageId: 'apres-sinistre', targetId: '07_Apres_Sinistre' },
+    { label: 'Avis clients', pageId: 'avis-clients', targetId: '08_Avis_Clients' },
+    { label: 'Zone d’intervention', pageId: 'zone-intervention', targetId: '09_Zone_Intervention' },
+    { label: 'Questions fréquentes', pageId: 'questions-frequentes', targetId: 'FAQ' },
+    { label: 'Demander un devis', pageId: 'devis' },
+    { label: 'Professionnels', pageId: 'professionnels' },
+    { label: 'Devenir partenaire', pageId: 'devenir-partenaire' },
   ],
+  agenciesHeading: 'Nos agences',
   contactHeading: 'Contact',
   quoteCtaLabel: 'Demander un devis',
 };
@@ -538,4 +606,159 @@ export const WHATSAPP_CONFIG: WhatsAppConfig = {
   ariaLabel: 'Contacter Serrurerie de la République sur WhatsApp pour une urgence',
   prefilledMessage:
     'Bonjour Serrurerie de la République, j’ai besoin d’une intervention urgente à Marseille.',
+};
+
+/** Textes communs aux pages métiers (une page par domaine). */
+export interface DomainPageConfig {
+  readonly breadcrumbHomeLabel: string;
+  readonly breadcrumbDomainsLabel: string;
+  readonly prestationsKicker: string;
+  readonly prestationsTitle: string;
+  readonly methodKicker: string;
+  readonly methodTitle: string;
+  readonly methodSteps: readonly { readonly title: string; readonly text: string }[];
+  readonly otherDomainsKicker: string;
+  readonly otherDomainsTitle: string;
+  readonly quoteCtaLabel: string;
+}
+
+export const DOMAIN_PAGE_CONFIG: DomainPageConfig = {
+  breadcrumbHomeLabel: 'Accueil',
+  breadcrumbDomainsLabel: 'Nos domaines',
+  prestationsKicker: 'Prestations',
+  prestationsTitle: 'Ce que nous réalisons pour vous.',
+  methodKicker: 'Notre méthode',
+  methodTitle: 'Une intervention claire, de A à Z.',
+  methodSteps: [
+    { title: 'Écoute & diagnostic', text: 'Nous analysons votre besoin, en boutique ou sur place.' },
+    { title: 'Devis détaillé', text: 'Un devis clair, validé avec vous avant toute intervention.' },
+    { title: 'Intervention', text: 'Travaux réalisés avec soin, conformément au devis validé.' },
+    { title: 'Suivi', text: 'Conseils d’entretien et accompagnement, y compris auprès de votre assureur.' },
+  ],
+  otherDomainsKicker: 'Nos autres domaines',
+  otherDomainsTitle: 'Un même interlocuteur pour tous vos accès.',
+  quoteCtaLabel: 'Demander un devis',
+};
+
+/** Une étape numérotée (méthode, parcours…). */
+export interface NumberedStep {
+  readonly title: string;
+  readonly text: string;
+}
+
+/** Contenu commun d'une page thématique (en-tête + référencement). */
+export interface ThematicPageBase {
+  readonly kicker: string;
+  readonly title: string;
+  readonly intro: string;
+  readonly seoTitle: string;
+  readonly seoDescription: string;
+}
+
+export interface KeysBadgesPageConfig extends ThematicPageBase {
+  readonly servicesKicker: string;
+  readonly servicesTitle: string;
+  readonly services: readonly {
+    readonly icon: KeysBadgeIconKey;
+    readonly title: string;
+    readonly text: string;
+  }[];
+  readonly stepsKicker: string;
+  readonly stepsTitle: string;
+  readonly steps: readonly NumberedStep[];
+}
+
+export const KEYS_BADGES_PAGE_CONFIG: KeysBadgesPageConfig = {
+  kicker: 'Reproduction en boutique',
+  title: 'Clés & badges',
+  intro:
+    'Doubles de clés et de badges d’accès, réalisés en boutique à partir de votre original, dans nos agences de Marseille.',
+  seoTitle: 'Double de clés et badges à Marseille | Serrurerie de la République',
+  seoDescription:
+    'Reproduction de clés et de badges d’accès en boutique à Marseille, à partir de votre original. Agences République (2e) et Rome (6e).',
+  servicesKicker: 'Nos services',
+  servicesTitle: 'Deux savoir-faire au comptoir.',
+  services: [
+    {
+      icon: 'key',
+      title: 'Reproduction de clés',
+      text: 'Un double réalisé à partir de votre clé d’origine, vérifié avant de vous être remis.',
+    },
+    {
+      icon: 'badge',
+      title: 'Reproduction de badges',
+      text: 'Copie de badges d’accès à partir de votre badge d’origine, selon la compatibilité du modèle.',
+    },
+  ],
+  stepsKicker: 'Comment ça marche',
+  stepsTitle: 'Simple, en trois étapes.',
+  steps: [
+    { title: 'Venez avec l’original', text: 'Apportez la clé ou le badge à reproduire dans l’une de nos agences.' },
+    { title: 'Vérification du modèle', text: 'Nous identifions le modèle et vous indiquons le délai et le tarif.' },
+    { title: 'Reproduction & essai', text: 'Votre double est réalisé et contrôlé avant de vous être remis.' },
+  ],
+};
+
+export interface AfterIncidentPageConfig extends ThematicPageBase {
+  readonly stepsKicker: string;
+  readonly stepsTitle: string;
+  readonly insuranceKicker: string;
+  readonly insuranceTitle: string;
+}
+
+export const AFTER_INCIDENT_PAGE_CONFIG: AfterIncidentPageConfig = {
+  kicker: 'Après sinistre',
+  title: 'Du premier diagnostic à la remise en état.',
+  intro:
+    'Effraction, vandalisme ou bris de glace : nous sécurisons les lieux, établissons un devis détaillé avec reportage photo et assurons la remise en état.',
+  seoTitle: 'Après effraction ou bris de glace à Marseille | Serrurerie de la République',
+  seoDescription:
+    'Mise en sécurité, devis détaillé et reportage photo pour votre assurance, réparation ou remplacement après effraction, vandalisme ou bris de glace à Marseille.',
+  stepsKicker: 'Notre accompagnement',
+  stepsTitle: 'Quatre étapes, un seul interlocuteur.',
+  insuranceKicker: 'Assurance',
+  insuranceTitle: 'Un dossier complet pour votre assureur.',
+};
+
+export interface ContactPageConfig extends ThematicPageBase {
+  readonly channelsKicker: string;
+  readonly channelsTitle: string;
+  readonly channels: readonly {
+    readonly id: 'phone' | 'whatsapp' | 'quote';
+    readonly title: string;
+    readonly text: string;
+    readonly ctaLabel: string;
+  }[];
+}
+
+export const CONTACT_PAGE_CONFIG: ContactPageConfig = {
+  kicker: 'Agences & contact',
+  title: 'Deux boutiques au cœur de Marseille.',
+  intro:
+    'Retrouvez-nous en agence, appelez-nous ou décrivez votre besoin en ligne : nous vous répondons rapidement.',
+  seoTitle: 'Agences et contact — Serrurerie à Marseille | Serrurerie de la République',
+  seoDescription:
+    'Nos agences République (2e) et Rome (6e) à Marseille : adresses, téléphone, WhatsApp, demande de devis et zone d’intervention.',
+  channelsKicker: 'Nous contacter',
+  channelsTitle: 'Le moyen qui vous arrange.',
+  channels: [
+    {
+      id: 'phone',
+      title: 'Par téléphone',
+      text: 'Le plus rapide pour une urgence ou une question.',
+      ctaLabel: 'Appeler',
+    },
+    {
+      id: 'whatsapp',
+      title: 'Par WhatsApp',
+      text: 'Envoyez un message et des photos de votre problème.',
+      ctaLabel: 'Écrire sur WhatsApp',
+    },
+    {
+      id: 'quote',
+      title: 'Devis en ligne',
+      text: 'Décrivez votre besoin, nous revenons vers vous avec un devis.',
+      ctaLabel: 'Demander un devis',
+    },
+  ],
 };

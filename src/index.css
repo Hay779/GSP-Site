@@ -41,6 +41,75 @@
   }
 }
 
+/* Styles communs : garantissent la cohérence typographique entre les blocs */
+@layer components {
+  /* Sur-titre de section (ex. « NOS DOMAINES ») — couleur ajoutée par bloc */
+  .section-kicker {
+    @apply text-[13px] sm:text-[14px] font-medium uppercase tracking-[0.18em];
+  }
+
+  /* Titre principal de section (h2) — couleur ajoutée par bloc */
+  .section-title {
+    @apply font-display text-[30px] sm:text-[36px] lg:text-[42px] font-semibold leading-[1.12] tracking-[-0.015em];
+  }
+
+  /* Sous-titre de section */
+  .section-subtitle {
+    @apply text-[16px] sm:text-[17px] leading-[1.6];
+  }
+}
+
+/* Diaporama cinéma de l'accueil : cadrage par image, mobile puis ordinateur */
+.hero-slide {
+  object-position: var(--pos-mobile, 50% 50%);
+}
+
+@media (min-width: 1024px) {
+  .hero-slide {
+    object-position: var(--pos-desktop, 50% 50%);
+  }
+}
+
+@keyframes hero-progress-fill {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.hero-progress {
+  animation-name: hero-progress-fill;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-progress {
+    animation: none;
+    transform: scaleX(1);
+  }
+}
+
+/* Bloc Clés & badges : bas de photo arrondi avec filet doré (mobile & tablette) */
+@media (max-width: 1023px) {
+  .kb-curve {
+    clip-path: ellipse(120% 100% at 50% 0%);
+  }
+  .kb-curve::after {
+    content: '';
+    position: absolute;
+    left: -10%;
+    right: -10%;
+    bottom: 0;
+    height: 44px;
+    border-bottom: 2.5px solid #b79a62;
+    border-radius: 0 0 50% 50% / 0 0 100% 100%;
+    pointer-events: none;
+  }
+}
+
 @keyframes reviews-marquee-scroll {
   0% {
     transform: translate3d(0, 0, 0);
