@@ -14,9 +14,61 @@ interface FaqSectionProps {
   readonly config: FaqConfig;
   readonly brand: BrandConfig;
   readonly onOpenQuoteModal: () => void;
+  /** Fond clair ou sombre (pour respecter l'alternance des blocs). */
+  readonly tone?: 'light' | 'dark';
+  /** Identifiant de la section (ancre). */
+  readonly sectionId?: string;
+  /** Affiche le rappel « une question ? » avec devis et téléphone. */
+  readonly showContact?: boolean;
 }
 
-export function FaqSection({ config, brand, onOpenQuoteModal }: FaqSectionProps) {
+/** Couleurs du bloc FAQ selon le fond. */
+const FAQ_TONES = {
+  dark: {
+    section: 'bg-[#1C1F21] text-[#F3F0E7]',
+    kicker: 'text-[#B79A62]',
+    title: 'text-[#F3F0E7]',
+    subtitle: 'text-[#F3F0E7]/76',
+    rule: 'border-[#F3F0E7]/12',
+    prompt: 'text-[#F3F0E7]/75',
+    phone: 'text-[#B79A62] hover:text-[#F3F0E7]',
+    outline: 'focus-visible:outline-[#B79A62]',
+    list: 'border-[#F3F0E7]/12 bg-[#292D2F]/55 divide-[#F3F0E7]/10',
+    rowHover: 'hover:bg-[#F3F0E7]/[0.04]',
+    number: 'text-[#B79A62]',
+    question: 'text-[#F3F0E7] group-hover:text-[#D2B478]',
+    iconOpen: 'border-[#B79A62] bg-[#B79A62] text-[#1C1F21]',
+    iconClosed: 'border-[#F3F0E7]/22 bg-transparent text-[#B79A62] group-hover:border-[#B79A62]',
+    answer: 'text-[#F3F0E7]/78',
+  },
+  light: {
+    section: 'bg-[#F7F5F0] text-[#1C1F21]',
+    kicker: 'text-[#7D612D]',
+    title: 'text-[#1C1F21]',
+    subtitle: 'text-[#1C1F21]/70',
+    rule: 'border-[#1C1F21]/12',
+    prompt: 'text-[#1C1F21]/75',
+    phone: 'text-[#7D612D] hover:text-[#1C1F21]',
+    outline: 'focus-visible:outline-[#7D612D]',
+    list: 'border-[#1C1F21]/12 bg-[#FFFFFF] divide-[#1C1F21]/10',
+    rowHover: 'hover:bg-[#F7F5F0]/70',
+    number: 'text-[#7D612D]',
+    question: 'text-[#1C1F21] group-hover:text-[#7D612D]',
+    iconOpen: 'border-[#1C1F21] bg-[#1C1F21] text-[#B79A62]',
+    iconClosed: 'border-[#1C1F21]/16 bg-[#F7F5F0] text-[#7D612D] group-hover:border-[#B79A62]',
+    answer: 'text-[#1C1F21]/76',
+  },
+} as const;
+
+export function FaqSection({
+  config,
+  brand,
+  onOpenQuoteModal,
+  tone = 'dark',
+  sectionId = 'FAQ',
+  showContact = true,
+}: FaqSectionProps) {
+  const t = FAQ_TONES[tone];
   const [openId, setOpenId] = useState<string | null>(config.items[0]?.id ?? null);
   const triggerRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const prefersReducedMotion = useReducedMotion() ?? false;
@@ -40,10 +92,10 @@ export function FaqSection({ config, brand, onOpenQuoteModal }: FaqSectionProps)
 
   return (
     <section
-      id="FAQ"
-      data-section="FAQ"
-      aria-labelledby="FAQ-title"
-      className="w-full bg-[#1C1F21] text-[#F3F0E7] border-t border-[#B79A62]/45 scroll-mt-[74px] lg:scroll-mt-[88px]"
+      id={sectionId}
+      data-section={sectionId}
+      aria-labelledby={`${sectionId}-title`}
+      className={`w-full ${t.section} border-t border-[#B79A62]/45 scroll-mt-[74px] lg:scroll-mt-[88px]`}
     >
       <div className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-10 py-16 sm:py-20 lg:py-24">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
@@ -55,21 +107,24 @@ export function FaqSection({ config, brand, onOpenQuoteModal }: FaqSectionProps)
             transition={{ duration: prefersReducedMotion ? 0 : 0.52, ease: REVEAL_EASE }}
             className="lg:col-span-4 lg:sticky lg:top-28"
           >
-            <p className="section-kicker text-[#B79A62]">
+            <p className={`section-kicker ${t.kicker}`}>
               {config.kicker}
             </p>
             <h2
-              id="FAQ-title"
-              className="mt-3 section-title text-[#F3F0E7]"
+              id={`${sectionId}-title`}
+              className={`mt-3 section-title ${t.title}`}
             >
               {config.title}
             </h2>
-            <p className="mt-4 section-subtitle text-[#F3F0E7]/76">
-              {config.subtitle}
-            </p>
+            {config.subtitle && (
+              <p className={`mt-4 section-subtitle ${t.subtitle}`}>
+                {config.subtitle}
+              </p>
+            )}
 
-            <div className="mt-7 border-t border-[#F3F0E7]/12 pt-6">
-              <p className="text-[14px] leading-[1.55] text-[#F3F0E7]/75">
+            {showContact && (
+            <div className={`mt-7 border-t ${t.rule} pt-6`}>
+              <p className={`text-[14px] leading-[1.55] ${t.prompt}`}>
                 {config.contactPrompt}
               </p>
 
@@ -89,13 +144,14 @@ export function FaqSection({ config, brand, onOpenQuoteModal }: FaqSectionProps)
 
                 <a
                   href={brand.phoneHref}
-                  className="inline-flex min-h-[46px] items-center gap-2 px-1 py-2 text-[14.5px] font-semibold text-[#B79A62] hover:text-[#F3F0E7] whitespace-nowrap tabular-nums transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62]"
+                  className={`inline-flex min-h-[46px] items-center gap-2 px-1 py-2 text-[14.5px] font-semibold ${t.phone} whitespace-nowrap tabular-nums transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 ${t.outline}`}
                 >
                   <Phone className="h-4 w-4 shrink-0" strokeWidth={2} aria-hidden="true" />
                   <span>{brand.phoneDisplay}</span>
                 </a>
               </div>
             </div>
+            )}
           </motion.div>
 
           {/* Colonne droite : accordéon éditorial sur carte blanche unifiée */}
@@ -110,7 +166,7 @@ export function FaqSection({ config, brand, onOpenQuoteModal }: FaqSectionProps)
             }}
             className="lg:col-span-8"
           >
-            <div className="rounded-xl border border-[#F3F0E7]/12 bg-[#292D2F]/55 divide-y divide-[#F3F0E7]/10 overflow-hidden">
+            <div className={`rounded-xl border divide-y overflow-hidden ${t.list}`}>
               {config.items.map((item, index) => {
                 const isOpen = openId === item.id;
                 const triggerId = `faq-trigger-${item.id}`;
@@ -130,16 +186,16 @@ export function FaqSection({ config, brand, onOpenQuoteModal }: FaqSectionProps)
                         aria-controls={panelId}
                         onClick={() => handleToggle(item.id)}
                         onKeyDown={(event) => handleTriggerKeyDown(event, index)}
-                        className="group flex w-full min-h-[68px] items-center justify-between gap-4 px-5 sm:px-7 py-5 text-left transition-colors duration-150 hover:bg-[#F3F0E7]/[0.04] focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[#B79A62] cursor-pointer"
+                        className={`group flex w-full min-h-[68px] items-center justify-between gap-4 px-5 sm:px-7 py-5 text-left transition-colors duration-150 ${t.rowHover} focus-visible:outline-2 focus-visible:outline-offset-[-2px] ${t.outline} cursor-pointer`}
                       >
                         <span className="flex items-baseline gap-4 min-w-0">
                           <span
                             aria-hidden="true"
-                            className="shrink-0 font-display text-[13px] font-semibold tracking-[0.06em] tabular-nums text-[#B79A62]"
+                            className={`shrink-0 font-display text-[13px] font-semibold tracking-[0.06em] tabular-nums ${t.number}`}
                           >
                             {itemNumber}
                           </span>
-                          <span className="font-display text-[16.5px] sm:text-[18px] font-semibold leading-[1.35] text-[#F3F0E7] group-hover:text-[#D2B478] transition-colors duration-150">
+                          <span className={`font-display text-[16.5px] sm:text-[18px] font-semibold leading-[1.35] ${t.question} transition-colors duration-150`}>
                             {item.question}
                           </span>
                         </span>
@@ -148,8 +204,8 @@ export function FaqSection({ config, brand, onOpenQuoteModal }: FaqSectionProps)
                           aria-hidden="true"
                           className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border transition-colors duration-200 ${
                             isOpen
-                              ? 'border-[#B79A62] bg-[#B79A62] text-[#1C1F21]'
-                              : 'border-[#F3F0E7]/22 bg-transparent text-[#B79A62] group-hover:border-[#B79A62]'
+                              ? t.iconOpen
+                              : t.iconClosed
                           }`}
                         >
                           <Plus
@@ -186,7 +242,7 @@ export function FaqSection({ config, brand, onOpenQuoteModal }: FaqSectionProps)
                           className="overflow-hidden"
                         >
                           <div className="px-5 sm:px-7 pb-6 pt-0 pl-[52px] sm:pl-[66px] pr-6 sm:pr-14">
-                            <p className="text-[15px] sm:text-[15.5px] leading-[1.7] text-[#F3F0E7]/78">
+                            <p className={`text-[15px] sm:text-[15.5px] leading-[1.7] ${t.answer}`}>
                               {item.answer}
                             </p>
                           </div>

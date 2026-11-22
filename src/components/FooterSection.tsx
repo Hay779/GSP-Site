@@ -3,7 +3,6 @@ import type { DomainCardItem, FooterConfig } from '../data/sectionsContent';
 import type { BrandConfig, SectionId } from '../utils/navigation';
 import type { PageId } from '../utils/router';
 import { BrandMark } from './BrandMark';
-import type { LegalDocumentType } from './LegalNoticeModal';
 
 interface FooterSectionProps {
   readonly brand: BrandConfig;
@@ -16,7 +15,6 @@ interface FooterSectionProps {
   /** Adresse d'une page thématique. */
   readonly pageHref: (pageId: PageId) => string;
   readonly onOpenQuoteModal: () => void;
-  readonly onOpenLegalModal: (docType: LegalDocumentType) => void;
 }
 
 export function FooterSection({
@@ -27,7 +25,6 @@ export function FooterSection({
   sectionHref,
   pageHref,
   onOpenQuoteModal,
-  onOpenLegalModal,
 }: FooterSectionProps) {
   return (
     <footer
@@ -126,23 +123,15 @@ export function FooterSection({
 
         {/* Barre légale inférieure */}
         <div className="mt-10 sm:mt-12 border-t border-[#B79A62]/50 pt-6 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[13px] sm:text-[14px] text-[#F3F0E7]/78">
-          <button
-            type="button"
-            onClick={() => onOpenLegalModal('mentions')}
-            className="hover:text-[#B79A62] transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#B79A62] rounded-xs cursor-pointer"
-          >
+          <a href={pageHref('mentions-legales')} className="hover:text-[#B79A62] transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#B79A62] rounded-xs">
             Mentions légales
-          </button>
+          </a>
           <span aria-hidden="true" className="text-[#F3F0E7]/35">
             |
           </span>
-          <button
-            type="button"
-            onClick={() => onOpenLegalModal('confidentialite')}
-            className="hover:text-[#B79A62] transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#B79A62] rounded-xs cursor-pointer"
-          >
+          <a href={pageHref('confidentialite')} className="hover:text-[#B79A62] transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#B79A62] rounded-xs">
             Confidentialité
-          </button>
+          </a>
         </div>
       </div>
     </footer>

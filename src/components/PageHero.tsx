@@ -18,6 +18,8 @@ interface PageHeroProps {
   readonly imagePosition?: string;
   readonly breadcrumb: readonly BreadcrumbItem[];
   readonly actions?: ReactNode;
+  /** En-tête réduit, sans photo (pages légales). */
+  readonly compact?: boolean;
 }
 
 /** Met à jour le titre de l'onglet et la description Google de la page. */
@@ -48,6 +50,7 @@ export function PageHero({
   imagePosition = '60% 45%',
   breadcrumb,
   actions,
+  compact = false,
 }: PageHeroProps) {
   const prefersReducedMotion = Boolean(useReducedMotion());
   const [imageFailed, setImageFailed] = useState(false);
@@ -68,11 +71,13 @@ export function PageHero({
     <section
       id="page-hero"
       aria-labelledby="page-hero-title"
-      className="relative w-full overflow-hidden bg-[#1C1F21] min-h-[560px] lg:min-h-[620px] flex items-end"
+      className={`relative w-full overflow-hidden bg-[#1C1F21] flex items-end ${
+        compact ? 'min-h-[340px] lg:min-h-[380px]' : 'min-h-[560px] lg:min-h-[620px]'
+      }`}
     >
       <div aria-hidden="true" className="absolute inset-0">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_75%_40%,rgba(183,154,98,0.16),rgba(41,45,47,0.45)_45%,rgba(28,31,33,1)_85%)]" />
-        {imageSrc && !imageFailed && (
+        {imageSrc && !compact && !imageFailed && (
           <motion.img
             key={imageSrc}
             src={imageSrc}
@@ -90,7 +95,7 @@ export function PageHero({
         <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#1C1F21] to-transparent" />
       </div>
 
-      <div className="relative z-10 mx-auto w-full max-w-[1280px] px-5 sm:px-8 lg:px-10 pt-28 pb-14 sm:pb-16 lg:py-24">
+      <div className={`relative z-10 mx-auto w-full max-w-[1280px] px-5 sm:px-8 lg:px-10 ${compact ? 'pt-20 pb-12 lg:pb-14' : 'pt-28 pb-14 sm:pb-16 lg:py-24'}`}>
         <nav aria-label="Fil d’Ariane" className="mb-6">
           <ol className="flex flex-wrap items-center gap-1.5 text-[13px] text-[#F3F0E7]/70">
             {breadcrumb.map((item, index) => (

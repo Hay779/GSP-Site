@@ -12,7 +12,15 @@ export type DomainId = 'serrurerie' | 'vitrerie' | 'menuiserie' | 'fermetures';
 export type RouterMode = 'history' | 'hash';
 
 /** Pages thématiques (hors domaines métiers). */
-export type PageId = 'cles-badges' | 'apres-sinistre' | 'agences-contact';
+export type PageId =
+  | 'cles-badges'
+  | 'apres-sinistre'
+  | 'agences-contact'
+  | 'zone-intervention'
+  | 'avis-clients'
+  | 'questions-frequentes'
+  | 'mentions-legales'
+  | 'confidentialite';
 
 export type Route =
   | { readonly kind: 'home' }
@@ -30,6 +38,11 @@ export const PAGE_SLUGS: Readonly<Record<PageId, string>> = {
   'cles-badges': 'cles-badges',
   'apres-sinistre': 'apres-sinistre',
   'agences-contact': 'agences-contact',
+  'zone-intervention': 'zone-intervention',
+  'avis-clients': 'avis-clients',
+  'questions-frequentes': 'questions-frequentes',
+  'mentions-legales': 'mentions-legales',
+  confidentialite: 'confidentialite',
 };
 
 export const HOME_ROUTE: Route = { kind: 'home' };

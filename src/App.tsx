@@ -3,7 +3,7 @@ import { MotionConfig } from 'motion/react';
 import { AfterIncidentSection } from './components/AfterIncidentSection';
 import { AgenciesSection } from './components/AgenciesSection';
 import { BrandsSection } from './components/BrandsSection';
-import { DomainPage } from './components/DomainPage';
+import { PageRenderer } from './components/PageRenderer';
 import { DomainsSection } from './components/DomainsSection';
 import { FaqSection } from './components/FaqSection';
 import { FooterSection } from './components/FooterSection';
@@ -11,23 +11,18 @@ import { HeaderSection, type HeaderNavLink } from './components/HeaderSection';
 import { HeroSection } from './components/HeroSection';
 import { IncidentPhotoModal } from './components/IncidentPhotoModal';
 import { KeysBadgesSection } from './components/KeysBadgesSection';
-import { LegalNoticeModal, type LegalDocumentType } from './components/LegalNoticeModal';
 import { QuoteModal } from './components/QuoteModal';
-import { AfterIncidentPage, ContactPage, KeysBadgesPage } from './components/ThematicPages';
 import { ReviewsSection } from './components/ReviewsSection';
 import { UrgencySection } from './components/UrgencySection';
 import { WhatsAppFloatingButton } from './components/WhatsAppFloatingButton';
 import { ZoneInterventionSection } from './components/ZoneInterventionSection';
 import { HERO_CONFIG } from './data/heroConfig';
+import { resolvePageDefinition } from './data/pages';
 import {
   AFTER_INCIDENT_CONFIG,
-  AFTER_INCIDENT_PAGE_CONFIG,
-  CONTACT_PAGE_CONFIG,
-  KEYS_BADGES_PAGE_CONFIG,
   AGENCIES_CONFIG,
   BRANDS_CONFIG,
   DOMAINS_CONFIG,
-  DOMAIN_PAGE_CONFIG,
   FAQ_CONFIG,
   FOOTER_CONFIG,
   KEYS_BADGES_CONFIG,
@@ -61,11 +56,9 @@ export default function App() {
     undefined
   );
   const [photoModalOpen, setPhotoModalOpen] = useState(false);
-  const [legalDocument, setLegalDocument] = useState<LegalDocumentType | null>(null);
   const quoteTriggerRef = useRef<HTMLButtonElement | null>(null);
   const { route, navigate } = useRouter();
-  const currentDomain =
-    route.kind === 'domain' ? DOMAINS_CONFIG.items.find((item) => item.id === route.id) ?? null : null;
+  const currentPage = resolvePageDefinition(route);
   const sectionHref = (sectionId: SectionId) => hrefForHomeSection(sectionId, route, ROUTER_MODE);
   const domainHref = (domainId: DomainCardItem['id']) => hrefForDomain(domainId, ROUTER_MODE);
   const pageHref = (pageId: PageId) => hrefForPage(pageId, ROUTER_MODE);
@@ -146,7 +139,6 @@ export default function App() {
 
   const handleOpenQuoteModal = (domain?: QuoteDomain, district?: string) => {
     setPhotoModalOpen(false);
-    setLegalDocument(null);
     setQuoteInitialDomain(domain);
     setQuoteInitialDistrict(district);
     setQuoteModalOpen(true);
@@ -180,71 +172,21 @@ export default function App() {
         homeHref={sectionHref('02_Hero')}
       />
 
-      {currentPageId === 'cles-badges' ? (
+      {currentPage ? (
+        /* Pages intérieures : assemblées à partir de blocs (voir data/pages.ts) */
         <main className="flex-1 flex flex-col">
-          <KeysBadgesPage
-            config={KEYS_BADGES_PAGE_CONFIG}
-            imageSrc={KEYS_BADGES_CONFIG.imageSrc}
-            brand={BRAND_CONFIG}
-            routerMode={ROUTER_MODE}
-            agenciesHref={pageHref('agences-contact')}
+          <PageRenderer
+            key={route.kind === 'home' ? 'home' : `${route.kind}-${route.id}`}
+            page={currentPage}
+            ctx={{
+              brand: BRAND_CONFIG,
+              route,
+              routerMode: ROUTER_MODE,
+              onOpenQuoteModal: handleOpenQuoteModal,
+              onSendPhotos: () => setPhotoModalOpen(true),
+              quoteTriggerRef,
+            }}
           />
-          <AgenciesSection config={AGENCIES_CONFIG} brand={BRAND_CONFIG} />
-        </main>
-      ) : currentPageId === 'apres-sinistre' ? (
-        <main className="flex-1 flex flex-col">
-          <AfterIncidentPage
-            config={AFTER_INCIDENT_PAGE_CONFIG}
-            sectionConfig={AFTER_INCIDENT_CONFIG}
-            brand={BRAND_CONFIG}
-            routerMode={ROUTER_MODE}
-            quoteTriggerRef={quoteTriggerRef}
-            onOpenQuoteModal={(domain) => handleOpenQuoteModal(domain)}
-            onSendPhotos={() => setPhotoModalOpen(true)}
-          />
-          <UrgencySection config={URGENCY_CONFIG} brand={BRAND_CONFIG} />
-          <AgenciesSection config={AGENCIES_CONFIG} brand={BRAND_CONFIG} />
-        </main>
-      ) : currentPageId === 'agences-contact' ? (
-        <main className="flex-1 flex flex-col">
-          <ContactPage
-            config={CONTACT_PAGE_CONFIG}
-            whatsapp={WHATSAPP_CONFIG}
-            brand={BRAND_CONFIG}
-            routerMode={ROUTER_MODE}
-            quoteTriggerRef={quoteTriggerRef}
-            onOpenQuoteModal={() => handleOpenQuoteModal()}
-            afterHero={
-              <>
-                <AgenciesSection config={AGENCIES_CONFIG} brand={BRAND_CONFIG} />
-                <ZoneInterventionSection
-                  config={ZONE_INTERVENTION_CONFIG}
-                  onRequestQuoteForDistrict={(district) => handleOpenQuoteModal(undefined, district)}
-                />
-              </>
-            }
-          />
-          <FaqSection
-            config={FAQ_CONFIG}
-            brand={BRAND_CONFIG}
-            onOpenQuoteModal={() => handleOpenQuoteModal()}
-          />
-        </main>
-      ) : currentDomain ? (
-        /* Page métier dédiée */
-        <main className="flex-1 flex flex-col">
-          <DomainPage
-            domain={currentDomain}
-            otherDomains={DOMAINS_CONFIG.items.filter((item) => item.id !== currentDomain.id)}
-            config={DOMAIN_PAGE_CONFIG}
-            brand={BRAND_CONFIG}
-            route={route}
-            routerMode={ROUTER_MODE}
-            onOpenQuoteModal={(domain) => handleOpenQuoteModal(domain)}
-            quoteTriggerRef={quoteTriggerRef}
-          />
-          <UrgencySection config={URGENCY_CONFIG} brand={BRAND_CONFIG} />
-          <AgenciesSection config={AGENCIES_CONFIG} brand={BRAND_CONFIG} />
         </main>
       ) : (
       /* 02_Hero -> 10_Nos_Agences */
@@ -302,7 +244,6 @@ export default function App() {
         sectionHref={sectionHref}
         pageHref={pageHref}
         onOpenQuoteModal={() => handleOpenQuoteModal()}
-        onOpenLegalModal={(docType) => setLegalDocument(docType)}
       />
 
 
@@ -322,12 +263,6 @@ export default function App() {
         onClose={() => setPhotoModalOpen(false)}
       />
 
-      {/* Mentions légales & politique de confidentialité */}
-      <LegalNoticeModal
-        documentType={legalDocument}
-        brand={BRAND_CONFIG}
-        onClose={() => setLegalDocument(null)}
-      />
 
       {/* Bouton flottant WhatsApp urgence */}
       <WhatsAppFloatingButton config={WHATSAPP_CONFIG} />

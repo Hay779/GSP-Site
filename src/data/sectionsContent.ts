@@ -557,10 +557,10 @@ export const FOOTER_CONFIG: FooterConfig = {
   infoHeading: 'Informations',
   infoLinks: [
     { label: 'Après sinistre', pageId: 'apres-sinistre', targetId: '07_Apres_Sinistre' },
-    { label: 'Avis clients', targetId: '08_Avis_Clients' },
-    { label: 'Zone d’intervention', targetId: '09_Zone_Intervention' },
+    { label: 'Avis clients', pageId: 'avis-clients', targetId: '08_Avis_Clients' },
+    { label: 'Zone d’intervention', pageId: 'zone-intervention', targetId: '09_Zone_Intervention' },
     { label: 'Agences & contact', pageId: 'agences-contact', targetId: '10_Nos_Agences' },
-    { label: 'Questions fréquentes', targetId: 'FAQ' },
+    { label: 'Questions fréquentes', pageId: 'questions-frequentes', targetId: 'FAQ' },
   ],
   contactHeading: 'Contact',
   quoteCtaLabel: 'Demander un devis',
