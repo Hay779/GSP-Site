@@ -21,7 +21,12 @@ export type PageId =
   | 'questions-frequentes'
   | 'mentions-legales'
   | 'confidentialite'
-  | 'devis';
+  | 'devis'
+  | 'professionnels'
+  | 'pro-syndics'
+  | 'pro-assureurs'
+  | 'pro-immobilier'
+  | 'devenir-partenaire';
 
 export type Route =
   | { readonly kind: 'home' }
@@ -45,6 +50,11 @@ export const PAGE_SLUGS: Readonly<Record<PageId, string>> = {
   'mentions-legales': 'mentions-legales',
   confidentialite: 'confidentialite',
   devis: 'devis',
+  professionnels: 'professionnels',
+  'pro-syndics': 'syndics-coproprietes',
+  'pro-assureurs': 'assureurs-experts',
+  'pro-immobilier': 'agences-immobilieres-bailleurs',
+  'devenir-partenaire': 'devenir-partenaire',
 };
 
 export const HOME_ROUTE: Route = { kind: 'home' };

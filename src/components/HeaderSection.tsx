@@ -37,7 +37,7 @@ interface HeaderSectionProps {
 }
 
 const DESKTOP_LINK_CLASS =
-  'group relative inline-flex items-center gap-1.5 py-2 text-[15px] tracking-[0.01em] whitespace-nowrap shrink-0 transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#B79A62] rounded-sm';
+  'group relative inline-flex items-center gap-1.5 py-2 text-[14.5px] tracking-[0.01em] whitespace-nowrap shrink-0 transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#B79A62] rounded-sm';
 
 function ActiveIndicator({ isActive, reducedMotion }: { readonly isActive: boolean; readonly reducedMotion: boolean }) {
   return isActive ? (
@@ -330,7 +330,7 @@ export function HeaderSection({ brand, nav, homeHref, quoteHref }: HeaderSection
           {/* Zone 2 : Navigation principale (bureau) avec indicateur actif glissant */}
           <nav
             aria-label="Navigation principale"
-            className="hidden lg:flex items-center gap-7 xl:gap-9 ml-auto"
+            className="hidden lg:flex items-center gap-5 xl:gap-7 ml-auto"
           >
             {nav.map((item) =>
               item.children?.length ? (
@@ -352,7 +352,7 @@ export function HeaderSection({ brand, nav, homeHref, quoteHref }: HeaderSection
           </nav>
 
           {/* Zone 3 : Séparateur + Bouton d'appel (bureau) et commandes mobile */}
-          <div className="flex items-center gap-2.5 sm:gap-3 lg:gap-7 shrink-0">
+          <div className="flex items-center gap-2.5 sm:gap-3 lg:gap-4 xl:gap-5 shrink-0">
             <span
               aria-hidden="true"
               className="hidden lg:block h-6 w-px bg-[#F3F0E7]/20"

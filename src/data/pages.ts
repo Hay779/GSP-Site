@@ -10,6 +10,10 @@ import type { QuoteDomain } from '../utils/quoteForm';
 import type { DomainId, PageId, Route } from '../utils/router';
 import {
   FAQ_APRES_SINISTRE,
+  FAQ_PRO_ASSUREURS,
+  FAQ_PRO_GENERAL,
+  FAQ_PRO_IMMOBILIER,
+  FAQ_PRO_SYNDICS,
   FAQ_CLES_BADGES,
   FAQ_FERMETURES,
   FAQ_MENUISERIE,
@@ -63,6 +67,14 @@ interface SectionHeading {
   readonly subtitle?: string;
 }
 
+/** Carte « public » (page Professionnels). */
+export interface AudienceCard {
+  readonly icon: 'syndic' | 'assureur' | 'immobilier';
+  readonly title: string;
+  readonly text: string;
+  readonly page: PageId;
+}
+
 export interface LegalArticle {
   readonly heading: string;
   readonly paragraphs: readonly string[];
@@ -92,7 +104,19 @@ export type PageBlock =
   | ({ readonly type: 'domains'; readonly id: string; readonly tone: 'light'; readonly excludeId?: DomainId } & SectionHeading)
   | ({ readonly type: 'contactChannels'; readonly id: string; readonly tone: 'light' } & SectionHeading)
   | ({ readonly type: 'legal'; readonly id: string; readonly tone: 'light'; readonly articles: readonly LegalArticle[] } & SectionHeading)
-  | ({ readonly type: 'cta'; readonly id: string; readonly tone: 'dark' } & SectionHeading)
+  | ({
+      readonly type: 'cta';
+      readonly id: string;
+      readonly tone: 'dark';
+      /** Bouton principal vers une page (par défaut : « Demander un devis »). */
+      readonly primary?: { readonly label: string; readonly page: PageId };
+    } & SectionHeading)
+  | ({
+      readonly type: 'audiences';
+      readonly id: string;
+      readonly tone: 'light';
+      readonly items: readonly AudienceCard[];
+    } & SectionHeading)
   /* Sections partagées avec l'accueil (fond fixe) */
   | { readonly type: 'urgency' }
   | { readonly type: 'agencies' }
@@ -244,9 +268,184 @@ const LEGAL_PRIVACY: readonly LegalArticle[] = [
 ];
 
 /** Pages assemblées à partir de blocs (la page /devis a son propre composant). */
-export type BlockPageId = Exclude<PageId, 'devis'>;
+export type BlockPageId = Exclude<PageId, 'devis' | 'devenir-partenaire'>;
+
+
+/* ------------------------------------------------------------------ */
+/* Professionnels                                                      */
+/* ------------------------------------------------------------------ */
+
+const PARTNER_CTA: PageBlock = {
+  type: 'cta',
+  id: 'page-partenaire',
+  tone: 'dark',
+  kicker: 'Travaillons ensemble',
+  title: 'Un interlocuteur unique pour vos immeubles et vos dossiers.',
+  subtitle: 'Présentez-nous votre structure et vos besoins : nous revenons vers vous pour organiser notre collaboration.',
+  primary: { label: 'Devenir partenaire', page: 'devenir-partenaire' },
+};
+
+const PRO_METHOD: readonly NumberedStep[] = [
+  { title: 'Votre demande', text: 'Par téléphone ou en ligne, avec l’adresse, le besoin et le contact sur place.' },
+  { title: 'Devis détaillé', text: 'Transmis et validé avant toute intervention.' },
+  { title: 'Intervention', text: 'Réalisée par nos artisans, conformément au devis.' },
+  { title: 'Compte rendu', text: 'Photos et informations utiles au suivi de votre dossier.' },
+];
+
+const PRO_PAGES = {
+  professionnels: {
+    seoTitle: 'Professionnels : syndics, assureurs, agences immobilières | Serrurerie de la République',
+    seoDescription:
+      'Serrurerie, vitrerie, menuiserie et fermetures pour les syndics de copropriété, assureurs, experts, agences immobilières et bailleurs à Marseille.',
+    hero: {
+      kicker: 'Professionnels',
+      title: 'Un partenaire de confiance pour vos immeubles.',
+      intro:
+        'Syndics, assureurs, experts, agences immobilières et bailleurs : un seul interlocuteur à Marseille pour la serrurerie, la vitrerie, la menuiserie et les fermetures.',
+      imageSrc: DOMAINS_CONFIG.items.find((d) => d.id === 'serrurerie')?.imageSrc,
+      imagePosition: '60% 50%',
+      breadcrumbLabel: 'Professionnels',
+      actions: [{ kind: 'page', label: 'Devenir partenaire', page: 'devenir-partenaire' }, { kind: 'phone' }],
+    },
+    blocks: [
+      {
+        type: 'audiences',
+        id: 'page-publics',
+        tone: 'light',
+        kicker: 'Vous êtes',
+        title: 'Des solutions adaptées à votre métier.',
+        items: [
+          {
+            icon: 'syndic',
+            title: 'Syndics & gestionnaires',
+            text: 'Parties communes, accès de la copropriété, clés et badges des résidents.',
+            page: 'pro-syndics',
+          },
+          {
+            icon: 'assureur',
+            title: 'Assureurs & experts',
+            text: 'Mise en sécurité, devis détaillé et reportage photo, remise en état après sinistre.',
+            page: 'pro-assureurs',
+          },
+          {
+            icon: 'immobilier',
+            title: 'Agences immobilières & bailleurs',
+            text: 'Changement de serrure entre locataires, jeux de clés, petites réparations.',
+            page: 'pro-immobilier',
+          },
+        ],
+      },
+      { type: 'steps', id: 'page-methode', tone: 'dark', kicker: 'Notre méthode', title: 'Une collaboration simple et traçable.', steps: PRO_METHOD },
+      faqBlock('page-faq', 'light', FAQ_PRO_GENERAL, 'Vos questions de professionnels.'),
+      PARTNER_CTA,
+    ],
+  },
+
+  'pro-syndics': {
+    seoTitle: 'Serrurier pour syndics et copropriétés à Marseille | Serrurerie de la République',
+    seoDescription:
+      'Portes de hall, serrures, ferme-portes, vitrages, portes de garage, clés et badges des résidents : nos services pour les syndics et gestionnaires de copropriété à Marseille.',
+    hero: {
+      kicker: 'Syndics & gestionnaires',
+      title: 'Les accès de vos copropriétés, entre de bonnes mains.',
+      intro:
+        'Nous intervenons sur les parties communes de vos immeubles et accompagnons la gestion des clés et des badges des résidents.',
+      imageSrc: DOMAINS_CONFIG.items.find((d) => d.id === 'fermetures')?.imageSrc,
+      imagePosition: '55% 50%',
+      breadcrumbLabel: 'Syndics & gestionnaires',
+      actions: [{ kind: 'page', label: 'Devenir partenaire', page: 'devenir-partenaire' }, { kind: 'phone' }],
+    },
+    blocks: [
+      {
+        type: 'cards',
+        id: 'page-prestations',
+        tone: 'light',
+        kicker: 'Nos interventions',
+        title: 'Pour vos parties communes.',
+        items: [
+          'Dépannage et remplacement des serrures, cylindres et ferme-portes des portes de hall',
+          'Clés et badges compatibles pour les résidents',
+          'Remplacement des vitrages des parties communes',
+          'Portes de garage, rideaux et fermetures collectives',
+        ],
+      },
+      { type: 'steps', id: 'page-methode', tone: 'dark', kicker: 'Notre méthode', title: 'Une collaboration simple et traçable.', steps: PRO_METHOD },
+      faqBlock('page-faq', 'light', FAQ_PRO_SYNDICS, 'Vos questions de gestionnaires.'),
+      PARTNER_CTA,
+    ],
+  },
+
+  'pro-assureurs': {
+    seoTitle: 'Assureurs et experts : intervention après sinistre à Marseille | Serrurerie de la République',
+    seoDescription:
+      'Mise en sécurité, fermeture provisoire, devis détaillé et reportage photo, remise en état après effraction ou bris de glace à Marseille.',
+    hero: {
+      kicker: 'Assureurs & experts',
+      title: 'De la mise en sécurité à la remise en état.',
+      intro:
+        'Après une effraction, du vandalisme ou un bris de glace, nous sécurisons les lieux et fournissons les éléments utiles à l’instruction du dossier.',
+      imageSrc: AFTER_INCIDENT_CONFIG.imageSrc,
+      imagePosition: '70% 35%',
+      breadcrumbLabel: 'Assureurs & experts',
+      actions: [{ kind: 'page', label: 'Devenir partenaire', page: 'devenir-partenaire' }, { kind: 'phone' }],
+    },
+    blocks: [
+      {
+        type: 'cards',
+        id: 'page-prestations',
+        tone: 'light',
+        kicker: 'Nos interventions',
+        title: 'Pour vos dossiers sinistres.',
+        items: [
+          'Mise en sécurité et fermeture provisoire des accès',
+          'Devis détaillé accompagné d’un reportage photo',
+          'Remise en état : serrurerie, vitrerie, menuiserie et fermetures',
+          'Suivi administratif du dossier',
+        ],
+      },
+      { type: 'steps', id: 'page-methode', tone: 'dark', kicker: 'Notre méthode', title: 'Une collaboration simple et traçable.', steps: PRO_METHOD },
+      faqBlock('page-faq', 'light', FAQ_PRO_ASSUREURS, 'Vos questions d’assureurs et d’experts.'),
+      PARTNER_CTA,
+    ],
+  },
+
+  'pro-immobilier': {
+    seoTitle: 'Agences immobilières et bailleurs : serrurier à Marseille | Serrurerie de la République',
+    seoDescription:
+      'Changement de serrure entre locataires, doubles de clés et badges, ouverture de porte et petites réparations pour les agences immobilières et bailleurs à Marseille.',
+    hero: {
+      kicker: 'Agences immobilières & bailleurs',
+      title: 'Des logements prêts à être remis en main.',
+      intro:
+        'Entre deux locataires ou en cours de bail, nous prenons en charge les serrures, les clés et les petites réparations de vos biens.',
+      imageSrc: KEYS_BADGES_CONFIG.imageSrc,
+      imagePosition: '55% 45%',
+      breadcrumbLabel: 'Agences immobilières & bailleurs',
+      actions: [{ kind: 'page', label: 'Devenir partenaire', page: 'devenir-partenaire' }, { kind: 'phone' }],
+    },
+    blocks: [
+      {
+        type: 'cards',
+        id: 'page-prestations',
+        tone: 'light',
+        kicker: 'Nos interventions',
+        title: 'Pour vos biens en gestion.',
+        items: [
+          'Changement de cylindre ou de serrure entre deux locataires',
+          'Doubles de clés et de badges compatibles',
+          'Ouverture de porte',
+          'Réglages et petites réparations de menuiseries et fermetures',
+        ],
+      },
+      { type: 'steps', id: 'page-methode', tone: 'dark', kicker: 'Notre méthode', title: 'Une collaboration simple et traçable.', steps: PRO_METHOD },
+      faqBlock('page-faq', 'light', FAQ_PRO_IMMOBILIER, 'Vos questions de gestionnaires de biens.'),
+      PARTNER_CTA,
+    ],
+  },
+} satisfies Record<'professionnels' | 'pro-syndics' | 'pro-assureurs' | 'pro-immobilier', PageDefinition>;
 
 export const THEMATIC_PAGES: Readonly<Record<BlockPageId, PageDefinition>> = {
+  ...PRO_PAGES,
   'cles-badges': {
     seoTitle: KEYS_BADGES_PAGE_CONFIG.seoTitle,
     seoDescription: KEYS_BADGES_PAGE_CONFIG.seoDescription,
@@ -444,7 +643,7 @@ export function resolvePageDefinition(route: Route): PageDefinition | null {
     return domain ? buildDomainPage(domain) : null;
   }
   if (route.kind === 'page') {
-    return route.id === 'devis' ? null : THEMATIC_PAGES[route.id];
+    return route.id === 'devis' || route.id === 'devenir-partenaire' ? null : THEMATIC_PAGES[route.id];
   }
   return null;
 }

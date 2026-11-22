@@ -506,6 +506,8 @@ export const FOOTER_CONFIG: FooterConfig = {
     { label: 'Zone d’intervention', pageId: 'zone-intervention', targetId: '09_Zone_Intervention' },
     { label: 'Questions fréquentes', pageId: 'questions-frequentes', targetId: 'FAQ' },
     { label: 'Demander un devis', pageId: 'devis' },
+    { label: 'Professionnels', pageId: 'professionnels' },
+    { label: 'Devenir partenaire', pageId: 'devenir-partenaire' },
   ],
   agenciesHeading: 'Nos agences',
   contactHeading: 'Contact',

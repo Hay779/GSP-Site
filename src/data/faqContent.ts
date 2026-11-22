@@ -191,3 +191,79 @@ export const FAQ_ZONE: readonly FaqItem[] = [
       'Oui, nos agences République (2e) et Lodi (6e) vous accueillent pour vos doubles de clés et de badges et pour vos conseils.',
   },
 ];
+
+/* ------------------------------------------------------------------ */
+/* Professionnels                                                      */
+/* ------------------------------------------------------------------ */
+
+export const FAQ_PRO_GENERAL: readonly FaqItem[] = [
+  {
+    id: 'pro-demande',
+    question: 'Comment nous transmettre une demande d’intervention ?',
+    answer:
+      'Par téléphone pour une urgence, ou via le formulaire « Devenir partenaire » / la demande de devis pour organiser une intervention. Précisez l’adresse, le besoin et la personne à contacter sur place.',
+  },
+  {
+    id: 'pro-devis',
+    question: 'Recevons-nous un devis avant l’intervention ?',
+    answer: 'Oui, un devis détaillé est transmis et validé avant la réalisation des travaux.',
+  },
+  {
+    id: 'pro-photos',
+    question: 'Pouvez-vous fournir des photos de l’intervention ?',
+    answer:
+      'Oui, nous pouvons réaliser un reportage photo, notamment après un sinistre, pour faciliter le suivi du dossier.',
+  },
+  {
+    id: 'pro-zone',
+    question: 'Dans quels secteurs intervenez-vous pour les professionnels ?',
+    answer:
+      'Dans les arrondissements de Marseille et plusieurs communes voisines, depuis nos agences République (2e) et Lodi (6e).',
+  },
+];
+
+export const FAQ_PRO_SYNDICS: readonly FaqItem[] = [
+  {
+    id: 'syn-parties-communes',
+    question: 'Intervenez-vous sur les parties communes ?',
+    answer:
+      'Oui : portes de hall, serrures et cylindres, ferme-portes, vitrages, portes de garage et fermetures collectives.',
+  },
+  {
+    id: 'syn-badges',
+    question: 'Pouvez-vous fournir des badges ou des clés pour les résidents ?',
+    answer:
+      'Nous reproduisons les clés et les badges compatibles, et vous conseillons sur l’organisation des accès de la copropriété.',
+  },
+  FAQ_PRO_GENERAL[1],
+];
+
+export const FAQ_PRO_ASSUREURS: readonly FaqItem[] = [
+  {
+    id: 'ass-securisation',
+    question: 'Pouvez-vous sécuriser un logement avant le passage de l’expert ?',
+    answer:
+      'Oui, la mise en sécurité (fermeture provisoire, remplacement de cylindre) peut être réalisée rapidement ; les éléments endommagés et les photos sont conservés pour l’expertise.',
+  },
+  {
+    id: 'ass-dossier',
+    question: 'Quels documents fournissez-vous pour le dossier ?',
+    answer: 'Un devis détaillé et un reportage photo, utiles à l’instruction du sinistre.',
+  },
+  FAQ_PRO_GENERAL[3],
+];
+
+export const FAQ_PRO_IMMOBILIER: readonly FaqItem[] = [
+  {
+    id: 'imm-relocation',
+    question: 'Changez-vous les serrures entre deux locataires ?',
+    answer:
+      'Oui, nous remplaçons le cylindre ou la serrure pour que le nouveau locataire soit le seul à disposer des clés.',
+  },
+  {
+    id: 'imm-doubles',
+    question: 'Pouvez-vous préparer des jeux de clés ?',
+    answer: 'Oui, nous réalisons les doubles de clés et de badges compatibles en boutique.',
+  },
+  FAQ_PRO_GENERAL[1],
+];

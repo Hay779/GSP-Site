@@ -12,6 +12,7 @@ import { HeaderSection, type HeaderNavLink } from './components/HeaderSection';
 import { HeroSection } from './components/HeroSection';
 import { IncidentPhotoModal } from './components/IncidentPhotoModal';
 import { KeysBadgesSection } from './components/KeysBadgesSection';
+import { PartnerPage } from './components/PartnerPage';
 import { QuotePage } from './components/QuotePage';
 import { ReviewsSection } from './components/ReviewsSection';
 import { UrgencySection } from './components/UrgencySection';
@@ -95,8 +96,26 @@ export default function App() {
       isActive: currentPageId === 'apres-sinistre' || (onHome && activeSectionId === '07_Apres_Sinistre'),
     },
     {
+      key: 'professionnels',
+      label: 'Professionnels',
+      href: pageHref('professionnels'),
+      isActive:
+        currentPageId === 'professionnels' ||
+        currentPageId === 'pro-syndics' ||
+        currentPageId === 'pro-assureurs' ||
+        currentPageId === 'pro-immobilier' ||
+        currentPageId === 'devenir-partenaire',
+      children: [
+        { key: 'pro-syndics', label: 'Syndics & gestionnaires', description: 'Copropriétés', href: pageHref('pro-syndics'), isActive: currentPageId === 'pro-syndics' },
+        { key: 'pro-assureurs', label: 'Assureurs & experts', description: 'Sinistres', href: pageHref('pro-assureurs'), isActive: currentPageId === 'pro-assureurs' },
+        { key: 'pro-immobilier', label: 'Agences & bailleurs', description: 'Gestion locative', href: pageHref('pro-immobilier'), isActive: currentPageId === 'pro-immobilier' },
+        { key: 'devenir-partenaire', label: 'Devenir partenaire', description: 'Formulaire pro', href: pageHref('devenir-partenaire'), isActive: currentPageId === 'devenir-partenaire' },
+      ],
+      overviewLink: { label: 'Voir l’espace Professionnels', href: pageHref('professionnels') },
+    },
+    {
       key: 'agences-contact',
-      label: 'Agences & contact',
+      label: 'Contact',
       href: pageHref('agences-contact'),
       isActive: currentPageId === 'agences-contact' || (onHome && activeSectionId === '10_Nos_Agences'),
     },
@@ -179,6 +198,10 @@ export default function App() {
             prefill={quotePrefill}
           />
         </main>
+      ) : route.kind === 'page' && route.id === 'devenir-partenaire' ? (
+        <main className="flex-1 flex flex-col">
+          <PartnerPage brand={BRAND_CONFIG} routerMode={ROUTER_MODE} />
+        </main>
       ) : currentPage ? (
         /* Pages intérieures : assemblées à partir de blocs (voir data/pages.ts) */
         <main className="flex-1 flex flex-col">
@@ -254,7 +277,7 @@ export default function App() {
         domainHref={domainHref}
         sectionHref={sectionHref}
         pageHref={pageHref}
-        hideCta={isQuotePage}
+        hideCta={isQuotePage || currentPage?.blocks[currentPage.blocks.length - 1]?.type === 'cta'}
       />
 
 

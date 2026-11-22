@@ -1,4 +1,4 @@
-import { ArrowRight, FileText, MessageCircle, Phone } from 'lucide-react';
+import { ArrowRight, Building2, FileText, KeyRound, MessageCircle, Phone, ShieldCheck } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
 import type { HeroAction, PageBlock, PageDefinition } from '../data/pages';
 import {
@@ -148,6 +148,49 @@ function DomainCards({ excludeId, ctx }: { readonly excludeId?: string; readonly
   );
 }
 
+const AUDIENCE_ICONS = { syndic: Building2, assureur: ShieldCheck, immobilier: KeyRound } as const;
+
+function AudienceCards({
+  items,
+  ctx,
+}: {
+  readonly items: Extract<PageBlock, { type: 'audiences' }>['items'];
+  readonly ctx: PageContext;
+}) {
+  const prefersReducedMotion = Boolean(useReducedMotion());
+  return (
+    <ul className="grid grid-cols-1 gap-5 md:grid-cols-3 lg:gap-6">
+      {items.map((item, index) => {
+        const Icon = AUDIENCE_ICONS[item.icon];
+        return (
+          <motion.li
+            key={item.page}
+            initial={prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 22 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={REVEAL_VIEWPORT}
+            transition={{ duration: prefersReducedMotion ? 0 : 0.5, delay: prefersReducedMotion ? 0 : index * 0.08, ease: REVEAL_EASE }}
+          >
+            <a
+              href={hrefForPage(item.page, ctx.routerMode)}
+              className="group flex h-full flex-col gap-4 rounded-xl border border-[#1C1F21]/12 bg-[#FFFFFF] p-7 transition-colors duration-200 hover:border-[#B79A62] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7D612D]"
+            >
+              <span className="grid h-14 w-14 place-items-center rounded-full border border-[#B79A62]/45 bg-[#F7F5F0] text-[#7D612D]">
+                <Icon className="h-6 w-6" strokeWidth={1.6} aria-hidden="true" />
+              </span>
+              <h3 className="font-display text-[22px] font-semibold leading-[1.2] text-[#1C1F21]">{item.title}</h3>
+              <p className="text-[15.5px] leading-[1.6] text-[#1C1F21]/72">{item.text}</p>
+              <span className="mt-auto pt-2 inline-flex items-center gap-2 text-[15px] font-semibold text-[#1C1F21] group-hover:text-[#7D612D] transition-colors duration-150">
+                Découvrir
+                <ArrowRight className="h-4 w-4 transition-transform duration-150 group-hover:translate-x-1" aria-hidden="true" />
+              </span>
+            </a>
+          </motion.li>
+        );
+      })}
+    </ul>
+  );
+}
+
 function ServiceCards({ services }: { readonly services: Extract<PageBlock, { type: 'services' }>['services'] }) {
   const prefersReducedMotion = Boolean(useReducedMotion());
   return (
@@ -246,12 +289,25 @@ function LegalArticles({ articles }: { readonly articles: Extract<PageBlock, { t
   );
 }
 
-function CtaActions({ ctx }: { readonly ctx: PageContext }) {
+function CtaActions({
+  ctx,
+  primary,
+}: {
+  readonly ctx: PageContext;
+  readonly primary?: Extract<PageBlock, { type: 'cta' }>['primary'];
+}) {
   return (
     <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-      <button type="button" onClick={() => ctx.onOpenQuoteModal()} className={PAGE_HERO_PRIMARY_BUTTON}>
-        Demander un devis
-      </button>
+      {primary ? (
+        <a href={hrefForPage(primary.page, ctx.routerMode)} className={PAGE_HERO_PRIMARY_BUTTON}>
+          {primary.label}
+          <ArrowRight className="h-4 w-4" aria-hidden="true" />
+        </a>
+      ) : (
+        <button type="button" onClick={() => ctx.onOpenQuoteModal()} className={PAGE_HERO_PRIMARY_BUTTON}>
+          Demander un devis
+        </button>
+      )}
       <a href={ctx.brand.phoneHref} className={PAGE_HERO_SECONDARY_BUTTON}>
         <Phone className="h-4 w-4 shrink-0 text-[#B79A62]" aria-hidden="true" />
         Appeler le {ctx.brand.phoneDisplay}
@@ -326,7 +382,13 @@ export function PageBlockView({ block, ctx }: { readonly block: PageBlock; reado
     case 'cta':
       return (
         <PageSection id={block.id} tone="dark" kicker={block.kicker} title={block.title} subtitle={block.subtitle}>
-          <CtaActions ctx={ctx} />
+          <CtaActions ctx={ctx} primary={block.primary} />
+        </PageSection>
+      );
+    case 'audiences':
+      return (
+        <PageSection id={block.id} tone="light" kicker={block.kicker} title={block.title} subtitle={block.subtitle}>
+          <AudienceCards items={block.items} ctx={ctx} />
         </PageSection>
       );
     case 'urgency':
