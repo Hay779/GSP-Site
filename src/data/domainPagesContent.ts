@@ -15,6 +15,9 @@ export type FeatureIconKey =
   | 'garage'
   | 'motor';
 
+/** Icônes disponibles pour les étapes (« méthode », « comment ça marche »). */
+export type ProcessIconKey = 'hand' | 'search' | 'file' | 'wrench' | 'folder' | 'settings';
+
 export interface FeatureCard {
   readonly icon: FeatureIconKey;
   readonly title: string;
@@ -40,6 +43,8 @@ export interface BeforeAfterCase {
 }
 
 export interface DomainPageExtras {
+  /** Points rassurants du haut de page. */
+  readonly highlights: readonly string[];
   readonly features: readonly FeatureCard[];
   /** Exemples avant / après (bloc masqué s'il est vide). */
   readonly beforeAfter: readonly BeforeAfterCase[];
@@ -49,6 +54,7 @@ export interface DomainPageExtras {
 
 export const DOMAIN_PAGE_EXTRAS: Readonly<Record<DomainCardItem['id'], DomainPageExtras>> = {
   serrurerie: {
+    highlights: ['Devis avant intervention', 'Marseille & alentours', 'Particuliers & professionnels'],
     features: [
       { icon: 'door', title: 'Ouverture de porte', text: 'Porte claquée ou verrouillée, sans dégradation lorsque c’est possible.' },
       { icon: 'lock', title: 'Serrures & cylindres', text: 'Cylindres, serrures multipoints et verrous haute sécurité.' },
@@ -71,6 +77,7 @@ export const DOMAIN_PAGE_EXTRAS: Readonly<Record<DomainCardItem['id'], DomainPag
     showBrands: true,
   },
   vitrerie: {
+    highlights: ['Mise en sécurité rapide', 'Vitrages sur mesure', 'Particuliers & commerces'],
     features: [
       { icon: 'shield', title: 'Mise en sécurité', text: 'Fermeture provisoire immédiate après un bris de glace.' },
       { icon: 'glass', title: 'Vitrages', text: 'Simple, double vitrage et vitrage feuilleté, remplacés à l’identique.' },
@@ -81,6 +88,7 @@ export const DOMAIN_PAGE_EXTRAS: Readonly<Record<DomainCardItem['id'], DomainPag
     showBrands: false,
   },
   menuiserie: {
+    highlights: ['Sur mesure', 'Alu · PVC · bois · acier', 'Devis avant intervention'],
     features: [
       { icon: 'door', title: 'Portes & fenêtres', text: 'Portes d’entrée, fenêtres et portes-fenêtres sur mesure.' },
       { icon: 'wrench', title: 'Réglage & réparation', text: 'Quincaillerie, crémones et paumelles.' },
@@ -91,6 +99,7 @@ export const DOMAIN_PAGE_EXTRAS: Readonly<Record<DomainCardItem['id'], DomainPag
     showBrands: false,
   },
   fermetures: {
+    highlights: ['Dépannage de rideaux', 'Volets & portes de garage', 'Particuliers & commerces'],
     features: [
       { icon: 'store', title: 'Rideaux métalliques', text: 'Dépannage, déblocage et motorisation pour les commerces.' },
       { icon: 'shutter', title: 'Volets roulants', text: 'Installation et réparation, manuels ou électriques.' },

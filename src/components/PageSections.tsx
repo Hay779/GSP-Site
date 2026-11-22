@@ -7,6 +7,8 @@ import {
   DoorOpen,
   FileText,
   FolderCheck,
+  HandHelping,
+  Settings,
   Frame,
   LockKeyhole,
   PanelsTopLeft,
@@ -20,7 +22,7 @@ import {
 } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
 import type { NumberedStep } from '../data/sectionsContent';
-import type { BeforeAfterCase, FeatureCard, FeatureIconKey } from '../data/domainPagesContent';
+import type { BeforeAfterCase, FeatureCard, FeatureIconKey, ProcessIconKey } from '../data/domainPagesContent';
 import { REVEAL_EASE, REVEAL_VIEWPORT } from '../utils/scrollReveal';
 
 export type SectionTone = 'light' | 'dark';
@@ -195,15 +197,33 @@ export function FeatureCards({ items }: { readonly items: readonly FeatureCard[]
   );
 }
 
-const PROCESS_ICONS: readonly LucideIcon[] = [Search, FileText, Wrench, FolderCheck];
+const DEFAULT_PROCESS_ICONS: readonly LucideIcon[] = [Search, FileText, Wrench, FolderCheck];
+
+const PROCESS_ICON_MAP: Record<ProcessIconKey, LucideIcon> = {
+  hand: HandHelping,
+  search: Search,
+  file: FileText,
+  wrench: Wrench,
+  folder: FolderCheck,
+  settings: Settings,
+};
 
 /** Méthode en étapes : icône + numéro laiton, 2 × 2 sur mobile, une ligne sur ordinateur. */
-export function ProcessSteps({ steps, tone }: { readonly steps: readonly NumberedStep[]; readonly tone: SectionTone }) {
+export function ProcessSteps({
+  steps,
+  tone,
+  icons,
+}: {
+  readonly steps: readonly NumberedStep[];
+  readonly tone: SectionTone;
+  readonly icons?: readonly ProcessIconKey[];
+}) {
   const dark = tone === 'dark';
+  const iconList = icons ? icons.map((key) => PROCESS_ICON_MAP[key]) : DEFAULT_PROCESS_ICONS;
   return (
     <ol className={`grid grid-cols-2 ${steps.length >= 4 ? 'lg:grid-cols-4' : steps.length === 3 ? 'lg:grid-cols-3' : ''} gap-y-7`}>
       {steps.map((step, index) => {
-        const Icon = PROCESS_ICONS[index % PROCESS_ICONS.length];
+        const Icon = iconList[index % iconList.length];
         return (
           <li
             key={step.title}

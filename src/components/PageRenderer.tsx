@@ -200,6 +200,8 @@ function AudienceCards({
   );
 }
 
+const SERVICE_IMAGES = { key: '/src/assets/images/kb_cles.jpg', badge: '/src/assets/images/kb_badge.jpg' } as const;
+
 function ServiceCards({ services }: { readonly services: Extract<PageBlock, { type: 'services' }>['services'] }) {
   const prefersReducedMotion = Boolean(useReducedMotion());
   return (
@@ -211,13 +213,19 @@ function ServiceCards({ services }: { readonly services: Extract<PageBlock, { ty
           whileInView={{ opacity: 1, y: 0 }}
           viewport={REVEAL_VIEWPORT}
           transition={{ duration: prefersReducedMotion ? 0 : 0.5, delay: prefersReducedMotion ? 0 : index * 0.08, ease: REVEAL_EASE }}
-          className="flex flex-col gap-4 rounded-xl border border-[#1C1F21]/12 bg-[#FFFFFF] p-7 sm:p-8 transition-colors duration-200 hover:border-[#B79A62]"
+          className="flex flex-col overflow-hidden rounded-2xl bg-white shadow-[0_10px_28px_-20px_rgba(28,31,33,0.4)]"
         >
-          <span className="grid h-14 w-14 place-items-center rounded-full border border-[#B79A62]/45 bg-[#F7F5F0]">
-            <ServiceIcon icon={service.icon} />
-          </span>
-          <h3 className="font-display text-[22px] sm:text-[24px] font-semibold text-[#1C1F21]">{service.title}</h3>
-          <p className="text-[16px] leading-[1.6] text-[#1C1F21]/75">{service.text}</p>
+          <div className="flex flex-col gap-3 p-5 sm:p-7">
+            <span className="grid h-12 w-12 place-items-center rounded-full bg-[#F1E8D6]">
+              <ServiceIcon icon={service.icon} />
+            </span>
+            <h3 className="font-display text-[20px] sm:text-[23px] font-semibold text-[#1C1F21]">{service.title}</h3>
+            <p className="text-[15px] sm:text-[16px] leading-[1.55] text-[#1C1F21]/72">{service.text}</p>
+          </div>
+          {/* Photo du produit (provisoire : découpée d'une maquette) */}
+          <div className="mt-auto h-[150px] sm:h-[190px] bg-gradient-to-b from-white to-[#F1ECE1]">
+            <img src={SERVICE_IMAGES[service.icon]} alt="" loading="lazy" className="h-full w-full object-cover mix-blend-multiply" />
+          </div>
         </motion.li>
       ))}
     </ul>
@@ -421,7 +429,7 @@ export function PageBlockView({ block, ctx }: { readonly block: PageBlock; reado
     case 'process':
       return (
         <PageSection id={block.id} tone={block.tone} kicker={block.kicker} title={block.title} subtitle={block.subtitle}>
-          <ProcessSteps steps={block.steps} tone={block.tone} />
+          <ProcessSteps steps={block.steps} tone={block.tone} icons={block.icons} />
         </PageSection>
       );
     case 'beforeAfter':
@@ -461,7 +469,7 @@ export function PageRenderer({ page, ctx }: { readonly page: PageDefinition; rea
         imageSrc={page.hero.imageSrc}
         imagePosition={page.hero.imagePosition}
         compact={page.hero.compact}
-        appStyle={page.hero.breadcrumbParent === 'domaines'}
+        highlights={page.hero.highlights}
         actions={
           page.hero.actions.length > 0 ? (
             <>

@@ -22,7 +22,7 @@ import {
   FAQ_ZONE,
 } from './faqContent';
 import { HERO_CONFIG } from './heroConfig';
-import { DOMAIN_PAGE_EXTRAS, type BeforeAfterCase, type FeatureCard } from './domainPagesContent';
+import { DOMAIN_PAGE_EXTRAS, type BeforeAfterCase, type FeatureCard, type ProcessIconKey } from './domainPagesContent';
 import {
   AFTER_INCIDENT_CONFIG,
   AFTER_INCIDENT_PAGE_CONFIG,
@@ -53,6 +53,8 @@ export interface PageHeroDefinition {
   readonly intro: string;
   readonly imageSrc?: string;
   readonly imagePosition?: string;
+  /** Petits points rassurants sous l'introduction (2 ou 3, courts). */
+  readonly highlights?: readonly string[];
   /** En-tête réduit (pages légales). */
   readonly compact?: boolean;
   /** Masque l'en-tête sur mobile et tablette (le contenu commence directement). */
@@ -127,6 +129,7 @@ export type PageBlock =
       readonly id: string;
       readonly tone: BlockTone;
       readonly steps: readonly NumberedStep[];
+      readonly icons?: readonly ProcessIconKey[];
     } & SectionHeading)
   | ({ readonly type: 'beforeAfter'; readonly id: string; readonly tone: 'dark'; readonly items: readonly BeforeAfterCase[] } & SectionHeading)
   /* Sections partagées avec l'accueil (fond fixe) */
@@ -209,6 +212,7 @@ export function buildDomainPage(domain: DomainCardItem): PageDefinition {
       intro: domain.pageIntro,
       imageSrc: domain.imageSrc,
       breadcrumbParent: 'domaines',
+      highlights: DOMAIN_PAGE_EXTRAS[domain.id].highlights,
       actions: [{ kind: 'quote', domain: domain.quoteDomain }, { kind: 'phone' }],
     },
     blocks: domainPageBlocks(domain),
@@ -505,6 +509,7 @@ export const THEMATIC_PAGES: Readonly<Record<BlockPageId, PageDefinition>> = {
       intro: KEYS_BADGES_PAGE_CONFIG.intro,
       imageSrc: KEYS_BADGES_CONFIG.imageSrc,
       imagePosition: '65% 45%',
+      highlights: ['En boutique', 'À partir de votre original', 'République & Rome'],
       actions: [{ kind: 'page', label: 'Trouver une agence', page: 'agences-contact' }, { kind: 'phone' }],
     },
     blocks: [
@@ -517,16 +522,17 @@ export const THEMATIC_PAGES: Readonly<Record<BlockPageId, PageDefinition>> = {
         services: KEYS_BADGES_PAGE_CONFIG.services,
       },
       {
-        type: 'steps',
+        type: 'process',
         id: 'page-etapes',
         tone: 'dark',
         kicker: KEYS_BADGES_PAGE_CONFIG.stepsKicker,
         title: KEYS_BADGES_PAGE_CONFIG.stepsTitle,
         steps: KEYS_BADGES_PAGE_CONFIG.steps,
+        icons: ['hand', 'search', 'settings'],
       },
-      faqBlock('page-faq', 'light', FAQ_CLES_BADGES),
-      { type: 'urgency' },
+      // Service réalisé en boutique : les agences viennent juste après.
       { type: 'agencies' },
+      faqBlock('page-faq', 'dark', FAQ_CLES_BADGES),
     ],
   },
 
