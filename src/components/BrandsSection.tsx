@@ -71,15 +71,9 @@ export function BrandsSection({ config, contactHref }: BrandsSectionProps) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={REVEAL_VIEWPORT}
               transition={{ duration: prefersReducedMotion ? 0 : 0.45, delay: prefersReducedMotion ? 0 : index * 0.06, ease: REVEAL_EASE }}
-              className="group flex min-h-[168px] flex-col items-center justify-between rounded-xl border border-[#1C1F21]/12 bg-[#FFFFFF] px-4 pt-7 pb-5 text-center transition-colors duration-200 hover:border-[#B79A62]"
+              className="group flex min-h-[120px] items-center justify-center rounded-xl bg-[#FFFFFF] px-4 py-6 text-center transition-shadow duration-200 hover:shadow-[0_10px_30px_rgba(28,31,33,0.08)]"
             >
               <BrandLogo partner={partner} />
-              <div className="flex w-full flex-col items-center gap-2.5 pt-4">
-                <span aria-hidden="true" className="h-px w-8 bg-[#B79A62]/70 transition-all duration-300 group-hover:w-12" />
-                <span className="min-h-[2.6em] text-[12px] font-medium uppercase leading-[1.3] tracking-[0.12em] text-[#1C1F21]/55">
-                  {partner.specialty}
-                </span>
-              </div>
             </motion.li>
           ))}
         </ul>
