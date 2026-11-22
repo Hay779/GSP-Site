@@ -59,6 +59,39 @@
   }
 }
 
+/* Diaporama cinéma de l'accueil : cadrage par image, mobile puis ordinateur */
+.hero-slide {
+  object-position: var(--pos-mobile, 50% 50%);
+}
+
+@media (min-width: 1024px) {
+  .hero-slide {
+    object-position: var(--pos-desktop, 50% 50%);
+  }
+}
+
+@keyframes hero-progress-fill {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.hero-progress {
+  animation-name: hero-progress-fill;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-progress {
+    animation: none;
+    transform: scaleX(1);
+  }
+}
+
 @keyframes reviews-marquee-scroll {
   0% {
     transform: translate3d(0, 0, 0);

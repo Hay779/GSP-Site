@@ -3,6 +3,8 @@ import { ClipboardCheck, KeyRound, Pause, Play, ShieldCheck } from 'lucide-react
 import { motion, useReducedMotion, useScroll, useSpring, useTransform } from 'motion/react';
 import type { CommitmentIconKey, HeroConfig } from '../data/heroConfig';
 import { HERO_PARALLAX_CONFIG } from '../utils/heroParallax';
+import { HERO_SLIDESHOW_TIMING, nextSlideIndex } from '../utils/heroSlideshow';
+import { HeroSlideshowIndicator, HeroSlideshowMedia } from './HeroSlideshow';
 import type { SectionId } from '../utils/navigation';
 import { REVEAL_EASE } from '../utils/scrollReveal';
 
@@ -37,6 +39,11 @@ export function HeroSection({
   const [videoFailed, setVideoFailed] = useState(false);
   const [isVideoPaused, setIsVideoPaused] = useState(false);
   const prefersReducedMotion = useReducedMotion() ?? false;
+  const slides = config.media.slides;
+  const posterSlide = slides[0];
+  const [activeSlide, setActiveSlide] = useState(0);
+  const [isSlideshowToggled, setIsSlideshowToggled] = useState(false);
+  const [isPageHidden, setIsPageHidden] = useState(false);
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -70,6 +77,30 @@ export function HeroSection({
     !videoFailed &&
     Boolean(config.media.videoSrc.trim() || config.media.videoWebmSrc?.trim());
 
+  const hasSlideshow = !hasVideoSource && slides.length > 1;
+  // Si l'utilisateur préfère réduire les animations, le diaporama démarre en pause
+  // (il peut quand même le lancer avec le bouton lecture).
+  const isSlideshowPausedByChoice = prefersReducedMotion ? !isSlideshowToggled : isSlideshowToggled;
+  const isSlideshowPaused = isSlideshowPausedByChoice || isPageHidden;
+
+  // Met le diaporama en pause quand l'onglet n'est pas visible.
+  useEffect(() => {
+    const onVisibility = () => setIsPageHidden(document.hidden);
+    document.addEventListener('visibilitychange', onVisibility);
+    return () => document.removeEventListener('visibilitychange', onVisibility);
+  }, []);
+
+  // Passe à l'image suivante après la durée d'affichage.
+  useEffect(() => {
+    if (!hasSlideshow || isSlideshowPaused) {
+      return;
+    }
+    const timer = window.setTimeout(() => {
+      setActiveSlide((current) => nextSlideIndex(current, slides.length));
+    }, HERO_SLIDESHOW_TIMING.slideDurationMs);
+    return () => window.clearTimeout(timer);
+  }, [hasSlideshow, isSlideshowPaused, activeSlide, slides.length]);
+
   useEffect(() => {
     if (!hasVideoSource || !videoRef.current) {
       return;
@@ -91,6 +122,10 @@ export function HeroSection({
   }, [hasVideoSource]);
 
   const handleTogglePlayback = () => {
+    if (hasSlideshow) {
+      setIsSlideshowToggled((toggled) => !toggled);
+      return;
+    }
     const videoEl = videoRef.current;
     if (!videoEl) {
       return;
@@ -132,11 +167,21 @@ export function HeroSection({
           }
           className="absolute -top-[18%] -bottom-[18%] inset-x-0 origin-center will-change-transform"
         >
-          {/* Image poster haute qualité (affichée immédiatement et en repli vidéo) */}
-          {!posterFailed && (
+          {/* Diaporama cinéma (fondus enchaînés + mouvements de caméra lents) */}
+          {hasSlideshow && (
+            <HeroSlideshowMedia
+              slides={slides}
+              activeIndex={activeSlide}
+              isPaused={isSlideshowPaused}
+              reducedMotion={prefersReducedMotion}
+            />
+          )}
+
+          {/* Image unique haute qualité (poster de la vidéo ou image seule) */}
+          {!hasSlideshow && posterSlide && !posterFailed && (
             <img
-              src={config.media.posterSrc}
-              alt={config.media.posterAlt}
+              src={posterSlide.src}
+              alt={posterSlide.alt}
               referrerPolicy="no-referrer"
               onError={() => setPosterFailed(true)}
               className="h-full w-full object-cover object-[80%_30%] sm:object-[72%_36%] lg:object-[70%_40%]"
@@ -153,7 +198,7 @@ export function HeroSection({
               loop
               playsInline
               preload="metadata"
-              poster={config.media.posterSrc}
+              poster={posterSlide?.src}
               onError={() => setVideoFailed(true)}
               className="absolute inset-0 h-full w-full object-cover object-center"
             >
@@ -170,6 +215,8 @@ export function HeroSection({
         {/* Voile directionnel calibré pour garantir un contraste WCAG AA sur tout contenu vidéo */}
         <div className="absolute inset-0 bg-[linear-gradient(to_top,#1C1F21_0%,#1C1F21_42%,rgba(28,31,33,0.78)_62%,rgba(28,31,33,0.15)_100%)] lg:hidden" />
         <div className="hidden lg:block absolute inset-0 bg-[linear-gradient(90deg,#1C1F21_0%,#1C1F21_28%,rgba(28,31,33,0.92)_44%,rgba(28,31,33,0.48)_62%,rgba(28,31,33,0.12)_100%)]" />
+        {/* Voile haut (mobile) pour la lisibilité de l'indicateur du diaporama */}
+        <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-[#1C1F21]/80 via-[#1C1F21]/35 to-transparent lg:hidden" />
         <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#1C1F21]/90 via-[#1C1F21]/35 to-transparent" />
         {/* Assombrissement progressif subtil au défilement pour fondre 02_Hero vers la section suivante */}
         <motion.div
@@ -303,24 +350,40 @@ export function HeroSection({
         </div>
       </motion.div>
 
-      {/* Contrôle discret lecture/pause lorsqu'une vidéo plein écran est branchée */}
-      {hasVideoSource && (
-        <button
-          type="button"
-          onClick={handleTogglePlayback}
-          aria-label={
-            isVideoPaused
-              ? 'Lancer la vidéo d’arrière-plan'
-              : 'Mettre en pause la vidéo d’arrière-plan'
-          }
-          className="absolute bottom-5 right-5 z-20 inline-flex h-11 w-11 items-center justify-center rounded-lg border border-[#F3F0E7]/25 bg-[#1C1F21]/70 text-[#F3F0E7] backdrop-blur-sm hover:border-[#B79A62] hover:text-[#B79A62] transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62] cursor-pointer"
-        >
-          {isVideoPaused ? (
-            <Play className="h-4 w-4" aria-hidden="true" />
-          ) : (
-            <Pause className="h-4 w-4" aria-hidden="true" />
-          )}
-        </button>
+      {/* Indicateur du diaporama + contrôle lecture/pause (vidéo ou diaporama) */}
+      {(hasSlideshow || hasVideoSource) && (
+        <div className="pointer-events-none absolute inset-x-0 top-5 lg:top-auto lg:bottom-8 z-20">
+          <div className="pointer-events-auto mx-auto flex max-w-[1280px] items-center justify-between lg:justify-end gap-5 px-5 sm:px-8 lg:px-10">
+            {hasSlideshow && (
+              <HeroSlideshowIndicator
+                slides={slides}
+                activeIndex={activeSlide}
+                isPaused={isSlideshowPaused}
+                onSelect={setActiveSlide}
+              />
+            )}
+            <button
+              type="button"
+              onClick={handleTogglePlayback}
+              aria-label={
+                (hasSlideshow ? isSlideshowPausedByChoice : isVideoPaused)
+                  ? hasSlideshow
+                    ? 'Relancer le diaporama'
+                    : 'Lancer la vidéo d’arrière-plan'
+                  : hasSlideshow
+                    ? 'Mettre en pause le diaporama'
+                    : 'Mettre en pause la vidéo d’arrière-plan'
+              }
+              className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#F3F0E7]/30 bg-[#1C1F21]/55 text-[#F3F0E7] backdrop-blur-sm hover:border-[#B79A62] hover:text-[#B79A62] transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62] cursor-pointer"
+            >
+              {(hasSlideshow ? isSlideshowPausedByChoice : isVideoPaused) ? (
+                <Play className="h-4 w-4" aria-hidden="true" />
+              ) : (
+                <Pause className="h-4 w-4" aria-hidden="true" />
+              )}
+            </button>
+          </div>
+        </div>
       )}
     </section>
   );
