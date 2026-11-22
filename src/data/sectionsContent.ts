@@ -444,8 +444,8 @@ export const ZONE_INTERVENTION_CONFIG: ZoneInterventionConfig = {
   title: 'Marseille et ses alentours.',
   subtitle:
     'Serrurerie, vitrerie, menuiserie et fermetures dans tous les arrondissements de Marseille et les communes voisines.',
-  marseilleLabel: 'Marseille & Arrondissements',
-  marseilleRangeLabel: '1er au 16ème arrondissements',
+  marseilleLabel: 'Marseille',
+  marseilleRangeLabel: 'Les 16 arrondissements',
   marseilleSectors: [
     'République',
     'Lodi',
@@ -454,7 +454,7 @@ export const ZONE_INTERVENTION_CONFIG: ZoneInterventionConfig = {
     'Vieux-Port',
     'La Timone',
   ],
-  neighboringLabel: 'Villes & Communes Voisines',
+  neighboringLabel: 'Communes voisines',
   neighboringCommunes: [
     'Allauch',
     'Septèmes-les-Vallons',

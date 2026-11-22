@@ -184,7 +184,8 @@ export function checkServiceSector(rawQuery: string): SectorCheckResult {
     marseilleCp ||
     normalizedQuery === 'marseille' ||
     normalizedQuery.startsWith('marseille ') ||
-    normalizedQuery.includes('1er au 16')
+    normalizedQuery.includes('1er au 16') ||
+    normalizedQuery.includes('16 arrondissements')
   ) {
     const label = marseilleCp ? `Marseille (${marseilleCp})` : 'Marseille (1er au 16e arr.)';
     return {

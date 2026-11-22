@@ -157,115 +157,46 @@ export function ZoneInterventionSection({
                   )}
                 </div>
 
-              {/* Carte 1 : Marseille & Arrondissements */}
+              {/* Secteurs couverts : une seule carte, quartiers et communes en pastilles cliquables */}
               <div className="rounded-xl border border-[#B79A62]/35 bg-[#15181A]/90 p-5 sm:p-6">
-                <div className="flex items-center gap-3 border-b border-[#F3F0E7]/10 pb-3.5">
-                  <span
-                    aria-hidden="true"
-                    className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[#B79A62]/35 bg-[#B79A62]/14 text-[#B79A62]"
-                  >
-                    <MapPin className="h-[17px] w-[17px]" strokeWidth={2} />
-                  </span>
-                  <h3 className="font-display text-[17px] sm:text-[18.5px] font-semibold tracking-[-0.01em] text-[#F3F0E7]">
-                    {config.marseilleLabel}
-                  </h3>
-                </div>
-
-                {/* Ligne chapeau : 1er au 16ème arrondissements */}
-                <button
-                  type="button"
-                  onClick={() => handleSelectSector(config.marseilleRangeLabel)}
-                  aria-pressed={selectedSector === config.marseilleRangeLabel}
-                  className={`mt-4 flex w-full items-center gap-2.5 rounded-md px-2 py-1.5 text-left text-[14.5px] sm:text-[15px] transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62] cursor-pointer ${
-                    selectedSector === config.marseilleRangeLabel
-                      ? 'bg-[#B79A62]/14 text-[#F3F0E7] font-medium'
-                      : 'text-[#F3F0E7]/90 hover:bg-[#F3F0E7]/5 hover:text-[#F3F0E7]'
-                  }`}
-                >
-                  <span aria-hidden="true" className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#B79A62]" />
-                  <span>{config.marseilleRangeLabel}</span>
-                </button>
-
-                {/* Grille 2 colonnes des quartiers clés */}
-                <ul
-                  aria-label="Secteurs de Marseille"
-                  className="mt-1.5 grid grid-cols-2 gap-x-4 gap-y-1"
-                >
-                  {config.marseilleSectors.map((sector) => {
-                    const isSelected = selectedSector === sector;
-                    return (
-                      <li key={sector}>
-                        <button
-                          type="button"
-                          onClick={() => handleSelectSector(sector)}
-                          aria-pressed={isSelected}
-                          className={`flex w-full min-h-[38px] items-center gap-2.5 rounded-md px-2 py-1.5 text-left text-[14.5px] sm:text-[15px] transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62] cursor-pointer ${
-                            isSelected
-                              ? 'bg-[#B79A62]/16 text-[#F3F0E7] font-medium'
-                              : 'text-[#F3F0E7]/84 hover:bg-[#F3F0E7]/5 hover:text-[#F3F0E7]'
-                          }`}
-                        >
-                          <span
-                            aria-hidden="true"
-                            className={`h-1.5 w-1.5 shrink-0 rounded-full transition-colors ${
-                              isSelected ? 'bg-[#E5C57B]' : 'bg-[#B79A62]/85'
-                            }`}
-                          />
-                          <span className="truncate">{sector}</span>
-                        </button>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
-
-              {/* Carte 2 : Villes & Communes Voisines */}
-              <div className="rounded-xl border border-[#B79A62]/35 bg-[#15181A]/90 p-5 sm:p-6">
-                <div className="flex items-center gap-3 border-b border-[#F3F0E7]/10 pb-3.5">
-                  <span
-                    aria-hidden="true"
-                    className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[#B79A62]/35 bg-[#B79A62]/14 text-[#B79A62]"
-                  >
-                    <MapPin className="h-[17px] w-[17px]" strokeWidth={2} />
-                  </span>
-                  <h3 className="font-display text-[17px] sm:text-[18.5px] font-semibold tracking-[-0.01em] text-[#F3F0E7]">
-                    {config.neighboringLabel}
-                  </h3>
-                </div>
-
-                <ul
-                  aria-label="Villes et communes voisines"
-                  className="mt-3.5 grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1"
-                >
-                  {config.neighboringCommunes.map((commune) => {
-                    const isSelected = selectedSector === commune;
-                    return (
-                      <li key={commune}>
-                        <button
-                          type="button"
-                          onClick={() => handleSelectSector(commune)}
-                          aria-pressed={isSelected}
-                          className={`flex w-full min-h-[38px] items-center gap-2.5 rounded-md px-2 py-1.5 text-left text-[14.5px] sm:text-[15px] transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62] cursor-pointer ${
-                            isSelected
-                              ? 'bg-[#B79A62]/16 text-[#F3F0E7] font-medium'
-                              : 'text-[#F3F0E7]/84 hover:bg-[#F3F0E7]/5 hover:text-[#F3F0E7]'
-                          }`}
-                        >
-                          <span
-                            aria-hidden="true"
-                            className={`h-1.5 w-1.5 shrink-0 rounded-full transition-colors ${
-                              isSelected ? 'bg-[#E5C57B]' : 'bg-[#B79A62]/85'
-                            }`}
-                          />
-                          <span className="truncate">{commune}</span>
-                        </button>
-                      </li>
-                    );
-                  })}
-                </ul>
+                {[
+                  {
+                    label: config.marseilleLabel,
+                    aria: 'Secteurs de Marseille',
+                    items: [config.marseilleRangeLabel, ...config.marseilleSectors],
+                  },
+                  { label: config.neighboringLabel, aria: 'Villes et communes voisines', items: config.neighboringCommunes },
+                ].map((group, groupIndex) => (
+                  <div key={group.label} className={groupIndex > 0 ? 'mt-5 border-t border-[#F3F0E7]/10 pt-5' : ''}>
+                    <h3 className="flex items-center gap-2.5 font-display text-[16.5px] sm:text-[18px] font-semibold tracking-[-0.01em] text-[#F3F0E7]">
+                      <MapPin className="h-[17px] w-[17px] text-[#B79A62]" strokeWidth={2} aria-hidden="true" />
+                      {group.label}
+                    </h3>
+                    <ul aria-label={group.aria} className="mt-3 flex flex-wrap gap-2">
+                      {group.items.map((item) => {
+                        const isSelected = selectedSector === item;
+                        return (
+                          <li key={item}>
+                            <button
+                              type="button"
+                              onClick={() => handleSelectSector(item)}
+                              aria-pressed={isSelected}
+                              className={`inline-flex min-h-[36px] items-center rounded-full border px-3.5 text-[14px] transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62] cursor-pointer ${
+                                isSelected
+                                  ? 'border-[#B79A62] bg-[#B79A62] text-[#1C1F21] font-semibold'
+                                  : 'border-[#F3F0E7]/18 text-[#F3F0E7]/86 hover:border-[#B79A62]/70 hover:text-[#F3F0E7]'
+                              }`}
+                            >
+                              {item}
+                            </button>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+                ))}
               </div>
             </div>
-
             {/* Deux boutons d'action en bas à gauche */}
             <div>
               <div className="flex flex-col sm:flex-row gap-3">
@@ -297,7 +228,7 @@ export function ZoneInterventionSection({
               delay: prefersReducedMotion ? 0 : 0.14,
               ease: REVEAL_EASE,
             }}
-            className="lg:col-span-7 flex lg:sticky lg:top-28"
+            className="order-first lg:order-none lg:col-span-7 flex lg:sticky lg:top-28"
           >
             <MarseilleRadarMap
               activePinId={activePinId}

@@ -45,6 +45,8 @@ test('resolves interactive map focus pin accurately for Marseille districts and 
   assert.equal(resolveZoneMapFocusPin(null), 'marseille');
   assert.equal(resolveZoneMapFocusPin('Lodi'), 'marseille');
   assert.equal(resolveZoneMapFocusPin('1er au 16ème arrondissements'), 'marseille');
+  assert.equal(resolveZoneMapFocusPin('Les 16 arrondissements'), 'marseille');
+  assert.equal(checkServiceSector('Les 16 arrondissements').status, 'covered');
   assert.equal(resolveZoneMapFocusPin('Septèmes-les-Vallons'), 'septemes');
   assert.equal(resolveZoneMapFocusPin('Plan-de-Cuques'), 'plan-de-cuques');
   assert.equal(resolveZoneMapFocusPin('Allauch'), 'allauch');
