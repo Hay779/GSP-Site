@@ -6,11 +6,13 @@ import {
   Blinds,
   Check,
   ChevronLeft,
+  ClipboardList,
   KeyRound,
   Lock,
   MapPin,
   Phone,
   ShieldAlert,
+  ShieldCheck,
   type LucideIcon,
 } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
@@ -62,7 +64,9 @@ function ChoiceOption({
   onChange,
   children,
   className = '',
+  stacked = false,
 }: {
+  readonly stacked?: boolean;
   readonly name: string;
   readonly checked: boolean;
   readonly onChange: () => void;
@@ -73,14 +77,20 @@ function ChoiceOption({
     <label className={`relative block cursor-pointer ${className}`}>
       <input type="radio" name={name} checked={checked} onChange={onChange} className="peer sr-only" />
       <span
-        className={`flex h-full items-center gap-3 rounded-lg border px-4 py-3.5 text-[15px] transition-colors duration-150 peer-focus-visible:ring-2 peer-focus-visible:ring-[#B79A62] ${
+        className={`flex h-full ${stacked ? 'flex-col justify-center gap-1.5 px-2 py-3 text-center text-[14px] leading-snug sm:flex-row sm:justify-start sm:gap-3 sm:px-4 sm:text-left sm:text-[15px]' : 'items-center gap-3 px-4 py-3.5 text-[15px]'} items-center rounded-lg border transition-colors duration-150 peer-focus-visible:ring-2 peer-focus-visible:ring-[#B79A62] ${
           checked
             ? 'border-[#B79A62] bg-[#B79A62]/12 text-[#1C1F21] font-medium'
             : 'border-[#1C1F21]/15 bg-[#FFFFFF] text-[#1C1F21]/85 hover:border-[#B79A62]/70'
         }`}
       >
         {children}
-        {checked && <Check className="ml-auto h-4 w-4 shrink-0 text-[#7D612D]" strokeWidth={2.4} aria-hidden="true" />}
+        {checked && (
+          <Check
+            className={`h-4 w-4 shrink-0 text-[#7D612D] ${stacked ? 'absolute right-2 top-2 sm:static sm:ml-auto' : 'ml-auto'}`}
+            strokeWidth={2.4}
+            aria-hidden="true"
+          />
+        )}
       </span>
     </label>
   );
@@ -97,11 +107,23 @@ function FieldError({ id, message }: { readonly id: string; readonly message?: s
   );
 }
 
-function Fieldset({ legend, error, errorId, children }: { readonly legend: string; readonly error?: string; readonly errorId: string; readonly children: ReactNode }) {
+function Fieldset({
+  legend,
+  error,
+  errorId,
+  children,
+  hideLegend = false,
+}: {
+  readonly legend: string;
+  readonly error?: string;
+  readonly errorId: string;
+  readonly children: ReactNode;
+  readonly hideLegend?: boolean;
+}) {
   return (
     <fieldset aria-describedby={error ? errorId : undefined}>
-      <legend className="font-display text-[17px] font-semibold text-[#1C1F21]">{legend}</legend>
-      <div className="mt-3">{children}</div>
+      <legend className={hideLegend ? 'sr-only' : 'font-display text-[17px] font-semibold text-[#1C1F21]'}>{legend}</legend>
+      <div className={hideLegend ? '' : 'mt-3'}>{children}</div>
       <FieldError id={errorId} message={error} />
     </fieldset>
   );
@@ -197,6 +219,8 @@ export function QuotePage({ brand, routerMode, prefill }: QuotePageProps) {
 
   return (
     <>
+      {/* Ordinateur : en-tête de page. Mobile & tablette : en-tête compact dans le questionnaire. */}
+      <div className="hidden lg:block">
       <PageHero
         compact
         kicker="Devis en ligne"
@@ -204,14 +228,37 @@ export function QuotePage({ brand, routerMode, prefill }: QuotePageProps) {
         intro="Quelques questions, deux minutes : nous revenons vers vous avec un devis détaillé, validé avec vous avant toute intervention."
         breadcrumb={[{ label: 'Accueil', href: hrefForHome(routerMode) }, { label: 'Demander un devis' }]}
       />
+      </div>
 
-      <section id="page-devis" aria-label="Questionnaire de devis" className="w-full border-t border-[#B79A62]/45 bg-[#F7F5F0] text-[#1C1F21]">
-        <div className="mx-auto grid max-w-[1280px] grid-cols-1 gap-8 px-5 py-12 sm:px-8 sm:py-16 lg:grid-cols-12 lg:gap-12 lg:px-10 lg:py-20">
+      <section id="page-devis" aria-label="Questionnaire de devis" className="w-full lg:border-t lg:border-[#B79A62]/45 bg-[#F7F5F0] text-[#1C1F21]">
+        <div className="mx-auto grid max-w-[1280px] grid-cols-1 gap-4 px-4 pt-4 pb-10 sm:gap-5 sm:px-8 sm:pt-6 sm:pb-14 lg:grid-cols-12 lg:gap-12 lg:px-10 lg:py-20 lg:gap-12 lg:px-10 lg:py-20">
           {/* Étapes */}
           <aside className="lg:col-span-4">
-            {/* Mobile : barre de progression */}
+            {/* Mobile & tablette : en-tête compact + progression */}
             <div className="lg:hidden">
-              <p className="text-[13px] font-medium uppercase tracking-[0.16em] text-[#7D612D]">
+              <div className="flex items-center gap-3">
+                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#1C1F21] text-[#B79A62]">
+                  <ClipboardList className="h-5 w-5" strokeWidth={1.8} aria-hidden="true" />
+                </span>
+                <div className="min-w-0">
+                  <h1 className="font-display text-[20px] font-semibold leading-tight text-[#1C1F21]">Votre devis en ligne</h1>
+                  <p className="text-[13px] text-[#1C1F21]/65">5 questions, puis nous vous recontactons.</p>
+                </div>
+              </div>
+              <ul className="mt-2.5 flex flex-wrap gap-x-4 gap-y-1 text-[12.5px] text-[#1C1F21]/75">
+                <li className="inline-flex items-center gap-1.5">
+                  <ShieldCheck className="h-3.5 w-3.5 text-[#7D612D]" aria-hidden="true" />
+                  Devis validé avant intervention
+                </li>
+                <li className="inline-flex items-center gap-1.5">
+                  <Phone className="h-3.5 w-3.5 text-[#7D612D]" aria-hidden="true" />
+                  Urgence ?{' '}
+                  <a href={brand.phoneHref} className="font-semibold tabular-nums text-[#7D612D] underline">
+                    {brand.phoneDisplay}
+                  </a>
+                </li>
+              </ul>
+              <p className="mt-3 text-[12px] font-semibold uppercase tracking-[0.16em] text-[#7D612D]">
                 {reference ? 'Demande envoyée' : `Étape ${stepIndex + 1} sur ${QUOTE_STEPS.length}`}
               </p>
               <div className="mt-2 flex gap-1.5" aria-hidden="true">
@@ -268,7 +315,7 @@ export function QuotePage({ brand, routerMode, prefill }: QuotePageProps) {
 
           {/* Carte du questionnaire */}
           <div ref={cardRef} className="lg:col-span-8">
-            <div className="rounded-xl border border-[#1C1F21]/12 bg-[#FFFFFF] p-6 shadow-[0_18px_50px_rgba(28,31,33,0.06)] sm:p-9">
+            <div className="rounded-xl border border-[#1C1F21]/12 bg-[#FFFFFF] p-5 shadow-[0_18px_50px_rgba(28,31,33,0.06)] sm:p-9">
               <AnimatePresence mode="wait" initial={false}>
                 {reference ? (
                   <motion.div key="done" {...motionProps}>
@@ -302,22 +349,23 @@ export function QuotePage({ brand, routerMode, prefill }: QuotePageProps) {
                   </motion.div>
                 ) : (
                   <motion.div key={step} {...motionProps}>
-                    <p className="text-[13px] font-medium uppercase tracking-[0.16em] text-[#7D612D]">
+                    <p className="hidden lg:block text-[13px] font-medium uppercase tracking-[0.16em] text-[#7D612D]">
                       {QUOTE_STEPS[stepIndex].label}
                     </p>
-                    <h2 ref={headingRef} tabIndex={-1} className="mt-2 font-display text-[26px] font-semibold leading-tight text-[#1C1F21] focus:outline-none sm:text-[30px]">
+                    <h2 ref={headingRef} tabIndex={-1} className="lg:mt-1.5 font-display text-[22px] font-semibold leading-tight text-[#1C1F21] focus:outline-none sm:text-[30px]">
                       {stepTitle[step]}
                     </h2>
 
-                    <div className="mt-7 flex flex-col gap-7">
+                    <div className="mt-5 sm:mt-7 flex flex-col gap-6 sm:gap-7">
                       {step === 'besoin' && (
-                        <Fieldset legend="Type de besoin" error={errors.domain} errorId="err-domain">
-                          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                        <Fieldset legend="Type de besoin" hideLegend error={errors.domain} errorId="err-domain">
+                          <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
                             {QUOTE_DOMAINS.map((domain) => {
                               const Icon = DOMAIN_ICONS[domain];
                               return (
                                 <ChoiceOption
                                   key={domain}
+                                  stacked
                                   name="domain"
                                   checked={draft.domain === domain}
                                   onChange={() => {
@@ -526,7 +574,7 @@ export function QuotePage({ brand, routerMode, prefill }: QuotePageProps) {
                 )}
               </AnimatePresence>
             </div>
-            <p className="mt-4 text-center text-[13.5px] text-[#1C1F21]/55 lg:hidden">
+            <p className="hidden">
               Une urgence ? <a href={brand.phoneHref} className="font-semibold tabular-nums text-[#7D612D]">{brand.phoneDisplay}</a>
             </p>
           </div>
