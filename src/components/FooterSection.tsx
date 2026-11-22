@@ -48,28 +48,28 @@ export function FooterSection({
     >
       {/* Appel à l'action sur fond clair : photo clés & badge en haut à droite, découpée en vague (filet doré) */}
       {!hideCta && (
-        <div className="relative overflow-hidden pt-8 pb-12 sm:pt-12 sm:pb-16">
-          <div aria-hidden="true" className="absolute right-0 top-0 h-[190px] w-[94%] sm:h-[250px] sm:w-[72%] lg:h-[300px] lg:w-[48%]">
-            <img src={CTA_IMAGE} alt="" loading="lazy" className="h-full w-full object-cover object-[45%_45%]" />
-            <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 h-full w-full">
-              <path d="M0 0 C34 4 46 30 58 58 C68 82 80 96 100 100 V101 H-1 V0 Z" fill="#F3F0E7" />
-              <path
-                d="M0 0 C34 4 46 30 58 58 C68 82 80 96 100 100"
-                fill="none"
-                stroke="#B79A62"
-                strokeWidth="2.5"
-                vectorEffect="non-scaling-stroke"
-              />
-            </svg>
-          </div>
-          <div className="relative mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-10">
-          <div className="relative rounded-3xl p-5 sm:p-8 lg:p-10 ring-1 ring-white/80 shadow-[0_18px_50px_-30px_rgba(28,31,33,0.35)]">
-            <div className="relative max-w-2xl pt-[130px] sm:pt-[180px] lg:pt-0 lg:max-w-[52%]">
-              <p className="section-kicker flex items-center gap-3 text-[#7D612D]">
+        <div className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-10 pt-8 pb-12 sm:pt-12 sm:pb-16">
+          <div className="relative overflow-hidden rounded-3xl bg-[#FAF7F1] p-5 sm:p-8 lg:p-10 shadow-[0_18px_50px_-28px_rgba(28,31,33,0.35)] ring-1 ring-[#1C1F21]/5">
+            {/* Photo dans le coin haut droit du panneau, découpée en vague avec filet doré */}
+            <div aria-hidden="true" className="absolute right-0 top-0 h-[150px] w-[92%] sm:h-[190px] sm:w-[62%] lg:h-[168px] lg:w-[46%]">
+              <img src={CTA_IMAGE} alt="" loading="lazy" className="absolute right-0 top-0 h-full w-[78%] object-cover object-[30%_40%] [mask-image:linear-gradient(to_right,transparent,black_18%)]" />
+              <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 h-full w-full">
+                <path d="M-1 -1 L2 -1 C30 0 42 22 55 52 C66 80 80 97 101 100 V101 H-1 Z" fill="#FAF7F1" />
+                <path
+                  d="M2 -1 C30 0 42 22 55 52 C66 80 80 97 101 100"
+                  fill="none"
+                  stroke="#B79A62"
+                  strokeWidth="2.5"
+                  vectorEffect="non-scaling-stroke"
+                />
+              </svg>
+            </div>
+            <div className="relative max-w-2xl pt-[118px] sm:pt-[150px] lg:pt-0 lg:max-w-[54%]">
+              <p className="section-kicker flex items-center gap-3 font-semibold text-[#9C7C40]">
                 <span aria-hidden="true" className="h-0.5 w-8 bg-[#B79A62]" />
                 {config.ctaKicker}
               </p>
-              <p className="mt-2 font-display text-[32px] sm:text-[44px] font-semibold leading-[1.05] tracking-[-0.02em] text-[#1C1F21]">
+              <p className="mt-2 font-display text-[34px] sm:text-[46px] font-bold leading-[1.05] tracking-[-0.02em] text-[#1C1F21]">
                 {config.ctaTitle}
               </p>
               <p className="mt-3 text-[15.5px] leading-[1.6] text-[#1C1F21]/70">{config.ctaSubtitle}</p>
@@ -87,7 +87,7 @@ export function FooterSection({
                       <item.icon className="h-[22px] w-[22px]" strokeWidth={1.6} />
                     </span>
                     <div className="min-w-0">
-                      <p className="font-display text-[19px] font-semibold leading-tight text-[#1C1F21]">{item.title}</p>
+                      <p className="font-display text-[20px] font-bold leading-tight text-[#1C1F21]">{item.title}</p>
                       <p className="mt-1 text-[14.5px] leading-[1.45] text-[#1C1F21]/65">{item.text}</p>
                     </div>
                   </div>
@@ -124,7 +124,6 @@ export function FooterSection({
                 </span>
               ))}
             </p>
-          </div>
           </div>
         </div>
       )}
