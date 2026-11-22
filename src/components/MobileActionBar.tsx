@@ -27,7 +27,8 @@ const ITEM =
 
 /**
  * Barre d'actions mobile (Devis · SOS · Contact), façon application.
- * Cachée en haut de page et pendant la lecture ; elle réapparaît quand on remonte.
+ * Cachée en haut de page et pendant qu'on fait défiler vers le bas ;
+ * elle réapparaît quand on remonte ou dès que le défilement s'arrête.
  */
 export function MobileActionBar({ brand, whatsapp, quoteHref, contactHref }: MobileActionBarProps) {
   const prefersReducedMotion = Boolean(useReducedMotion());
@@ -46,15 +47,30 @@ export function MobileActionBar({ brand, whatsapp, quoteHref, contactHref }: Mob
         resolveActionBarVisible({
           currentY: y,
           previousY: lastY.current,
-          revealAfterY: window.innerHeight * 0.8,
+          revealAfterY: window.innerHeight * 0.5,
           nearFooter,
           wasVisible: was,
         })
       );
       lastY.current = y;
     };
+    // Réapparaît dès que le défilement s'arrête (sauf en haut de page / près du pied de page).
+    let idleTimer: number | undefined;
+    const onScrollIdle = () => {
+      window.clearTimeout(idleTimer);
+      idleTimer = window.setTimeout(() => {
+        const footer = document.getElementById('11_Pied_De_Page');
+        const nearFooter = footer ? footer.getBoundingClientRect().top < window.innerHeight - 40 : false;
+        setVisible(window.scrollY >= window.innerHeight * 0.5 && !nearFooter);
+      }, 450);
+    };
     window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    window.addEventListener('scroll', onScrollIdle, { passive: true });
+    return () => {
+      window.clearTimeout(idleTimer);
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('scroll', onScrollIdle);
+    };
   }, []);
 
   useEffect(() => {
