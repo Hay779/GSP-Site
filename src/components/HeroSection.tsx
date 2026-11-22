@@ -303,24 +303,20 @@ export function HeroSection({
               delay: prefersReducedMotion ? 0 : 0.4,
               ease: REVEAL_EASE,
             }}
-            className="mt-8 hidden sm:flex sm:flex-row sm:flex-wrap sm:items-center gap-4 w-auto"
+            className="mt-8 hidden sm:flex sm:flex-row sm:flex-wrap sm:items-center gap-3 w-auto"
           >
             <button
               ref={quoteTriggerRef}
               type="button"
               onClick={onOpenQuoteModal}
-              className="group relative overflow-hidden inline-flex min-h-[50px] w-full sm:w-auto items-center justify-center rounded-lg bg-[#B79A62] hover:bg-[#C6AA73] active:bg-[#A68952] px-5 sm:px-7 py-3 text-[15px] sm:text-[16px] font-semibold text-[#1C1F21] whitespace-nowrap shrink-0 transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F3F0E7] cursor-pointer"
+              className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-[#B79A62] hover:bg-[#C6AA73] active:bg-[#A68952] px-5 text-[15px] font-semibold text-[#1C1F21] whitespace-nowrap shrink-0 transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F3F0E7] cursor-pointer"
             >
-              <span
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-500 ease-out group-hover:translate-x-full"
-              />
-              <span className="relative">{config.primaryCtaLabel}</span>
+              <span>{config.primaryCtaLabel}</span>
             </button>
 
             <a
               href={config.secondaryCtaHref}
-              className="inline-flex min-h-[50px] w-full sm:w-auto items-center justify-center gap-2.5 rounded-lg border border-[#F3F0E7]/65 bg-[#1C1F21]/35 hover:bg-[#F3F0E7]/10 hover:border-[#F3F0E7] px-5 sm:px-7 py-3 text-[15px] sm:text-[16px] font-medium text-[#F3F0E7] whitespace-nowrap shrink-0 transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62]"
+              className="inline-flex h-11 items-center justify-center gap-2 rounded-full border border-[#F3F0E7]/40 hover:border-[#F3F0E7] hover:bg-[#F3F0E7]/10 px-5 text-[15px] font-medium text-[#F3F0E7] tabular-nums whitespace-nowrap shrink-0 transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62] cursor-pointer"
             >
               {config.secondaryCtaHref.startsWith('tel:') && (
                 <Phone className="h-4 w-4 shrink-0 text-[#B79A62]" strokeWidth={2} aria-hidden="true" />
@@ -339,14 +335,12 @@ export function HeroSection({
               delay: prefersReducedMotion ? 0 : 0.5,
               ease: REVEAL_EASE,
             }}
-            className="mt-6 sm:mt-12 hidden [@media(min-height:780px)]:grid grid-cols-3 sm:flex sm:flex-wrap sm:items-center sm:gap-y-3 border-t border-[#F3F0E7]/15 pt-5 sm:pt-6 w-full"
+            className="mt-6 sm:mt-8 hidden sm:flex flex-wrap items-center gap-2"
           >
-            {config.commitments.map((item, index) => (
+            {config.commitments.map((item) => (
               <li
                 key={item.label}
-                className={`flex flex-col items-center gap-2 px-1 text-center text-[12.5px] leading-[1.3] text-[#F3F0E7]/85 sm:flex-row sm:gap-2.5 sm:px-0 sm:text-left sm:text-[15px] sm:whitespace-nowrap ${
-                  index > 0 ? 'border-l border-[#F3F0E7]/15 sm:border-[#F3F0E7]/20 sm:pl-5 sm:ml-5' : ''
-                }`}
+                className="inline-flex items-center gap-2 rounded-full bg-[#F3F0E7]/[0.08] px-3.5 py-1.5 text-[14px] text-[#F3F0E7]/90 whitespace-nowrap ring-1 ring-[#F3F0E7]/12"
               >
                 <CommitmentIcon icon={item.icon} />
                 <span>{item.label}</span>
