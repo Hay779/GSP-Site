@@ -129,7 +129,7 @@ export function MobileActionBar({ brand, whatsapp, quoteHref, contactHref, route
   );
 
   const PILL =
-    'rounded-full border border-[#F3F0E7]/20 bg-[#16191B]/35 px-3.5 py-1.5 shadow-[0_10px_30px_rgba(0,0,0,0.25)] backdrop-blur-xl backdrop-saturate-150';
+    'rounded-full border border-[#F3F0E7]/20 bg-[#16191B]/80 px-3.5 py-1.5 shadow-[0_10px_30px_rgba(0,0,0,0.25)] backdrop-blur-xl backdrop-saturate-150';
 
   return (
     <div className="sm:hidden">

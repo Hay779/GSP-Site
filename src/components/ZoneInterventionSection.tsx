@@ -104,9 +104,9 @@ export function ZoneInterventionSection({
           whileInView={{ opacity: 1, y: 0 }}
           viewport={REVEAL_VIEWPORT}
           transition={{ duration: prefersReducedMotion ? 0 : 0.55, delay: prefersReducedMotion ? 0 : 0.08, ease: REVEAL_EASE }}
-          className={`${embedded ? '' : 'mt-8 sm:mt-10 '}grid gap-5 lg:grid-cols-12 lg:gap-8 lg:items-start`}
+          className={`${embedded ? '' : 'mt-8 sm:mt-10 '}grid grid-cols-1 gap-5 lg:grid-cols-12 lg:gap-8 lg:items-start`}
         >
-          <div className="order-2 lg:col-span-7 overflow-hidden rounded-3xl shadow-[0_14px_36px_-20px_rgba(28,31,33,0.45)]">
+          <div className="order-2 min-w-0 lg:col-span-7 overflow-hidden rounded-3xl shadow-[0_14px_36px_-20px_rgba(28,31,33,0.45)]">
             <MarseilleRadarMap
               activePinId={activePinId}
               selectedSector={selectedSector}
@@ -121,7 +121,7 @@ export function ZoneInterventionSection({
             />
           </div>
 
-          <div className="order-1 lg:col-span-5 rounded-3xl bg-[#F7F5F0] p-5 sm:p-7 lg:p-8">
+          <div className="order-1 min-w-0 lg:col-span-5 rounded-3xl bg-[#F7F5F0] p-5 sm:p-7 lg:p-8">
             {/* Vérification du secteur : champ et bouton sur une ligne */}
             <label htmlFor="sector-check-input" className="font-display text-[17px] sm:text-[18px] font-semibold text-[#1C1F21]">
               Votre adresse est-elle couverte ?
