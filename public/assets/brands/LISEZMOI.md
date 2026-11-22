@@ -4,11 +4,11 @@ Déposez ici les logos officiels des marques, avec exactement ces noms de fichie
 
 | Marque   | Fichier         |
 |----------|-----------------|
-| Vachette | `vachette.svg` (à fournir) |
+| Vachette | `vachette.png` ✅ |
 | Bricard  | `bricard.png` ✅ |
 | Fichet   | `fichet.png` ✅ |
 | Picard   | `picard.png` ✅ |
-| DOM      | `dom.svg` (à fournir) |
+| DOM      | `dom.png` ✅ |
 | ISEO     | `iseo.png` ✅ |
 
 - Format conseillé : **SVG** (net à toutes les tailles). Un PNG à fond transparent

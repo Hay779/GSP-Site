@@ -324,11 +324,11 @@ export const BRANDS_CONFIG: BrandsConfig = {
   subtitle:
     'Nous posons, dépannons et entretenons les équipements des principaux fabricants de serrurerie et de fermeture.',
   partners: [
-    { id: 'vachette', name: 'Vachette', specialty: 'Cylindres & serrures', logoSrc: '/assets/brands/vachette.svg' },
+    { id: 'vachette', name: 'Vachette', specialty: 'Cylindres & serrures', logoSrc: '/assets/brands/vachette.png', logoHeight: 40 },
     { id: 'bricard', name: 'Bricard', specialty: 'Haute sécurité A2P', logoSrc: '/assets/brands/bricard.png', logoHeight: 62 },
     { id: 'fichet', name: 'Fichet', specialty: 'Portes blindées', logoSrc: '/assets/brands/fichet.png', logoHeight: 42 },
     { id: 'picard', name: 'Picard', specialty: 'Serrures multipoints', logoSrc: '/assets/brands/picard.png', logoHeight: 52 },
-    { id: 'dom', name: 'DOM', specialty: 'Organigrammes & clés', logoSrc: '/assets/brands/dom.svg' },
+    { id: 'dom', name: 'DOM', specialty: 'Organigrammes & clés', logoSrc: '/assets/brands/dom.png', logoHeight: 50 },
     { id: 'iseo', name: 'ISEO', specialty: 'Contrôle d’accès', logoSrc: '/assets/brands/iseo.png', logoHeight: 40 },
   ],
   otherBrandsLabel: 'Votre équipement est d’une autre marque ?',
