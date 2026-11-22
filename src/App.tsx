@@ -263,13 +263,13 @@ export default function App() {
           onSelectDomain={(domain) => navigate(domainHref(domain.id))}
         />
 
-        <BrandsSection config={BRANDS_CONFIG} contactHref={pageHref('devis')} />
-
         <AfterIncidentSection
           config={AFTER_INCIDENT_CONFIG}
           onDescribeNeed={() => handleOpenQuoteModal('Après sinistre')}
           onSendPhotos={() => setPhotoModalOpen(true)}
         />
+
+        <BrandsSection config={BRANDS_CONFIG} contactHref={pageHref('devis')} />
 
         <ReviewsSection config={REVIEWS_CONFIG} allReviewsHref={pageHref('avis-clients')} />
 

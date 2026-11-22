@@ -43,7 +43,7 @@ export function BrandsSection({ config, contactHref }: BrandsSectionProps) {
       id="06_Marques"
       data-section="06_Marques"
       aria-labelledby="06_Marques-title"
-      className="w-full bg-[#F7F5F0] text-[#1C1F21] border-t border-b border-[#B79A62]/45 scroll-mt-[74px] lg:scroll-mt-[88px]"
+      className="w-full bg-[#1C1F21] text-[#F3F0E7] scroll-mt-[74px] lg:scroll-mt-[88px]"
     >
       <div className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-10 py-16 sm:py-20 lg:py-24">
         <motion.div
@@ -53,11 +53,11 @@ export function BrandsSection({ config, contactHref }: BrandsSectionProps) {
           transition={{ duration: prefersReducedMotion ? 0 : 0.52, ease: REVEAL_EASE }}
           className="max-w-2xl"
         >
-          <p className="section-kicker text-[#7D612D]">{config.kicker}</p>
-          <h2 id="06_Marques-title" className="mt-3 section-title text-[#1C1F21]">
+          <p className="section-kicker text-[#B79A62]">{config.kicker}</p>
+          <h2 id="06_Marques-title" className="mt-3 section-title text-[#F3F0E7]">
             {config.title}
           </h2>
-          <p className="mt-4 section-subtitle text-[#1C1F21]/70">{config.subtitle}</p>
+          <p className="mt-4 section-subtitle text-[#F3F0E7]/75">{config.subtitle}</p>
         </motion.div>
 
         <ul
@@ -71,18 +71,18 @@ export function BrandsSection({ config, contactHref }: BrandsSectionProps) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={REVEAL_VIEWPORT}
               transition={{ duration: prefersReducedMotion ? 0 : 0.45, delay: prefersReducedMotion ? 0 : index * 0.06, ease: REVEAL_EASE }}
-              className="group flex min-h-[120px] items-center justify-center rounded-xl bg-[#FFFFFF] px-4 py-6 text-center transition-shadow duration-200 hover:shadow-[0_10px_30px_rgba(28,31,33,0.08)]"
+              className="group flex min-h-[120px] items-center justify-center rounded-xl bg-[#FFFFFF] px-4 py-6 text-center transition-shadow duration-200 hover:shadow-[0_10px_30px_rgba(0,0,0,0.35)]"
             >
               <BrandLogo partner={partner} />
             </motion.li>
           ))}
         </ul>
 
-        <p className="mt-6 flex flex-wrap items-center gap-x-2 gap-y-1 text-[15px] text-[#1C1F21]/70">
+        <p className="mt-6 flex flex-wrap items-center gap-x-2 gap-y-1 text-[15px] text-[#F3F0E7]/70">
           {config.otherBrandsLabel}
           <a
             href={contactHref}
-            className="group inline-flex items-center gap-1.5 font-semibold text-[#7D612D] hover:text-[#1C1F21] transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7D612D] rounded-xs"
+            className="group inline-flex items-center gap-1.5 font-semibold text-[#B79A62] hover:text-[#F3F0E7] transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62] rounded-xs"
           >
             {config.otherBrandsCta}
             <ArrowRight className="h-4 w-4 transition-transform duration-150 group-hover:translate-x-1" aria-hidden="true" />
