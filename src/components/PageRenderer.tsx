@@ -271,7 +271,7 @@ const CHANNEL_ICONS = { phone: Phone, whatsapp: MessageCircle, quote: FileText }
 function ContactChannels({ ctx }: { readonly ctx: PageContext }) {
   const whatsappUrl = buildWhatsAppUrl(WHATSAPP_CONFIG.phoneDisplay, WHATSAPP_CONFIG.prefilledMessage);
   const base =
-    'inline-flex w-full min-h-[48px] items-center justify-center gap-2.5 rounded-lg px-6 py-3 text-[15px] whitespace-nowrap transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7D612D] cursor-pointer';
+    'inline-flex w-full h-11 items-center justify-center gap-2.5 rounded-full px-5 text-[15px] whitespace-nowrap transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7D612D] cursor-pointer';
   const primary = `${base} bg-[#B79A62] hover:bg-[#C6AA73] active:bg-[#A68952] text-[#1C1F21] font-semibold`;
   const secondary = `${base} border border-[#1C1F21]/25 hover:border-[#1C1F21] hover:bg-[#1C1F21]/5 text-[#1C1F21] font-medium`;
   return (

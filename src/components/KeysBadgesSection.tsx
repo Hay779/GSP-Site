@@ -190,7 +190,7 @@ export function KeysBadgesSection({ config, details, agencies, pageHref, agencie
             <motion.div {...reveal(0.25)} className="mt-5 flex flex-col items-center gap-4 sm:flex-row sm:gap-6">
               <a
                 href={pageHref}
-                className="group inline-flex min-h-[52px] w-full items-center justify-center gap-3 rounded-xl bg-[#1C1F21] px-8 text-[16px] font-medium text-[#F3F0E7] hover:bg-[#292D2F] transition-colors duration-150 sm:w-auto focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7D612D]"
+                className="group inline-flex h-11 w-full items-center justify-center gap-3 rounded-full bg-[#1C1F21] px-5 text-[15px] font-medium text-[#F3F0E7] hover:bg-[#292D2F] transition-colors duration-150 sm:w-auto focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7D612D]"
               >
                 Découvrir le service
                 <ArrowRight className="h-5 w-5 text-[#B79A62] transition-transform duration-150 group-hover:translate-x-1" strokeWidth={2} aria-hidden="true" />

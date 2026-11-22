@@ -176,7 +176,7 @@ export function PartnerPage({ brand, routerMode }: { readonly brand: BrandConfig
                     Référence <strong className="font-semibold tabular-nums text-[#1C1F21]">{reference}</strong>. Nous revenons vers{' '}
                     {draft.fullName.trim()} ({draft.company.trim()}) pour organiser notre collaboration.
                   </p>
-                  <a href={hrefForPage('professionnels', routerMode)} className="mt-7 inline-flex min-h-[48px] items-center justify-center rounded-lg bg-[#1C1F21] px-6 py-3 text-[15px] font-semibold text-[#F3F0E7] hover:bg-[#292D2F]">
+                  <a href={hrefForPage('professionnels', routerMode)} className="mt-7 inline-flex h-11 items-center justify-center rounded-full bg-[#1C1F21] px-5 text-[15px] font-semibold text-[#F3F0E7] hover:bg-[#292D2F]">
                     Retour à l’espace Professionnels
                   </a>
                 </div>

@@ -119,7 +119,7 @@ export function AfterIncidentSection({ config, onDescribeNeed, onSendPhotos }: A
             <button
               type="button"
               onClick={onDescribeNeed}
-              className="group inline-flex min-h-[52px] w-full sm:w-auto items-center justify-center gap-3 rounded-xl bg-[#1C1F21] px-8 text-[16px] font-semibold text-[#F3F0E7] hover:bg-[#292D2F] transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62] cursor-pointer"
+              className="group inline-flex h-11 w-full sm:w-auto items-center justify-center gap-3 rounded-full bg-[#1C1F21] px-5 text-[15px] font-semibold text-[#F3F0E7] hover:bg-[#292D2F] transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62] cursor-pointer"
             >
               {config.primaryCtaLabel}
               <ArrowRight className="h-5 w-5 text-[#B79A62] transition-transform duration-150 group-hover:translate-x-0.5" strokeWidth={1.8} aria-hidden="true" />
