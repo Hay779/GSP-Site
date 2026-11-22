@@ -19,6 +19,7 @@ import { createQuoteReference, QUOTE_DOMAINS, type QuoteDomain } from '../utils/
 import {
   buildQuoteSummary,
   CALLBACK_OPTIONS,
+  CONTACT_PREFERENCE_OPTIONS,
   createInitialDraft,
   CUSTOMER_OPTIONS,
   firstIncompleteStep,
@@ -451,7 +452,16 @@ export function QuotePage({ brand, routerMode, prefill }: QuotePageProps) {
                               <FieldError id="err-email" message={errors.email} />
                             </div>
                           </div>
-                          <Fieldset legend="Quand préférez-vous être rappelé ?" errorId="err-callback">
+                          <Fieldset legend="Comment souhaitez-vous poursuivre ?" errorId="err-pref">
+                            <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+                              {CONTACT_PREFERENCE_OPTIONS.map((o) => (
+                                <ChoiceOption key={o.id} name="pref" checked={draft.contactPreference === o.id} onChange={() => update({ contactPreference: o.id })}>
+                                  {o.label}
+                                </ChoiceOption>
+                              ))}
+                            </div>
+                          </Fieldset>
+                          <Fieldset legend="Vos disponibilités" errorId="err-callback">
                             <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-3">
                               {CALLBACK_OPTIONS.map((o) => (
                                 <ChoiceOption key={o.id} name="callback" checked={draft.callbackSlot === o.id} onChange={() => update({ callbackSlot: o.id })}>

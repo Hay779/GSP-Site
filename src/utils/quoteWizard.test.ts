@@ -24,6 +24,7 @@ const COMPLETE: QuoteWizardDraft = {
   phone: '06 12 34 56 78',
   email: '',
   callbackSlot: 'matin',
+  contactPreference: 'boutique',
   consent: true,
 };
 

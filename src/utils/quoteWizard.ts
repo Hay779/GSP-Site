@@ -17,6 +17,7 @@ export const QUOTE_STEPS: readonly { readonly id: QuoteStepId; readonly label: s
 export type Urgency = 'urgent' | 'semaine' | 'projet';
 export type CustomerType = 'particulier' | 'professionnel' | 'syndic';
 export type CallbackSlot = 'matin' | 'apres-midi' | 'indifferent';
+export type ContactPreference = 'rappel' | 'boutique';
 
 export const URGENCY_OPTIONS: readonly { readonly id: Urgency; readonly label: string; readonly hint: string }[] = [
   { id: 'urgent', label: 'Urgent', hint: 'Aujourd’hui si possible' },
@@ -28,6 +29,11 @@ export const CUSTOMER_OPTIONS: readonly { readonly id: CustomerType; readonly la
   { id: 'particulier', label: 'Particulier' },
   { id: 'professionnel', label: 'Commerce / professionnel' },
   { id: 'syndic', label: 'Syndic / copropriété' },
+];
+
+export const CONTACT_PREFERENCE_OPTIONS: readonly { readonly id: ContactPreference; readonly label: string }[] = [
+  { id: 'rappel', label: 'Être rappelé' },
+  { id: 'boutique', label: 'Passer en boutique / prendre RDV' },
 ];
 
 export const CALLBACK_OPTIONS: readonly { readonly id: CallbackSlot; readonly label: string }[] = [
@@ -63,6 +69,7 @@ export interface QuoteWizardDraft {
   readonly phone: string;
   readonly email: string;
   readonly callbackSlot: CallbackSlot;
+  readonly contactPreference: ContactPreference;
   readonly consent: boolean;
 }
 
@@ -80,6 +87,7 @@ export function createInitialDraft(prefill: { readonly domain?: QuoteDomain; rea
     phone: '',
     email: '',
     callbackSlot: 'indifferent',
+    contactPreference: 'rappel',
     consent: false,
   };
 }
@@ -163,7 +171,8 @@ export function buildQuoteSummary(draft: QuoteWizardDraft): readonly { readonly 
     { label: 'Nom', value: draft.fullName.trim() || '—' },
     { label: 'Téléphone', value: draft.phone.trim() || '—' },
     { label: 'E-mail', value: draft.email.trim() || 'Non renseigné' },
-    { label: 'Rappel', value: labelOf(CALLBACK_OPTIONS, draft.callbackSlot) },
+    { label: 'Préférence', value: labelOf(CONTACT_PREFERENCE_OPTIONS, draft.contactPreference) },
+    { label: 'Disponibilité', value: labelOf(CALLBACK_OPTIONS, draft.callbackSlot) },
   ];
 }
 

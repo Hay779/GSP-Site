@@ -12,6 +12,7 @@ import { HeaderSection, type HeaderNavLink } from './components/HeaderSection';
 import { HeroSection } from './components/HeroSection';
 import { IncidentPhotoModal } from './components/IncidentPhotoModal';
 import { KeysBadgesSection } from './components/KeysBadgesSection';
+import { MobileActionBar } from './components/MobileActionBar';
 import { PartnerPage } from './components/PartnerPage';
 import { QuotePage } from './components/QuotePage';
 import { ReviewsSection } from './components/ReviewsSection';
@@ -311,6 +312,16 @@ export default function App() {
 
       {/* Bouton flottant WhatsApp urgence */}
       <WhatsAppFloatingButton config={WHATSAPP_CONFIG} />
+
+      {/* Barre d'actions mobile (hors page devis, déjà centrée sur le questionnaire) */}
+      {!isQuotePage && (
+        <MobileActionBar
+          brand={BRAND_CONFIG}
+          whatsapp={WHATSAPP_CONFIG}
+          quoteHref={pageHref('devis')}
+          contactHref={pageHref('agences-contact')}
+        />
+      )}
     </div>
     </MotionConfig>
   );
