@@ -43,7 +43,7 @@ export const HERO_CONFIG: HeroConfig = {
   kicker: 'Serrurerie · Vitrerie · Menuiserie',
   headlineLines: ['Votre serrurier', 'à Marseille.'],
   subtitle:
-    'Dépannage, changement de serrure, doubles de clés et badges, vitrerie et fermetures — en boutique (République & Lodi) ou chez vous.',
+    'Dépannage, changement de serrure, doubles de clés et badges, vitrerie et fermetures — en boutique ou chez vous.',
   primaryCtaLabel: 'Demander un devis',
   secondaryCtaLabel: 'Appeler le 04 91 90 51 65',
   secondaryCtaHref: 'tel:+33491905165',
