@@ -27,7 +27,10 @@ export function AfterIncidentSection({
     >
       {/* Partie haute : accroche + boutons sur scène photographique avec voile directionnel */}
       <div className="relative w-full overflow-hidden">
-        <div className="absolute inset-0 z-0 bg-[#1C1F21]" aria-hidden="true">
+        <div
+          className="relative h-[38svh] min-h-[220px] max-h-[360px] w-full overflow-hidden lg:absolute lg:inset-0 lg:h-auto lg:min-h-0 lg:max-h-none z-0 bg-[#1C1F21]"
+          aria-hidden="true"
+        >
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_75%_40%,rgba(183,154,98,0.14),rgba(41,45,47,0.4)_45%,rgba(28,31,33,1)_85%)]" />
           {!imageFailed && (
             <img
@@ -35,15 +38,15 @@ export function AfterIncidentSection({
               alt={config.imageAlt}
               referrerPolicy="no-referrer"
               onError={() => setImageFailed(true)}
-              className="h-full w-full object-cover object-[70%_20%] lg:object-[72%_18%]"
+              className="h-full w-full object-cover object-[65%_30%] lg:object-[72%_18%]"
             />
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#1C1F21] via-[#1C1F21]/84 to-[#1C1F21]/50 lg:hidden" />
+          <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#1C1F21] to-transparent lg:hidden" />
           <div className="hidden lg:block absolute inset-0 bg-[linear-gradient(90deg,#1C1F21_0%,#1C1F21_32%,rgba(28,31,33,0.92)_46%,rgba(28,31,33,0.44)_62%,rgba(28,31,33,0.14)_100%)]" />
-          <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-[#1C1F21] via-[#1C1F21]/45 to-transparent" />
+          <div className="hidden lg:block absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-[#1C1F21] via-[#1C1F21]/45 to-transparent" />
         </div>
 
-        <div className="relative z-10 mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-10 py-16 sm:py-20 lg:py-24">
+        <div className="relative z-10 mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-10 pt-4 pb-12 sm:pb-16 lg:py-24">
           <motion.div
             initial={prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}

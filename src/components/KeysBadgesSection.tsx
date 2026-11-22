@@ -120,25 +120,32 @@ export function KeysBadgesSection({ config, details, agencies, pageHref, agencie
             </motion.ul>
 
             {/* Comment ça marche (version courte) */}
-            <motion.ol {...reveal(0.15)} aria-label={details.stepsKicker} className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-0 border-y border-[#1C1F21]/10 py-5">
+            <motion.ol {...reveal(0.15)} aria-label={details.stepsKicker} className="mt-6 grid grid-cols-3 border-y border-[#1C1F21]/10 py-5">
               {details.steps.map((step, index) => (
-                <li key={step.title} className={`flex items-center gap-3 ${index > 0 ? 'sm:border-l sm:border-[#1C1F21]/10 sm:pl-5' : ''} sm:pr-4`}>
+                <li
+                  key={step.title}
+                  className={`flex flex-col items-center gap-1.5 px-1.5 text-center sm:flex-row sm:items-center sm:gap-3 sm:px-0 sm:text-left ${
+                    index > 0 ? 'border-l border-[#1C1F21]/10 sm:pl-5' : ''
+                  } sm:pr-4`}
+                >
                   <span className="font-display text-[22px] font-semibold leading-none tabular-nums text-[#B79A62]">
                     {String(index + 1).padStart(2, '0')}
                   </span>
-                  <span className="text-[14.5px] font-medium leading-snug text-[#1C1F21]/85">{step.title}</span>
+                  <span className="text-[12.5px] sm:text-[14.5px] font-medium leading-snug text-[#1C1F21]/85">{step.title}</span>
                 </li>
               ))}
             </motion.ol>
 
             {/* Agences + actions */}
             <motion.div {...reveal(0.2)} className="mt-6 flex flex-col gap-6">
-              <ul aria-label="Nos boutiques" className="flex flex-wrap gap-2.5">
+              <ul aria-label="Nos boutiques" className="grid grid-cols-2 gap-2.5 sm:flex sm:flex-wrap">
                 {agencies.map((agency) => (
-                  <li key={agency.id} className="inline-flex items-center gap-2 rounded-full border border-[#1C1F21]/15 bg-[#FFFFFF] px-3.5 py-1.5 text-[14px] text-[#1C1F21]/80">
-                    <MapPin className="h-4 w-4 text-[#7D612D]" aria-hidden="true" />
-                    <span className="font-medium text-[#1C1F21]">{agency.name}</span>
-                    <span className="text-[#1C1F21]/55">· {agency.districtLabel}</span>
+                  <li key={agency.id} className="flex items-center gap-2 rounded-xl border border-[#1C1F21]/15 bg-[#FFFFFF] px-3 py-2.5 text-[13.5px] text-[#1C1F21]/80 sm:inline-flex sm:rounded-full sm:px-3.5 sm:py-1.5 sm:text-[14px]">
+                    <MapPin className="h-4 w-4 shrink-0 text-[#7D612D]" aria-hidden="true" />
+                    <span className="flex min-w-0 flex-col leading-tight sm:flex-row sm:gap-1.5">
+                      <span className="font-medium text-[#1C1F21]">{agency.name.replace('Agence ', '')}</span>
+                      <span className="text-[12px] text-[#1C1F21]/55 sm:text-[14px]">{agency.districtLabel}</span>
+                    </span>
                   </li>
                 ))}
               </ul>
