@@ -58,9 +58,21 @@ export function ZoneInterventionSection({
       id="09_Zone_Intervention"
       data-section="09_Zone_Intervention"
       aria-labelledby="09_Zone_Intervention-title"
-      className="w-full bg-[#1C1F21] scroll-mt-[74px] lg:scroll-mt-[88px]"
+      className="w-full bg-white scroll-mt-[74px] lg:scroll-mt-[88px] lg:pt-16"
     >
-      <div className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-10 py-14 sm:py-20 lg:py-24">
+      {/* Bandeau photo de Marseille : bas arrondi avec filet doré (mobile), carte arrondie (bureau) */}
+      <div className="mx-auto max-w-[1280px] lg:px-10">
+        <div className="kb-curve relative">
+          <img
+            src={config.bannerSrc}
+            alt={config.bannerAlt}
+            loading="lazy"
+            className="h-[200px] sm:h-[260px] lg:h-[300px] w-full object-cover object-[30%_40%] lg:rounded-3xl"
+          />
+        </div>
+      </div>
+
+      <div className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-10 pt-6 pb-14 sm:pb-20 lg:pt-12 lg:pb-24">
         <motion.div
           initial={prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -68,11 +80,17 @@ export function ZoneInterventionSection({
           transition={{ duration: prefersReducedMotion ? 0 : 0.5, ease: REVEAL_EASE }}
           className="max-w-3xl"
         >
-          <p className="section-kicker text-[#B79A62]">{config.kicker}</p>
-          <h2 id="09_Zone_Intervention-title" className="mt-3 section-title text-[#F3F0E7]">
+          <p className="section-kicker flex items-center gap-3 text-[#7D612D]">
+            <span aria-hidden="true" className="h-px w-8 bg-[#B79A62]" />
+            {config.kicker}
+          </p>
+          <h2 id="09_Zone_Intervention-title" className="mt-3 section-title text-[#1C1F21]">
             {config.title}
           </h2>
-          <p className="mt-4 section-subtitle text-[#F3F0E7]/76">{config.subtitle}</p>
+          <svg aria-hidden="true" viewBox="0 0 220 12" className="mt-1 h-3 w-[180px] sm:w-[220px]" fill="none">
+            <path d="M2 9C60 3 140 1 218 6" stroke="#B79A62" strokeWidth="3" strokeLinecap="round" />
+          </svg>
+          <p className="mt-3 section-subtitle text-[#1C1F21]/70">{config.subtitle}</p>
         </motion.div>
 
         {/* Un seul grand panneau clair : carte en couleur + recherche + secteurs */}
@@ -81,9 +99,9 @@ export function ZoneInterventionSection({
           whileInView={{ opacity: 1, y: 0 }}
           viewport={REVEAL_VIEWPORT}
           transition={{ duration: prefersReducedMotion ? 0 : 0.55, delay: prefersReducedMotion ? 0 : 0.08, ease: REVEAL_EASE }}
-          className="mt-8 sm:mt-10 overflow-hidden rounded-3xl bg-[#F7F5F0] lg:grid lg:grid-cols-12"
+          className="mt-8 sm:mt-10 grid gap-5 lg:grid-cols-12 lg:gap-8 lg:items-start"
         >
-          <div className="lg:col-span-7 lg:order-2">
+          <div className="order-2 lg:col-span-7 overflow-hidden rounded-3xl shadow-[0_14px_36px_-20px_rgba(28,31,33,0.45)]">
             <MarseilleRadarMap
               activePinId={activePinId}
               selectedSector={selectedSector}
@@ -98,7 +116,7 @@ export function ZoneInterventionSection({
             />
           </div>
 
-          <div className="lg:col-span-5 lg:order-1 p-5 sm:p-7 lg:p-8">
+          <div className="order-1 lg:col-span-5 rounded-3xl bg-[#F7F5F0] p-5 sm:p-7 lg:p-8">
             {/* Vérification du secteur : champ et bouton sur une ligne */}
             <label htmlFor="sector-check-input" className="font-display text-[17px] sm:text-[18px] font-semibold text-[#1C1F21]">
               Votre adresse est-elle couverte ?

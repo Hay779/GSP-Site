@@ -1,5 +1,6 @@
+import { useEffect, useState } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
-import { X } from 'lucide-react';
+import { Store, X } from 'lucide-react';
 import type { ZoneMapPinId } from '../utils/serviceArea';
 
 interface MapPinSpec {
@@ -106,6 +107,15 @@ export function MarseilleRadarMap({
   onClearSelection,
 }: MarseilleRadarMapProps) {
   const prefersReducedMotion = useReducedMotion() ?? false;
+  // Sur téléphone la carte est réduite : on grossit les étiquettes pour qu'elles restent lisibles.
+  const [labelScale, setLabelScale] = useState(1);
+  useEffect(() => {
+    const query = window.matchMedia('(max-width: 639px)');
+    const update = () => setLabelScale(query.matches ? 1.55 : 1);
+    update();
+    query.addEventListener('change', update);
+    return () => query.removeEventListener('change', update);
+  }, []);
 
   return (
     <div className="relative flex aspect-[680/560] w-full overflow-hidden bg-[#CFE5EF]">
@@ -160,9 +170,14 @@ export function MarseilleRadarMap({
             d="M0 78C68 54 134 56 196 94"
           />
         </g>
+          <radialGradient id="zone-area" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#E8C982" stopOpacity="0.38" />
+            <stop offset="70%" stopColor="#E8C982" stopOpacity="0.16" />
+            <stop offset="100%" stopColor="#E8C982" stopOpacity="0" />
+          </radialGradient>
           <linearGradient id="sea-blue" x1="0" y1="1" x2="1" y2="0">
-            <stop offset="0%" stopColor="#8DBFD6" />
-            <stop offset="100%" stopColor="#C6E0EC" />
+            <stop offset="0%" stopColor="#6FB0CF" />
+            <stop offset="100%" stopColor="#B4DAEA" />
           </linearGradient>
           <radialGradient id="marseille-map-glow" cx="44%" cy="56%" r="55%">
             <stop offset="0%" stopColor="#B79A62" stopOpacity="0.14" />
@@ -190,20 +205,20 @@ export function MarseilleRadarMap({
         {/* Masse terrestre Provence / Marseille */}
         <path
           d="M0 0H680V560H530C495 546 472 522 448 525C424 528 408 548 378 542C344 535 332 508 296 510C260 512 246 534 234 514C224 496 244 466 258 438C272 410 278 386 252 362C226 338 232 292 254 268C274 246 256 218 228 192C198 164 176 138 140 124C102 110 54 114 0 132V0Z"
-          fill="#F1EADB"
+          fill="#F5F2EA"
         />
 
         {/* Reliefs subtils (Étoile, Garlaban, Calanques) */}
         <path
           d="M342 146C395 130 462 128 524 152C572 170 618 196 664 232"
-          stroke="#D9E0C4"
+          stroke="#E1E8D0"
           strokeWidth="30"
           strokeLinecap="round"
           opacity="0.9"
         />
         <path
           d="M274 470C336 458 398 468 468 492C510 506 558 510 612 496"
-          stroke="#D9E0C4"
+          stroke="#E1E8D0"
           strokeWidth="24"
           strokeLinecap="round"
           opacity="0.9"
@@ -211,6 +226,9 @@ export function MarseilleRadarMap({
 
         {/* Halo global chaleureux centré sur Marseille */}
         <rect width="680" height="560" fill="url(#marseille-map-glow)" />
+
+        {/* Zone couverte : halo doré doux autour de Marseille */}
+        <circle cx="292" cy="330" r="236" fill="url(#zone-area)" />
 
         {/* Cercles radar concentriques centrés sur Marseille */}
         <g stroke="#9C7C40" fill="none">
@@ -221,7 +239,7 @@ export function MarseilleRadarMap({
 
         {/* Réseau routier : liseré beige puis chaussée blanche */}
         <g strokeLinecap="round" strokeLinejoin="round" fill="none">
-          <use href="#zone-roads" stroke="#D2C29E" strokeWidth="6" />
+          <use href="#zone-roads" stroke="#E6D4A8" strokeWidth="6" />
           <use href="#zone-roads" stroke="#FFFFFF" strokeWidth="3.2" />
         </g>
 
@@ -236,9 +254,9 @@ export function MarseilleRadarMap({
         <path
           d="M274 60C350 48 434 62 496 108C554 150 610 218 648 296C668 338 662 396 638 446"
           stroke="#B79A62"
-          strokeOpacity="0.9"
-          strokeWidth="2"
-          strokeDasharray="3 6"
+          strokeOpacity="0.95"
+          strokeWidth="2.2"
+          strokeDasharray="5 6"
           strokeLinecap="round"
           fill="none"
         />
@@ -248,8 +266,8 @@ export function MarseilleRadarMap({
           x="128"
           y="428"
           textAnchor="middle"
-          fill="#2F6580"
-          fillOpacity="0.75"
+          fill="#FFFFFF"
+          fillOpacity="0.95"
           fontStyle="italic"
           fontFamily="DM Sans, sans-serif"
           fontSize="13.5"
@@ -331,22 +349,38 @@ export function MarseilleRadarMap({
                 <circle cx="0" cy="-20.5" r="4.2" fill="#FFFFFF" />
               </g>
 
-              {/* Étiquette de la ville */}
-              <text
-                x={pin.labelX}
-                y={pin.labelY}
-                textAnchor={pin.labelAnchor ?? 'middle'}
-                fill="#1C1F21"
-                stroke="#FFFFFF"
-                strokeWidth="4"
-                paintOrder="stroke"
-                strokeLinejoin="round"
-                fontFamily="Plus Jakarta Sans, sans-serif"
-                fontSize={pin.isHub || isActive ? '16' : '15'}
-                fontWeight={pin.isHub || isActive ? '600' : '500'}
-              >
-                {pin.label}
-              </text>
+              {/* Étiquette de la ville : pastille blanche */}
+              {(() => {
+                const size = (pin.isHub || isActive ? 16 : 14) * labelScale;
+                const width = pin.label.length * size * 0.56 + 22;
+                const anchor = pin.labelAnchor ?? 'middle';
+                const left = anchor === 'start' ? pin.labelX - 10 : anchor === 'end' ? pin.labelX - width + 10 : pin.labelX - width / 2;
+                return (
+                  <>
+                    <rect
+                      x={left}
+                      y={pin.labelY - size * 0.74 - 7}
+                      width={width}
+                      height={size + 14}
+                      rx={(size + 14) / 2}
+                      fill="#FFFFFF"
+                      fillOpacity="0.96"
+                      style={{ filter: 'drop-shadow(0 2px 4px rgba(28,31,33,0.18))' }}
+                    />
+                    <text
+                      x={pin.labelX}
+                      y={pin.labelY}
+                      textAnchor={anchor}
+                      fill="#1C1F21"
+                      fontFamily="Plus Jakarta Sans, sans-serif"
+                      fontSize={size}
+                      fontWeight={pin.isHub || isActive ? '700' : '600'}
+                    >
+                      {pin.label}
+                    </text>
+                  </>
+                );
+              })()}
             </g>
           );
         })}
@@ -354,7 +388,7 @@ export function MarseilleRadarMap({
 
       {/* Indicateur discret en haut à gauche lorsqu'un secteur précis est sélectionné */}
       {selectedSector && (
-        <div className="absolute left-4 top-4 z-10 inline-flex items-center gap-2 rounded-full bg-white/95 px-3.5 py-1.5 text-[13px] text-[#1C1F21] shadow-sm">
+        <div className="absolute right-3 bottom-3 sm:right-4 sm:bottom-4 z-10 inline-flex items-center gap-2 rounded-full bg-white/95 px-3.5 py-1.5 text-[13px] text-[#1C1F21] shadow-sm">
           <span className="text-[#1C1F21]/60">Secteur :</span>
           <span className="font-semibold text-[#C0392B]">{selectedSector}</span>
           <button
@@ -368,14 +402,13 @@ export function MarseilleRadarMap({
         </div>
       )}
 
-      {/* Encart (en bas à droite ; en bas à gauche sur mobile pour ne pas masquer Aubagne) */}
-      <div className="pointer-events-none absolute bottom-3 left-3 sm:left-auto sm:bottom-4 sm:right-4 z-10 rounded-lg bg-white/95 px-3 py-2 sm:px-4 sm:py-2.5 text-left sm:text-right shadow-sm">
-        <p className="text-[11px] sm:text-[12.5px] leading-snug text-[#1C1F21]/65">
-          {responseTimePrefix}
-        </p>
-        <p className="mt-0.5 font-display text-[13px] sm:text-[15.5px] font-semibold leading-snug text-[#1C1F21] tabular-nums">
-          {responseTimeHighlight}
-        </p>
+      {/* Encart des agences (en haut à gauche) */}
+      <div className="pointer-events-none absolute left-3 bottom-3 sm:bottom-auto sm:left-4 sm:top-4 z-10 flex items-center gap-2.5 rounded-xl bg-[#1C1F21]/92 px-3 py-2 sm:px-4 sm:py-2.5 shadow-md">
+        <Store className="h-5 w-5 shrink-0 text-[#B79A62]" strokeWidth={1.7} aria-hidden="true" />
+        <div>
+          <p className="text-[11px] sm:text-[12px] leading-snug text-[#F3F0E7]/70">{responseTimePrefix}</p>
+          <p className="font-display text-[13px] sm:text-[15px] font-semibold leading-snug text-[#F3F0E7]">{responseTimeHighlight}</p>
+        </div>
       </div>
     </div>
   );

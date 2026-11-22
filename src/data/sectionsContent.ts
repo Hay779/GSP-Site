@@ -140,6 +140,8 @@ export interface ZoneInterventionConfig {
   readonly kicker: string;
   readonly title: string;
   readonly subtitle: string;
+  readonly bannerSrc: string;
+  readonly bannerAlt: string;
   readonly marseilleLabel: string;
   readonly marseilleRangeLabel: string;
   readonly marseilleSectors: readonly string[];
@@ -473,6 +475,9 @@ export const ZONE_INTERVENTION_CONFIG: ZoneInterventionConfig = {
   // Encart de la carte. ⚠️ N'indiquer un délai (ex. « moins de 30 min ») que s'il est garanti.
   responseTimePrefix: '2 agences à Marseille',
   responseTimeHighlight: 'République & Rome',
+  // Bandeau provisoire (découpé d'une maquette) : remplacer par une vraie photo de Marseille.
+  bannerSrc: '/src/assets/images/zone_marseille.jpg',
+  bannerAlt: 'Vue de Marseille avec Notre-Dame-de-la-Garde et le Vieux-Port.',
 };
 
 export const AGENCIES_CONFIG: AgenciesConfig = {
