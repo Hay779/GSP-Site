@@ -108,6 +108,27 @@ export function normalizeSectorText(input: string): string {
     .trim();
 }
 
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+/**
+ * Vrai si le mot-clé apparaît comme mot entier dans la recherche
+ * (« marseille 1 » ne doit pas correspondre à « marseille 13006 »),
+ * ou si la recherche est le début d'un mot-clé de nom de lieu (saisie en cours).
+ */
+export function keywordMatches(normalizedQuery: string, keyword: string): boolean {
+  if (normalizedQuery === keyword) {
+    return true;
+  }
+  const wholeWord = new RegExp(`(^|[\\s-])${escapeRegExp(keyword)}($|[\\s-])`);
+  if (wholeWord.test(normalizedQuery)) {
+    return true;
+  }
+  const isPlaceName = /[a-z]/.test(keyword) && !keyword.startsWith('marseille');
+  return isPlaceName && normalizedQuery.length >= 4 && keyword.startsWith(normalizedQuery);
+}
+
 export function isMarseillePostalCode(normalizedQuery: string): string | null {
   const match = normalizedQuery.match(/\b(130(?:0[1-9]|1[0-6]))\b/);
   return match ? match[1] : null;
@@ -126,9 +147,7 @@ export function resolveZoneMapFocusPin(selectedSector: string | null): ZoneMapPi
   }
 
   for (const sector of KNOWN_SECTORS) {
-    const matched = sector.keywords.some(
-      (kw) => normalized === kw || normalized.includes(kw) || kw.includes(normalized)
-    );
+    const matched = sector.keywords.some((kw) => keywordMatches(normalized, kw));
     if (matched) {
       return sector.pinId;
     }
@@ -149,9 +168,7 @@ export function checkServiceSector(rawQuery: string): SectorCheckResult {
   }
 
   for (const sector of KNOWN_SECTORS) {
-    const matched = sector.keywords.some(
-      (kw) => normalizedQuery === kw || normalizedQuery.includes(kw) || kw.includes(normalizedQuery)
-    );
+    const matched = sector.keywords.some((kw) => keywordMatches(normalizedQuery, kw));
     if (matched) {
       return {
         status: 'covered',

@@ -251,7 +251,10 @@ const LEGAL_PRIVACY: readonly LegalArticle[] = [
   },
 ];
 
-export const THEMATIC_PAGES: Readonly<Record<PageId, PageDefinition>> = {
+/** Pages assemblées à partir de blocs (la page /devis a son propre composant). */
+export type BlockPageId = Exclude<PageId, 'devis'>;
+
+export const THEMATIC_PAGES: Readonly<Record<BlockPageId, PageDefinition>> = {
   'cles-badges': {
     seoTitle: KEYS_BADGES_PAGE_CONFIG.seoTitle,
     seoDescription: KEYS_BADGES_PAGE_CONFIG.seoDescription,
@@ -450,7 +453,7 @@ export function resolvePageDefinition(route: Route): PageDefinition | null {
     return domain ? buildDomainPage(domain) : null;
   }
   if (route.kind === 'page') {
-    return THEMATIC_PAGES[route.id];
+    return route.id === 'devis' ? null : THEMATIC_PAGES[route.id];
   }
   return null;
 }

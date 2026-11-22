@@ -20,7 +20,8 @@ export type PageId =
   | 'avis-clients'
   | 'questions-frequentes'
   | 'mentions-legales'
-  | 'confidentialite';
+  | 'confidentialite'
+  | 'devis';
 
 export type Route =
   | { readonly kind: 'home' }
@@ -43,6 +44,7 @@ export const PAGE_SLUGS: Readonly<Record<PageId, string>> = {
   'questions-frequentes': 'questions-frequentes',
   'mentions-legales': 'mentions-legales',
   confidentialite: 'confidentialite',
+  devis: 'devis',
 };
 
 export const HOME_ROUTE: Route = { kind: 'home' };

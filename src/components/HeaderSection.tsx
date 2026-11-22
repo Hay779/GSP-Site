@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { ArrowRight, ChevronDown, Menu, Phone, X } from 'lucide-react';
+import { ArrowRight, ChevronDown, FileText, Menu, Phone, X } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion, useScroll, useSpring } from 'motion/react';
 import { resolveHeaderHidden } from '../utils/headerVisibility';
 import type { BrandConfig } from '../utils/navigation';
@@ -32,6 +32,10 @@ interface HeaderSectionProps {
   readonly nav: readonly HeaderNavLink[];
   /** Adresse du logo (haut de l'accueil). */
   readonly homeHref: string;
+  /** Adresse de la page « Demander un devis ». */
+  readonly quoteHref: string;
+  /** Vrai quand on est déjà sur la page devis (le bouton est alors mis en avant). */
+  readonly isQuotePage?: boolean;
 }
 
 const DESKTOP_LINK_CLASS =
@@ -206,7 +210,7 @@ function DesktopDropdown({
   );
 }
 
-export function HeaderSection({ brand, nav, homeHref }: HeaderSectionProps) {
+export function HeaderSection({ brand, nav, homeHref, quoteHref, isQuotePage = false }: HeaderSectionProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isHeaderHidden, setIsHeaderHidden] = useState(false);
   const [hasFocusWithin, setHasFocusWithin] = useState(false);
@@ -356,6 +360,20 @@ export function HeaderSection({ brand, nav, homeHref }: HeaderSectionProps) {
               className="hidden lg:block h-6 w-px bg-[#F3F0E7]/20"
             />
 
+            {/* Bouton devis (grand écran) */}
+            <a
+              href={quoteHref}
+              aria-current={isQuotePage ? 'page' : undefined}
+              className={`hidden xl:inline-flex items-center gap-2 rounded-lg border px-4 py-2.5 text-[15px] font-medium whitespace-nowrap shrink-0 transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62] ${
+                isQuotePage
+                  ? 'border-[#B79A62] bg-[#B79A62]/15 text-[#F3F0E7]'
+                  : 'border-[#B79A62]/70 text-[#F3F0E7] hover:border-[#B79A62] hover:bg-[#B79A62]/10'
+              }`}
+            >
+              <FileText className="h-[17px] w-[17px] shrink-0 text-[#B79A62]" strokeWidth={1.9} aria-hidden="true" />
+              Demander un devis
+            </a>
+
             {/* Bouton d'appel principal (tablette & bureau) */}
             <a
               href={brand.phoneHref}
@@ -475,7 +493,15 @@ export function HeaderSection({ brand, nav, homeHref }: HeaderSectionProps) {
                   );
                 })}
 
-                <div className="pt-4">
+                <div className="pt-4 flex flex-col gap-3">
+                  <a
+                    href={quoteHref}
+                    onClick={closeMobileMenu}
+                    className="flex min-h-[48px] w-full items-center justify-center gap-2.5 rounded-lg border border-[#B79A62]/70 px-5 py-3 text-[15px] font-medium text-[#F3F0E7] hover:bg-[#B79A62]/10 transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62]"
+                  >
+                    <FileText className="h-[18px] w-[18px] shrink-0 text-[#B79A62]" strokeWidth={1.9} aria-hidden="true" />
+                    <span>Demander un devis</span>
+                  </a>
                   <a
                     href={brand.phoneHref}
                     onClick={closeMobileMenu}

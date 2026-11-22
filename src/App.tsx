@@ -11,7 +11,7 @@ import { HeaderSection, type HeaderNavLink } from './components/HeaderSection';
 import { HeroSection } from './components/HeroSection';
 import { IncidentPhotoModal } from './components/IncidentPhotoModal';
 import { KeysBadgesSection } from './components/KeysBadgesSection';
-import { QuoteModal } from './components/QuoteModal';
+import { QuotePage } from './components/QuotePage';
 import { ReviewsSection } from './components/ReviewsSection';
 import { UrgencySection } from './components/UrgencySection';
 import { WhatsAppFloatingButton } from './components/WhatsAppFloatingButton';
@@ -48,13 +48,9 @@ const NAV_TARGET_IDS: readonly SectionId[] = HEADER_NAV_ITEMS.map((item) => item
 
 export default function App() {
   const [activeSectionId, setActiveSectionId] = useState<SectionId | null>(null);
-  const [quoteModalOpen, setQuoteModalOpen] = useState(false);
-  const [quoteInitialDomain, setQuoteInitialDomain] = useState<QuoteDomain | undefined>(
-    undefined
-  );
-  const [quoteInitialDistrict, setQuoteInitialDistrict] = useState<string | undefined>(
-    undefined
-  );
+  // Pré-remplissage du questionnaire de devis + compteur pour le réinitialiser à chaque ouverture.
+  const [quotePrefill, setQuotePrefill] = useState<{ domain?: QuoteDomain; location?: string }>({});
+  const [quoteSession, setQuoteSession] = useState(0);
   const [photoModalOpen, setPhotoModalOpen] = useState(false);
   const quoteTriggerRef = useRef<HTMLButtonElement | null>(null);
   const { route, navigate } = useRouter();
@@ -137,18 +133,12 @@ export default function App() {
     }
   };
 
+  /** Tous les boutons « devis » mènent à la page /devis, pré-remplie si possible. */
   const handleOpenQuoteModal = (domain?: QuoteDomain, district?: string) => {
     setPhotoModalOpen(false);
-    setQuoteInitialDomain(domain);
-    setQuoteInitialDistrict(district);
-    setQuoteModalOpen(true);
-  };
-
-  const handleCloseQuoteModal = () => {
-    setQuoteModalOpen(false);
-    window.requestAnimationFrame(() => {
-      quoteTriggerRef.current?.focus();
-    });
+    setQuotePrefill({ domain, location: district });
+    setQuoteSession((n) => n + 1);
+    navigate(pageHref('devis'));
   };
 
 
@@ -170,9 +160,20 @@ export default function App() {
         brand={BRAND_CONFIG}
         nav={headerNav}
         homeHref={sectionHref('02_Hero')}
+        quoteHref={pageHref('devis')}
+        isQuotePage={route.kind === 'page' && route.id === 'devis'}
       />
 
-      {currentPage ? (
+      {route.kind === 'page' && route.id === 'devis' ? (
+        <main className="flex-1 flex flex-col">
+          <QuotePage
+            key={quoteSession}
+            brand={BRAND_CONFIG}
+            routerMode={ROUTER_MODE}
+            prefill={quotePrefill}
+          />
+        </main>
+      ) : currentPage ? (
         /* Pages intérieures : assemblées à partir de blocs (voir data/pages.ts) */
         <main className="flex-1 flex flex-col">
           <PageRenderer
@@ -247,14 +248,6 @@ export default function App() {
       />
 
 
-      {/* Formulaire de devis intégré */}
-      <QuoteModal
-        isOpen={quoteModalOpen}
-        brand={BRAND_CONFIG}
-        initialDomain={quoteInitialDomain}
-        initialDistrict={quoteInitialDistrict}
-        onClose={handleCloseQuoteModal}
-      />
 
       {/* Reportage photo après sinistre */}
       <IncidentPhotoModal

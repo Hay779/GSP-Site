@@ -6,7 +6,9 @@ import { PAGE_SLUGS, type PageId, type Route } from '../utils/router';
 
 const ALL_ROUTES: readonly Route[] = [
   ...DOMAINS_CONFIG.items.map((item) => ({ kind: 'domain', id: item.id }) as const),
-  ...(Object.keys(PAGE_SLUGS) as PageId[]).map((id) => ({ kind: 'page', id }) as const),
+  ...(Object.keys(PAGE_SLUGS) as PageId[])
+    .filter((id) => id !== 'devis') // page à part (questionnaire)
+    .map((id) => ({ kind: 'page', id }) as const),
 ];
 
 function label(route: Route): string {
