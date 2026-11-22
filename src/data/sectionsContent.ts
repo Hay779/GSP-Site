@@ -370,7 +370,7 @@ export const ZONE_INTERVENTION_CONFIG: ZoneInterventionConfig = {
   kicker: 'Zone d’intervention',
   title: 'Marseille et ses alentours.',
   subtitle:
-    'Serrurerie, vitrerie et menuiserie à Marseille et dans sa région. Intervention rapide 24h/7j.',
+    'Serrurerie, vitrerie, menuiserie et fermetures dans tous les arrondissements de Marseille et les communes voisines.',
   marseilleLabel: 'Marseille & Arrondissements',
   marseilleRangeLabel: '1er au 16ème arrondissements',
   marseilleSectors: [
@@ -392,8 +392,9 @@ export const ZONE_INTERVENTION_CONFIG: ZoneInterventionConfig = {
   ],
   ctaLabel: 'Vérifier votre secteur',
   quoteCtaLabel: 'Demander un devis en ligne',
-  responseTimePrefix: 'Intervention en',
-  responseTimeHighlight: 'moins de 30 min',
+  // Encart de la carte. ⚠️ N'indiquer un délai (ex. « moins de 30 min ») que s'il est garanti.
+  responseTimePrefix: '2 agences à Marseille',
+  responseTimeHighlight: 'République & Lodi',
 };
 
 export const AGENCIES_CONFIG: AgenciesConfig = {

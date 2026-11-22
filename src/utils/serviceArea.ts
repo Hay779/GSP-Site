@@ -174,7 +174,7 @@ export function checkServiceSector(rawQuery: string): SectorCheckResult {
         status: 'covered',
         matchedLabel: sector.label,
         normalizedQuery,
-        message: `${sector.label} fait partie de notre zone d’intervention rapide.`,
+        message: `${sector.label} fait partie de notre zone d’intervention.`,
       };
     }
   }

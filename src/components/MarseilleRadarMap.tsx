@@ -108,7 +108,7 @@ export function MarseilleRadarMap({
   const prefersReducedMotion = useReducedMotion() ?? false;
 
   return (
-    <div className="relative flex h-full min-h-[380px] sm:min-h-[450px] w-full overflow-hidden rounded-xl border border-[#B79A62]/30 bg-[#111518]">
+    <div className="relative flex aspect-[680/560] w-full overflow-hidden rounded-xl border border-[#B79A62]/30 bg-[#111518]">
       {/* Carte stylisée sombre Marseille & Mer Méditerranée avec littoral et axes dorés */}
       <svg
         viewBox="0 0 680 560"
@@ -396,12 +396,12 @@ export function MarseilleRadarMap({
         </div>
       )}
 
-      {/* Encart en bas à droite : Intervention en moins de 30 min */}
-      <div className="pointer-events-none absolute bottom-4 right-4 z-10 rounded-xl border border-[#B79A62]/30 bg-[#14171A]/90 px-4 py-3 text-right backdrop-blur-md">
-        <p className="text-[12.5px] leading-snug text-[#F3F0E7]/76">
+      {/* Encart (en bas à droite ; en bas à gauche sur mobile pour ne pas masquer Aubagne) */}
+      <div className="pointer-events-none absolute bottom-3 left-3 sm:left-auto sm:bottom-4 sm:right-4 z-10 rounded-lg sm:rounded-xl border border-[#B79A62]/30 bg-[#14171A]/90 px-3 py-2 sm:px-4 sm:py-3 text-left sm:text-right backdrop-blur-md">
+        <p className="text-[11px] sm:text-[12.5px] leading-snug text-[#F3F0E7]/76">
           {responseTimePrefix}
         </p>
-        <p className="mt-0.5 font-display text-[14.5px] sm:text-[15.5px] font-semibold leading-snug text-[#F3F0E7] tabular-nums">
+        <p className="mt-0.5 font-display text-[13px] sm:text-[15.5px] font-semibold leading-snug text-[#F3F0E7] tabular-nums">
           {responseTimeHighlight}
         </p>
       </div>
