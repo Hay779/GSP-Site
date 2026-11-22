@@ -82,13 +82,13 @@ export function KeysBadgesSection({
 
           {/* Colonne droite : promesse, deux services et bouton vers les agences */}
           <div className="lg:col-span-6 flex flex-col items-start">
-            <p className="text-[13px] sm:text-[14px] font-medium tracking-[0.16em] uppercase text-[#7D612D]">
+            <p className="section-kicker text-[#7D612D]">
               {config.kicker}
             </p>
 
             <h2
               id="04_Cles_Badges-title"
-              className="mt-3 font-display text-[30px] sm:text-[36px] lg:text-[42px] font-semibold leading-[1.12] tracking-[-0.015em] text-[#1C1F21]"
+              className="mt-3 section-title text-[#1C1F21]"
             >
               <span className="block">{config.headlineLines[0]}</span>
               <span className="block">{config.headlineLines[1]}</span>

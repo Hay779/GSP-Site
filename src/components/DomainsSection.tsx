@@ -203,7 +203,7 @@ function PortraitPeelDomainCard({
               {item.categoryTag}
             </p>
             <p className="mt-4 text-[10px] font-medium uppercase tracking-[0.1em] text-[#F3F0E7]/75">
-              Survoler ou toucher →
+              Voir les prestations →
             </p>
           </div>
         </div>
@@ -239,12 +239,12 @@ export function DomainsSection({ config, onSelectDomain }: DomainsSectionProps) 
           viewport={REVEAL_VIEWPORT}
           className="max-w-2xl"
         >
-          <p className="text-[13px] sm:text-[14px] font-medium tracking-[0.16em] text-[#B79A62]">
+          <p className="section-kicker text-[#B79A62]">
             {config.kicker}
           </p>
           <h2
             id="05_Nos_Domaines-title"
-            className="mt-3 font-display text-[30px] sm:text-[36px] lg:text-[42px] font-semibold leading-[1.14] tracking-[-0.015em] text-[#F3F0E7]"
+            className="mt-3 section-title text-[#F3F0E7]"
           >
             {config.title}
           </h2>

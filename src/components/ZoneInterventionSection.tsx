@@ -71,13 +71,14 @@ export function ZoneInterventionSection({
           transition={{ duration: prefersReducedMotion ? 0 : 0.5, ease: REVEAL_EASE }}
           className="max-w-3xl"
         >
+          <p className="section-kicker text-[#B79A62]">{config.kicker}</p>
           <h2
             id="09_Zone_Intervention-title"
-            className="font-display text-[32px] sm:text-[38px] lg:text-[44px] font-semibold leading-[1.12] tracking-[-0.015em] text-[#F3F0E7]"
+            className="mt-3 section-title text-[#F3F0E7]"
           >
             {config.title}
           </h2>
-          <p className="mt-3 text-[15.5px] sm:text-[17px] leading-[1.55] text-[#F3F0E7]/76">
+          <p className="mt-4 section-subtitle text-[#F3F0E7]/76">
             {config.subtitle}
           </p>
         </motion.div>

@@ -189,7 +189,7 @@ export function HeroSection({
             initial={prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: prefersReducedMotion ? 0 : 0.45, ease: REVEAL_EASE }}
-            className="text-[13px] sm:text-[14px] font-medium tracking-[0.16em] text-[#B79A62]"
+            className="section-kicker text-[#B79A62]"
           >
             {config.kicker}
           </motion.p>

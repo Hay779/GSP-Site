@@ -55,7 +55,7 @@ export function UrgencySection({ config, brand }: UrgencySectionProps) {
           <div className="shrink-0">
             <a
               href={brand.phoneHref}
-              className="group relative overflow-hidden inline-flex min-h-[52px] w-full md:w-auto items-center justify-center gap-3 rounded-xl border border-[#F3F0E7]/75 bg-[#1C1F21]/30 hover:bg-[#B79A62] hover:border-[#B79A62] hover:text-[#1C1F21] active:bg-[#A68952] px-6 sm:px-7 py-3.5 text-[16px] sm:text-[17px] font-semibold text-[#F3F0E7] tabular-nums tracking-[0.01em] whitespace-nowrap transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62]"
+              className="group relative overflow-hidden inline-flex min-h-[52px] w-full md:w-auto items-center justify-center gap-3 rounded-lg border border-[#F3F0E7]/75 bg-[#1C1F21]/30 hover:bg-[#B79A62] hover:border-[#B79A62] hover:text-[#1C1F21] active:bg-[#A68952] px-6 sm:px-7 py-3.5 text-[16px] sm:text-[17px] font-semibold text-[#F3F0E7] tabular-nums tracking-[0.01em] whitespace-nowrap transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62]"
             >
               <span
                 aria-hidden="true"

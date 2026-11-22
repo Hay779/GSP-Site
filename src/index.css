@@ -41,6 +41,24 @@
   }
 }
 
+/* Styles communs : garantissent la cohérence typographique entre les blocs */
+@layer components {
+  /* Sur-titre de section (ex. « NOS DOMAINES ») — couleur ajoutée par bloc */
+  .section-kicker {
+    @apply text-[13px] sm:text-[14px] font-medium uppercase tracking-[0.18em];
+  }
+
+  /* Titre principal de section (h2) — couleur ajoutée par bloc */
+  .section-title {
+    @apply font-display text-[30px] sm:text-[36px] lg:text-[42px] font-semibold leading-[1.12] tracking-[-0.015em];
+  }
+
+  /* Sous-titre de section */
+  .section-subtitle {
+    @apply text-[16px] sm:text-[17px] leading-[1.6];
+  }
+}
+
 @keyframes reviews-marquee-scroll {
   0% {
     transform: translate3d(0, 0, 0);

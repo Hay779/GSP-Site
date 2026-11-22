@@ -394,7 +394,7 @@ export const REVIEWS_CONFIG: ReviewsConfig = {
 
 export const ZONE_INTERVENTION_CONFIG: ZoneInterventionConfig = {
   kicker: 'Zone d’intervention',
-  title: 'Zone d’Intervention',
+  title: 'Marseille et ses alentours.',
   subtitle:
     'Serrurerie, vitrerie et menuiserie à Marseille et dans sa région. Intervention rapide 24h/7j.',
   marseilleLabel: 'Marseille & Arrondissements',

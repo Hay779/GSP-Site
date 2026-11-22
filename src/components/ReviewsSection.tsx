@@ -114,16 +114,16 @@ export function ReviewsSection({ config }: ReviewsSectionProps) {
           className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-10 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between"
         >
           <div className="max-w-2xl">
-            <p className="text-[13px] sm:text-[14px] font-medium tracking-[0.16em] uppercase text-[#7D612D]">
+            <p className="section-kicker text-[#7D612D]">
               {config.kicker}
             </p>
             <h2
               id="08_Avis_Clients-title"
-              className="mt-3 font-display text-[30px] sm:text-[36px] lg:text-[42px] font-semibold leading-[1.14] tracking-[-0.015em] text-[#1C1F21]"
+              className="mt-3 section-title text-[#1C1F21]"
             >
               {config.title}
             </h2>
-            <p className="mt-2.5 text-[15px] sm:text-[16px] text-[#1C1F21]/68">
+            <p className="mt-4 section-subtitle text-[#1C1F21]/70">
               {config.subtitle}
             </p>
           </div>

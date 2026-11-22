@@ -50,19 +50,19 @@ export function AfterIncidentSection({
             transition={{ duration: prefersReducedMotion ? 0 : 0.56, ease: REVEAL_EASE }}
             className="flex flex-col items-start max-w-[540px]"
           >
-            <p className="text-[13px] sm:text-[14px] font-medium tracking-[0.16em] text-[#B79A62]">
+            <p className="section-kicker text-[#B79A62]">
               {config.kicker}
             </p>
 
             <h2
               id="07_Apres_Sinistre-title"
-              className="mt-3 font-display text-[30px] sm:text-[38px] lg:text-[44px] font-semibold leading-[1.12] tracking-[-0.015em] text-[#F3F0E7]"
+              className="mt-3 section-title text-[#F3F0E7]"
             >
               <span className="block">{config.headlineLines[0]}</span>
               <span className="block">{config.headlineLines[1]}</span>
             </h2>
 
-            <p className="mt-4 max-w-[460px] text-[16px] sm:text-[18px] leading-[1.6] text-[#F3F0E7]/84">
+            <p className="mt-4 max-w-[460px] section-subtitle text-[#F3F0E7]/84">
               {config.subtitle}
             </p>
 
@@ -70,7 +70,7 @@ export function AfterIncidentSection({
               <button
                 type="button"
                 onClick={onDescribeNeed}
-                className="group relative overflow-hidden inline-flex min-h-[48px] flex-1 sm:flex-initial items-center justify-center rounded-lg bg-[#B79A62] hover:bg-[#C6AA73] active:bg-[#A68952] px-7 py-3 text-[15px] sm:text-[16px] font-semibold text-[#1C1F21] whitespace-nowrap shrink-0 transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F3F0E7] cursor-pointer"
+                className="group relative overflow-hidden inline-flex min-h-[48px] w-full sm:w-auto items-center justify-center rounded-lg bg-[#B79A62] hover:bg-[#C6AA73] active:bg-[#A68952] px-6 sm:px-7 py-3 text-[15px] sm:text-[16px] font-semibold text-[#1C1F21] whitespace-nowrap shrink-0 transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F3F0E7] cursor-pointer"
               >
                 <span
                   aria-hidden="true"
@@ -82,7 +82,7 @@ export function AfterIncidentSection({
               <button
                 type="button"
                 onClick={onSendPhotos}
-                className="inline-flex min-h-[48px] flex-1 sm:flex-initial items-center justify-center rounded-lg border border-[#F3F0E7]/65 bg-[#1C1F21]/35 hover:bg-[#F3F0E7]/10 hover:border-[#F3F0E7] px-7 py-3 text-[15px] sm:text-[16px] font-medium text-[#F3F0E7] whitespace-nowrap shrink-0 transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62] cursor-pointer"
+                className="inline-flex min-h-[48px] w-full sm:w-auto items-center justify-center rounded-lg border border-[#F3F0E7]/65 bg-[#1C1F21]/35 hover:bg-[#F3F0E7]/10 hover:border-[#F3F0E7] px-6 sm:px-7 py-3 text-[15px] sm:text-[16px] font-medium text-[#F3F0E7] whitespace-nowrap shrink-0 transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62] cursor-pointer"
               >
                 {config.secondaryCtaLabel}
               </button>

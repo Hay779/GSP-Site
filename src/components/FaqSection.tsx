@@ -55,16 +55,16 @@ export function FaqSection({ config, brand, onOpenQuoteModal }: FaqSectionProps)
             transition={{ duration: prefersReducedMotion ? 0 : 0.52, ease: REVEAL_EASE }}
             className="lg:col-span-4 lg:sticky lg:top-28"
           >
-            <p className="text-[13px] sm:text-[14px] font-medium tracking-[0.16em] uppercase text-[#7D612D]">
+            <p className="section-kicker text-[#7D612D]">
               {config.kicker}
             </p>
             <h2
               id="FAQ-title"
-              className="mt-3 font-display text-[30px] sm:text-[36px] lg:text-[42px] font-semibold leading-[1.12] tracking-[-0.015em] text-[#1C1F21]"
+              className="mt-3 section-title text-[#1C1F21]"
             >
               {config.title}
             </h2>
-            <p className="mt-3.5 text-[15px] sm:text-[16px] leading-[1.65] text-[#1C1F21]/70">
+            <p className="mt-4 section-subtitle text-[#1C1F21]/70">
               {config.subtitle}
             </p>
 

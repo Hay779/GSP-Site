@@ -143,7 +143,7 @@ function AgencyShowcase({
         {/* Contenu éditorial ouvert directement sur le fond anthracite (sans cadre rectangulaire) */}
         <div className="mt-7">
           <div className="flex flex-wrap items-baseline justify-between gap-3">
-            <h3 className="font-display text-[23px] sm:text-[26px] font-semibold uppercase tracking-[0.04em] text-[#D2B478]">
+            <h3 className="font-display text-[24px] sm:text-[28px] font-semibold leading-[1.2] tracking-[-0.01em] text-[#F3F0E7]">
               {agency.name}
             </h3>
             <span className="inline-flex items-center gap-1.5 text-[12px] font-medium uppercase tracking-[0.16em] text-[#F3F0E7]/72">
@@ -220,7 +220,7 @@ function AgencyShowcase({
             <a
               href={agency.phoneHref}
               aria-label={`Appeler ${agency.name} au ${agency.phoneDisplay}`}
-              className="group/btn relative overflow-hidden inline-flex min-h-[48px] flex-1 sm:flex-initial sm:min-w-[168px] items-center justify-center gap-2.5 rounded-full bg-gradient-to-r from-[#B79A62] via-[#C9AD74] to-[#B79A62] hover:from-[#C6AA73] hover:to-[#D5BA82] px-6 py-2.5 text-[15px] font-semibold text-[#1C1F21] whitespace-nowrap transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F3F0E7]"
+              className="group/btn relative overflow-hidden inline-flex min-h-[48px] flex-1 sm:flex-initial sm:min-w-[168px] items-center justify-center gap-2.5 rounded-lg bg-[#B79A62] hover:bg-[#C6AA73] active:bg-[#A68952] px-6 py-3 text-[15px] font-semibold text-[#1C1F21] whitespace-nowrap transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F3F0E7]"
             >
               <span
                 aria-hidden="true"
@@ -237,7 +237,7 @@ function AgencyShowcase({
               }
               aria-label={`Appeler ${agency.name}`}
               aria-expanded={pendingActionNotice === 'phone'}
-              className="group/btn relative overflow-hidden inline-flex min-h-[48px] flex-1 sm:flex-initial sm:min-w-[168px] items-center justify-center gap-2.5 rounded-full bg-gradient-to-r from-[#B79A62] via-[#C9AD74] to-[#B79A62] hover:from-[#C6AA73] hover:to-[#D5BA82] px-6 py-2.5 text-[15px] font-semibold text-[#1C1F21] whitespace-nowrap transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F3F0E7] cursor-pointer"
+              className="group/btn relative overflow-hidden inline-flex min-h-[48px] flex-1 sm:flex-initial sm:min-w-[168px] items-center justify-center gap-2.5 rounded-lg bg-[#B79A62] hover:bg-[#C6AA73] active:bg-[#A68952] px-6 py-3 text-[15px] font-semibold text-[#1C1F21] whitespace-nowrap transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F3F0E7] cursor-pointer"
             >
               <span
                 aria-hidden="true"
@@ -254,7 +254,7 @@ function AgencyShowcase({
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`Ouvrir l’itinéraire vers ${agency.name}`}
-              className="group/nav inline-flex min-h-[48px] flex-1 sm:flex-initial sm:min-w-[168px] items-center justify-center gap-2.5 rounded-full border border-[#B79A62]/60 bg-transparent hover:border-[#D2B478] hover:bg-[#B79A62]/10 px-6 py-2.5 text-[15px] font-medium text-[#F3F0E7] whitespace-nowrap transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62]"
+              className="group/nav inline-flex min-h-[48px] flex-1 sm:flex-initial sm:min-w-[168px] items-center justify-center gap-2.5 rounded-lg border border-[#F3F0E7]/65 bg-transparent hover:border-[#F3F0E7] hover:bg-[#F3F0E7]/10 px-6 py-3 text-[15px] font-medium text-[#F3F0E7] whitespace-nowrap transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62]"
             >
               <Navigation
                 className="h-4 w-4 shrink-0 text-[#D2B478] transition-transform duration-200 group-hover/nav:translate-x-0.5 group-hover/nav:-translate-y-0.5"
@@ -271,7 +271,7 @@ function AgencyShowcase({
               }
               aria-label={`Itinéraire vers ${agency.name}`}
               aria-expanded={pendingActionNotice === 'maps'}
-              className="group/nav inline-flex min-h-[48px] flex-1 sm:flex-initial sm:min-w-[168px] items-center justify-center gap-2.5 rounded-full border border-[#B79A62]/60 bg-transparent hover:border-[#D2B478] hover:bg-[#B79A62]/10 px-6 py-2.5 text-[15px] font-medium text-[#F3F0E7] whitespace-nowrap transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62] cursor-pointer"
+              className="group/nav inline-flex min-h-[48px] flex-1 sm:flex-initial sm:min-w-[168px] items-center justify-center gap-2.5 rounded-lg border border-[#F3F0E7]/65 bg-transparent hover:border-[#F3F0E7] hover:bg-[#F3F0E7]/10 px-6 py-3 text-[15px] font-medium text-[#F3F0E7] whitespace-nowrap transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62] cursor-pointer"
             >
               <Navigation
                 className="h-4 w-4 shrink-0 text-[#D2B478] transition-transform duration-200 group-hover/nav:translate-x-0.5 group-hover/nav:-translate-y-0.5"
@@ -334,23 +334,23 @@ export function AgenciesSection({ config, brand }: AgenciesSectionProps) {
         className="pointer-events-none absolute inset-x-0 top-0 h-[360px] bg-[radial-gradient(ellipse_60%_55%_at_50%_0%,rgba(183,154,98,0.09),transparent_72%)]"
       />
 
-      <div className="relative mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-10 py-18 sm:py-22 lg:py-26">
+      <div className="relative mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-10 py-16 sm:py-20 lg:py-24">
         <motion.div
           initial={headingReveal.initial}
           whileInView={headingReveal.visible}
           viewport={REVEAL_VIEWPORT}
-          className="mx-auto max-w-2xl text-center"
+          className="max-w-2xl"
         >
-          <p className="text-[13px] sm:text-[14px] font-medium uppercase tracking-[0.2em] text-[#B79A62]">
+          <p className="section-kicker text-[#B79A62]">
             {config.kicker}
           </p>
           <h2
             id="10_Nos_Agences-title"
-            className="mt-3 font-display text-[32px] sm:text-[40px] lg:text-[46px] font-semibold leading-[1.12] tracking-[-0.02em] text-[#F3F0E7]"
+            className="mt-3 section-title text-[#F3F0E7]"
           >
             {config.title}
           </h2>
-          <p className="mt-4 text-[15px] sm:text-[17px] leading-[1.6] text-[#F3F0E7]/76">
+          <p className="mt-4 section-subtitle text-[#F3F0E7]/76">
             {config.subtitle}
           </p>
         </motion.div>
