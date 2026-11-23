@@ -619,8 +619,8 @@ export const AGENCIES_CONFIG: AgenciesConfig = {
       phoneDisplay: '04 91 90 51 65',
       phoneHref: 'tel:+33491905165',
       hoursTitle: 'Horaires d’ouverture',
-      hoursLabel: 'Horaires à compléter',
-      isHoursPending: true,
+      hoursLabel: 'Lun – sam : 9h – 19h · Dimanche : fermé',
+      isHoursPending: false,
       directionsUrl:
         'https://www.google.com/maps/search/?api=1&query=48+rue+de+la+R%C3%A9publique+13002+Marseille',
     },
@@ -636,8 +636,8 @@ export const AGENCIES_CONFIG: AgenciesConfig = {
       phoneDisplay: '07 82 82 82 08',
       phoneHref: 'tel:+33782828208',
       hoursTitle: 'Horaires d’ouverture',
-      hoursLabel: 'Horaires à compléter',
-      isHoursPending: true,
+      hoursLabel: 'Lun – sam : 9h – 19h · Dimanche : fermé',
+      isHoursPending: false,
       directionsUrl: 'https://www.google.com/maps/search/?api=1&query=124+rue+de+Rome+13006+Marseille',
     },
   ],
@@ -722,7 +722,7 @@ export const FOOTER_CONFIG: FooterConfig = {
 };
 
 export const WHATSAPP_CONFIG: WhatsAppConfig = {
-  phoneDisplay: '04 91 90 51 65',
+  phoneDisplay: '07 82 82 82 08',
   label: 'WhatsApp urgence',
   ariaLabel: 'Contacter Serrurerie de la République sur WhatsApp pour une urgence',
   prefilledMessage:

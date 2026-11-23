@@ -230,7 +230,7 @@ export function HeroSection({
       <motion.div
         data-testid="hero-parallax-content"
         style={prefersReducedMotion ? undefined : { y: contentParallaxY }}
-        className="relative z-10 mx-auto w-full max-w-[1280px] shrink-0 px-5 sm:px-8 lg:px-10 pt-1 pb-12 sm:pt-2 sm:pb-20 lg:pt-24 lg:pb-32 will-change-transform"
+        className="relative z-10 mx-auto w-full max-w-[1280px] shrink-0 px-5 sm:px-8 lg:px-10 pt-1 pb-8 sm:pt-2 sm:pb-20 lg:pt-24 lg:pb-32 will-change-transform"
       >
         <div className="flex flex-col items-start max-w-[640px]">
           {config.kicker && (

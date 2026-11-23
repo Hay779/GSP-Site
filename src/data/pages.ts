@@ -290,18 +290,33 @@ function domainPageBlocks(domain: DomainCardItem): PageBlock[] {
 const LEGAL_MENTIONS: readonly LegalArticle[] = [
   {
     heading: 'Éditeur du site',
-    paragraphs: ['Serrurerie de la République — 48 rue de la République, 13002 Marseille.', 'Téléphone : 04 91 90 51 65.'],
-    pending: 'Forme juridique, capital social, SIRET, RCS et responsable de la publication à compléter.',
+    paragraphs: [
+      'SERRURERIE DE LA REPUBLIQUE, société à responsabilité limitée (SARL) au capital de 1\u00A0000\u00A0€.',
+      'Siège social\u00A0: 48 rue de la République, 13002 Marseille.',
+      'Immatriculée au RCS de Marseille sous le numéro 106\u00A0157\u00A0118 — SIRET 106\u00A0157\u00A0118\u00A000014.',
+      'TVA intracommunautaire\u00A0: FR93106157118 — Code APE\u00A0: 43.32B (travaux de menuiserie métallique et serrurerie).',
+      'Téléphone\u00A0: 04 91 90 51 65.',
+    ],
+  },
+  {
+    heading: 'Directeur de la publication',
+    paragraphs: ['Grigor Galstyan, gérant.'],
   },
   {
     heading: 'Hébergement',
     paragraphs: [],
-    pending: 'Nom, raison sociale, adresse et contact de l’hébergeur à compléter.',
+    pending: 'Nom, raison sociale, adresse et contact de l’hébergeur à compléter lors de la mise en ligne.',
   },
   {
     heading: 'Propriété intellectuelle',
     paragraphs: [
-      'L’ensemble des contenus de ce site (textes, visuels, logo) est protégé. Toute reproduction sans autorisation préalable est interdite.',
+      'L’ensemble des contenus de ce site (textes, visuels, logo) est la propriété de SERRURERIE DE LA REPUBLIQUE ou de ses partenaires. Toute reproduction, même partielle, sans autorisation préalable est interdite.',
+    ],
+  },
+  {
+    heading: 'Photographies',
+    paragraphs: [
+      'Certaines photographies présentes sur le site sont des visuels d’illustration et ne représentent pas nécessairement des interventions réalisées par l’entreprise.',
     ],
   },
 ];
@@ -310,15 +325,16 @@ const LEGAL_PRIVACY: readonly LegalArticle[] = [
   {
     heading: 'Données collectées',
     paragraphs: [
-      'Les informations transmises via les formulaires (demande de devis, envoi de photos après sinistre) sont destinées uniquement au traitement de votre demande par Serrurerie de la République.',
+      'Les informations transmises via les formulaires (demande de devis, envoi de photos après sinistre, demande de partenariat) sont destinées uniquement au traitement de votre demande par SERRURERIE DE LA REPUBLIQUE, responsable du traitement, représentée par son gérant, Grigor Galstyan.',
+      'Elles ne sont ni vendues ni cédées à des tiers.',
     ],
   },
   {
     heading: 'Conservation et droits (RGPD)',
     paragraphs: [
-      'Vous disposez d’un droit d’accès, de rectification et de suppression de vos données.',
+      'Vos données sont conservées le temps nécessaire au traitement de votre demande, puis au maximum 3 ans après notre dernier échange.',
+      'Vous disposez d’un droit d’accès, de rectification, d’opposition et de suppression de vos données, par courrier à SERRURERIE DE LA REPUBLIQUE, 48 rue de la République, 13002 Marseille, ou en nous contactant via le formulaire du site. Vous pouvez aussi saisir la CNIL (cnil.fr).',
     ],
-    pending: 'Durée de conservation et adresse e-mail dédiée à l’exercice des droits à compléter.',
   },
   {
     heading: 'Cookies',
