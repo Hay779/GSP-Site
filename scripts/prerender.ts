@@ -2,7 +2,7 @@
  * Pré-rendu après `vite build` : enregistre le HTML complet de chaque page
  * (dist/<adresse>/index.html) pour que Google et les réseaux sociaux lisent
  * le contenu sans exécuter le JavaScript. Génère aussi 404.html, sitemap.xml
- * et robots.txt.
+ * robots.txt et llms.txt (présentation pour les assistants IA).
  *
  * Utilisation : npm run build:prod   (voir package.json)
  */
@@ -11,6 +11,7 @@ import { createRequire } from 'node:module';
 import { existsSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { extname, join, resolve } from 'node:path';
 import { SITE_URL, indexableRoutes, pathForRoute, seoForRoute } from '../src/utils/seo';
+import { buildLlmsTxt } from './llms';
 
 const require = createRequire(import.meta.url);
 // Playwright (navigateur sans écran) : installé sur la machine de build.
@@ -87,8 +88,22 @@ async function main() {
     join(DIST, 'sitemap.xml'),
     `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join('\n')}\n</urlset>\n`
   );
-  writeFileSync(join(DIST, 'robots.txt'), `User-agent: *\nAllow: /\nDisallow: /404.html\n\nSitemap: ${SITE_URL}/sitemap.xml\n`);
-  console.log(`✓ sitemap.xml (${urls.length} adresses) et robots.txt`);
+  // Robots : moteurs de recherche ET assistants IA explicitement autorisés.
+  const aiBots = [
+    'Googlebot', 'Bingbot', 'Applebot', 'DuckDuckBot',
+    'OAI-SearchBot', 'ChatGPT-User', 'GPTBot',
+    'Claude-SearchBot', 'Claude-User', 'ClaudeBot',
+    'PerplexityBot', 'Perplexity-User', 'Google-Extended', 'Applebot-Extended',
+    'MistralAI-User', 'Amazonbot', 'meta-externalagent',
+  ];
+  const robots = [
+    ...aiBots.map((bot) => `User-agent: ${bot}\nAllow: /\nDisallow: /404.html\n`),
+    'User-agent: *\nAllow: /\nDisallow: /404.html\n',
+    `Sitemap: ${SITE_URL}/sitemap.xml\n`,
+  ].join('\n');
+  writeFileSync(join(DIST, 'robots.txt'), robots);
+  writeFileSync(join(DIST, 'llms.txt'), buildLlmsTxt());
+  console.log(`✓ sitemap.xml (${urls.length} adresses), robots.txt et llms.txt`);
 
   await browser.close();
   server.close();

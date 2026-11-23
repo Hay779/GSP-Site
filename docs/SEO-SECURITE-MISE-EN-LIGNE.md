@@ -24,6 +24,12 @@
 - `Service` sur les pages métiers.
 - `FAQPage` sur les pages qui contiennent des questions.
 
+### Assistants IA (ChatGPT, Claude, Perplexity, Gemini, Copilot…)
+- Les pages sont pré-rendues en HTML. C'est indispensable, car la plupart des robots IA n'exécutent pas le JavaScript.
+- `robots.txt` autorise explicitement les robots des assistants : OAI-SearchBot, ChatGPT-User, GPTBot, Claude-SearchBot, ClaudeBot, PerplexityBot, Google-Extended, Applebot, Bingbot, etc.
+- `llms.txt` : une fiche en texte simple qui résume l'entreprise pour les IA. Elle contient les agences, les horaires, les téléphones, les services avec leurs liens et la FAQ. Elle est générée automatiquement à partir du contenu du site.
+- Les données structurées (entreprise, agences, services, FAQ) donnent aux IA des faits fiables à citer.
+
 ### Sécurité (fichier `public/.htaccess`)
 - HTTPS obligatoire et adresse unique en `www` (redirections 301).
 - En-têtes de sécurité :
@@ -51,6 +57,7 @@
    - téléphone : 1007 ;
    - site : ovhcloud.com.
 6. **Google Search Console** : ajouter le domaine, puis envoyer `https://www.<domaine>/sitemap.xml`.
+   **Bing Webmaster Tools** : faire la même chose. C'est important, car ChatGPT et Copilot s'appuient sur l'index de Bing.
 7. **Fiche Google Business** : mettre l'adresse du site dans le champ « Site web ».
 8. **Formulaires** : brancher le service d'envoi, puis ajouter son adresse dans `connect-src` de la CSP (`.htaccess`).
 9. **Test final** :
