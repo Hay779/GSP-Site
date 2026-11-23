@@ -50,12 +50,182 @@ export interface ReviewsSource {
 }
 
 export const REVIEWS_SOURCE: ReviewsSource = {
-  googleProfileUrl: '',
-  leaveReviewUrl: '',
+  googleProfileUrl: 'https://www.google.com/maps?cid=8005087096552407541',
+  leaveReviewUrl: 'https://search.google.com/local/writereview?placeid=ChIJR5B6nerAyRIR9cERMk3IF28',
+  // Chiffres de la fiche Google au 23/11/2026.
+  googleAverage: 4.6,
+  googleTotalCount: 30,
 };
 
-/** VOS VRAIS AVIS (à remplir). */
-export const REAL_REVIEWS: readonly CustomerReview[] = [];
+/**
+ * VOS VRAIS AVIS — copiés depuis la fiche Google le 23/11/2026.
+ * Seuls les avis 5 étoiles avec un commentaire sont repris ici ; la note et le total
+ * affichés (REVIEWS_SOURCE) sont ceux de Google, tous avis confondus.
+ */
+export const REAL_REVIEWS: readonly CustomerReview[] = [
+  {
+    id: 'g-garcia',
+    author: 'Thierry G.',
+    rating: 5,
+    date: '2026-10-21',
+    text: 'Très réactif, très bon professionnel, magasin très propre et bien rangé. Je recommande fortement ce vendeur. Merci encore.',
+    service: 'Clés & badges',
+    source: 'Google',
+  },
+  {
+    id: 'g-boucher',
+    author: 'Jeremy B.',
+    rating: 5,
+    date: '2026-09-03',
+    text: 'Je viens d’avoir un problème avec une clé reproduite coincée dans la serrure. Le gérant s’est déplacé et a réglé le problème sans frais. A pris le temps de m’expliquer comment faire à l’avenir. Gentil et professionnel. Je recommande.',
+    service: 'Clés & badges',
+    source: 'Google',
+  },
+  {
+    id: 'g-mdfe',
+    author: 'MDFE',
+    rating: 5,
+    date: '2026-08-29',
+    text: 'Depuis la demande de devis jusqu’à l’installation, le service a été très professionnel et plaisant. Le prix est de plus raisonnable. Je recommande grandement.',
+    service: 'Serrurerie',
+    source: 'Google',
+  },
+  {
+    id: 'g-bobin',
+    author: 'Mickaël B.',
+    rating: 5,
+    date: '2026-08-28',
+    text: 'Après avoir testé un autre serrurier à plusieurs reprises pour refaire ma clé (qui ne tournait pas lorsque je la mettais dans la serrure), je suis venue ici et les clés ont fonctionné du premier coup ! Merci beaucoup.',
+    service: 'Clés & badges',
+    source: 'Google',
+  },
+  {
+    id: 'g-remy',
+    author: 'Rémy G.',
+    rating: 5,
+    date: '2026-02-23',
+    text: 'Des artisans comme il en reste peu, et surtout avec la gentillesse et un très bon rapport qualité-prix ! Merci !',
+    service: 'Serrurerie',
+    source: 'Google',
+  },
+  {
+    id: 'g-verhoosel',
+    author: 'Thomas V.',
+    rating: 5,
+    date: '2026-01-13',
+    text: 'Rapide, efficace et extrêmement aimable (pour faire un double de clés).',
+    service: 'Clés & badges',
+    source: 'Google',
+  },
+  {
+    id: 'g-lina',
+    author: 'Lina B.',
+    rating: 5,
+    date: '2025-04-24',
+    text: 'Intervention rapide et très efficace. Les serruriers sont très gentils et compétents, je recommande.',
+    service: 'Serrurerie',
+    source: 'Google',
+  },
+  {
+    id: 'g-zeppel',
+    author: 'Der Z.',
+    rating: 5,
+    date: '2025-01-25',
+    text: 'J’ai eu besoin de changer le barillet de ma porte d’entrée. Ils sont intervenus rapidement et ont réussi à me dépanner malgré une porte en mauvais état.',
+    service: 'Serrurerie',
+    source: 'Google',
+  },
+  {
+    id: 'g-franck',
+    author: 'Théo F.',
+    rating: 5,
+    date: '2025-01-16',
+    text: 'Reproduction de clé très rapide et bon marché.',
+    service: 'Clés & badges',
+    source: 'Google',
+  },
+  {
+    id: 'g-madamet',
+    author: 'Madame T.',
+    rating: 5,
+    date: '2024-10-30',
+    text: 'Parfait ! Intervention à domicile suite à une déclaration d’assurance. Les deux serruriers qui sont intervenus ont été professionnels, m’ont donné des conseils et ont été très sympathiques ! Je recommande fortement l’entreprise ! Le travail rendu est plus que parfait !',
+    service: 'Après sinistre',
+    source: 'Google',
+  },
+  {
+    id: 'g-reinhard',
+    author: 'Laurent R.',
+    rating: 5,
+    date: '2024-10-17',
+    text: 'Un accueil très sympathique et une copie de clé en moins de 5 minutes. Super !',
+    service: 'Clés & badges',
+    source: 'Google',
+  },
+  {
+    id: 'g-emilie',
+    author: 'Émilie',
+    rating: 5,
+    date: '2024-07-19',
+    text: 'Rien à dire ! Rapides, compétents, professionnels… Nous n’hésiterons pas à refaire appel à vos services !',
+    service: 'Serrurerie',
+    source: 'Google',
+  },
+  {
+    id: 'g-marion',
+    author: 'Marion L.',
+    rating: 5,
+    date: '2024-04-30',
+    text: 'Je suis venue pour poser une simple question, et la personne a pris tout le temps nécessaire pour me répondre. Il s’avère que j’ai pu dépanner moi-même ma serrure grâce à ses précieux conseils. Merci monsieur pour votre aide, je sais vers qui me tourner si j’ai un problème de serrurerie.',
+    service: 'Serrurerie',
+    source: 'Google',
+  },
+  {
+    id: 'g-antunes',
+    author: 'Sébastien A.',
+    rating: 5,
+    date: '2023-10-27',
+    text: 'Travail rapide et efficace, très bon rapport qualité-prix !',
+    service: 'Serrurerie',
+    source: 'Google',
+  },
+  {
+    id: 'g-gauthier',
+    author: 'Anthony G.',
+    rating: 5,
+    date: '2023-09-19',
+    text: 'Entreprise sérieuse, je recommande.',
+    service: 'Serrurerie',
+    source: 'Google',
+  },
+  {
+    id: 'g-mt',
+    author: 'MT',
+    rating: 5,
+    date: '2023-09-08',
+    text: 'La serrurerie est rapide, efficace, le travail est bien fait et les ouvriers sont compétents.',
+    service: 'Serrurerie',
+    source: 'Google',
+  },
+  {
+    id: 'g-riban',
+    author: 'Arnaud R.',
+    rating: 5,
+    date: '2023-08-10',
+    text: 'Rapide et efficace. Nickel.',
+    service: 'Serrurerie',
+    source: 'Google',
+  },
+  {
+    id: 'g-bouacid',
+    author: 'Nadia B.',
+    rating: 5,
+    date: '2022-12-17',
+    text: 'Professionnel et très bonne communication. Intervention rapide. Je recommande.',
+    service: 'Serrurerie',
+    source: 'Google',
+  },
+];
 
 /** EXEMPLES pour l'aperçu du design — jamais affichés en production. */
 export const DEMO_REVIEWS: readonly CustomerReview[] = [
