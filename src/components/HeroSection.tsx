@@ -185,7 +185,7 @@ export function HeroSection({
               alt={posterSlide.alt}
               referrerPolicy="no-referrer"
               onError={() => setPosterFailed(true)}
-              className="h-full w-full object-cover [filter:contrast(1.06)_saturate(1.1)_brightness(1.04)] object-[80%_30%] sm:object-[72%_36%] lg:object-[70%_40%]"
+              className="h-full w-full object-cover [filter:contrast(1.06)_saturate(1.1)_brightness(1.04)] lg:[filter:contrast(1.08)_saturate(1.14)_brightness(1.1)] object-[80%_30%] sm:object-[72%_36%] lg:object-[70%_40%]"
             />
           )}
 
@@ -201,7 +201,7 @@ export function HeroSection({
               preload="metadata"
               poster={posterSlide?.src}
               onError={() => setVideoFailed(true)}
-              className="absolute inset-0 h-full w-full object-cover object-center"
+              className="absolute inset-0 h-full w-full object-cover object-center [filter:contrast(1.06)_saturate(1.1)_brightness(1.04)]"
             >
               {config.media.videoWebmSrc && (
                 <source src={config.media.videoWebmSrc} type="video/webm" />
@@ -215,10 +215,10 @@ export function HeroSection({
 
         {/* Voile directionnel calibré pour garantir un contraste WCAG AA sur tout contenu vidéo */}
         <div className="absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-[#16191B] via-[#16191B]/30 to-transparent lg:hidden" />
-        <div className="hidden lg:block absolute inset-0 bg-[linear-gradient(90deg,rgba(36,40,43,0.94)_0%,rgba(36,40,43,0.82)_26%,rgba(36,40,43,0.55)_44%,rgba(36,40,43,0.18)_64%,rgba(36,40,43,0)_100%)]" />
+        <div className="hidden lg:block absolute inset-0 bg-[linear-gradient(90deg,rgba(36,40,43,0.9)_0%,rgba(36,40,43,0.72)_26%,rgba(36,40,43,0.4)_44%,rgba(36,40,43,0.08)_62%,rgba(36,40,43,0)_100%)]" />
         {/* Voile haut (mobile) pour la lisibilité de l'indicateur du diaporama */}
         <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-[#16191B]/40 to-transparent lg:hidden" />
-        <div className="hidden lg:block absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#24282B]/50 via-[#24282B]/15 to-transparent" />
+        <div className="hidden lg:block absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#24282B]/35 via-[#24282B]/10 to-transparent" />
         {/* Assombrissement progressif subtil au défilement pour fondre 02_Hero vers la section suivante */}
         <motion.div
           style={prefersReducedMotion ? undefined : { opacity: depthScrimOpacity }}

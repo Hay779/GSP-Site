@@ -81,7 +81,7 @@ export function PageHero({
         animate={{ scale: 1.02 }}
         transition={{ duration: prefersReducedMotion ? 0 : 6, ease: 'easeOut' }}
         style={{ objectPosition: imagePosition }}
-        className={`h-full w-full object-cover will-change-transform ${className}`}
+        className={`h-full w-full object-cover will-change-transform [filter:contrast(1.06)_saturate(1.1)_brightness(1.05)] ${className}`}
       />
     ) : null;
 
