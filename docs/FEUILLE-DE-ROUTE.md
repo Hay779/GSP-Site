@@ -15,7 +15,9 @@ Mise à jour : 23/11/2026. Liste de référence des chantiers restants. On coche
 - [ ] **Annuaires et citations** : PagesJaunes, Apple Plans (Business Connect), Bing Places, Waze, annuaires d'artisans, Chambre de métiers. Partout le **même nom, la même adresse et le même téléphone**.
 - [ ] **Bing Webmaster Tools** et **Bing Places** : ChatGPT et Copilot s'appuient sur l'index de Bing.
 - [ ] **Avis Google** : continuer à en obtenir (affiche QR, messages), répondre à chaque avis, y compris les 2 avis négatifs sans réponse. Mettre à jour la note affichée sur le site.
-- [ ] **Fiche Google Business** : renseigner le site web, les services, les photos, les horaires des 2 agences, des posts réguliers.
+- [ ] **Fiche Google Business** : voir `docs/AUDIT-GOOGLE-BUSINESS.md`.
+  - Urgent : mettre le vrai nom et « Serrurier » en catégorie principale.
+  - Ensuite : description, services, zone, publications, réponses aux avis, fiche de l'agence Rome.
 - [ ] Relire `llms.txt` après chaque changement de contenu (il est généré automatiquement au build).
 - [ ] Décider s'il faut bloquer les robots d'**entraînement** des IA (GPTBot, Google-Extended, CCBot). Ils sont autorisés aujourd'hui, ce qui donne plus de visibilité.
 
