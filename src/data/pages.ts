@@ -333,9 +333,8 @@ const LEGAL_PRIVACY: readonly LegalArticle[] = [
     heading: 'Conservation et droits (RGPD)',
     paragraphs: [
       'Vos données sont conservées le temps nécessaire au traitement de votre demande, puis au maximum 3 ans après notre dernier échange.',
-      'Vous disposez d’un droit d’accès, de rectification, d’opposition et de suppression de vos données, en écrivant à SERRURERIE DE LA REPUBLIQUE, 48 rue de la République, 13002 Marseille. Vous pouvez aussi saisir la CNIL (cnil.fr).',
+      'Vous disposez d’un droit d’accès, de rectification, d’opposition et de suppression de vos données, par courrier à SERRURERIE DE LA REPUBLIQUE, 48 rue de la République, 13002 Marseille, ou en nous contactant via le formulaire du site. Vous pouvez aussi saisir la CNIL (cnil.fr).',
     ],
-    pending: 'Adresse e-mail dédiée à l’exercice des droits à compléter.',
   },
   {
     heading: 'Cookies',

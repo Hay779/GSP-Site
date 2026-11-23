@@ -619,8 +619,8 @@ export const AGENCIES_CONFIG: AgenciesConfig = {
       phoneDisplay: '04 91 90 51 65',
       phoneHref: 'tel:+33491905165',
       hoursTitle: 'Horaires d’ouverture',
-      hoursLabel: 'Horaires à compléter',
-      isHoursPending: true,
+      hoursLabel: 'Lun – sam : 9h – 19h · Dimanche : fermé',
+      isHoursPending: false,
       directionsUrl:
         'https://www.google.com/maps/search/?api=1&query=48+rue+de+la+R%C3%A9publique+13002+Marseille',
     },
