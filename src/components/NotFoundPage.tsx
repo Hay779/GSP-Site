@@ -1,26 +1,10 @@
-import { useEffect } from 'react';
 import { ArrowRight, FileText, Home, Phone } from 'lucide-react';
 import { DOMAINS_CONFIG } from '../data/sectionsContent';
 import type { BrandConfig } from '../utils/navigation';
 import { hrefForDomain, hrefForHome, hrefForPage, type RouterMode } from '../utils/router';
-import { usePageMeta } from './PageHero';
 
 /** Page « introuvable » (adresse inconnue) : explication courte et raccourcis utiles. */
 export function NotFoundPage({ brand, routerMode }: { readonly brand: BrandConfig; readonly routerMode: RouterMode }) {
-  usePageMeta(
-    'Page introuvable | Serrurerie de la République',
-    'Cette page n’existe pas ou a été déplacée. Retrouvez nos services de serrurerie, vitrerie, menuiserie et fermetures à Marseille.',
-  );
-
-  // Indique aux moteurs de recherche de ne pas indexer cette page.
-  useEffect(() => {
-    const meta = document.createElement('meta');
-    meta.name = 'robots';
-    meta.content = 'noindex';
-    document.head.appendChild(meta);
-    return () => meta.remove();
-  }, []);
-
   const links = [
     ...DOMAINS_CONFIG.items.map((item) => ({ label: item.title, href: hrefForDomain(item.id, routerMode) })),
     { label: 'Clés & badges', href: hrefForPage('cles-badges', routerMode) },

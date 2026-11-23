@@ -13,7 +13,7 @@ import {
   type PartnerErrors,
 } from '../utils/partnerForm';
 import { hrefForPage, type RouterMode } from '../utils/router';
-import { PageHero, usePageMeta } from './PageHero';
+import { PageHero } from './PageHero';
 
 const ORG_ICONS: Readonly<Record<OrganizationType, typeof Building2>> = {
   'Syndic / gestionnaire de copropriété': Building2,
@@ -85,10 +85,6 @@ function Group({ title, children }: { readonly title: string; readonly children:
 }
 
 export function PartnerPage({ brand, routerMode }: { readonly brand: BrandConfig; readonly routerMode: RouterMode }) {
-  usePageMeta(
-    'Devenir partenaire — Professionnels | Serrurerie de la République',
-    'Syndics, assureurs, experts, agences immobilières et bailleurs : présentez-nous votre structure pour organiser une collaboration à Marseille.'
-  );
   const [draft, setDraft] = useState<PartnerDraft>(INITIAL_PARTNER_DRAFT);
   const [errors, setErrors] = useState<PartnerErrors>({});
   const [reference, setReference] = useState<string | null>(null);
