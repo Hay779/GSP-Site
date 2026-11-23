@@ -156,7 +156,7 @@ export function PageHero({
     <section
       id="page-hero"
       aria-labelledby="page-hero-title"
-      className="relative w-full overflow-hidden bg-[#24282B] bg-[radial-gradient(ellipse_at_80%_35%,rgba(183,154,98,0.2),transparent_60%)]"
+      className="relative w-full overflow-hidden bg-[#16191B] lg:bg-[#24282B] bg-[radial-gradient(ellipse_at_80%_35%,rgba(183,154,98,0.2),transparent_60%)]"
     >
       {/* Mobile & tablette : photo en bandeau, bas arrondi avec filet doré */}
       <div aria-hidden="true" className="kb-curve relative h-[34svh] min-h-[210px] max-h-[320px] overflow-hidden lg:hidden">

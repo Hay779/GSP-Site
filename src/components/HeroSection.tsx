@@ -146,12 +146,12 @@ export function HeroSection({
       id="02_Hero"
       data-section="02_Hero"
       aria-labelledby="02_Hero-title"
-      className="relative w-full overflow-hidden bg-[#24282B] scroll-mt-[74px] lg:scroll-mt-[88px] flex flex-col h-[calc(100svh-74px)] min-h-[540px] sm:h-auto sm:min-h-0 lg:flex-row lg:min-h-[min(calc(100svh-88px),740px)] lg:items-center"
+      className="relative w-full overflow-hidden bg-[#16191B] lg:bg-[#24282B] scroll-mt-[74px] lg:scroll-mt-[88px] flex flex-col h-[calc(100svh-74px)] min-h-[540px] sm:h-auto sm:min-h-0 lg:flex-row lg:min-h-[min(calc(100svh-88px),740px)] lg:items-center"
     >
       {/* Couche média plein écran : vidéo HTML5 + poster artisanal avec parallaxe immersif au scroll */}
       <div
         data-testid="hero-media-layer"
-        className="relative min-h-[150px] flex-1 sm:h-[54svh] sm:max-h-[520px] sm:flex-none w-full lg:absolute lg:inset-0 lg:h-auto lg:min-h-0 lg:max-h-none z-0 overflow-hidden bg-[#24282B]"
+        className="relative min-h-[150px] flex-1 sm:h-[54svh] sm:max-h-[520px] sm:flex-none w-full lg:absolute lg:inset-0 lg:h-auto lg:min-h-0 lg:max-h-none z-0 overflow-hidden bg-[#16191B] lg:bg-[#24282B]"
         aria-hidden="true"
       >
         {/* Repli stylisé si ni vidéo ni poster ne chargent */}
@@ -214,10 +214,10 @@ export function HeroSection({
         </motion.div>
 
         {/* Voile directionnel calibré pour garantir un contraste WCAG AA sur tout contenu vidéo */}
-        <div className="absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-[#24282B] via-[#24282B]/30 to-transparent lg:hidden" />
+        <div className="absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-[#16191B] via-[#16191B]/30 to-transparent lg:hidden" />
         <div className="hidden lg:block absolute inset-0 bg-[linear-gradient(90deg,rgba(36,40,43,0.94)_0%,rgba(36,40,43,0.82)_26%,rgba(36,40,43,0.55)_44%,rgba(36,40,43,0.18)_64%,rgba(36,40,43,0)_100%)]" />
         {/* Voile haut (mobile) pour la lisibilité de l'indicateur du diaporama */}
-        <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-[#24282B]/40 to-transparent lg:hidden" />
+        <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-[#16191B]/40 to-transparent lg:hidden" />
         <div className="hidden lg:block absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#24282B]/50 via-[#24282B]/15 to-transparent" />
         {/* Assombrissement progressif subtil au défilement pour fondre 02_Hero vers la section suivante */}
         <motion.div
