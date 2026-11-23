@@ -6,11 +6,11 @@ Audit du 23/11/2026. Fiche analysée : « Bricard Vachette Serrurerie de la Rép
 
 | # | Problème | Gravité | Action |
 |---|---|---|---|
-| 1 | **Aucun numéro de téléphone sur la fiche.** | 🔴 Critique | Ajouter **04 91 90 51 65** comme numéro principal. Un serrurier sans bouton « Appeler » perd la plupart de ses clients mobiles. |
+| 1 | **Téléphone** : il s'affiche bien sur Google (+33 4 91 90 51 65). En revanche, l'API du propriétaire ne le renvoie pas, ce qui laisse penser qu'il a été ajouté par Google plutôt que saisi par toi. | 🟢 Vérification | Dans « Modifier le profil → Contact », vérifier que le 04 91 90 51 65 est bien saisi comme numéro principal. Si c'est le cas, rien à faire. |
 | 2 | **Nom bourré de mots-clés** : « Bricard Vachette Serrurerie de la République serrurier menuisier porte blindée badge immeuble reproduction de clés ». | 🔴 Élevé | C'est contraire aux règles de Google : la fiche risque une **suspension**, ou un concurrent peut proposer une correction. Mettre le **nom réel, celui de l'enseigne** : « Serrurerie de la République ». Garder « Bricard Vachette » seulement si c'est écrit sur la devanture (ex. revendeur agréé). |
 | 3 | **Catégorie principale = « Service de reproduction de clés »** | 🟠 Élevé | Passer **« Serrurier »** en catégorie principale. C'est elle qui compte le plus pour « serrurier Marseille ». Garder « Reproduction de clés » en catégorie secondaire. |
 | 4 | **Site web = ancien site Wix** (serrurerierepubliq.wixsite.com) | 🟠 | Remplacer par le nouveau site dès qu'il sera en ligne sur OVH. |
-| 5 | **Description fausse et datée** : assistance « du lundi au vendredi de 10 à 00–12:00 et de 14:00 à 16:00 » (contredit les horaires 9h-19h), faute « Bouches du Rhones », pas de mention de l'agence Rome ni de la vitrerie. | 🟠 | Remplacer par le texte du §3. |
+| 5 | **Texte de la description daté** : les horaires de la fiche sont bons (9h-19h), mais la **description** dit encore « assistance téléphonique du lundi au vendredi de 10 à 00–12:00 et de 14:00 à 16:00 », faute « Bouches du Rhones », pas de mention de l'agence Rome ni de la vitrerie. | 🟠 | Remplacer par le texte du §3. |
 | 6 | **Zone d'intervention incomplète** : manquent 13013, 13015, 13016 et les communes voisines. | 🟡 | Ajouter tous les arrondissements, plus Allauch, Plan-de-Cuques, Aubagne, Septèmes-les-Vallons, Les Pennes-Mirabeau, Cassis. |
 | 7 | **Services** : seulement 8 services standards, sans description. Rien sur la vitrerie, les rideaux métalliques, les volets, les badges ou l'après-sinistre. | 🟡 | Ajouter les services du §4, chacun avec une description. |
 | 8 | **Catégories manquantes** | 🟡 | Ajouter si possible : « Vitrier », « Service de réparation de volets roulants » ou « Installateur de volets », « Service de réparation de portes de garage ». Garder « Serrurerie d'urgence » seulement si tu fais vraiment des urgences. |
@@ -27,7 +27,7 @@ Partout (fiche Google, site, PagesJaunes, Bing, Apple Plans, réseaux sociaux), 
 - **Téléphone** : 04 91 90 51 65
 - **Site** : l'adresse définitive (OVH)
 
-Le site est déjà conforme. La fiche Google ne l'est pas : il manque le téléphone et le nom n'est pas le bon.
+Le site est déjà conforme. Sur la fiche Google, c'est le nom qui diffère.
 
 ## 3. Nouvelle description de la fiche (prête à copier, 750 caractères maximum)
 
@@ -76,7 +76,7 @@ Pour les avis positifs, une réponse courte et personnalisée suffit : « Merci 
 
 ## 8. Ordre conseillé
 
-1. Ajouter le **téléphone**, corriger le **nom**, mettre **« Serrurier »** en catégorie principale. 10 minutes, c'est le plus gros impact.
+1. Corriger le **nom** et mettre **« Serrurier »** en catégorie principale. 10 minutes, c'est le plus gros impact.
 2. Description, services, zone, horaires exceptionnels.
 3. Répondre aux avis, en commençant par les 2 négatifs.
 4. Fiche de l'agence Rome.
