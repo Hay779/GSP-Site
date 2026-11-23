@@ -51,7 +51,7 @@ export interface ReviewsSource {
 
 export const REVIEWS_SOURCE: ReviewsSource = {
   googleProfileUrl: 'https://www.google.com/maps?cid=8005087096552407541',
-  leaveReviewUrl: '',
+  leaveReviewUrl: 'https://search.google.com/local/writereview?placeid=ChIJR5B6nerAyRIR9cERMk3IF28',
   // Chiffres de la fiche Google au 23/11/2026.
   googleAverage: 4.6,
   googleTotalCount: 30,
