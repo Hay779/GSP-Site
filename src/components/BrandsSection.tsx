@@ -15,20 +15,20 @@ function BrandLogo({ partner }: { readonly partner: PartnerBrandItem }) {
   const [failed, setFailed] = useState(false);
   if (partner.logoSrc && !failed) {
     return (
-      <span className="flex h-[72px] w-full items-center justify-center">
+      <span className="flex h-[52px] sm:h-[72px] w-full items-center justify-center">
         <img
           src={partner.logoSrc}
           alt={`Logo ${partner.name}`}
           loading="lazy"
           onError={() => setFailed(true)}
-          style={{ maxHeight: `${partner.logoHeight ?? 56}px` }}
+          style={{ maxHeight: `min(${partner.logoHeight ?? 56}px, 100%)` }}
           className="w-auto max-w-[92%] object-contain"
         />
       </span>
     );
   }
   return (
-    <span className="flex h-[64px] items-center font-display text-[21px] sm:text-[22px] font-semibold uppercase tracking-[0.14em] text-[#1C1F21] transition-colors duration-200 group-hover:text-[#7D612D]">
+    <span className="flex h-[52px] sm:h-[64px] items-center text-center font-display text-[13px] sm:text-[17px] lg:text-[18px] font-semibold uppercase leading-tight tracking-[0.1em] text-[#1C1F21] transition-colors duration-200 group-hover:text-[#7D612D]">
       {partner.name}
     </span>
   );
@@ -62,7 +62,7 @@ export function BrandsSection({ config, contactHref }: BrandsSectionProps) {
 
         <ul
           aria-label="Marques sur lesquelles nous intervenons"
-          className="mt-10 sm:mt-12 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 lg:gap-5"
+          className="mt-10 sm:mt-12 grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-7 gap-3 sm:gap-4 lg:gap-5"
         >
           {config.partners.map((partner, index) => (
             <motion.li
@@ -71,7 +71,7 @@ export function BrandsSection({ config, contactHref }: BrandsSectionProps) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={REVEAL_VIEWPORT}
               transition={{ duration: prefersReducedMotion ? 0 : 0.45, delay: prefersReducedMotion ? 0 : index * 0.06, ease: REVEAL_EASE }}
-              className="group flex min-h-[120px] items-center justify-center rounded-xl bg-[#FFFFFF] px-4 py-6 text-center transition-shadow duration-200 ring-1 ring-[#1C1F21]/8 shadow-[0_8px_24px_-18px_rgba(28,31,33,0.35)] hover:shadow-[0_14px_30px_-16px_rgba(28,31,33,0.35)]"
+              className="group flex min-h-[84px] sm:min-h-[110px] lg:min-h-[120px] items-center justify-center rounded-xl bg-[#FFFFFF] px-2 sm:px-4 py-4 sm:py-6 text-center transition-shadow duration-200 ring-1 ring-[#1C1F21]/8 shadow-[0_8px_24px_-18px_rgba(28,31,33,0.35)] hover:shadow-[0_14px_30px_-16px_rgba(28,31,33,0.35)]"
             >
               <BrandLogo partner={partner} />
             </motion.li>

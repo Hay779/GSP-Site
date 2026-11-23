@@ -2,7 +2,7 @@
  * llms.txt : fiche de présentation en texte simple pour les assistants IA
  * (ChatGPT, Claude, Perplexity, Gemini…), générée à partir des contenus du site.
  */
-import { AGENCIES_CONFIG, DOMAINS_CONFIG, FAQ_CONFIG } from '../src/data/sectionsContent';
+import { AGENCIES_CONFIG, BRANDS_CONFIG, DOMAINS_CONFIG, FAQ_CONFIG } from '../src/data/sectionsContent';
 import { SITE_URL, pathForRoute, seoForRoute } from '../src/utils/seo';
 import type { PageId } from '../src/utils/router';
 
@@ -50,6 +50,9 @@ export function buildLlmsTxt(): string {
 
 ## Agences
 ${agencies.join('\n')}
+
+## Marques sur lesquelles nous intervenons
+${BRANDS_CONFIG.partners.map((p) => `${p.name} (${p.specialty.toLowerCase()})`).join(', ')}.
 
 ## Services
 ${domains.join('\n')}
