@@ -79,7 +79,17 @@ export type PartnerBrandId =
   | 'pollux'
   | 'tordjman'
   | 'muel'
-  | 'reelax';
+  | 'reelax'
+  | 'cisa'
+  | 'multlock'
+  | 'keso'
+  | 'assaabloy'
+  | 'laperche'
+  | 'denyfontaine'
+  | 'thirard'
+  | 'somfy'
+  | 'came'
+  | 'nice';
 
 export interface PartnerBrandItem {
   readonly id: PartnerBrandId;
@@ -529,6 +539,16 @@ export const BRANDS_CONFIG: BrandsConfig = {
     { id: 'muel', name: 'Muel', specialty: 'Serrures & verrous' },
     { id: 'reelax', name: 'Reelax', specialty: 'Quincaillerie de sécurité' },
     { id: 'fichet', name: 'Point Fort Fichet', specialty: 'Portes blindées', logoSrc: '/assets/brands/fichet.png', logoHeight: 42 },
+    { id: 'cisa', name: 'Cisa', specialty: 'Serrures & cylindres' },
+    { id: 'multlock', name: 'Mul\u2011T\u2011Lock', specialty: 'Cylindres haute sécurité' },
+    { id: 'keso', name: 'Keso', specialty: 'Cylindres haute sécurité' },
+    { id: 'assaabloy', name: 'Assa Abloy', specialty: 'Serrures & contrôle d’accès' },
+    { id: 'laperche', name: 'Laperche', specialty: 'Serrures & verrous' },
+    { id: 'denyfontaine', name: 'Deny Fontaine', specialty: 'Serrures & portes blindées' },
+    { id: 'thirard', name: 'Thirard', specialty: 'Serrures & quincaillerie' },
+    { id: 'somfy', name: 'Somfy', specialty: 'Motorisation volets & rideaux' },
+    { id: 'came', name: 'Came', specialty: 'Motorisation portails & garages' },
+    { id: 'nice', name: 'Nice', specialty: 'Motorisation portails & garages' },
   ],
   otherBrandsLabel: 'Votre équipement est d’une autre marque ?',
   otherBrandsCta: 'Contactez-nous pour vérifier',

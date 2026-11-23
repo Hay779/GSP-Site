@@ -62,7 +62,7 @@ export function BrandsSection({ config, contactHref }: BrandsSectionProps) {
 
         <ul
           aria-label="Marques sur lesquelles nous intervenons"
-          className="mt-10 sm:mt-12 grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-7 gap-3 sm:gap-4 lg:gap-5"
+          className="mt-10 sm:mt-12 grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-8 gap-3 sm:gap-4 lg:gap-5"
         >
           {config.partners.map((partner, index) => (
             <motion.li
