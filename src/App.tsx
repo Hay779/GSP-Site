@@ -47,6 +47,7 @@ import {
 } from './utils/navigation';
 import type { QuoteDomain } from './utils/quoteForm';
 import { useRouter, ROUTER_MODE } from './hooks/useRouter';
+import { applySeo, seoForRoute } from './utils/seo';
 import { hrefForDomain, hrefForHome, hrefForHomeSection, hrefForPage, routeKey, type PageId } from './utils/router';
 
 const NAV_TARGET_IDS: readonly SectionId[] = HEADER_NAV_ITEMS.map((item) => item.targetId);
@@ -59,6 +60,11 @@ export default function App() {
   const [photoModalOpen, setPhotoModalOpen] = useState(false);
   const quoteTriggerRef = useRef<HTMLButtonElement | null>(null);
   const { route, navigate } = useRouter();
+
+  // Titre, description, adresse canonique et données structurées de la page.
+  useEffect(() => {
+    applySeo(seoForRoute(route));
+  }, [route]);
   const currentPage = resolvePageDefinition(route);
   const sectionHref = (sectionId: SectionId) => hrefForHomeSection(sectionId, route, ROUTER_MODE);
   const domainHref = (domainId: DomainCardItem['id']) => hrefForDomain(domainId, ROUTER_MODE);

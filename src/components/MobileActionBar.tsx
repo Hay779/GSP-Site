@@ -26,7 +26,7 @@ function WhatsAppIcon({ className }: { readonly className?: string }) {
 }
 
 const ITEM =
-  'flex flex-1 flex-col items-center gap-0.5 py-1 text-[11.5px] font-semibold text-[#F3F0E7] [text-shadow:0_1px_3px_rgba(0,0,0,0.6)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62] rounded-lg';
+  'flex flex-1 flex-col items-center gap-0.5 py-1 text-[12px] font-semibold text-white [text-shadow:0_1px_1px_rgba(0,0,0,0.35)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62] rounded-lg';
 
 /**
  * Barre d'actions mobile (Devis · SOS · Contact), façon application.
@@ -104,7 +104,7 @@ export function MobileActionBar({ brand, whatsapp, quoteHref, contactHref, route
   const renderButtons = (focusable: boolean, inline: boolean) => (
         <div className="flex items-center justify-between">
           <a href={quoteHref} tabIndex={focusable ? 0 : -1} className={ITEM}>
-            <FileText className="h-[21px] w-[21px] text-[#E5C57B] drop-shadow" strokeWidth={1.9} aria-hidden="true" />
+            <FileText className="h-[21px] w-[21px] text-[#EBCB82]" strokeWidth={1.9} aria-hidden="true" />
             Devis
           </a>
           <button
@@ -122,7 +122,7 @@ export function MobileActionBar({ brand, whatsapp, quoteHref, contactHref, route
             SOS
           </button>
           <a href={contactHref} tabIndex={focusable ? 0 : -1} className={ITEM}>
-            <MessageCircle className="h-[21px] w-[21px] text-[#E5C57B] drop-shadow" strokeWidth={1.9} aria-hidden="true" />
+            <MessageCircle className="h-[21px] w-[21px] text-[#EBCB82]" strokeWidth={1.9} aria-hidden="true" />
             Contact
           </a>
         </div>
@@ -135,7 +135,7 @@ export function MobileActionBar({ brand, whatsapp, quoteHref, contactHref, route
     <div className="sm:hidden">
       {slot &&
         createPortal(
-          <nav aria-label="Actions rapides (haut de page)" className={`mx-auto w-[min(320px,100%)] ${PILL} bg-[#F3F0E7]/[0.06]`}>
+          <nav aria-label="Actions rapides (haut de page)" className={`mx-auto w-[min(320px,100%)] ${PILL} !bg-[#2C3134]/85 !border-white/25`}>
             {renderButtons(true, true)}
           </nav>,
           slot

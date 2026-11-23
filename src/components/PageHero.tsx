@@ -21,25 +21,6 @@ interface PageHeroProps {
   readonly shortcuts?: readonly { readonly label: string; readonly targetId: string }[];
 }
 
-/** Met à jour le titre de l'onglet et la description Google de la page. */
-export function usePageMeta(title: string, description: string) {
-  useEffect(() => {
-    const previousTitle = document.title;
-    const meta = document.querySelector<HTMLMetaElement>('meta[name="description"]');
-    const previousDescription = meta?.content ?? '';
-    document.title = title;
-    if (meta) {
-      meta.content = description;
-    }
-    return () => {
-      document.title = previousTitle;
-      if (meta) {
-        meta.content = previousDescription;
-      }
-    };
-  }, [title, description]);
-}
-
 /** En-tête commun des pages intérieures. */
 export function PageHero({
   title,
@@ -81,7 +62,7 @@ export function PageHero({
         animate={{ scale: 1.02 }}
         transition={{ duration: prefersReducedMotion ? 0 : 6, ease: 'easeOut' }}
         style={{ objectPosition: imagePosition }}
-        className={`h-full w-full object-cover will-change-transform ${className}`}
+        className={`h-full w-full object-cover will-change-transform [filter:contrast(1.06)_saturate(1.1)_brightness(1.05)] ${className}`}
       />
     ) : null;
 
@@ -90,11 +71,11 @@ export function PageHero({
       <motion.h1
         {...fadeUp(0.04)}
         id="page-hero-title"
-        className="font-display text-[clamp(2.15rem,4.4vw,3.5rem)] font-semibold leading-[1.06] tracking-[-0.015em] text-[#F3F0E7]"
+        className="font-display text-[clamp(2.15rem,4.4vw,3.5rem)] font-semibold leading-[1.06] tracking-[-0.015em] text-white"
       >
         {title}
       </motion.h1>
-      <motion.p {...fadeUp(0.12)} className="mt-4 sm:mt-5 max-w-[560px] text-[16px] sm:text-[18px] leading-[1.6] text-[#F3F0E7]/85">
+      <motion.p {...fadeUp(0.12)} className="mt-4 sm:mt-5 max-w-[560px] text-[16px] sm:text-[18px] leading-[1.6] text-white/92">
         {intro}
       </motion.p>
       {highlights.length > 0 && (
@@ -102,7 +83,7 @@ export function PageHero({
           {highlights.map((item) => (
             <li
               key={item}
-              className="inline-flex items-center gap-2 rounded-full bg-[#F3F0E7]/[0.08] px-3.5 py-1.5 text-[13.5px] sm:text-[14px] text-[#F3F0E7]/90 ring-1 ring-[#F3F0E7]/12"
+              className="inline-flex items-center gap-2 rounded-full bg-[#F3F0E7]/[0.08] px-3.5 py-1.5 text-[13.5px] sm:text-[14px] text-white ring-1 ring-white/20"
             >
               <Check className="h-3.5 w-3.5 shrink-0 text-[#B79A62]" strokeWidth={2.4} aria-hidden="true" />
               {item}
@@ -156,7 +137,7 @@ export function PageHero({
     <section
       id="page-hero"
       aria-labelledby="page-hero-title"
-      className="relative w-full overflow-hidden bg-[#24282B] bg-[radial-gradient(ellipse_at_80%_35%,rgba(183,154,98,0.2),transparent_60%)]"
+      className="relative w-full overflow-hidden bg-[#16191B] lg:bg-[#24282B] bg-[radial-gradient(ellipse_at_80%_35%,rgba(183,154,98,0.2),transparent_60%)]"
     >
       {/* Mobile & tablette : photo en bandeau, bas arrondi avec filet doré */}
       <div aria-hidden="true" className="kb-curve relative h-[34svh] min-h-[210px] max-h-[320px] overflow-hidden lg:hidden">

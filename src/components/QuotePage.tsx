@@ -38,7 +38,6 @@ import { hrefForHome, hrefForPage, type RouterMode } from '../utils/router';
 import { BrandMark } from './BrandMark';
 import { checkServiceSector } from '../utils/serviceArea';
 import { REVEAL_EASE } from '../utils/scrollReveal';
-import { usePageMeta } from './PageHero';
 
 const DOMAIN_ICONS: Readonly<Record<QuoteDomain, LucideIcon>> = {
   'Serrurerie & portes blindées': Lock,
@@ -131,10 +130,6 @@ function Fieldset({
 }
 
 export function QuotePage({ brand, routerMode, prefill }: QuotePageProps) {
-  usePageMeta(
-    'Demander un devis — Serrurerie de la République à Marseille',
-    'Décrivez votre besoin en serrurerie, vitrerie, menuiserie, fermetures, clés ou après sinistre : nous revenons vers vous avec un devis détaillé.'
-  );
   const prefersReducedMotion = Boolean(useReducedMotion());
   const [draft, setDraft] = useState<QuoteWizardDraft>(() => createInitialDraft(prefill));
   const [step, setStep] = useState<QuoteStepId>(() => (prefill?.domain ? 'precisions' : 'besoin'));
@@ -227,7 +222,7 @@ export function QuotePage({ brand, routerMode, prefill }: QuotePageProps) {
             <BrandMark brand={brand} compact />
           </a>
           <div className="min-w-0 flex-1 border-l border-[#F3F0E7]/15 pl-3">
-            <h1 className="truncate font-display text-[15px] font-semibold leading-tight text-[#F3F0E7]">Votre devis</h1>
+            <p className="truncate font-display text-[15px] font-semibold leading-tight text-[#F3F0E7]">Votre devis</p>
             <p className="text-[11.5px] font-medium uppercase tracking-[0.12em] text-[#B79A62]">
               {reference ? 'Demande envoyée' : `Étape ${stepIndex + 1} / ${QUOTE_STEPS.length}`}
             </p>

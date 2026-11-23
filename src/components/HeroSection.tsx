@@ -146,12 +146,12 @@ export function HeroSection({
       id="02_Hero"
       data-section="02_Hero"
       aria-labelledby="02_Hero-title"
-      className="relative w-full overflow-hidden bg-[#24282B] scroll-mt-[74px] lg:scroll-mt-[88px] flex flex-col h-[calc(100svh-74px)] min-h-[540px] sm:h-auto sm:min-h-0 lg:flex-row lg:min-h-[min(calc(100svh-88px),740px)] lg:items-center"
+      className="relative w-full overflow-hidden bg-[#16191B] lg:bg-[#24282B] scroll-mt-[74px] lg:scroll-mt-[88px] flex flex-col h-[calc(100svh-74px)] min-h-[540px] sm:h-auto sm:min-h-0 lg:flex-row lg:min-h-[min(calc(100svh-88px),740px)] lg:items-center"
     >
       {/* Couche média plein écran : vidéo HTML5 + poster artisanal avec parallaxe immersif au scroll */}
       <div
         data-testid="hero-media-layer"
-        className="relative min-h-[150px] flex-1 sm:h-[54svh] sm:max-h-[520px] sm:flex-none w-full lg:absolute lg:inset-0 lg:h-auto lg:min-h-0 lg:max-h-none z-0 overflow-hidden bg-[#24282B]"
+        className="relative min-h-[150px] flex-1 sm:h-[54svh] sm:max-h-[520px] sm:flex-none w-full lg:absolute lg:inset-0 lg:h-auto lg:min-h-0 lg:max-h-none z-0 overflow-hidden bg-[#16191B] lg:bg-[#24282B]"
         aria-hidden="true"
       >
         {/* Repli stylisé si ni vidéo ni poster ne chargent */}
@@ -185,7 +185,7 @@ export function HeroSection({
               alt={posterSlide.alt}
               referrerPolicy="no-referrer"
               onError={() => setPosterFailed(true)}
-              className="h-full w-full object-cover object-[80%_30%] sm:object-[72%_36%] lg:object-[70%_40%]"
+              className="h-full w-full object-cover [filter:contrast(1.06)_saturate(1.1)_brightness(1.04)] lg:[filter:contrast(1.08)_saturate(1.14)_brightness(1.1)] object-[80%_30%] sm:object-[72%_36%] lg:object-[70%_40%]"
             />
           )}
 
@@ -201,7 +201,7 @@ export function HeroSection({
               preload="metadata"
               poster={posterSlide?.src}
               onError={() => setVideoFailed(true)}
-              className="absolute inset-0 h-full w-full object-cover object-center"
+              className="absolute inset-0 h-full w-full object-cover object-center [filter:contrast(1.06)_saturate(1.1)_brightness(1.04)]"
             >
               {config.media.videoWebmSrc && (
                 <source src={config.media.videoWebmSrc} type="video/webm" />
@@ -214,11 +214,11 @@ export function HeroSection({
         </motion.div>
 
         {/* Voile directionnel calibré pour garantir un contraste WCAG AA sur tout contenu vidéo */}
-        <div className="absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-[#24282B] via-[#24282B]/30 to-transparent lg:hidden" />
-        <div className="hidden lg:block absolute inset-0 bg-[linear-gradient(90deg,rgba(36,40,43,0.94)_0%,rgba(36,40,43,0.82)_26%,rgba(36,40,43,0.55)_44%,rgba(36,40,43,0.18)_64%,rgba(36,40,43,0)_100%)]" />
+        <div className="absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-[#16191B] via-[#16191B]/30 to-transparent lg:hidden" />
+        <div className="hidden lg:block absolute inset-0 bg-[linear-gradient(90deg,rgba(36,40,43,0.9)_0%,rgba(36,40,43,0.72)_26%,rgba(36,40,43,0.4)_44%,rgba(36,40,43,0.08)_62%,rgba(36,40,43,0)_100%)]" />
         {/* Voile haut (mobile) pour la lisibilité de l'indicateur du diaporama */}
-        <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-[#24282B]/40 to-transparent lg:hidden" />
-        <div className="hidden lg:block absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#24282B]/50 via-[#24282B]/15 to-transparent" />
+        <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-[#16191B]/40 to-transparent lg:hidden" />
+        <div className="hidden lg:block absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#24282B]/35 via-[#24282B]/10 to-transparent" />
         {/* Assombrissement progressif subtil au défilement pour fondre 02_Hero vers la section suivante */}
         <motion.div
           style={prefersReducedMotion ? undefined : { opacity: depthScrimOpacity }}
@@ -246,7 +246,7 @@ export function HeroSection({
 
           <h1
             id="02_Hero-title"
-            className={`${config.kicker ? 'mt-4' : 'mt-2'} font-display text-[clamp(2.15rem,4vw,3.5rem)] font-semibold leading-[1.08] tracking-[-0.015em] text-[#F3F0E7]`}
+            className={`${config.kicker ? 'mt-4' : 'mt-2'} font-display text-[clamp(2.15rem,4vw,3.5rem)] font-semibold leading-[1.08] tracking-[-0.015em] text-white`}
           >
             <span className="block overflow-hidden pb-1">
               <motion.span
@@ -286,7 +286,7 @@ export function HeroSection({
               delay: prefersReducedMotion ? 0 : 0.3,
               ease: REVEAL_EASE,
             }}
-            className="mt-3 sm:mt-5 max-w-[490px] text-[15.5px] sm:text-[18px] leading-[1.6] text-[#F3F0E7]/85"
+            className="mt-3 sm:mt-5 max-w-[490px] text-[15.5px] sm:text-[18px] leading-[1.6] text-white/92"
           >
             {config.subtitle}
           </motion.p>
@@ -340,7 +340,7 @@ export function HeroSection({
             {config.commitments.map((item) => (
               <li
                 key={item.label}
-                className="inline-flex items-center gap-2 rounded-full bg-[#F3F0E7]/[0.08] px-3.5 py-1.5 text-[14px] text-[#F3F0E7]/90 whitespace-nowrap ring-1 ring-[#F3F0E7]/12"
+                className="inline-flex items-center gap-2 rounded-full bg-[#F3F0E7]/[0.08] px-3.5 py-1.5 text-[14px] text-white whitespace-nowrap ring-1 ring-white/20"
               >
                 <CommitmentIcon icon={item.icon} />
                 <span>{item.label}</span>

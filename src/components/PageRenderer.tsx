@@ -32,7 +32,6 @@ import {
   PAGE_HERO_PRIMARY_BUTTON,
   PAGE_HERO_SECONDARY_BUTTON,
   PageHero,
-  usePageMeta,
 } from './PageHero';
 import { BeforeAfterCases, FeatureCards, NumberedCards, NumberedSteps, PageSection, ProcessSteps } from './PageSections';
 import { BrandsSection } from './BrandsSection';
@@ -505,7 +504,6 @@ function heroNextFill(page: PageDefinition): string {
 
 /** Page intérieure complète : en-tête + blocs. */
 export function PageRenderer({ page, ctx }: { readonly page: PageDefinition; readonly ctx: PageContext }) {
-  usePageMeta(page.seoTitle, page.seoDescription);
 
   return (
     <>
