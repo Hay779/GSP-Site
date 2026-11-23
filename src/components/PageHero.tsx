@@ -90,11 +90,11 @@ export function PageHero({
       <motion.h1
         {...fadeUp(0.04)}
         id="page-hero-title"
-        className="font-display text-[clamp(2.15rem,4.4vw,3.5rem)] font-semibold leading-[1.06] tracking-[-0.015em] text-[#F3F0E7]"
+        className="font-display text-[clamp(2.15rem,4.4vw,3.5rem)] font-semibold leading-[1.06] tracking-[-0.015em] text-white"
       >
         {title}
       </motion.h1>
-      <motion.p {...fadeUp(0.12)} className="mt-4 sm:mt-5 max-w-[560px] text-[16px] sm:text-[18px] leading-[1.6] text-[#F3F0E7]/85">
+      <motion.p {...fadeUp(0.12)} className="mt-4 sm:mt-5 max-w-[560px] text-[16px] sm:text-[18px] leading-[1.6] text-white/92">
         {intro}
       </motion.p>
       {highlights.length > 0 && (
@@ -102,7 +102,7 @@ export function PageHero({
           {highlights.map((item) => (
             <li
               key={item}
-              className="inline-flex items-center gap-2 rounded-full bg-[#F3F0E7]/[0.08] px-3.5 py-1.5 text-[13.5px] sm:text-[14px] text-[#F3F0E7]/90 ring-1 ring-[#F3F0E7]/12"
+              className="inline-flex items-center gap-2 rounded-full bg-[#F3F0E7]/[0.08] px-3.5 py-1.5 text-[13.5px] sm:text-[14px] text-white ring-1 ring-white/20"
             >
               <Check className="h-3.5 w-3.5 shrink-0 text-[#B79A62]" strokeWidth={2.4} aria-hidden="true" />
               {item}

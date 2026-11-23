@@ -185,7 +185,7 @@ export function HeroSection({
               alt={posterSlide.alt}
               referrerPolicy="no-referrer"
               onError={() => setPosterFailed(true)}
-              className="h-full w-full object-cover object-[80%_30%] sm:object-[72%_36%] lg:object-[70%_40%]"
+              className="h-full w-full object-cover [filter:contrast(1.06)_saturate(1.1)_brightness(1.04)] object-[80%_30%] sm:object-[72%_36%] lg:object-[70%_40%]"
             />
           )}
 
@@ -246,7 +246,7 @@ export function HeroSection({
 
           <h1
             id="02_Hero-title"
-            className={`${config.kicker ? 'mt-4' : 'mt-2'} font-display text-[clamp(2.15rem,4vw,3.5rem)] font-semibold leading-[1.08] tracking-[-0.015em] text-[#F3F0E7]`}
+            className={`${config.kicker ? 'mt-4' : 'mt-2'} font-display text-[clamp(2.15rem,4vw,3.5rem)] font-semibold leading-[1.08] tracking-[-0.015em] text-white`}
           >
             <span className="block overflow-hidden pb-1">
               <motion.span
@@ -286,7 +286,7 @@ export function HeroSection({
               delay: prefersReducedMotion ? 0 : 0.3,
               ease: REVEAL_EASE,
             }}
-            className="mt-3 sm:mt-5 max-w-[490px] text-[15.5px] sm:text-[18px] leading-[1.6] text-[#F3F0E7]/85"
+            className="mt-3 sm:mt-5 max-w-[490px] text-[15.5px] sm:text-[18px] leading-[1.6] text-white/92"
           >
             {config.subtitle}
           </motion.p>
@@ -340,7 +340,7 @@ export function HeroSection({
             {config.commitments.map((item) => (
               <li
                 key={item.label}
-                className="inline-flex items-center gap-2 rounded-full bg-[#F3F0E7]/[0.08] px-3.5 py-1.5 text-[14px] text-[#F3F0E7]/90 whitespace-nowrap ring-1 ring-[#F3F0E7]/12"
+                className="inline-flex items-center gap-2 rounded-full bg-[#F3F0E7]/[0.08] px-3.5 py-1.5 text-[14px] text-white whitespace-nowrap ring-1 ring-white/20"
               >
                 <CommitmentIcon icon={item.icon} />
                 <span>{item.label}</span>
