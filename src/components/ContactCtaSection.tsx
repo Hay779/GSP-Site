@@ -72,7 +72,7 @@ export function ContactCtaSection({
   phoneHref = 'tel:+33491905165',
   quoteHref = '/devis',
   quoteLabel = 'Demander un devis',
-  whatsappHref = 'https://wa.me/33491905165',
+  whatsappHref = 'https://wa.me/33782828208',
   whatsappLabel = 'Écrire sur WhatsApp',
   agenciesIntro = 'Ou passez en boutique :',
   agencies = DEFAULT_AGENCIES,
