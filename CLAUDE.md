@@ -6,7 +6,7 @@
 
 ## Contexte
 - Client francophone. Toujours répondre en français, simplement.
-- Hébergement final : **OVH** (Apache, `public/.htaccess`). Le nom de domaine sera acheté chez OVH ; adresse provisoire dans `src/utils/seo.ts` (`SITE_URL`).
+- Hébergement final : **OVH** (Apache, `public/.htaccess`). Domaine : **www.serrurerierepublique.fr** (sans trait d'union), défini dans `src/utils/seo.ts` (`SITE_URL`). V1 en ligne depuis le 24/11/2026.
 - Google AI Studio importe la branche `main`. Le travail se fait sur une branche, puis demande de fusion vers `main` quand le client dit « mets à jour main ».
 - Formulaires : **ne rien brancher avant la mise en ligne sur OVH**. Destination : l'adresse e-mail de l'entreprise, qui ne doit jamais être affichée sur le site.
 - Avis clients : uniquement les vrais avis Google (`src/data/reviewsContent.ts`), jamais d'avis négatifs affichés, et **jamais de note ou de nombre d'avis inventés**.

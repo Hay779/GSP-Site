@@ -49,7 +49,7 @@
 ## 2. À faire au moment de la mise en ligne
 
 1. **Acheter le nom de domaine chez OVH.**
-2. **Mettre l'adresse définitive dans `src/utils/seo.ts`** (`SITE_URL`), aujourd'hui `https://www.serrurerie-republique.fr`. Puis lancer `npm run build:prod`.
+2. **Mettre l'adresse définitive dans `src/utils/seo.ts`** (`SITE_URL`), aujourd'hui `https://www.serrurerierepublique.fr`. Puis lancer `npm run build:prod`.
 3. **Activer le certificat SSL gratuit** (Let's Encrypt) dans l'espace client OVH, *avant* d'envoyer le site. Sans lui, la redirection HTTPS bloque l'accès.
 4. **Envoyer le contenu du dossier `dist/`** (avec le fichier caché `.htaccess`) dans le dossier `www/` de l'hébergement, par FTP ou FileZilla.
 5. **Hébergeur** : compléter la page Mentions légales :

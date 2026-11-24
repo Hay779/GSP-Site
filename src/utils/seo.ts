@@ -9,7 +9,7 @@ import { resolvePageDefinition, type PageDefinition } from '../data/pages';
 import { AGENCIES_CONFIG, DOMAINS_CONFIG, FAQ_CONFIG, type FaqItem } from '../data/sectionsContent';
 import { DOMAIN_SLUGS, PAGE_SLUGS, type PageId, type Route } from './router';
 
-export const SITE_URL = ((import.meta.env?.VITE_SITE_URL as string | undefined) || 'https://www.serrurerie-republique.fr').replace(/\/+$/, '');
+export const SITE_URL = ((import.meta.env?.VITE_SITE_URL as string | undefined) || 'https://www.serrurerierepublique.fr').replace(/\/+$/, '');
 
 export const SITE_NAME = 'Serrurerie de la République';
 const DEFAULT_IMAGE = '/src/assets/images/hero_serrurier_marseille_1795288791942.jpg';
