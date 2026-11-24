@@ -40,6 +40,12 @@ Mise à jour : 23/11/2026. Liste de référence des chantiers restants. On coche
 - [ ] Test PageSpeed Insights (objectif ≥ 90 sur mobile) une fois en ligne.
 
 ## E. Mise en ligne (OVH)
+**V1 en ligne le 24/11/2026 sur https://www.serrurerierepublique.fr.** Vérifié : HTTPS, www, en-têtes de sécurité, gzip, cache, pages pré-rendues, sitemap, robots, llms.txt, page 404.
+- [ ] Renvoyer le `.htaccess` corrigé : redirections sans « :443 ».
+- [ ] Fiche Google : mettre le site en **https**://www.serrurerierepublique.fr (aujourd'hui en http).
+- [ ] Mentions légales : ajouter l'hébergeur OVH.
+- [ ] Search Console et Bing Webmaster Tools, avec envoi du sitemap.
+
 Voir `docs/SEO-SECURITE-MISE-EN-LIGNE.md`, section 2 :
 1. domaine ;
 2. SSL ;
