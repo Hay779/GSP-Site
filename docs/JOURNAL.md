@@ -3,6 +3,13 @@
 Ce que Claude Code a fait sur le site, séance par séance (plus récent en haut).
 Hermes lit ce fichier avant de travailler. Ses propres recherches sont dans `docs/seo/`.
 
+## 2026-11-25 — vitesse mobile
+- Photos du site converties en WebP : 1,3 Mo en JPEG → 0,76 Mo. Les JPEG restent pour l'image de partage (`seo.ts`).
+- Accueil : la photo du haut de page est préchargée dans le `<head>` (ajouté par `scripts/prerender.ts`).
+- Animations d'entrée du haut de page coupées quand la page arrive pré-rendue (`src/utils/firstPaint.ts`) : le titre est visible tout de suite.
+- PageSpeed mobile : 78 → **83** ; LCP 5,7 s → **4,5 s**. Ordinateur : 83 → **93**.
+- Reste : environ 1 s d'affichage de la photo attend le JavaScript (662 Ko), parce que React reconstruit la page au lieu de reprendre le HTML pré-rendu. Pistes : passer à `hydrateRoot` (le pré-rendu doit alors produire exactement le premier rendu client), ou découper le code par page (`React.lazy`). Chantier à part, à tester avec soin.
+
 ## 2026-11-23 (séance 2) — préparation de la mise en ligne
 - Plan d'action en 7 étapes validé avec le client : 1) mise en ligne OVH, 2) formulaires, 3) Search Console et Bing, 4) fiche Google, 5) annuaires, 6) pages locales et contenu, 7) avis, publications et blog en autonomie. Les étapes 4, 5 et 7 (fiche Google, annuaires, avis, mots-clés) sont le rôle de Hermes.
 - Version finale du site fabriquée (`npm run build:prod`) : 17 pages pré-rendues, `sitemap.xml`, `robots.txt`, `llms.txt`, `.htaccess`. Vérification du code et 88 tests : OK. `npm audit` : 0 vulnérabilité.

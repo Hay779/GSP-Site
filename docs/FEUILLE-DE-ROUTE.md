@@ -36,8 +36,8 @@ Mise à jour : 23/11/2026. Liste de référence des chantiers restants. On coche
 
 ## D. Technique et performance
 - [ ] Découper le code JavaScript (654 Ko, 189 Ko compressé) pour accélérer le premier affichage.
-- [ ] Photos en WebP et `width`/`height` sur les images, pour éviter les décalages au chargement.
-- [ ] Test PageSpeed Insights (objectif ≥ 90 sur mobile) : 78 le 23/11/2026, LCP 5,7 s à corriger (titre et photo d'accueil visibles sans JavaScript).
+- [x] Photos en WebP (25/11/2026). [ ] `width`/`height` sur les images restantes.
+- [ ] Test PageSpeed Insights (objectif ≥ 90 sur mobile) : 78 le 23/11 → 83 le 25/11/2026 (LCP 4,5 s). Reste : reprendre le HTML pré-rendu sans le reconstruire (`hydrateRoot`) ou découper le code.
 
 ## E. Mise en ligne (OVH)
 Voir `docs/SEO-SECURITE-MISE-EN-LIGNE.md`, section 2 :

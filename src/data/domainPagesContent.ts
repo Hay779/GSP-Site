@@ -65,10 +65,10 @@ export const DOMAIN_PAGE_EXTRAS: Readonly<Record<DomainCardItem['id'], DomainPag
       {
         title: 'Porte forcée : sécurisation et remplacement du cylindre',
         text: 'Après une tentative d’effraction : mise en sécurité, nouveau cylindre et remise en état de la porte.',
-        beforeSrc: '/src/assets/images/as_banniere.jpg',
+        beforeSrc: '/src/assets/images/as_banniere.webp',
         beforeAlt: 'Porte d’entrée forcée, bois arraché autour de la serrure.',
         beforePosition: '22% 50%',
-        afterSrc: '/src/assets/images/domaine_serrurerie_1795289920360.jpg',
+        afterSrc: '/src/assets/images/domaine_serrurerie_1795289920360.webp',
         afterAlt: 'Porte d’entrée remise en état avec un cylindre neuf.',
         afterPosition: '50% 50%',
         illustrative: true,

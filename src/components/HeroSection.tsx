@@ -8,6 +8,7 @@ import { HERO_SLIDESHOW_TIMING, nextSlideIndex } from '../utils/heroSlideshow';
 import { HeroSlideshowIndicator, HeroSlideshowMedia } from './HeroSlideshow';
 import type { SectionId } from '../utils/navigation';
 import { REVEAL_EASE } from '../utils/scrollReveal';
+import { HAS_PRERENDERED_HTML } from '../utils/firstPaint';
 
 interface HeroSectionProps {
   readonly config: HeroConfig;
@@ -40,6 +41,7 @@ export function HeroSection({
   const [videoFailed, setVideoFailed] = useState(false);
   const [isVideoPaused, setIsVideoPaused] = useState(false);
   const prefersReducedMotion = useReducedMotion() ?? false;
+  const skipIntro = Boolean(prefersReducedMotion) || HAS_PRERENDERED_HTML;
   const slides = config.media.slides;
   const posterSlide = slides[0];
   const [activeSlide, setActiveSlide] = useState(0);
@@ -235,7 +237,7 @@ export function HeroSection({
         <div className="flex flex-col items-start max-w-[640px]">
           {config.kicker && (
           <motion.p
-            initial={prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
+            initial={skipIntro ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: prefersReducedMotion ? 0 : 0.45, ease: REVEAL_EASE }}
             className="section-kicker text-[#B79A62]"
@@ -250,7 +252,7 @@ export function HeroSection({
           >
             <span className="block overflow-hidden pb-1">
               <motion.span
-                initial={prefersReducedMotion ? { y: 0, opacity: 1 } : { y: '105%', opacity: 0 }}
+                initial={skipIntro ? { y: 0, opacity: 1 } : { y: '105%', opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{
                   duration: prefersReducedMotion ? 0 : 0.62,
@@ -264,7 +266,7 @@ export function HeroSection({
             </span>
             <span className="block overflow-hidden pb-1">
               <motion.span
-                initial={prefersReducedMotion ? { y: 0, opacity: 1 } : { y: '105%', opacity: 0 }}
+                initial={skipIntro ? { y: 0, opacity: 1 } : { y: '105%', opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{
                   duration: prefersReducedMotion ? 0 : 0.62,
@@ -279,7 +281,7 @@ export function HeroSection({
           </h1>
 
           <motion.p
-            initial={prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
+            initial={skipIntro ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{
               duration: prefersReducedMotion ? 0 : 0.54,
@@ -296,7 +298,7 @@ export function HeroSection({
 
           {/* Deux boutons d'appel à l'action (tablette & ordinateur) */}
           <motion.div
-            initial={prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
+            initial={skipIntro ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{
               duration: prefersReducedMotion ? 0 : 0.54,
@@ -328,7 +330,7 @@ export function HeroSection({
           {/* Engagements concrets en cascade */}
           <motion.ul
             aria-label="Nos engagements"
-            initial={prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 14 }}
+            initial={skipIntro ? { opacity: 1, y: 0 } : { opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{
               duration: prefersReducedMotion ? 0 : 0.54,
