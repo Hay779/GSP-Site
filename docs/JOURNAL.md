@@ -3,6 +3,15 @@
 Ce que Claude Code a fait sur le site, séance par séance (plus récent en haut).
 Hermes lit ce fichier avant de travailler. Ses propres recherches sont dans `docs/seo/`.
 
+## 2026-11-25 — Black Friday : version PC et tablette (branche `claude/youthful-pascal-btj1i4`)
+- **Bandeau doré** affiché sur toutes les tailles d'écran (accueil et `/promotions`).
+- **Ordinateur** : macaron « Black Friday -20 % » penché sur la photo du haut de page. Il ouvre la pop-up.
+- **Tablette et ordinateur** : rond « Black Friday -20 % » en bas à gauche (le bouton WhatsApp est à droite). Il apparaît après le haut de page, est masqué sur le pied de page, et sa croix masque le Black Friday pour la visite.
+- **Pop-up** : centrée à l'écran sur tablette et ordinateur (en bas sur mobile), fermeture par la croix, « Fermer », Échap ou clic à côté.
+- **Page `/promotions`** : sur ordinateur, texte et compte à rebours à gauche, offres à droite ; « Comment en profiter » sur 3 colonnes ; questions et carte de l'agence côte à côte.
+- Mobile inchangé. Captures : `docs/maquettes/black-friday/captures-pc/`. Vérification du code, 100 tests et construction de production : OK.
+- **À fusionner vers `main` puis renvoyer sur OVH** (la version mobile est déjà dans `main`).
+
 ## 2026-11-25 — Black Friday : version mobile codée (branche `claude/youthful-pascal-btj1i4`)
 - Présentation validée par le client : `docs/maquettes/black-friday/8-presentation-onglet-popup.png` (style noir et or de ses affiches, `modeles-client/`). Captures du résultat : `docs/maquettes/black-friday/captures-mobile/`.
 - **Accueil (mobile)** : bandeau doré défilant sous l'en-tête (caché avec lui), rond « Black Friday -20 % » en bas à droite au-dessus de la barre Devis · SOS · Contact (petite croix = masqué pour la visite, sessionStorage ; caché quand le menu SOS est ouvert et sur le pied de page). Toucher le rond ou le bandeau ouvre la **pop-up** des 3 offres (croix, « Fermer », glisser vers le bas, Échap). Rien ne s'ouvre tout seul.
