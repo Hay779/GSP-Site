@@ -20,6 +20,19 @@ Hermes lit ce fichier avant de travailler. Ses propres recherches sont dans `doc
 ### Questions pour Hermes
 - Après le 30/11, retirer `/promotions` de la Search Console si elle y a été soumise ; vérifier qu'elle repasse en noindex.
 
+## 2026-11-25 — Apple Plans (Apple Business)
+- Compte **Apple Business** créé : organisation SERRURERIE DE LA REPUBLIQUE, compte Apple géré **contact@serrurerierepublique.fr** (mot de passe choisi par le client), téléphone de vérification 06 50 70 44 52. E-mails promotionnels Apple refusés.
+- **Validation de l'organisation** : documents envoyés par le client, en attente chez Apple (quelques jours).
+- Fiche Plans : l'ancienne fiche « Galstyan Grigor, **61** r de la République » a été **revendiquée et corrigée au 48**. Nom affiché « Serrurerie de la République », catégorie Emergency Locksmith Service, site, description (agréé assurances, urgences le soir et le dimanche). Horaires déjà justes (lun–sam 9h–19h).
+- Logo recadré, photo de couverture (comptoir) et 7 vraies photos ajoutés : tout est « en cours de validation » chez Apple.
+- À faire après validation : vérifier la fiche publique, puis ajouter les « Éléments en vedette » (équivalent des posts Google) lors de la prochaine synchro.
+
+## 2026-11-25 — Bing Places
+- Compte Bing Places créé avec « Continuer avec Google » (gspserrurerie13). Fiche **importée depuis Google**, vérification instantanée. **Synchronisation hebdomadaire avec Google activée** : les changements faits sur Google (infos, horaires, description, services) passent sur Bing tout seuls.
+- Ajouté à la main : 8 vraies photos (`docs/photos-reelles/`) + logo recadré.
+- Publication Bing annoncée sous 7 à 12 jours. Le nom est celui de Google (« Bricard Vachette Serrurerie de la République… ») : c'est voulu, Google n'est pas modifié (décision client).
+- Pas d'actualités sur Bing Places (la fonction n'existe pas) : rien à synchroniser de ce côté.
+
 ## 2026-11-25 — PagesJaunes revendiquée et corrigée
 - Compte **Solocal Manager** créé avec « Continuer avec Google » (gspserrurerie13@gmail.com), fiche PagesJaunes n° 65378857 **revendiquée** (code par appel vocal depuis le 04 91 90 51 65, saisi par le client).
 - Modifié dans Solocal Manager :
@@ -36,6 +49,7 @@ Hermes lit ce fichier avant de travailler. Ses propres recherches sont dans `doc
 - **Vraies photos** (prises par le client, récupérées depuis sa fiche Google) : `docs/photos-reelles/` (façade jour/nuit/vitrine, comptoir, intérieur, plan de travail, machines à clés, présentoir clés et badges). À utiliser pour les annuaires, et plus tard sur le site à la place des illustrations.
 - **Compléments PagesJaunes** : 15 marques (Abus, Assa Abloy, Bricard, Cisa, DOM, Héraclès, ISEO, JPM, Keso, Laperche, Mottura, Muel, Mul-T-Lock, Pollux, Thirard ; Vachette, Picard et Fichet absents de la liste) ; 9 prestations clés, confirmées par le client (carte de propriété, clé à puce, clé automobile reproduction/duplication/reprogrammation, télécommande de portail, reprogrammation de clé électronique, duplication, badge d'immeuble).
 - **5 actualités publiées sur PagesJaunes** (25/11, avec photos réelles et bouton vers le site) : doubles de clés et de badges ; porte claquée ou forcée et urgences soir et dimanche ; syndics et copropriétés ; assurances et sinistres (agréé) ; clés de voiture et télécommandes. Textes réutilisables pour Google, Bing et Facebook.
+- **5 autres actualités PagesJaunes par marque** (Bricard, Héraclès, KESO, Mul-T-Lock, Pollux) : textes et visuels repris des posts Google du client. Visuels dans `docs/photos-reelles/posts-marques/`. Ce sont des visuels promotionnels, pas des photos de la boutique, donc à n'utiliser que pour les publications, pas dans les galeries.
 - Le connecteur Google Business (Pipedream) ne voit aucun compte : il n'est pas relié à gspserrurerie13. À reconnecter si on veut publier sur Google depuis Claude ou Hermes.
 - Pas d'e-mail public (décision client). Aucune certification ajoutée : la liste ne propose que des labels officiels (A2P…), pas « agréé assurances ».
 - Nom, adresse, téléphones et activités sont **en vérification chez Solocal** (jusqu'à 48 h, réponse par e-mail).
