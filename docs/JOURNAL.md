@@ -3,6 +3,14 @@
 Ce que Claude Code a fait sur le site, séance par séance (plus récent en haut).
 Hermes lit ce fichier avant de travailler. Ses propres recherches sont dans `docs/seo/`.
 
+## 2026-11-25 — Fusion et mise en ligne (Black Friday + annuaires)
+- Fusion dans `main` de `claude/youthful-pascal-btj1i4` (Black Friday mobile, offres confirmées), puis de `claude/annuaires-pagesjaunes`. Seul conflit : ce journal, résolu en gardant les deux entrées.
+- Vérifications : `tsc` OK, 100 tests OK, `npm run build:prod` OK (18 pages dont `/promotions`).
+- Envoi sur OVH : 81 fichiers de `dist/` par FTP, sans suppression. `www/signature/`, `~/config-formulaires.php` et `~/demandes/` intacts. `api/demande.php` identique à la version du serveur.
+- Le `.htaccess` en ligne est maintenant la version corrigée : redirections en `https://` complet, sans « :443 ».
+- Contrôlé en ligne : `/`, `/promotions`, `/devis`, `/agences-contact`, sitemap, robots, llms.txt, signature → 200. Les redirections `.html`, `index.html` et http sans www → 301 propres. Le formulaire répond 405 en GET (normal).
+- **Rappel Hermes** sur Telegram le **01/12 à 8h** (tâche 387402680cc9, une seule fois) : reconstruire et renvoyer le site pour retirer `/promotions` du HTML pré-rendu et du sitemap.
+
 ## 2026-11-25 — Black Friday : version mobile codée (branche `claude/youthful-pascal-btj1i4`)
 - Présentation validée par le client : `docs/maquettes/black-friday/8-presentation-onglet-popup.png` (style noir et or de ses affiches, `modeles-client/`). Captures du résultat : `docs/maquettes/black-friday/captures-mobile/`.
 - **Accueil (mobile)** : bandeau doré défilant sous l'en-tête (caché avec lui), rond « Black Friday -20 % » en bas à droite au-dessus de la barre Devis · SOS · Contact (petite croix = masqué pour la visite, sessionStorage ; caché quand le menu SOS est ouvert et sur le pied de page). Toucher le rond ou le bandeau ouvre la **pop-up** des 3 offres (croix, « Fermer », glisser vers le bas, Échap). Rien ne s'ouvre tout seul.
@@ -83,6 +91,7 @@ Hermes lit ce fichier avant de travailler. Ses propres recherches sont dans `doc
 ## 2026-11-25 — signature e-mail (hors site)
 - Dossier `www/signature/` sur OVH : logo et bandeau de la signature e-mail, plus une page d'aperçu (noindex, `.htaccess` propre au dossier). **Ne pas le supprimer lors d'un envoi du site** : les signatures Gmail, Outlook et Roundcube pointent vers ces images.
 - Sources dans `Projects/Signature_Republique_Gmail_Outlook_OVH/signature_mail_republique/final`.
+- Gmail : la version adaptable se repliait mal dans la petite fenêtre « Nouveau message » (moins de 640 px). Elle est remplacée par une version à largeur fixe (440 px), `final/signature-fixe.html`. Outlook et Roundcube gardent la version adaptable pour l'instant. Copie du dossier aussi dans `Projects/GSP/`.
 - Numéro de dépannage et WhatsApp de la signature : 06 50 70 44 52. Différent du WhatsApp du site (07 82 82 82 08) : à harmoniser si le client le confirme.
 
 ## 2026-11-25 — vitesse mobile
