@@ -67,7 +67,7 @@ export function ContactCtaSection({
   kicker = 'Un projet, une urgence ?',
   title = 'Parlons-en.',
   subtitle = 'Choisissez le moyen le plus simple pour nous contacter : téléphone, devis en ligne ou WhatsApp.',
-  imageSrc = '/src/assets/images/cta_cles_badge.jpg',
+  imageSrc = '/src/assets/images/cta_cles_badge.webp',
   phoneDisplay = '04 91 90 51 65',
   phoneHref = 'tel:+33491905165',
   quoteHref = '/devis',

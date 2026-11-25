@@ -56,42 +56,42 @@ export const HERO_CONFIG: HeroConfig = {
   media: {
     slides: [
       {
-        src: '/src/assets/images/hero_serrurier_marseille_1795288791942.jpg',
+        src: '/src/assets/images/hero_serrurier_marseille_1795288791942.webp',
         alt: 'Artisan serrurier ajustant un cylindre de porte à Marseille en présence d’une cliente.',
         label: 'Serrurerie',
         objectPositionMobile: '80% 30%',
         objectPositionDesktop: '70% 40%',
       },
       {
-        src: '/src/assets/images/domaine_serrurerie_1795289920360.jpg',
+        src: '/src/assets/images/domaine_serrurerie_1795289920360.webp',
         alt: 'Cylindre de sécurité haut de gamme sur une porte blindée.',
         label: 'Portes blindées',
         objectPositionMobile: '50% 45%',
         objectPositionDesktop: '60% 50%',
       },
       {
-        src: '/src/assets/images/domaine_vitrerie_1795289921283.jpg',
+        src: '/src/assets/images/domaine_vitrerie_1795289921283.webp',
         alt: 'Vitrier posant une vitrine de commerce à l’aide de ventouses.',
         label: 'Vitrerie',
         objectPositionMobile: '45% 35%',
         objectPositionDesktop: '65% 40%',
       },
       {
-        src: '/src/assets/images/domaine_menuiserie_1795289934186.jpg',
+        src: '/src/assets/images/domaine_menuiserie_1795289934186.webp',
         alt: 'Menuisier réglant une fenêtre aluminium avec vue sur la mer.',
         label: 'Menuiserie',
         objectPositionMobile: '40% 35%',
         objectPositionDesktop: '65% 40%',
       },
       {
-        src: '/src/assets/images/domaine_fermetures_1795289921534.jpg',
+        src: '/src/assets/images/domaine_fermetures_1795289921534.webp',
         alt: 'Volet roulant et porte de garage sur une façade en pierre.',
         label: 'Fermetures',
         objectPositionMobile: '35% 50%',
         objectPositionDesktop: '60% 50%',
       },
       {
-        src: '/src/assets/images/cles_badges_boutique_1795289681478.jpg',
+        src: '/src/assets/images/cles_badges_boutique_1795289681478.webp',
         alt: 'Remise d’une clé reproduite au comptoir de la boutique.',
         label: 'Clés & badges',
         objectPositionMobile: '60% 40%',

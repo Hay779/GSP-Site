@@ -266,14 +266,14 @@ export const URGENCY_CONFIG: UrgencyConfig = {
       title: 'Porte claquée',
       text: 'Clés oubliées, porte fermée par inadvertance.',
       icon: 'lock',
-      imageSrc: '/src/assets/images/domaine_serrurerie_1795289920360.jpg',
+      imageSrc: '/src/assets/images/domaine_serrurerie_1795289920360.webp',
       imageAlt: 'Cylindre de serrure sur une porte d’entrée, mur en pierre claire.',
     },
     {
       title: 'Porte forcée',
       text: 'Serrure endommagée, tentative d’effraction ou intrusion.',
       icon: 'shield',
-      imageSrc: '/src/assets/images/apres_sinistre_diagnostic_1795291186729.jpg',
+      imageSrc: '/src/assets/images/apres_sinistre_diagnostic_1795291186729.webp',
       imageAlt: 'Serrurier examinant une porte d’entrée après une tentative d’effraction.',
       imagePosition: '92% 50%',
     },
@@ -306,7 +306,7 @@ export const URGENCY_VARIANTS: Readonly<Record<UrgencyVariant, UrgencyConfig>> =
         title: 'Vitre cassée',
         text: 'Fenêtre ou porte vitrée brisée, vitrage fissuré.',
         icon: 'glass',
-        imageSrc: '/src/assets/images/as_banniere.jpg',
+        imageSrc: '/src/assets/images/as_banniere.webp',
         imageAlt: 'Vitrage de fenêtre brisé.',
         imagePosition: '96% 40%',
       },
@@ -314,7 +314,7 @@ export const URGENCY_VARIANTS: Readonly<Record<UrgencyVariant, UrgencyConfig>> =
         title: 'Vitrine brisée',
         text: 'Vitrine de commerce endommagée ou vandalisée.',
         icon: 'store',
-        imageSrc: '/src/assets/images/domaine_vitrerie_1795289921283.jpg',
+        imageSrc: '/src/assets/images/domaine_vitrerie_1795289921283.webp',
         imageAlt: 'Artisan intervenant sur la vitrine d’un commerce.',
         imagePosition: '55% 40%',
       },
@@ -331,7 +331,7 @@ export const URGENCY_VARIANTS: Readonly<Record<UrgencyVariant, UrgencyConfig>> =
         title: 'Fenêtre bloquée',
         text: 'Ouvrant qui ne ferme plus, poignée ou crémone cassée.',
         icon: 'window',
-        imageSrc: '/src/assets/images/domaine_menuiserie_1795289934186.jpg',
+        imageSrc: '/src/assets/images/domaine_menuiserie_1795289934186.webp',
         imageAlt: 'Artisan réglant une fenêtre.',
         imagePosition: '45% 40%',
       },
@@ -339,7 +339,7 @@ export const URGENCY_VARIANTS: Readonly<Record<UrgencyVariant, UrgencyConfig>> =
         title: 'Porte qui ferme mal',
         text: 'Porte d’entrée ou porte-fenêtre qui frotte ou se déforme.',
         icon: 'lock',
-        imageSrc: '/src/assets/images/hero_serrurier_marseille_1795288791942.jpg',
+        imageSrc: '/src/assets/images/hero_serrurier_marseille_1795288791942.webp',
         imageAlt: 'Artisan intervenant sur une porte d’entrée.',
         imagePosition: '70% 40%',
       },
@@ -360,7 +360,7 @@ export const URGENCY_VARIANTS: Readonly<Record<UrgencyVariant, UrgencyConfig>> =
         title: 'Rideau métallique bloqué',
         text: 'Commerce impossible à ouvrir ou à fermer.',
         icon: 'shutter',
-        imageSrc: '/src/assets/images/domaine_fermetures_1795289921534.jpg',
+        imageSrc: '/src/assets/images/domaine_fermetures_1795289921534.webp',
         imageAlt: 'Volet roulant métallique fermé.',
         imagePosition: '20% 50%',
       },
@@ -368,7 +368,7 @@ export const URGENCY_VARIANTS: Readonly<Record<UrgencyVariant, UrgencyConfig>> =
         title: 'Volet ou porte de garage',
         text: 'Volet roulant ou porte de garage en panne.',
         icon: 'garage',
-        imageSrc: '/src/assets/images/domaine_fermetures_1795289921534.jpg',
+        imageSrc: '/src/assets/images/domaine_fermetures_1795289921534.webp',
         imageAlt: 'Porte de garage sectionnelle.',
         imagePosition: '80% 55%',
       },
@@ -385,7 +385,7 @@ export const URGENCY_VARIANTS: Readonly<Record<UrgencyVariant, UrgencyConfig>> =
         title: 'Clé à refaire',
         text: 'Clé tordue, usée ou un exemplaire en moins.',
         icon: 'key',
-        imageSrc: '/src/assets/images/kb_cles.jpg',
+        imageSrc: '/src/assets/images/kb_cles.webp',
         imageAlt: 'Deux clés sur un anneau.',
         imagePosition: '50% 50%',
       },
@@ -393,7 +393,7 @@ export const URGENCY_VARIANTS: Readonly<Record<UrgencyVariant, UrgencyConfig>> =
         title: 'Badge à copier',
         text: 'Badge d’accès en plus, selon la compatibilité du modèle.',
         icon: 'badge',
-        imageSrc: '/src/assets/images/kb_badge.jpg',
+        imageSrc: '/src/assets/images/kb_badge.webp',
         imageAlt: 'Badge d’accès d’immeuble.',
         imagePosition: '50% 50%',
       },
@@ -419,7 +419,7 @@ export const KEYS_BADGES_CONFIG: KeysBadgesConfig = {
   ctaLabel: 'Voir nos agences',
   ctaTargetId: '10_Nos_Agences',
   ctaHref: '#10_Nos_Agences',
-  imageSrc: '/src/assets/images/cles_badges_boutique_1795289681478.jpg',
+  imageSrc: '/src/assets/images/cles_badges_boutique_1795289681478.webp',
   imageAlt:
     'Remise d’un double de clé en laiton au comptoir de la boutique Serrurerie de la République à Marseille, avec un badge d’accès d’immeuble.',
 };
@@ -441,7 +441,7 @@ export const DOMAINS_CONFIG: DomainsConfig = {
         'Entretien et réglage de serrures pour particuliers, syndics et commerces',
       ],
       ctaLabel: 'En savoir plus',
-      imageSrc: '/src/assets/images/domaine_serrurerie_1795289920360.jpg',
+      imageSrc: '/src/assets/images/domaine_serrurerie_1795289920360.webp',
       imageAlt:
         'Cylindre de haute sécurité en acier brossé posé sur une porte blindée anthracite.',
       pageIntro:
@@ -463,7 +463,7 @@ export const DOMAINS_CONFIG: DomainsConfig = {
         'Découpe et pose de miroirs sur mesure pour logements et locaux professionnels',
       ],
       ctaLabel: 'En savoir plus',
-      imageSrc: '/src/assets/images/domaine_vitrerie_1795289921283.jpg',
+      imageSrc: '/src/assets/images/domaine_vitrerie_1795289921283.webp',
       imageAlt:
         'Vitrier manipulant un double vitrage de vitrine à l’aide de ventouses professionnelles dans une rue de Marseille.',
       pageIntro:
@@ -485,7 +485,7 @@ export const DOMAINS_CONFIG: DomainsConfig = {
         'Amélioration de l’isolation thermique, acoustique et de l’étanchéité des ouvrants',
       ],
       ctaLabel: 'En savoir plus',
-      imageSrc: '/src/assets/images/domaine_menuiserie_1795289934186.jpg',
+      imageSrc: '/src/assets/images/domaine_menuiserie_1795289934186.webp',
       imageAlt:
         'Menuisier réglant la poignée et l’alignement d’une fenêtre en aluminium anthracite.',
       pageIntro:
@@ -507,7 +507,7 @@ export const DOMAINS_CONFIG: DomainsConfig = {
         'Remplacement de moteurs, lames, axes et commandes de sécurité',
       ],
       ctaLabel: 'En savoir plus',
-      imageSrc: '/src/assets/images/domaine_fermetures_1795289921534.jpg',
+      imageSrc: '/src/assets/images/domaine_fermetures_1795289921534.webp',
       imageAlt:
         'Rideau métallique motorisé et porte de garage sectionnelle anthracite intégrés dans une façade en pierre claire.',
       pageIntro:
@@ -561,7 +561,7 @@ export const AFTER_INCIDENT_CONFIG: AfterIncidentConfig = {
     'Effraction, vandalisme ou bris de glace\u00A0: une prise en charge claire, rapide et structurée.',
   primaryCtaLabel: 'Décrire mon besoin',
   secondaryCtaLabel: 'Envoyer des photos',
-  imageSrc: '/src/assets/images/apres_sinistre_diagnostic_1795291186729.jpg',
+  imageSrc: '/src/assets/images/apres_sinistre_diagnostic_1795291186729.webp',
   imageAlt:
     'Artisan serrurier réalisant un diagnostic sur tablette devant une gâche de porte endommagée avec une cliente à Marseille.',
   steps: [
@@ -577,26 +577,26 @@ export const AFTER_INCIDENT_CONFIG: AfterIncidentConfig = {
       'Reportage photo, devis détaillé et facture conformes aux attentes de votre assureur.',
     ctaLabel: 'Envoyer mes photos',
   },
-  bannerSrc: '/src/assets/images/as_banniere.jpg',
+  bannerSrc: '/src/assets/images/as_banniere.webp',
   bannerAlt: 'Porte d’entrée forcée à côté d’une fenêtre au vitrage brisé.',
   services: [
     {
       title: 'Mise en sécurité',
       text: 'Sécurisation rapide de vos accès.',
       icon: 'shield',
-      imageSrc: '/src/assets/images/as_securite.jpg',
+      imageSrc: '/src/assets/images/as_securite.webp',
     },
     {
       title: 'Réparation',
       text: 'Serrure, porte, vitrage, fermeture.',
       icon: 'wrench',
-      imageSrc: '/src/assets/images/as_reparation.jpg',
+      imageSrc: '/src/assets/images/as_reparation.webp',
     },
     {
       title: 'Dossier assurance',
       text: 'Devis, photos et facture pour vos démarches.',
       icon: 'file',
-      imageSrc: '/src/assets/images/as_assurance.jpg',
+      imageSrc: '/src/assets/images/as_assurance.webp',
     },
   ],
   stepsTitle: 'Notre accompagnement en 4 étapes',
@@ -638,7 +638,7 @@ export const ZONE_INTERVENTION_CONFIG: ZoneInterventionConfig = {
   responseTimePrefix: '2 agences à Marseille',
   responseTimeHighlight: 'République & Rome',
   // Bandeau provisoire (découpé d'une maquette) : remplacer par une vraie photo de Marseille.
-  bannerSrc: '/src/assets/images/zone_marseille.jpg',
+  bannerSrc: '/src/assets/images/zone_marseille.webp',
   bannerAlt: 'Vue de Marseille avec Notre-Dame-de-la-Garde et le Vieux-Port.',
 };
 
@@ -653,7 +653,7 @@ export const AGENCIES_CONFIG: AgenciesConfig = {
       name: 'Agence République',
       districtLabel: 'Marseille 2e',
       // Vignette provisoire (découpée d'une maquette) : remplacer par une vraie photo de la façade.
-      imageSrc: '/src/assets/images/kb_facade_republique.jpg',
+      imageSrc: '/src/assets/images/kb_facade_republique.webp',
       imageAlt: 'Façade de l’Agence République — Serrurerie de la République à Marseille',
       photoPlaceholderLabel: 'Photo de la façade à venir',
       addressLines: ['48 rue de la République', '13002 Marseille'],
@@ -670,7 +670,7 @@ export const AGENCIES_CONFIG: AgenciesConfig = {
       id: 'rome',
       name: 'Agence Rome',
       districtLabel: 'Marseille 6e',
-      imageSrc: '/src/assets/images/kb_facade_rome.jpg',
+      imageSrc: '/src/assets/images/kb_facade_rome.webp',
       imageAlt: 'Façade de l’Agence Rome — Serrurerie de la République à Marseille',
       photoPlaceholderLabel: 'Photo de la façade à venir',
       addressLines: ['124 rue de Rome', '13006 Marseille'],

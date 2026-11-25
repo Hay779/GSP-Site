@@ -70,6 +70,19 @@ async function main() {
     const path = pathForRoute(route);
     await page.goto(`http://localhost:${PORT}${path === '/404' ? '/page-introuvable-404' : path}`, { waitUntil: 'networkidle' });
     await page.waitForTimeout(300);
+    // Accueil : la photo du haut de page (élément LCP) est demandée dès la lecture du <head>.
+    if (path === '/') {
+      await page.evaluate(() => {
+        const first = document.querySelector<HTMLImageElement>('img.hero-slide[fetchpriority="high"]');
+        if (!first) return;
+        const link = document.createElement('link');
+        link.rel = 'preload';
+        link.as = 'image';
+        link.href = first.getAttribute('src') ?? '';
+        link.setAttribute('fetchpriority', 'high');
+        document.head.prepend(link);
+      });
+    }
     const html = await page.evaluate(() => '<!doctype html>\n' + document.documentElement.outerHTML);
     writeFileSync(outFile(path), html);
     console.log(`✓ ${path}`);
