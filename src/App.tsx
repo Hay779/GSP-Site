@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { MotionConfig } from 'motion/react';
 import { AfterIncidentSection } from './components/AfterIncidentSection';
 import { AgenciesSection } from './components/AgenciesSection';
-import { PromoFloatingBadge, PromoSheet, PromoTicker } from './components/BlackFriday';
+import { PromoDesktopBadge, PromoFloatingBadge, PromoHeroBadge, PromoSheet, PromoTicker } from './components/BlackFriday';
 import { PromotionsPage } from './components/PromotionsPage';
 import { usePromotion } from './hooks/usePromotion';
 import { BrandsSection } from './components/BrandsSection';
@@ -256,9 +256,7 @@ export default function App() {
           quoteHref={pageHref('devis')}
           belowBar={
             showPromoTicker ? (
-              <div className="sm:hidden">
-                <PromoTicker promo={promo} variant={onHome ? 'gold' : 'dark'} onOpen={onHome ? openPromoSheet : undefined} />
-              </div>
+              <PromoTicker promo={promo} variant={onHome ? 'gold' : 'dark'} onOpen={onHome ? openPromoSheet : undefined} />
             ) : undefined
           }
         />
@@ -318,6 +316,7 @@ export default function App() {
           onSelectSection={handleSelectSection}
           quoteTriggerRef={quoteTriggerRef}
           hasPromoBar={showPromoHome}
+          overlay={showPromoHome ? <PromoHeroBadge promo={promo} onOpen={openPromoSheet} /> : undefined}
         />
 
         <UrgencySection config={URGENCY_CONFIG} brand={BRAND_CONFIG} />
@@ -412,6 +411,9 @@ export default function App() {
       )}
 
       {/* Black Friday : pop-up des offres (ouverte par le rond ou le bandeau, jamais toute seule) */}
+      {showPromoHome && (
+        <PromoDesktopBadge promo={promo} hidden={promoSheetOpen} onOpen={openPromoSheet} onDismiss={dismissPromo} />
+      )}
       {showPromoHome && (
         <PromoSheet
           promo={promo}

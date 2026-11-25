@@ -1,5 +1,5 @@
 import { HeroGoldWave } from './HeroGoldWave';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { ClipboardCheck, KeyRound, Pause, Phone, Play, ShieldCheck } from 'lucide-react';
 import { motion, useReducedMotion, useScroll, useSpring, useTransform } from 'motion/react';
 import type { CommitmentIconKey, HeroConfig } from '../data/heroConfig';
@@ -17,6 +17,8 @@ interface HeroSectionProps {
   readonly quoteTriggerRef?: React.RefObject<HTMLButtonElement | null>;
   /** Bandeau promotionnel affiché sous l'en-tête (mobile) : le haut de page se raccourcit d'autant. */
   readonly hasPromoBar?: boolean;
+  /** Élément posé sur la photo (ex. macaron Black Friday sur grand écran). */
+  readonly overlay?: ReactNode;
 }
 
 function CommitmentIcon({ icon }: { readonly icon: CommitmentIconKey }) {
@@ -37,6 +39,7 @@ export function HeroSection({
   onSelectSection,
   quoteTriggerRef,
   hasPromoBar = false,
+  overlay,
 }: HeroSectionProps) {
   const sectionRef = useRef<HTMLElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -151,7 +154,7 @@ export function HeroSection({
       id="02_Hero"
       data-section="02_Hero"
       aria-labelledby="02_Hero-title"
-      className={`relative w-full overflow-hidden bg-[#16191B] lg:bg-[#24282B] scroll-mt-[74px] lg:scroll-mt-[88px] flex flex-col ${hasPromoBar ? 'h-[calc(100svh-112px)]' : 'h-[calc(100svh-74px)]'} min-h-[540px] sm:h-auto sm:min-h-0 lg:flex-row lg:min-h-[min(calc(100svh-88px),740px)] lg:items-center`}
+      className={`relative w-full overflow-hidden bg-[#16191B] lg:bg-[#24282B] scroll-mt-[74px] lg:scroll-mt-[88px] flex flex-col ${hasPromoBar ? 'h-[calc(100svh-112px)]' : 'h-[calc(100svh-74px)]'} min-h-[540px] sm:h-auto sm:min-h-0 lg:flex-row ${hasPromoBar ? 'lg:min-h-[min(calc(100svh-126px),740px)]' : 'lg:min-h-[min(calc(100svh-88px),740px)]'} lg:items-center`}
     >
       {/* Couche média plein écran : vidéo HTML5 + poster artisanal avec parallaxe immersif au scroll */}
       <div
@@ -390,6 +393,8 @@ export function HeroSection({
           </div>
         </div>
       )}
+
+      {overlay}
 
       {/* Coupe vague dorée vers la section suivante (bloc urgence, fond blanc) */}
       <HeroGoldWave fillColor="#FFFFFF" />

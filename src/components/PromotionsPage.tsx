@@ -108,10 +108,12 @@ export function PromotionsPage({ promo, active, agency, phoneDisplay, phoneHref,
         aria-labelledby="promo-title"
         className="relative overflow-hidden bg-[#0B0C0D] bg-[radial-gradient(90%_55%_at_100%_0%,rgba(183,154,98,0.3),transparent_60%)] text-[#F3F0E7]"
       >
-        <div className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-10 pb-20 pt-8 sm:pb-28 sm:pt-14">
+        <div className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-10 pb-20 pt-8 sm:pb-28 sm:pt-14 lg:pb-36">
+          <div className="lg:grid lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-center lg:gap-14">
+          <div>
           <Kicker tone="dark">Opération · Marseille 2e</Kicker>
-          <h1 id="promo-title" className="mt-3 font-display text-[44px] sm:text-[64px] font-extrabold uppercase leading-[0.98] tracking-[-0.02em]">
-            Black <br className="sm:hidden" />
+          <h1 id="promo-title" className="mt-3 font-display text-[44px] sm:text-[64px] lg:text-[88px] font-extrabold uppercase leading-[0.98] tracking-[-0.02em]">
+            Black <br className="sm:hidden lg:inline" />
             <span className={PROMO_GOLD_TEXT}>Friday</span>
           </h1>
           <p className="mt-3 font-display text-[21px] sm:text-[26px] font-extrabold uppercase tracking-[-0.01em]">
@@ -139,8 +141,10 @@ export function PromotionsPage({ promo, active, agency, phoneDisplay, phoneHref,
           </div>
 
           {/* Les 3 offres */}
+          </div>
+          <div className="mt-6 lg:mt-0">
           <h2 className="sr-only">Les offres {promo.name}</h2>
-          <article className="mt-6 flex max-w-[720px] overflow-hidden rounded-2xl border-[1.5px] border-[#D9BD82]/55 bg-[#111315]">
+          <article className="flex max-w-[720px] lg:max-w-none overflow-hidden rounded-2xl border-[1.5px] border-[#D9BD82]/55 bg-[#111315]">
             <div className="flex min-w-0 flex-1 flex-col p-4 sm:p-6">
               <p className={`font-display text-[46px] sm:text-[60px] font-extrabold leading-none tracking-[-0.03em] ${PROMO_GOLD_TEXT}`}>
                 {promoBadgeText(main.badge)}
@@ -162,10 +166,10 @@ export function PromotionsPage({ promo, active, agency, phoneDisplay, phoneHref,
                 <OfferAction offer={main} quoteHref={quoteHref} wide />
               </div>
             </div>
-            <img src={main.imageSrc} alt={main.imageAlt} className="w-[38%] max-w-[260px] shrink-0 object-cover" />
+            <img src={main.imageSrc} alt={main.imageAlt} className="w-[38%] max-w-[260px] shrink-0 object-cover sm:max-h-[320px]" />
           </article>
 
-          <div className="mt-2.5 grid max-w-[720px] grid-cols-2 gap-2.5">
+          <div className="mt-2.5 grid max-w-[720px] grid-cols-2 gap-2.5 lg:max-w-none">
             {others.map((offer) => (
               <article key={offer.id} className="flex flex-col overflow-hidden rounded-2xl border-[1.5px] border-[#D9BD82]/55 bg-[#111315] text-center">
                 <h3 className="px-2 pt-3.5 font-display text-[15px] sm:text-[18px] font-extrabold uppercase leading-[1.15]">
@@ -185,6 +189,8 @@ export function PromotionsPage({ promo, active, agency, phoneDisplay, phoneHref,
               </article>
             ))}
           </div>
+          </div>
+          </div>
         </div>
         <HeroGoldWave compact fillColor="#F7F5F0" />
       </section>
@@ -194,7 +200,7 @@ export function PromotionsPage({ promo, active, agency, phoneDisplay, phoneHref,
         <div className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-10 py-12 sm:py-20">
           <Kicker>Comment en profiter</Kicker>
           <h2 id="promo-how" className="mt-3 section-title">Simple et rapide.</h2>
-          <ol className="mt-6 grid max-w-[720px] gap-2.5">
+          <ol className="mt-6 grid max-w-[720px] gap-2.5 lg:max-w-none lg:grid-cols-3 lg:gap-4">
             {[
               { title: 'En boutique', text: `Montrez cette page au ${agency.addressLines[0]}.` },
               { title: 'Par téléphone', text: `Dites « ${promo.name} » au ${phoneDisplay}.` },
@@ -211,7 +217,7 @@ export function PromotionsPage({ promo, active, agency, phoneDisplay, phoneHref,
               </li>
             ))}
           </ol>
-          <div className="mt-5 max-w-[720px] rounded-2xl bg-[#1C1F21] p-5 text-[#F3F0E7]">
+          <div className="mt-5 max-w-[720px] rounded-2xl bg-[#1C1F21] p-5 lg:max-w-none lg:p-7 text-[#F3F0E7]">
             <h3 className="font-display text-[16px] font-semibold text-[#E5C57B]">Conditions</h3>
             {promo.conditions.map((c) => (
               <p key={c} className="mt-2 text-[14.5px] leading-[1.55] text-[#F3F0E7]/80">
@@ -224,7 +230,8 @@ export function PromotionsPage({ promo, active, agency, phoneDisplay, phoneHref,
 
       {/* Questions + agence */}
       <section aria-labelledby="promo-faq" className="bg-white text-[#1C1F21]">
-        <div className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-10 py-12 sm:py-20">
+        <div className="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-10 py-12 sm:py-20 lg:grid lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)] lg:items-start lg:gap-14">
+          <div>
           <Kicker>Questions</Kicker>
           <h2 id="promo-faq" className="mt-3 section-title">Vos questions.</h2>
           <div className="mt-5 max-w-[720px] border-t border-[#1C1F21]/12">
@@ -257,7 +264,9 @@ export function PromotionsPage({ promo, active, agency, phoneDisplay, phoneHref,
             })}
           </div>
 
-          <div id={AGENCY_ID} className="mt-8 max-w-[720px] scroll-mt-28 rounded-2xl border border-[#1C1F21]/10 bg-white p-5 shadow-[0_10px_30px_rgba(0,0,0,0.06)]">
+          </div>
+
+          <div id={AGENCY_ID} className="mt-8 max-w-[720px] scroll-mt-28 lg:sticky lg:top-28 lg:mt-14 rounded-2xl border border-[#1C1F21]/10 bg-white p-5 shadow-[0_10px_30px_rgba(0,0,0,0.06)]">
             <h3 className="font-display text-[21px] font-semibold">{agency.name}</h3>
             <p className="mt-1.5 flex items-start gap-2 text-[14.5px] leading-snug text-[#1C1F21]/70">
               <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#B79A62]" aria-hidden="true" />
