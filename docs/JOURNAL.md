@@ -3,6 +3,12 @@
 Ce que Claude Code a fait sur le site, séance par séance (plus récent en haut).
 Hermes lit ce fichier avant de travailler. Ses propres recherches sont dans `docs/seo/`.
 
+## 2026-11-25 — Bing Places
+- Compte Bing Places créé avec « Continuer avec Google » (gspserrurerie13). Fiche **importée depuis Google**, vérification instantanée. **Synchronisation hebdomadaire avec Google activée** : les changements faits sur Google (infos, horaires, description, services) passent sur Bing tout seuls.
+- Ajouté à la main : 8 vraies photos (`docs/photos-reelles/`) + logo recadré.
+- Publication Bing annoncée sous 7 à 12 jours. Le nom est celui de Google (« Bricard Vachette Serrurerie de la République… ») : c'est voulu, Google n'est pas modifié (décision client).
+- Pas d'actualités sur Bing Places (la fonction n'existe pas) : rien à synchroniser de ce côté.
+
 ## 2026-11-25 — PagesJaunes revendiquée et corrigée
 - Compte **Solocal Manager** créé avec « Continuer avec Google » (gspserrurerie13@gmail.com), fiche PagesJaunes n° 65378857 **revendiquée** (code par appel vocal depuis le 04 91 90 51 65, saisi par le client).
 - Modifié dans Solocal Manager :

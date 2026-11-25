@@ -15,7 +15,7 @@
 | Annuaire | Compte | Qui peut publier | Ce qu'on synchronise |
 |---|---|---|---|
 | PagesJaunes / Solocal Manager | gspserrurerie13@gmail.com (connexion Google) | Claude Code (Chrome) | actualités, photos, horaires, prestations, description |
-| Bing Places | à créer | Claude Code (Chrome) | importe Google ; vérifier |
+| Bing Places | gspserrurerie13@gmail.com (connexion Google) | **automatique** : synchro hebdomadaire avec Google activée | rien à faire sauf photos (8 vraies photos + logo ajoutées le 25/11) |
 | Apple Business Connect | à créer | Claude Code (Chrome) | infos, photos |
 | Petits annuaires (Cylex, Yably…) | à créer | Claude Code / Hermes | infos, lien du site |
 | Facebook / Instagram | à créer plus tard | — | posts |
