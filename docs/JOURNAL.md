@@ -9,7 +9,7 @@ Hermes lit ce fichier avant de travailler. Ses propres recherches sont dans `doc
 - **Gmail gspserrurerie13@gmail.com** : envoie en tant que contact@ (SMTP ssl0.ovh.net:465 SSL, nom affiché « Serrurerie République »), adresse **par défaut**. Gmail ne **reçoit pas** les messages de contact@.
 - **Hotmail / Outlook.com** : reçoit contact@ par la redirection, mais **ne peut pas envoyer en tant que contact@** (Outlook.com web ne permet pas l'envoi depuis un domaine extérieur). Solutions : répondre depuis Gmail ou Roundcube, ou ajouter contact@ en compte IMAP dans l'application Outlook (PC ou téléphone).
 - **Signature** « Serrurerie de la République » (version adaptée au mobile) installée par défaut dans Gmail (rattachée à contact@), Outlook et Roundcube. Images dans `www/signature/` sur OVH. Outlook.com retire les liens `tel:`.
-- `postmaster@serrurerierepublique.fr` est redirigé vers serrurerieextra13@gmail.com (réglage d'origine, non modifié).
+- `postmaster@serrurerierepublique.fr` (adresse technique obligatoire) est redirigé vers serrurerieextra13@gmail.com (réglage d'origine, toujours utilisé) **et** vers gspserrurerie13@gmail.com (ajouté le 25/11/2026).
 
 ## 2026-11-25 — signature e-mail (hors site)
 - Dossier `www/signature/` sur OVH : logo et bandeau de la signature e-mail, plus une page d'aperçu (noindex, `.htaccess` propre au dossier). **Ne pas le supprimer lors d'un envoi du site** : les signatures Gmail, Outlook et Roundcube pointent vers ces images.
