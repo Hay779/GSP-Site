@@ -15,6 +15,8 @@ Hermes lit ce fichier avant de travailler. Ses propres recherches sont dans `doc
   - site https://www.serrurerierepublique.fr ;
   - activités secondaires « serrurerie (dépannage) » et « vitrerie » (la principale « clés (reproduction) » est gardée, comme sur Google) ;
   - prestations « duplication de clé » et « reproduction de badge d'immeuble ».
+- **Visuels PagesJaunes** : logo recadré serré `docs/logo-google/logo-carre-serre-1080.png` (le texte prend toute la largeur, plus lisible en petit ; à réutiliser sur les autres annuaires), vignette = façade de jour, galerie = 7 vraies photos de la boutique.
+- **Vraies photos** (prises par le client, récupérées depuis sa fiche Google) : `docs/photos-reelles/` (façade jour/nuit/vitrine, comptoir, intérieur, plan de travail, machines à clés, présentoir clés et badges). À utiliser pour les annuaires, et plus tard sur le site à la place des illustrations.
 - Pas d'e-mail public (décision client). Aucune certification ajoutée : la liste ne propose que des labels officiels (A2P…), pas « agréé assurances ».
 - Nom, adresse, téléphones et activités sont **en vérification chez Solocal** (jusqu'à 48 h, réponse par e-mail).
 - Google : **on n'y touche pas** (décision client).
