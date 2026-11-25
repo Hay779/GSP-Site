@@ -141,3 +141,25 @@ html,
 body {
   overflow-x: clip;
 }
+
+/* Black Friday : bandeau doré défilant (en boucle, lentement) */
+@keyframes promo-marquee {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.promo-marquee-track {
+  animation: promo-marquee 38s linear infinite;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .promo-marquee-track {
+    animation: none !important;
+    transform: none !important;
+  }
+}
