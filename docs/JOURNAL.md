@@ -3,6 +3,11 @@
 Ce que Claude Code a fait sur le site, séance par séance (plus récent en haut).
 Hermes lit ce fichier avant de travailler. Ses propres recherches sont dans `docs/seo/`.
 
+## 2026-11-25 — signature e-mail (hors site)
+- Dossier `www/signature/` sur OVH : logo et bandeau de la signature e-mail, plus une page d'aperçu (noindex, `.htaccess` propre au dossier). **Ne pas le supprimer lors d'un envoi du site** : les signatures Gmail, Outlook et Roundcube pointent vers ces images.
+- Sources dans `Projects/Signature_Republique_Gmail_Outlook_OVH/signature_mail_republique/final`.
+- Numéro de dépannage et WhatsApp de la signature : 06 50 70 44 52. Différent du WhatsApp du site (07 82 82 82 08) : à harmoniser si le client le confirme.
+
 ## 2026-11-25 — vitesse mobile
 - Photos du site converties en WebP : 1,3 Mo en JPEG → 0,76 Mo. Les JPEG restent pour l'image de partage (`seo.ts`).
 - Accueil : la photo du haut de page est préchargée dans le `<head>` (ajouté par `scripts/prerender.ts`).
