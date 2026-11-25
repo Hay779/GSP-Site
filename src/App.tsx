@@ -1,7 +1,10 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { MotionConfig } from 'motion/react';
 import { AfterIncidentSection } from './components/AfterIncidentSection';
 import { AgenciesSection } from './components/AgenciesSection';
+import { PromoFloatingBadge, PromoSheet, PromoTicker } from './components/BlackFriday';
+import { PromotionsPage } from './components/PromotionsPage';
+import { usePromotion } from './hooks/usePromotion';
 import { BrandsSection } from './components/BrandsSection';
 import { PageRenderer } from './components/PageRenderer';
 import { DomainsSection } from './components/DomainsSection';
@@ -61,6 +64,11 @@ export default function App() {
   const [photoModalOpen, setPhotoModalOpen] = useState(false);
   const quoteTriggerRef = useRef<HTMLButtonElement | null>(null);
   const { route, navigate } = useRouter();
+  // Black Friday (mobile) : visible pendant les dates, sur l'accueil et /promotions.
+  const { promo, active: promoActive, dismissed: promoDismissed, dismiss: dismissPromo } = usePromotion();
+  const [promoSheetOpen, setPromoSheetOpen] = useState(false);
+  const openPromoSheet = useCallback(() => setPromoSheetOpen(true), []);
+  const closePromoSheet = useCallback(() => setPromoSheetOpen(false), []);
 
   // Titre, description, adresse canonique et données structurées de la page.
   useEffect(() => {
@@ -73,6 +81,15 @@ export default function App() {
   const currentPageId = route.kind === 'page' ? route.id : null;
   const onHome = route.kind === 'home';
   const isQuotePage = route.kind === 'page' && route.id === 'devis';
+  const isPromoPage = route.kind === 'page' && route.id === 'promotions';
+  const showPromoHome = promoActive && !promoDismissed && onHome;
+  const showPromoTicker = promoActive && !promoDismissed && (onHome || isPromoPage);
+  const republique = AGENCIES_CONFIG.agencies.find((a) => a.id === 'republique') ?? AGENCIES_CONFIG.agencies[0];
+
+  // Ferme la pop-up quand on change de page ou à la fin de la promo.
+  useEffect(() => {
+    if (!showPromoHome) setPromoSheetOpen(false);
+  }, [showPromoHome]);
 
   // Menu principal : pages dédiées + menu déroulant « Nos domaines ».
   // Sur l'accueil, le lien de la section visible est mis en avant.
@@ -237,6 +254,13 @@ export default function App() {
           nav={headerNav}
           homeHref={sectionHref('02_Hero')}
           quoteHref={pageHref('devis')}
+          belowBar={
+            showPromoTicker ? (
+              <div className="sm:hidden">
+                <PromoTicker promo={promo} variant={onHome ? 'gold' : 'dark'} onOpen={onHome ? openPromoSheet : undefined} />
+              </div>
+            ) : undefined
+          }
         />
       )}
 
@@ -252,6 +276,18 @@ export default function App() {
       ) : route.kind === 'page' && route.id === 'devenir-partenaire' ? (
         <main className="flex-1 flex flex-col">
           <PartnerPage brand={BRAND_CONFIG} routerMode={ROUTER_MODE} />
+        </main>
+      ) : isPromoPage ? (
+        <main className="flex-1 flex flex-col">
+          <PromotionsPage
+            promo={promo}
+            active={promoActive}
+            agency={republique}
+            phoneDisplay={BRAND_CONFIG.phoneDisplay}
+            phoneHref={BRAND_CONFIG.phoneHref}
+            quoteHref={pageHref('devis')}
+            homeHref={hrefForHome(ROUTER_MODE)}
+          />
         </main>
       ) : route.kind === 'notFound' ? (
         <main className="flex-1 flex flex-col">
@@ -281,6 +317,7 @@ export default function App() {
           onOpenQuoteModal={() => handleOpenQuoteModal()}
           onSelectSection={handleSelectSection}
           quoteTriggerRef={quoteTriggerRef}
+          hasPromoBar={showPromoHome}
         />
 
         <UrgencySection config={URGENCY_CONFIG} brand={BRAND_CONFIG} />
@@ -359,6 +396,30 @@ export default function App() {
           quoteHref={pageHref('devis')}
           contactHref={pageHref('agences-contact')}
           routeKey={routeKey(route)}
+          floatingExtra={
+            showPromoHome
+              ? ({ sosOpen, nearFooter }) => (
+                  <PromoFloatingBadge
+                    promo={promo}
+                    visible={!sosOpen && !nearFooter && !promoSheetOpen}
+                    onOpen={openPromoSheet}
+                    onDismiss={dismissPromo}
+                  />
+                )
+              : undefined
+          }
+        />
+      )}
+
+      {/* Black Friday : pop-up des offres (ouverte par le rond ou le bandeau, jamais toute seule) */}
+      {showPromoHome && (
+        <PromoSheet
+          promo={promo}
+          brand={BRAND_CONFIG}
+          open={promoSheetOpen}
+          onClose={closePromoSheet}
+          promoHref={pageHref('promotions')}
+          shopAddress={`${republique.addressLines[0]}, Marseille 2e`}
         />
       )}
     </div>

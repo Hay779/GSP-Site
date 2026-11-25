@@ -15,6 +15,8 @@ interface HeroSectionProps {
   readonly onOpenQuoteModal: () => void;
   readonly onSelectSection: (sectionId: SectionId) => void;
   readonly quoteTriggerRef?: React.RefObject<HTMLButtonElement | null>;
+  /** Bandeau promotionnel affiché sous l'en-tête (mobile) : le haut de page se raccourcit d'autant. */
+  readonly hasPromoBar?: boolean;
 }
 
 function CommitmentIcon({ icon }: { readonly icon: CommitmentIconKey }) {
@@ -34,6 +36,7 @@ export function HeroSection({
   onOpenQuoteModal,
   onSelectSection,
   quoteTriggerRef,
+  hasPromoBar = false,
 }: HeroSectionProps) {
   const sectionRef = useRef<HTMLElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -148,7 +151,7 @@ export function HeroSection({
       id="02_Hero"
       data-section="02_Hero"
       aria-labelledby="02_Hero-title"
-      className="relative w-full overflow-hidden bg-[#16191B] lg:bg-[#24282B] scroll-mt-[74px] lg:scroll-mt-[88px] flex flex-col h-[calc(100svh-74px)] min-h-[540px] sm:h-auto sm:min-h-0 lg:flex-row lg:min-h-[min(calc(100svh-88px),740px)] lg:items-center"
+      className={`relative w-full overflow-hidden bg-[#16191B] lg:bg-[#24282B] scroll-mt-[74px] lg:scroll-mt-[88px] flex flex-col ${hasPromoBar ? 'h-[calc(100svh-112px)]' : 'h-[calc(100svh-74px)]'} min-h-[540px] sm:h-auto sm:min-h-0 lg:flex-row lg:min-h-[min(calc(100svh-88px),740px)] lg:items-center`}
     >
       {/* Couche média plein écran : vidéo HTML5 + poster artisanal avec parallaxe immersif au scroll */}
       <div

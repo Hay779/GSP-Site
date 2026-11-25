@@ -3,6 +3,23 @@
 Ce que Claude Code a fait sur le site, séance par séance (plus récent en haut).
 Hermes lit ce fichier avant de travailler. Ses propres recherches sont dans `docs/seo/`.
 
+## 2026-11-25 — Black Friday : version mobile codée (branche `claude/youthful-pascal-btj1i4`)
+- Présentation validée par le client : `docs/maquettes/black-friday/8-presentation-onglet-popup.png` (style noir et or de ses affiches, `modeles-client/`). Captures du résultat : `docs/maquettes/black-friday/captures-mobile/`.
+- **Accueil (mobile)** : bandeau doré défilant sous l'en-tête (caché avec lui), rond « Black Friday -20 % » en bas à droite au-dessus de la barre Devis · SOS · Contact (petite croix = masqué pour la visite, sessionStorage ; caché quand le menu SOS est ouvert et sur le pied de page). Toucher le rond ou le bandeau ouvre la **pop-up** des 3 offres (croix, « Fermer », glisser vers le bas, Échap). Rien ne s'ouvre tout seul.
+- **Page `/promotions`** : haut de page façon affiche + compte à rebours, 3 offres avec visuels, « Comment en profiter », conditions, FAQ, carte de l'agence République (sans photo du magasin, demande du client).
+- **Dates** : `src/data/promotions.ts` (24/11 00:00 → 30/11 23:59, heure de Paris). Après : tout disparaît, `/promotions` affiche « Pas d'offre en ce moment » et passe en noindex. Testé avec l'horloge au 01/12.
+- **SEO** : `/promotions` dans `PAGE_SLUGS`, balises et JSON-LD (fil d'Ariane + FAQ) dans `seo.ts`, sitemap (pendant la promo), bloc « Offre en cours » dans `llms.txt`.
+- Visuels des offres : recadrés des affiches du client (`src/assets/images/promo/`). Aucune photo du magasin.
+- Version PC : pas encore faite (tout le Black Friday est `sm:hidden` sauf la page `/promotions`).
+
+### À faire / à confirmer
+- Offres définitives à confirmer par le client : « 3e double offert » (pour 2 achetés ?), pose comprise, A2P, tampons (boutique seulement ? délai ?). Textes marqués « À CONFIRMER » dans `promotions.ts`.
+- **Reconstruire et renvoyer le site le 01/12** (`npm run build:prod`) : le HTML pré-rendu et le sitemap sont figés au moment du build (le JavaScript masque bien la promo, mais le HTML de départ et le sitemap la gardent jusqu'au prochain envoi).
+- Pas de mise en ligne OVH sans l'accord de l'autre session (celle de la mise en ligne).
+
+### Questions pour Hermes
+- Après le 30/11, retirer `/promotions` de la Search Console si elle y a été soumise ; vérifier qu'elle repasse en noindex.
+
 ## 2026-11-25 — PagesJaunes revendiquée et corrigée
 - Compte **Solocal Manager** créé avec « Continuer avec Google » (gspserrurerie13@gmail.com), fiche PagesJaunes n° 65378857 **revendiquée** (code par appel vocal depuis le 04 91 90 51 65, saisi par le client).
 - Modifié dans Solocal Manager :

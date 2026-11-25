@@ -1,31 +1,28 @@
 /**
- * Éléments du Black Friday sur mobile : bandeau doré défilant, macaron sur la photo
- * du haut de page, bouton « Voir les offres », rond flottant et tiroir des offres.
- * Les textes et les dates viennent de `data/promotions.ts`.
+ * Black Friday sur mobile (maquette validée `docs/maquettes/black-friday/8-presentation-onglet-popup.png`) :
+ * bandeau doré défilant, rond flottant « Black Friday -20 % » et pop-up des offres.
+ * Rien ne s'ouvre tout seul. Textes et dates : `data/promotions.ts`.
  */
 import { Fragment, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { ChevronRight, Phone, Store, X } from 'lucide-react';
+import { ChevronRight, X } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion, type PanInfo } from 'motion/react';
 import type { Promotion } from '../data/promotions';
+import type { BrandConfig } from '../utils/navigation';
 import { REVEAL_EASE } from '../utils/scrollReveal';
+import { BrandMark } from './BrandMark';
 
+/** Fond doré des boutons et pastilles. */
 export const PROMO_GOLD = 'bg-[linear-gradient(100deg,#E5C57B_0%,#CDB074_45%,#B79A62_100%)]';
-const PROMO_BLACK = '#0B0C0D';
+/** Texte doré dégradé (chiffres, « FRIDAY »). */
+export const PROMO_GOLD_TEXT = 'bg-[linear-gradient(180deg,#F3DB9E,#B79A62)] bg-clip-text text-transparent';
 
 /* ------------------------------------------------------------------ */
 /* Bandeau défilant                                                    */
 /* ------------------------------------------------------------------ */
 
-function tickerItems(promo: Promotion, long: boolean): string[] {
-  const labels = promo.offers.map((o) =>
-    long && o.tickerLabel.startsWith('-20 %') ? o.tickerLabel.replace('-20 %', '-20 % sur les') : o.tickerLabel
-  );
-  return [...labels, promo.untilShortLabel.replace('jusqu’au', 'Jusqu’au')];
-}
-
 /**
- * Bandeau sous l'en-tête. Variante « gold » (accueil, ouvre le tiroir) ou « dark »
+ * Bandeau sous l'en-tête. Variante « gold » (accueil, ouvre la pop-up) ou « dark »
  * (page /promotions, simple rappel).
  */
 export function PromoTicker({
@@ -38,12 +35,12 @@ export function PromoTicker({
   readonly onOpen?: () => void;
 }) {
   const gold = variant === 'gold';
-  const items = tickerItems(promo, !gold);
+  const items = [...promo.offers.map((o) => o.tickerLabel), promo.untilShortLabel.replace('jusqu’au', 'Jusqu’au')];
   const sequence = (copy: number) => (
     <span aria-hidden={copy > 0 ? true : undefined} className="flex shrink-0 items-center gap-5 pr-5">
       {items.map((item, i) => (
         <Fragment key={`${copy}-${i}`}>
-          <span className={gold ? 'uppercase' : ''}>{item}</span>
+          <span className="uppercase">{item}</span>
           <span aria-hidden="true" className={gold ? 'text-[#1C1F21]' : 'text-[#D9BD82]'}>
             ✦
           </span>
@@ -70,7 +67,7 @@ export function PromoTicker({
     </>
   );
 
-  const base = `flex h-[38px] w-full items-center text-[13px] font-semibold tracking-[0.02em] ${
+  const base = `flex h-[38px] w-full items-center text-[13px] font-bold tracking-[0.02em] ${
     gold ? `${PROMO_GOLD} text-[#1C1F21]` : 'border-b border-[#B79A62]/45 bg-[#0B0C0D] text-[#F3F0E7]'
   }`;
 
@@ -92,49 +89,6 @@ export function PromoTicker({
 }
 
 /* ------------------------------------------------------------------ */
-/* Macaron et bouton du haut de page                                    */
-/* ------------------------------------------------------------------ */
-
-/** Macaron rond, penché, posé sur la photo du haut de page (en haut à droite). */
-export function PromoHeroBadge({ promo, onOpen }: { readonly promo: Promotion; readonly onOpen: () => void }) {
-  return (
-    <button
-      type="button"
-      onClick={onOpen}
-      aria-haspopup="dialog"
-      aria-label={`${promo.name} : -20 %, ${promo.untilShortLabel}. Voir les offres`}
-      className="absolute right-3 top-4 z-20 grid h-[128px] w-[128px] -rotate-[10deg] cursor-pointer place-items-center rounded-full border-[2.5px] border-[#D9BD82] bg-[#0B0C0D] text-center shadow-[0_14px_34px_rgba(0,0,0,0.45)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#E5C57B] sm:hidden"
-    >
-      <span className="flex flex-col items-center leading-none">
-        <span className="font-display text-[12.5px] font-bold uppercase leading-[1.1] tracking-[0.16em] text-[#F3F0E7]">
-          Black
-          <br />
-          Friday
-        </span>
-        <span className="mt-1 bg-[linear-gradient(180deg,#F0D592,#B79A62)] bg-clip-text font-display text-[37px] font-extrabold tracking-[-0.03em] text-transparent">
-          -20%
-        </span>
-        <span className="mt-0.5 text-[11px] text-[#F3F0E7]/85">{promo.untilShortLabel}</span>
-      </span>
-    </button>
-  );
-}
-
-/** Bouton doré « Voir les offres Black Friday » au-dessus du titre (mobile). */
-export function PromoHeroButton({ promo, href }: { readonly promo: Promotion; readonly href: string }) {
-  return (
-    <a
-      href={href}
-      className={`mb-3 inline-flex h-11 items-center gap-2.5 rounded-full ${PROMO_GOLD} pl-4 pr-5 text-[15px] font-semibold text-[#1C1F21] shadow-[0_8px_26px_rgba(229,197,123,0.35)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F3F0E7] sm:hidden`}
-    >
-      <span aria-hidden="true" className="h-2.5 w-2.5 rounded-full bg-[#C0392B] ring-[3px] ring-[#C0392B]/25" />
-      Voir les offres {promo.name}
-      <ChevronRight className="-ml-1 h-4 w-4" strokeWidth={2.4} aria-hidden="true" />
-    </a>
-  );
-}
-
-/* ------------------------------------------------------------------ */
 /* Rond flottant (au-dessus de la barre Devis · SOS · Contact)          */
 /* ------------------------------------------------------------------ */
 
@@ -152,7 +106,7 @@ export function PromoFloatingBadge({
   return (
     <div
       aria-hidden={!visible}
-      className={`fixed bottom-[86px] left-3.5 z-[57] transition-all duration-300 motion-reduce:transition-none sm:hidden ${
+      className={`fixed bottom-[98px] right-4 z-[57] transition-all duration-300 motion-reduce:transition-none sm:hidden ${
         visible ? 'translate-y-0 scale-100 opacity-100' : 'pointer-events-none translate-y-4 scale-90 opacity-0'
       }`}
     >
@@ -162,18 +116,16 @@ export function PromoFloatingBadge({
         tabIndex={visible ? 0 : -1}
         aria-haspopup="dialog"
         aria-label={`${promo.name} -20 % : voir les offres`}
-        className="relative grid h-[76px] w-[76px] cursor-pointer place-items-center rounded-full border-2 border-[#B79A62] bg-[#0B0C0D] text-center shadow-[0_10px_26px_rgba(0,0,0,0.4)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62]"
+        className="relative grid h-[80px] w-[80px] cursor-pointer place-items-center rounded-full border-2 border-[#D9BD82] bg-[#0B0C0D] text-center shadow-[0_10px_26px_rgba(0,0,0,0.5)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62]"
       >
-        <span aria-hidden="true" className="absolute -left-0.5 top-0.5 h-3 w-3 rounded-full bg-[#C0392B] ring-2 ring-[#C0392B]/30" />
+        <span aria-hidden="true" className="absolute -left-0.5 top-0.5 h-3 w-3 rounded-full bg-[#C0392B] ring-2 ring-[#C0392B]/30 motion-safe:animate-pulse" />
         <span className="flex flex-col items-center leading-none">
-          <span className="font-display text-[9.5px] font-bold uppercase leading-[1.15] tracking-[0.12em] text-[#F3F0E7]">
+          <span className="font-display text-[10px] font-bold uppercase leading-[1.15] tracking-[0.12em] text-[#F3F0E7]">
             Black
             <br />
             Friday
           </span>
-          <span className="mt-0.5 bg-[linear-gradient(180deg,#F0D592,#B79A62)] bg-clip-text font-display text-[21px] font-extrabold tracking-[-0.02em] text-transparent">
-            -20%
-          </span>
+          <span className={`mt-0.5 font-display text-[22px] font-extrabold tracking-[-0.02em] ${PROMO_GOLD_TEXT}`}>-20%</span>
         </span>
       </button>
       <button
@@ -181,9 +133,9 @@ export function PromoFloatingBadge({
         onClick={onDismiss}
         tabIndex={visible ? 0 : -1}
         aria-label={`Masquer le ${promo.name} pour cette visite`}
-        className="absolute -right-3 -top-3 grid h-8 w-8 cursor-pointer place-items-center rounded-full focus-visible:outline-2 focus-visible:outline-[#B79A62]"
+        className="absolute -right-2.5 -top-2.5 grid h-8 w-8 cursor-pointer place-items-center rounded-full focus-visible:outline-2 focus-visible:outline-[#B79A62]"
       >
-        <span className="grid h-[22px] w-[22px] place-items-center rounded-full border border-[#1C1F21]/15 bg-white text-[#1C1F21] shadow-[0_2px_6px_rgba(0,0,0,0.25)]">
+        <span className="grid h-[22px] w-[22px] place-items-center rounded-full bg-white text-[#1C1F21] shadow-[0_2px_6px_rgba(0,0,0,0.3)]">
           <X className="h-3 w-3" strokeWidth={3} aria-hidden="true" />
         </span>
       </button>
@@ -192,55 +144,41 @@ export function PromoFloatingBadge({
 }
 
 /* ------------------------------------------------------------------ */
-/* Tiroir des offres                                                    */
+/* Pop-up des offres                                                    */
 /* ------------------------------------------------------------------ */
 
-/** Pastille dorée d'une offre (-20 %, Offert…). */
-export function PromoOfferBadge({ label, size = 'md' }: { readonly label: string; readonly size?: 'md' | 'lg' }) {
-  const short = label.replace(' %', '%');
-  const long = short.length > 5;
-  return (
-    <span
-      className={`grid shrink-0 place-items-center rounded-xl ${PROMO_GOLD} font-display font-extrabold tracking-[-0.02em] text-[#0B0C0D] ${
-        size === 'lg'
-          ? `h-[46px] px-4 ${long ? 'text-[19px]' : 'text-[26px]'} shadow-[0_8px_20px_rgba(0,0,0,0.25)]`
-          : `h-[58px] w-[70px] ${long ? 'text-[15px]' : 'text-[22px]'}`
-      }`}
-    >
-      {short}
-    </span>
-  );
+/** Mention d'une offre façon affiche (« -20% », « 3e OFFERT »). */
+export function promoBadgeText(badge: string): string {
+  return badge.replace(' %', '%').toUpperCase().replace('3E', '3e');
 }
 
 interface PromoSheetProps {
   readonly promo: Promotion;
+  readonly brand: BrandConfig;
   readonly open: boolean;
   readonly onClose: () => void;
-  readonly quoteHref: string;
   readonly promoHref: string;
-  readonly phoneHref: string;
   readonly shopAddress: string;
 }
 
-export function PromoSheet({ promo, open, onClose, quoteHref, promoHref, phoneHref, shopAddress }: PromoSheetProps) {
+export function PromoSheet({ promo, brand, open, onClose, promoHref, shopAddress }: PromoSheetProps) {
   const reduced = Boolean(useReducedMotion());
   const closeRef = useRef<HTMLButtonElement | null>(null);
   const sheetRef = useRef<HTMLDivElement | null>(null);
-  const openerRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     if (!open) return;
-    openerRef.current = document.activeElement as HTMLElement | null;
+    const opener = document.activeElement as HTMLElement | null;
     const root = document.documentElement;
     const previousOverflow = root.style.overflow;
     root.style.overflow = 'hidden';
-    const focusTimer = window.setTimeout(() => closeRef.current?.focus(), 30);
+    const focusTimer = window.setTimeout(() => closeRef.current?.focus({ preventScroll: true }), 30);
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         onClose();
         return;
       }
-      // Le focus reste dans le tiroir.
+      // Le focus reste dans la pop-up.
       if (e.key === 'Tab' && sheetRef.current) {
         const items = sheetRef.current.querySelectorAll<HTMLElement>('a[href], button');
         if (items.length === 0) return;
@@ -260,7 +198,7 @@ export function PromoSheet({ promo, open, onClose, quoteHref, promoHref, phoneHr
       window.clearTimeout(focusTimer);
       window.removeEventListener('keydown', onKey);
       root.style.overflow = previousOverflow;
-      openerRef.current?.focus?.({ preventScroll: true });
+      opener?.focus?.({ preventScroll: true });
     };
   }, [open, onClose]);
 
@@ -282,7 +220,7 @@ export function PromoSheet({ promo, open, onClose, quoteHref, promoHref, phoneHr
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: reduced ? 0 : 0.2 }}
-            className="fixed inset-0 z-[70] bg-[#1C1F21]/55"
+            className="fixed inset-0 z-[70] bg-black/65"
           />
           <motion.div
             key="promo-sheet"
@@ -290,92 +228,90 @@ export function PromoSheet({ promo, open, onClose, quoteHref, promoHref, phoneHr
             role="dialog"
             aria-modal="true"
             aria-labelledby="promo-sheet-title"
-            initial={reduced ? { opacity: 0 } : { y: '100%' }}
+            initial={reduced ? { opacity: 0 } : { y: '110%' }}
             animate={reduced ? { opacity: 1 } : { y: 0 }}
-            exit={reduced ? { opacity: 0 } : { y: '100%' }}
+            exit={reduced ? { opacity: 0 } : { y: '110%' }}
             transition={{ duration: reduced ? 0 : 0.38, ease: REVEAL_EASE }}
             drag={reduced ? false : 'y'}
             dragConstraints={{ top: 0, bottom: 0 }}
             dragElastic={{ top: 0, bottom: 0.7 }}
-            dragListener
             onDragEnd={onDragEnd}
-            className="fixed inset-x-0 bottom-0 z-[71] mx-auto max-h-[94svh] w-full max-w-[520px] overflow-y-auto overscroll-contain rounded-t-[28px] border-t border-[#B79A62]/40 bg-[#0B0C0D] bg-[radial-gradient(120%_60%_at_100%_0%,rgba(183,154,98,0.28),transparent_60%)] px-[18px] pb-[max(18px,env(safe-area-inset-bottom))] pt-3 text-[#F3F0E7] shadow-[0_-20px_60px_rgba(0,0,0,0.5)]"
+            className="fixed inset-x-3 bottom-3 z-[71] mx-auto max-h-[calc(100svh-24px)] max-w-[500px] overflow-y-auto overscroll-contain rounded-[26px] bg-[#0B0C0D] bg-[radial-gradient(120%_50%_at_50%_0%,rgba(183,154,98,0.3),transparent_60%)] p-2 text-[#F3F0E7] shadow-[0_-10px_50px_rgba(0,0,0,0.6)]"
           >
-            <div aria-hidden="true" className="mx-auto h-1 w-11 rounded-full bg-[#F3F0E7]/30" />
-
-            <div className="mt-4 flex items-start justify-between gap-3">
-              <div>
-                <p className="text-[12px] font-semibold uppercase tracking-[0.26em] text-[#E5C57B]">{promo.untilLabel}</p>
-                <h2 id="promo-sheet-title" className="mt-1.5 font-display text-[32px] font-extrabold uppercase leading-none tracking-[-0.02em]">
-                  Black <span className="text-[#C9AA68]">Friday</span>
-                </h2>
-                <p className="mt-2 text-[15px] text-[#F3F0E7]/75">Sur devis, en boutique et à domicile.</p>
-              </div>
+            <div className="relative rounded-[18px] border-[1.5px] border-[#D9BD82]/55 px-3.5 pb-3 pt-3">
+              <div aria-hidden="true" className="mx-auto h-1 w-11 rounded-full bg-[#F3F0E7]/30" />
               <button
                 ref={closeRef}
                 type="button"
                 onClick={onClose}
                 aria-label="Fermer les offres"
-                className="grid h-10 w-10 shrink-0 cursor-pointer place-items-center rounded-full border border-[#F3F0E7]/25 text-[#F3F0E7] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62]"
+                className="absolute right-3 top-3 grid h-9 w-9 cursor-pointer place-items-center rounded-full border border-[#F3F0E7]/30 text-[#F3F0E7] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62]"
               >
-                <X className="h-[18px] w-[18px]" strokeWidth={2.2} aria-hidden="true" />
+                <X className="h-4 w-4" strokeWidth={2.2} aria-hidden="true" />
               </button>
-            </div>
 
-            <ul className="mt-4 flex flex-col gap-2.5">
-              {promo.offers.map((offer) => (
-                <li
-                  key={offer.id}
-                  className="flex items-center gap-3.5 rounded-2xl border border-[#F3F0E7]/10 bg-[#16191B] p-3"
-                >
-                  <PromoOfferBadge label={offer.badge} />
-                  <div className="min-w-0">
-                    <p className="font-display text-[17px] font-semibold leading-tight">{offer.title}</p>
-                    <p className="mt-0.5 text-[14px] leading-snug text-[#F3F0E7]/70">{offer.summary}</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
-
-            <div className="mt-2.5 flex items-center gap-3 rounded-2xl bg-[#1F2224] p-3">
-              <span className={`grid h-9 w-9 shrink-0 place-items-center rounded-lg ${PROMO_GOLD} text-[#0B0C0D]`}>
-                <Store className="h-[18px] w-[18px]" strokeWidth={2} aria-hidden="true" />
-              </span>
-              <div className="min-w-0">
-                <p className="font-display text-[15.5px] font-semibold leading-tight">Montrez cet écran en boutique</p>
-                <p className="mt-0.5 text-[13.5px] text-[#F3F0E7]/70">{shopAddress}</p>
+              <div className="mt-2.5 flex justify-center" aria-hidden="true">
+                <BrandMark brand={brand} compact />
               </div>
-            </div>
-
-            <div className="mt-3.5 grid grid-cols-2 gap-2.5">
-              <a
-                href={quoteHref}
-                onClick={onClose}
-                className={`inline-flex h-11 items-center justify-center rounded-full ${PROMO_GOLD} px-4 text-[15px] font-semibold text-[#1C1F21] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F3F0E7]`}
+              <p className="mt-2 text-center text-[11.5px] font-bold uppercase tracking-[0.24em] text-[#E5C57B]">{promo.untilLabel}</p>
+              <h2
+                id="promo-sheet-title"
+                className={`mt-1 text-center font-display text-[33px] font-extrabold uppercase leading-none tracking-[-0.01em] ${PROMO_GOLD_TEXT}`}
               >
-                Demander un devis
-              </a>
-              <a
-                href={phoneHref}
-                className="inline-flex h-11 items-center justify-center gap-2 rounded-full border border-[#F3F0E7]/35 px-4 text-[15px] font-semibold text-[#F3F0E7] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62]"
-              >
-                <Phone className="h-4 w-4 text-[#E5C57B]" strokeWidth={2} aria-hidden="true" />
-                Appeler
-              </a>
+                {promo.name}
+              </h2>
+
+              <ul className="mt-3 flex flex-col gap-2">
+                {promo.offers.map((offer) => (
+                  <li
+                    key={offer.id}
+                    className="flex items-center gap-3 rounded-2xl border border-[#D9BD82]/35 bg-[#111315] p-2"
+                  >
+                    <img
+                      src={offer.imageSrc}
+                      alt=""
+                      loading="lazy"
+                      className="h-[72px] w-[72px] shrink-0 rounded-xl bg-[#16191B] object-cover"
+                    />
+                    <div className="min-w-0">
+                      <p className={`font-display text-[21px] font-extrabold leading-none tracking-[-0.02em] ${PROMO_GOLD_TEXT}`}>
+                        {promoBadgeText(offer.badge)}
+                      </p>
+                      <p className="mt-1 font-display text-[15px] font-semibold leading-tight">{offer.title}</p>
+                      <p className="text-[12.5px] leading-snug text-[#F3F0E7]/70">{offer.summary}</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+
+              <p className="mt-3 text-center text-[13.5px] leading-snug text-[#F3F0E7]/85">
+                Montrez cet écran en boutique
+                <br />
+                <strong className="font-semibold text-[#F3F0E7]">{shopAddress}</strong>
+              </p>
+
+              <div className="mt-3 flex items-center gap-4">
+                <a
+                  href={promoHref}
+                  onClick={onClose}
+                  className={`inline-flex h-11 flex-1 items-center justify-center gap-1 rounded-full ${PROMO_GOLD} px-5 text-[15px] font-bold text-[#1C1F21] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F3F0E7]`}
+                >
+                  Profiter de l’offre
+                  <ChevronRight className="h-4 w-4" strokeWidth={2.4} aria-hidden="true" />
+                </a>
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="shrink-0 cursor-pointer px-1 text-[15px] font-semibold text-[#E5C57B] underline decoration-[#E5C57B]/60 underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62]"
+                >
+                  Fermer
+                </button>
+              </div>
+
+              <p className="mt-2.5 text-center text-[10.5px] uppercase tracking-[0.06em] text-[#F3F0E7]/55">
+                Offres valables du 24 au 30 novembre · non cumulables
+              </p>
             </div>
-
-            <a
-              href={promoHref}
-              onClick={onClose}
-              className="mx-auto mt-4 flex w-fit items-center gap-0.5 text-[15px] font-semibold text-[#E5C57B] underline decoration-[#E5C57B]/60 underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62]"
-            >
-              Voir le détail des offres
-              <ChevronRight className="h-4 w-4" strokeWidth={2.4} aria-hidden="true" />
-            </a>
-
-            <p className="mt-3 text-center text-[12px] leading-snug text-[#F3F0E7]/50">
-              Offres valables du 24 au 30/11, non cumulables. Détail en boutique.
-            </p>
           </motion.div>
         </>
       )}
@@ -383,5 +319,3 @@ export function PromoSheet({ promo, open, onClose, quoteHref, promoHref, phoneHr
     document.body
   );
 }
-
-export { PROMO_BLACK };

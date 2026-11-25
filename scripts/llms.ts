@@ -3,6 +3,7 @@
  * (ChatGPT, Claude, Perplexity, Gemini…), générée à partir des contenus du site.
  */
 import { AGENCIES_CONFIG, BRANDS_CONFIG, DOMAINS_CONFIG, FAQ_CONFIG } from '../src/data/sectionsContent';
+import { CURRENT_PROMOTION, isPromotionActive } from '../src/data/promotions';
 import { SITE_URL, pathForRoute, seoForRoute } from '../src/utils/seo';
 import type { PageId } from '../src/utils/router';
 
@@ -36,6 +37,13 @@ export function buildLlmsTxt(): string {
     (a) => `- **${a.name}** (${a.districtLabel}) : ${a.addressLines.join(', ')} — tél. ${a.phoneDisplay} — ${a.hoursLabel}`
   );
   const faq = FAQ_CONFIG.items.map((q) => `### ${q.question}\n${q.answer}`);
+  const promo = CURRENT_PROMOTION;
+  // Offre en cours (uniquement pendant ses dates, au moment du build).
+  const promoBlock = isPromotionActive(promo)
+    ? `\n## Offre en cours : ${promo.name} (${promo.periodLabel.toLowerCase()})\n${promo.offers
+        .map((o) => `- ${o.badge} — ${o.title} : ${o.summary}`)
+        .join('\n')}\n- ${promo.conditions.join(' ')}\n- Détail : ${SITE_URL}/promotions\n`
+    : '';
 
   return `# Serrurerie de la République — serrurier à Marseille
 
@@ -48,6 +56,7 @@ export function buildLlmsTxt(): string {
 - Note Google : 4,6/5 (30 avis)
 - Société : SERRURERIE DE LA REPUBLIQUE, SARL — SIRET 106 157 118 00014
 
+${promoBlock}
 ## Agences
 ${agencies.join('\n')}
 

@@ -6,6 +6,7 @@
  *   acheté chez OVH (peut aussi être fournie au build via VITE_SITE_URL).
  */
 import { resolvePageDefinition, type PageDefinition } from '../data/pages';
+import { CURRENT_PROMOTION, isPromotionActive } from '../data/promotions';
 import { AGENCIES_CONFIG, DOMAINS_CONFIG, FAQ_CONFIG, type FaqItem } from '../data/sectionsContent';
 import { DOMAIN_SLUGS, PAGE_SLUGS, type PageId, type Route } from './router';
 
@@ -270,6 +271,31 @@ function baseSeoForRoute(route: Route): SeoData {
   const crumbs: { name: string; path: string }[] = [{ name: 'Accueil', path: '/' }];
   if (route.kind === 'page' && PRO_CHILDREN.includes(route.id)) {
     crumbs.push({ name: 'Professionnels', path: `/${PAGE_SLUGS.professionnels}` });
+  }
+
+  // Promotions : indexée pendant l'opération, « Pas d'offre en ce moment » + noindex le reste du temps.
+  if (route.kind === 'page' && route.id === 'promotions') {
+    const promo = CURRENT_PROMOTION;
+    const active = isPromotionActive(promo);
+    crumbs.push({ name: active ? promo.name : 'Promotions', path });
+    return active
+      ? {
+          title: `${promo.name} serrurier Marseille : -20 % portes blindées`,
+          description:
+            '-20 % sur les portes blindées (fourniture et pose), 3e double de clé offert, -20 % sur les tampons dès le 2e. Du 24 au 30/11/2026 à Marseille 2e.',
+          path,
+          image: promo.offers[0].imageSrc,
+          noindex: false,
+          jsonLd: [...base, breadcrumb(crumbs), faqPage(promo.faq)],
+        }
+      : {
+          title: 'Promotions | Serrurerie de la République',
+          description: 'Pas d’offre en ce moment. Retrouvez nos services de serrurerie à Marseille et demandez un devis.',
+          path,
+          image: DEFAULT_IMAGE,
+          noindex: true,
+          jsonLd: [...base, breadcrumb(crumbs)],
+        };
   }
 
   const fixed = route.kind === 'page' ? STATIC_META[route.id] : undefined;

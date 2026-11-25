@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { FileText, KeyRound, MessageCircle, Phone, X } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
@@ -15,6 +15,8 @@ interface MobileActionBarProps {
   readonly contactHref: string;
   /** Change à chaque changement de page (pour retrouver l'emplacement du haut de page). */
   readonly routeKey: string;
+  /** Élément flottant au-dessus de la barre (ex. rond Black Friday), selon l'état de la barre. */
+  readonly floatingExtra?: (state: { readonly sosOpen: boolean; readonly nearFooter: boolean }) => ReactNode;
 }
 
 function WhatsAppIcon({ className }: { readonly className?: string }) {
@@ -34,10 +36,11 @@ const ITEM =
  * de l'écran quand on descend. Ailleurs, elle apparaît après le haut de page.
  * Masquée sur le pied de page (qui a déjà ses boutons).
  */
-export function MobileActionBar({ brand, whatsapp, quoteHref, contactHref, routeKey }: MobileActionBarProps) {
+export function MobileActionBar({ brand, whatsapp, quoteHref, contactHref, routeKey, floatingExtra }: MobileActionBarProps) {
   const prefersReducedMotion = Boolean(useReducedMotion());
   const [visible, setVisible] = useState(false);
   const [sosOpen, setSosOpen] = useState(false);
+  const [nearFooter, setNearFooter] = useState(false);
   /** Emplacement dans le haut de page (accueil) : la barre y est affichée tant qu'il est visible. */
   const [slot, setSlot] = useState<HTMLElement | null>(null);
   const [slotInView, setSlotInView] = useState(false);
@@ -66,6 +69,7 @@ export function MobileActionBar({ brand, whatsapp, quoteHref, contactHref, route
     const update = () => {
       const footer = document.getElementById('11_Pied_De_Page');
       const nearFooter = footer ? footer.getBoundingClientRect().top < window.innerHeight - 40 : false;
+      setNearFooter(nearFooter);
       setVisible(
         resolveActionBarVisible({
           scrollY: window.scrollY,
@@ -140,6 +144,7 @@ export function MobileActionBar({ brand, whatsapp, quoteHref, contactHref, route
           </nav>,
           slot
         )}
+      {floatingExtra?.({ sosOpen, nearFooter })}
       <AnimatePresence>
         {sosOpen && (
           <>

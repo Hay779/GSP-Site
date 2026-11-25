@@ -9,23 +9,24 @@
  */
 import type { FaqItem } from './sectionsContent';
 
-export type PromoOfferId = 'portes-blindees' | 'tampons' | 'double-cle';
+export type PromoOfferId = 'portes-blindees' | 'double-cle' | 'tampons';
 
 export interface PromoOffer {
   readonly id: PromoOfferId;
   /** Pastille dorée (ex. « -20 % » ou « Offert »). */
   readonly badge: string;
   readonly title: string;
+  /** Accroche façon affiche (« sur les portes blindées »). */
+  readonly headline: string;
   /** Une ligne, reprise dans le tiroir. */
   readonly summary: string;
   /** Ce qui est compris (page /promotions). */
   readonly includes: readonly string[];
   /** Texte du bandeau défilant. */
   readonly tickerLabel: string;
-  /** Photo de la carte ; sans photo, un emplacement « photo à venir » est affiché. */
-  readonly imageSrc?: string;
-  readonly imageAlt?: string;
-  readonly imagePlaceholder?: string;
+  /** Visuel de l'offre (repris des affiches du client). */
+  readonly imageSrc: string;
+  readonly imageAlt: string;
   readonly cta: { readonly kind: 'quote' | 'shop'; readonly label: string };
 }
 
@@ -39,6 +40,7 @@ export interface Promotion {
   readonly untilLabel: string;
   readonly untilShortLabel: string;
   readonly periodLabel: string;
+  readonly tagline: string;
   readonly offers: readonly PromoOffer[];
   readonly conditions: readonly string[];
   readonly faq: readonly FaqItem[];
@@ -51,41 +53,46 @@ export const BLACK_FRIDAY_2026: Promotion = {
   endsAt: '2026-12-01T00:00:00+01:00',
   untilLabel: 'Jusqu’au 30 novembre',
   untilShortLabel: 'jusqu’au 30/11',
+  tagline: 'Jusqu’à -20 % sur la sécurité',
   periodLabel: 'Du 24 au 30 novembre 2026',
   offers: [
     {
       id: 'portes-blindees',
       badge: '-20 %',
       title: 'Portes blindées',
+      headline: 'sur les portes blindées',
       summary: 'Fourniture et pose d’un bloc-porte blindé.',
       // À CONFIRMER par le client : pose comprise ? modèles A2P ?
       includes: ['Prise de mesures et devis à domicile', 'Pose par nos serruriers', 'Modèles certifiés A2P'],
       tickerLabel: '-20 % portes blindées',
-      imageSrc: '/src/assets/images/domaine_serrurerie_1795289920360.webp',
-      imageAlt: 'Serrure d’une porte blindée posée par la Serrurerie de la République à Marseille.',
+      imageSrc: '/src/assets/images/promo/bf_porte_blindee.webp',
+      imageAlt: 'Bloc-porte blindé gris anthracite posé dans une entrée.',
       cta: { kind: 'quote', label: 'Demander un devis' },
+    },
+    {
+      id: 'double-cle',
+      badge: '3e offert',
+      title: 'Double de clé',
+      headline: '3e double de clé offert',
+      // À CONFIRMER par le client : le 3e offert pour 2 achetés ?
+      summary: 'Le 3e double offert, en boutique.',
+      includes: ['Reproduction sur place, en boutique', 'Clés plates et clés de sécurité', 'Conseils sur votre serrure'],
+      tickerLabel: '3e double de clé offert',
+      imageSrc: '/src/assets/images/promo/bf_double_cle.webp',
+      imageAlt: 'Deux clés de sécurité reproduites.',
+      cta: { kind: 'shop', label: 'Venir en boutique' },
     },
     {
       id: 'tampons',
       badge: '-20 %',
       title: 'Tampons personnalisés',
+      headline: 'sur les tampons personnalisés',
       summary: 'Dès le 2e tampon commandé.',
       // À CONFIRMER par le client : commande seulement en boutique ? délai ?
       includes: ['Tampons d’entreprise, adresse, signature', 'Commande en boutique', 'Prêts rapidement'],
       tickerLabel: '-20 % tampons dès le 2e',
-      imagePlaceholder: 'Photo de tampons à venir',
-      cta: { kind: 'shop', label: 'Commander en boutique' },
-    },
-    {
-      id: 'double-cle',
-      badge: 'Offert',
-      title: 'Double de clé offert',
-      // À CONFIRMER par le client : 1 acheté = 1 offert, ou le 3e offert pour 2 achetés ?
-      summary: 'Sur la reproduction de vos clés, en boutique.',
-      includes: ['Reproduction sur place, en boutique', 'Clés plates et clés de sécurité', 'Conseils sur votre serrure'],
-      tickerLabel: 'Double de clé offert',
-      imageSrc: '/src/assets/images/kb_cles.webp',
-      imageAlt: 'Reproduction de clés à la boutique République, Marseille 2e.',
+      imageSrc: '/src/assets/images/promo/bf_tampon.webp',
+      imageAlt: 'Tampon encreur personnalisé noir.',
       cta: { kind: 'shop', label: 'Venir en boutique' },
     },
   ],

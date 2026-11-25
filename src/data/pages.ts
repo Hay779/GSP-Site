@@ -350,7 +350,7 @@ const LEGAL_PRIVACY: readonly LegalArticle[] = [
 ];
 
 /** Pages assemblées à partir de blocs (la page /devis a son propre composant). */
-export type BlockPageId = Exclude<PageId, 'devis' | 'devenir-partenaire'>;
+export type BlockPageId = Exclude<PageId, 'devis' | 'devenir-partenaire' | 'promotions'>;
 
 
 /* ------------------------------------------------------------------ */
@@ -790,7 +790,9 @@ export function resolvePageDefinition(route: Route): PageDefinition | null {
     return domain ? buildDomainPage(domain) : null;
   }
   if (route.kind === 'page') {
-    return route.id === 'devis' || route.id === 'devenir-partenaire' ? null : THEMATIC_PAGES[route.id];
+    return route.id === 'devis' || route.id === 'devenir-partenaire' || route.id === 'promotions'
+      ? null
+      : THEMATIC_PAGES[route.id];
   }
   return null;
 }

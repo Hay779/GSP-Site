@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { ArrowRight, ChevronDown, FileText, Phone } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion, useScroll, useSpring } from 'motion/react';
 import { resolveHeaderHidden } from '../utils/headerVisibility';
@@ -34,6 +34,8 @@ interface HeaderSectionProps {
   readonly homeHref: string;
   /** Adresse de la page « Demander un devis ». */
   readonly quoteHref: string;
+  /** Bandeau affiché sous la barre (ex. Black Friday), caché avec l'en-tête. */
+  readonly belowBar?: ReactNode;
 }
 
 const DESKTOP_LINK_CLASS =
@@ -208,7 +210,7 @@ function DesktopDropdown({
   );
 }
 
-export function HeaderSection({ brand, nav, homeHref, quoteHref }: HeaderSectionProps) {
+export function HeaderSection({ brand, nav, homeHref, quoteHref, belowBar }: HeaderSectionProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isHeaderHidden, setIsHeaderHidden] = useState(false);
   const [hasFocusWithin, setHasFocusWithin] = useState(false);
@@ -407,6 +409,8 @@ export function HeaderSection({ brand, nav, homeHref, quoteHref }: HeaderSection
             </button>
           </div>
         </div>
+
+        {!mobileMenuOpen && belowBar}
 
         {/* Menu déroulant mobile & tablette */}
         {mobileMenuOpen && (
