@@ -3,6 +3,13 @@
 Ce que Claude Code a fait sur le site, séance par séance (plus récent en haut).
 Hermes lit ce fichier avant de travailler. Ses propres recherches sont dans `docs/seo/`.
 
+## 2026-11-25 — Apple Plans (Apple Business)
+- Compte **Apple Business** créé : organisation SERRURERIE DE LA REPUBLIQUE, compte Apple géré **contact@serrurerierepublique.fr** (mot de passe choisi par le client), téléphone de vérification 06 50 70 44 52. E-mails promotionnels Apple refusés.
+- **Validation de l'organisation** : documents envoyés par le client, en attente chez Apple (quelques jours).
+- Fiche Plans : l'ancienne fiche « Galstyan Grigor, **61** r de la République » a été **revendiquée et corrigée au 48**. Nom affiché « Serrurerie de la République », catégorie Emergency Locksmith Service, site, description (agréé assurances, urgences le soir et le dimanche). Horaires déjà justes (lun–sam 9h–19h).
+- Logo recadré, photo de couverture (comptoir) et 7 vraies photos ajoutés : tout est « en cours de validation » chez Apple.
+- À faire après validation : vérifier la fiche publique, puis ajouter les « Éléments en vedette » (équivalent des posts Google) lors de la prochaine synchro.
+
 ## 2026-11-25 — Bing Places
 - Compte Bing Places créé avec « Continuer avec Google » (gspserrurerie13). Fiche **importée depuis Google**, vérification instantanée. **Synchronisation hebdomadaire avec Google activée** : les changements faits sur Google (infos, horaires, description, services) passent sur Bing tout seuls.
 - Ajouté à la main : 8 vraies photos (`docs/photos-reelles/`) + logo recadré.

@@ -16,7 +16,7 @@
 |---|---|---|---|
 | PagesJaunes / Solocal Manager | gspserrurerie13@gmail.com (connexion Google) | Claude Code (Chrome) | actualités, photos, horaires, prestations, description |
 | Bing Places | gspserrurerie13@gmail.com (connexion Google) | **automatique** : synchro hebdomadaire avec Google activée | rien à faire sauf photos (8 vraies photos + logo ajoutées le 25/11) |
-| Apple Business Connect | à créer | Claude Code (Chrome) | infos, photos |
+| Apple Business (Plans) | compte Apple géré contact@serrurerierepublique.fr (mot de passe chez le client) | Claude Code (Chrome), une fois l'organisation validée | infos, photos, « Éléments en vedette » (équivalent des posts) |
 | Petits annuaires (Cylex, Yably…) | à créer | Claude Code / Hermes | infos, lien du site |
 | Facebook / Instagram | à créer plus tard | — | posts |
 
