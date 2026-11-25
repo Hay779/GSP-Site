@@ -53,7 +53,7 @@ export const BLACK_FRIDAY_2026: Promotion = {
   endsAt: '2026-12-01T00:00:00+01:00',
   untilLabel: 'Jusqu’au 30 novembre',
   untilShortLabel: 'jusqu’au 30/11',
-  tagline: 'Jusqu’à -20 % sur la sécurité',
+  tagline: 'Jusqu’à -25 % sur vos projets',
   periodLabel: 'Du 24 au 30 novembre 2026',
   offers: [
     {
@@ -61,9 +61,9 @@ export const BLACK_FRIDAY_2026: Promotion = {
       badge: '-20 %',
       title: 'Portes blindées',
       headline: 'sur les portes blindées',
-      summary: 'Fourniture et pose d’un bloc-porte blindé.',
-      // À CONFIRMER par le client : pose comprise ? modèles A2P ?
-      includes: ['Prise de mesures et devis à domicile', 'Pose par nos serruriers', 'Modèles certifiés A2P'],
+      summary: 'Fourniture et pose d’un bloc-porte blindé certifié A2P.',
+      // Confirmé par le client le 25/11 : pose comprise, modèles A2P, jusqu'à -25 % selon le projet.
+      includes: ['Pose comprise, par nos serruriers', 'Modèles certifiés A2P', 'Jusqu’à -25 % selon votre projet, sur devis'],
       tickerLabel: '-20 % portes blindées',
       imageSrc: '/src/assets/images/promo/bf_porte_blindee.webp',
       imageAlt: 'Bloc-porte blindé gris anthracite posé dans une entrée.',
@@ -74,8 +74,8 @@ export const BLACK_FRIDAY_2026: Promotion = {
       badge: '3e offert',
       title: 'Double de clé',
       headline: '3e double de clé offert',
-      // À CONFIRMER par le client : le 3e offert pour 2 achetés ?
-      summary: 'Le 3e double offert, en boutique.',
+      // Confirmé par le client le 25/11 : le 3e offert pour 2 achetés.
+      summary: 'Pour 2 doubles achetés, le 3e est offert.',
       includes: ['Reproduction sur place, en boutique', 'Clés plates et clés de sécurité', 'Conseils sur votre serrure'],
       tickerLabel: '3e double de clé offert',
       imageSrc: '/src/assets/images/promo/bf_double_cle.webp',
@@ -88,8 +88,8 @@ export const BLACK_FRIDAY_2026: Promotion = {
       title: 'Tampons personnalisés',
       headline: 'sur les tampons personnalisés',
       summary: 'Dès le 2e tampon commandé.',
-      // À CONFIRMER par le client : commande seulement en boutique ? délai ?
-      includes: ['Tampons d’entreprise, adresse, signature', 'Commande en boutique', 'Prêts rapidement'],
+      // Confirmé par le client le 25/11 : en boutique ou par téléphone, prêts dans la journée.
+      includes: ['Tampons d’entreprise, adresse, signature', 'Commande en boutique ou par téléphone', 'Prêts dans la journée'],
       tickerLabel: '-20 % tampons dès le 2e',
       imageSrc: '/src/assets/images/promo/bf_tampon.webp',
       imageAlt: 'Tampon encreur personnalisé noir.',
@@ -104,16 +104,14 @@ export const BLACK_FRIDAY_2026: Promotion = {
     {
       id: 'bf-pose',
       question: 'La pose est-elle comprise pour la porte blindée ?',
-      // À CONFIRMER par le client.
       answer:
-        'Oui : l’offre porte sur la fourniture et la pose d’un bloc-porte blindé par nos serruriers. Nous venons prendre les mesures et vous remettons un devis détaillé avant toute intervention.',
+        'Oui : l’offre porte sur la fourniture et la pose d’un bloc-porte blindé certifié A2P par nos serruriers. Nous venons prendre les mesures et vous remettons un devis détaillé : jusqu’à -25 % selon votre projet.',
     },
     {
       id: 'bf-tampons',
       question: 'Puis-je commander les tampons par téléphone ?',
-      // À CONFIRMER par le client.
       answer:
-        'Les tampons se commandent en boutique, au 48 rue de la République (Marseille 2e), pour valider ensemble le texte et le modèle. Appelez-nous au 04 91 90 51 65 pour toute question avant de passer.',
+        'Oui : en boutique au 48 rue de la République (Marseille 2e) ou par téléphone au 04 91 90 51 65. Vos tampons sont prêts dans la journée.',
     },
     {
       id: 'bf-pros',

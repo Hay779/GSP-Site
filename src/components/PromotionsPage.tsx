@@ -115,9 +115,15 @@ export function PromotionsPage({ promo, active, agency, phoneDisplay, phoneHref,
             <span className={PROMO_GOLD_TEXT}>Friday</span>
           </h1>
           <p className="mt-3 font-display text-[21px] sm:text-[26px] font-extrabold uppercase tracking-[-0.01em]">
-            {promo.tagline.replace(/-20 %.*/, '')}
-            <span className={PROMO_GOLD_TEXT}>-20 %</span>
-            {promo.tagline.replace(/.*-20 %/, '')}
+            {promo.tagline.split(/(-\d+ %)/).map((part, i) =>
+              /^-\d+ %$/.test(part) ? (
+                <span key={i} className={PROMO_GOLD_TEXT}>
+                  {part}
+                </span>
+              ) : (
+                part
+              )
+            )}
           </p>
           <p className="mt-3 max-w-[520px] text-[15.5px] leading-[1.6] text-[#F3F0E7]/80">
             En boutique au {agency.addressLines[0]} et à domicile sur devis. {promo.periodLabel}.
@@ -144,6 +150,14 @@ export function PromotionsPage({ promo, active, agency, phoneDisplay, phoneHref,
                 <span className={PROMO_GOLD_TEXT}>{main.title}</span>
               </h3>
               <p className="mt-2 text-[13.5px] leading-[1.45] text-[#F3F0E7]/75">{main.summary}</p>
+              <ul className="mt-2 space-y-1 text-[12.5px] leading-snug text-[#F3F0E7]/85">
+                {main.includes.map((item) => (
+                  <li key={item} className="flex gap-1.5">
+                    <span aria-hidden="true" className="text-[#E5C57B]">✓</span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
               <div className="mt-auto pt-4">
                 <OfferAction offer={main} quoteHref={quoteHref} wide />
               </div>

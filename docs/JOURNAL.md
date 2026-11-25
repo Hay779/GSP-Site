@@ -13,7 +13,7 @@ Hermes lit ce fichier avant de travailler. Ses propres recherches sont dans `doc
 - Version PC : pas encore faite (tout le Black Friday est `sm:hidden` sauf la page `/promotions`).
 
 ### À faire / à confirmer
-- Offres définitives à confirmer par le client : « 3e double offert » (pour 2 achetés ?), pose comprise, A2P, tampons (boutique seulement ? délai ?). Textes marqués « À CONFIRMER » dans `promotions.ts`.
+- Offres **confirmées par le client** (25/11) : 3e double de clé offert pour 2 achetés ; portes blindées pose comprise, modèles certifiés A2P, jusqu’à -25 % selon le projet (sur devis) ; tampons en boutique ou par téléphone, prêts dans la journée.
 - **Reconstruire et renvoyer le site le 01/12** (`npm run build:prod`) : le HTML pré-rendu et le sitemap sont figés au moment du build (le JavaScript masque bien la promo, mais le HTML de départ et le sitemap la gardent jusqu'au prochain envoi).
 - Pas de mise en ligne OVH sans l'accord de l'autre session (celle de la mise en ligne).
 
