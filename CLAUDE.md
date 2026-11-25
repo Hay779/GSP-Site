@@ -2,6 +2,7 @@
 
 ## À lire en premier
 - `docs/FEUILLE-DE-ROUTE.md` : **liste des améliorations restantes** (référencement IA, Google, contenu, technique, mise en ligne, formulaires). Cocher au fur et à mesure.
+- `docs/BLACK-FRIDAY.md` : **chantier en cours** — promo Black Friday 24-30/11/2026 validée en maquettes (`docs/maquettes/black-friday/`), à coder (mobile d'abord).
 - `docs/SEO-SECURITE-MISE-EN-LIGNE.md` : ce qui est en place côté SEO et sécurité, et la check-list de mise en ligne OVH.
 
 ## Contexte
