@@ -51,11 +51,11 @@ export function ServiceIcon({ icon }: { readonly icon: KeysBadgeIconKey }) {
 }
 
 const KB_IMAGES = {
-  keys: '/src/assets/images/kb_cles.jpg',
-  badge: '/src/assets/images/kb_badge.jpg',
+  keys: '/src/assets/images/kb_cles.webp',
+  badge: '/src/assets/images/kb_badge.webp',
   facades: {
-    republique: '/src/assets/images/kb_facade_republique.jpg',
-    rome: '/src/assets/images/kb_facade_rome.jpg',
+    republique: '/src/assets/images/kb_facade_republique.webp',
+    rome: '/src/assets/images/kb_facade_rome.webp',
   } as Record<string, string>,
 };
 

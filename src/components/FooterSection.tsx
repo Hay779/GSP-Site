@@ -5,6 +5,8 @@ import type { PageId } from '../utils/router';
 import { buildWhatsAppUrl } from '../utils/whatsapp';
 import { BrandMark } from './BrandMark';
 import { ContactCtaSection } from './ContactCtaSection';
+import { openCookieSettings } from './CookieBanner';
+import { GA_MEASUREMENT_ID } from '../utils/analytics';
 
 interface FooterSectionProps {
   readonly brand: BrandConfig;
@@ -24,7 +26,7 @@ interface FooterSectionProps {
 const LINK_CLASS =
   'text-[#F3F0E7]/80 hover:text-[#B79A62] transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#B79A62] rounded-xs';
 /** Photo provisoire (découpée d'une maquette) : remplacer par une vraie photo clés & badge. */
-const CTA_IMAGE = '/src/assets/images/cta_cles_badge.jpg';
+const CTA_IMAGE = '/src/assets/images/cta_cles_badge.webp';
 
 const HEADING_CLASS = 'text-[12px] sm:text-[13px] font-semibold uppercase tracking-[0.16em] text-[#B79A62]';
 
@@ -180,6 +182,11 @@ export function FooterSection({
             <a href={pageHref('confidentialite')} className={LINK_CLASS}>
               Confidentialité
             </a>
+            {GA_MEASUREMENT_ID && (
+              <button type="button" onClick={openCookieSettings} className={`${LINK_CLASS} cursor-pointer`}>
+                Gérer les cookies
+              </button>
+            )}
           </div>
         </div>
       </div>

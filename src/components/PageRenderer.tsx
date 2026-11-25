@@ -203,7 +203,7 @@ function AudienceCards({
   );
 }
 
-const SERVICE_IMAGES = { key: '/src/assets/images/kb_cles.jpg', badge: '/src/assets/images/kb_badge.jpg' } as const;
+const SERVICE_IMAGES = { key: '/src/assets/images/kb_cles.webp', badge: '/src/assets/images/kb_badge.webp' } as const;
 
 function ServiceCards({ services }: { readonly services: Extract<PageBlock, { type: 'services' }>['services'] }) {
   const prefersReducedMotion = Boolean(useReducedMotion());

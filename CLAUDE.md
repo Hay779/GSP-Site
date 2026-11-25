@@ -4,6 +4,15 @@
 - `docs/FEUILLE-DE-ROUTE.md` : **liste des améliorations restantes** (référencement IA, Google, contenu, technique, mise en ligne, formulaires). Cocher au fur et à mesure.
 - `docs/BLACK-FRIDAY.md` : **chantier en cours** — promo Black Friday 24-30/11/2026 validée en maquettes (`docs/maquettes/black-friday/`), à coder (mobile d'abord).
 - `docs/SEO-SECURITE-MISE-EN-LIGNE.md` : ce qui est en place côté SEO et sécurité, et la check-list de mise en ligne OVH.
+- `docs/seo/` : recherches écrites par **Hermes** (mots-clés, concurrents, annuaires, avis). À lire avant de créer ou modifier une page.
+- `docs/JOURNAL.md` : ce que Claude Code a fait, séance par séance.
+
+## Travail avec Hermes
+Hermes (agent sur le serveur) fait la recherche, le SEO, les annuaires et le suivi Google ; Claude Code fait le développement du site.
+- **Avant de travailler** : `git pull` sur `main`, puis lire `docs/seo/` et la fin de `docs/JOURNAL.md`.
+- **Après une séance** : ajouter une entrée datée en haut de `docs/JOURNAL.md` (ce qui a été fait, pages créées ou modifiées, ce qui reste, questions pour Hermes).
+- **Ne jamais modifier `docs/seo/`** : c'est le dossier de Hermes. Pour lui demander quelque chose, l'écrire dans le journal sous « Questions pour Hermes ».
+- Hermes publie directement sur `main`, mais uniquement dans `docs/seo/` (aucun effet sur le site).
 
 ## Contexte
 - Client francophone. Toujours répondre en français, simplement.

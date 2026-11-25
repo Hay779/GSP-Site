@@ -104,3 +104,18 @@ export function buildPartnerMessage(draft: PartnerDraft, reference: string): str
     `Message : ${draft.message.trim() || '—'}`,
   ].join('\n');
 }
+
+/** Lignes envoyées au récepteur (libellés « Nom » et « Téléphone » attendus par le serveur). */
+export function buildPartnerSummary(draft: PartnerDraft): readonly { readonly label: string; readonly value: string }[] {
+  return [
+    { label: 'Structure', value: draft.organizationType ?? '—' },
+    { label: 'Société', value: draft.company.trim() },
+    { label: 'Nom', value: draft.fullName.trim() },
+    { label: 'Fonction', value: draft.role.trim() || '—' },
+    { label: 'Téléphone', value: draft.phone.trim() },
+    { label: 'E-mail', value: draft.email.trim() },
+    { label: 'Volume', value: draft.volume.trim() || '—' },
+    { label: 'Besoins', value: draft.needs.length > 0 ? draft.needs.join(', ') : '—' },
+    { label: 'Message', value: draft.message.trim() || '—' },
+  ];
+}

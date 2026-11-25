@@ -3,6 +3,7 @@ import { Check } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
 import { REVEAL_EASE } from '../utils/scrollReveal';
 import { HeroGoldWave } from './HeroGoldWave';
+import { HAS_PRERENDERED_HTML } from '../utils/firstPaint';
 
 interface PageHeroProps {
   readonly title: string;
@@ -34,6 +35,7 @@ export function PageHero({
   compact = false,
 }: PageHeroProps) {
   const prefersReducedMotion = Boolean(useReducedMotion());
+  const skipIntro = Boolean(prefersReducedMotion) || HAS_PRERENDERED_HTML;
   const [imageFailed, setImageFailed] = useState(false);
 
   useEffect(() => setImageFailed(false), [imageSrc]);
@@ -58,7 +60,7 @@ export function PageHero({
         alt=""
         referrerPolicy="no-referrer"
         onError={() => setImageFailed(true)}
-        initial={prefersReducedMotion ? { scale: 1.02 } : { scale: 1.1 }}
+        initial={skipIntro ? { scale: 1.02 } : { scale: 1.1 }}
         animate={{ scale: 1.02 }}
         transition={{ duration: prefersReducedMotion ? 0 : 6, ease: 'easeOut' }}
         style={{ objectPosition: imagePosition }}
