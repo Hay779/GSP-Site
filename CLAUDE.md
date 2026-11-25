@@ -44,3 +44,10 @@ npm run build:prod               # build + pré-rendu + sitemap + robots + llms.
 - Polices : Plus Jakarta Sans (titres), DM Sans (texte).
 - Boutons en pilule `h-11 rounded-full px-5 text-[15px]`.
 - Sections claires entre le haut de page et le pied de page. Vague dorée sous les hauts de page.
+
+## Travail à plusieurs outils (Claude Code web, Antigravity, Hermes)
+- **Une branche par outil et par chantier**, jamais de travail direct sur `main`.
+- **Avant de commencer** : `git fetch origin && git merge origin/main` sur sa branche.
+- **Après le travail** : demande de fusion vers `main`, puis les autres branches récupèrent `main`.
+- Un seul outil à la fois sur un même fichier ou chantier. Le Black Friday est en cours sur `claude/blissful-meitner-p1hwrl`.
+- Ne jamais forcer un envoi (`push --force`) ni réécrire l'historique.
