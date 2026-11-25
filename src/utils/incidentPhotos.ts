@@ -112,3 +112,14 @@ export function createIncidentReference(date: Date = new Date(), seed = 415): st
   const suffix = String((Math.abs(Math.floor(seed)) % 9000) + 1000);
   return `SIN-${year}${month}${day}-${suffix}`;
 }
+
+/** Lignes envoyées au récepteur (libellés « Nom » et « Téléphone » attendus par le serveur). */
+export function buildIncidentSummary(draft: IncidentPhotoDraft): readonly { readonly label: string; readonly value: string }[] {
+  return [
+    { label: 'Type de sinistre', value: draft.incidentType },
+    { label: 'Nom', value: draft.fullName.trim() },
+    { label: 'Téléphone', value: draft.phone.trim() },
+    { label: 'Assureur', value: draft.insurer.trim() || 'Non renseigné' },
+    { label: 'Précisions', value: draft.note.trim() || '—' },
+  ];
+}

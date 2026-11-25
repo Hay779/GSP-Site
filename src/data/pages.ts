@@ -304,8 +304,10 @@ const LEGAL_MENTIONS: readonly LegalArticle[] = [
   },
   {
     heading: 'Hébergement',
-    paragraphs: [],
-    pending: 'Nom, raison sociale, adresse et contact de l’hébergeur à compléter lors de la mise en ligne.',
+    paragraphs: [
+      'OVH SAS, 2 rue Kellermann, 59100 Roubaix, France.',
+      'Téléphone : 1007 — site : www.ovhcloud.com.',
+    ],
   },
   {
     heading: 'Propriété intellectuelle',
@@ -337,9 +339,13 @@ const LEGAL_PRIVACY: readonly LegalArticle[] = [
     ],
   },
   {
-    heading: 'Cookies',
-    paragraphs: [],
-    pending: 'Politique cookies à compléter selon les outils utilisés (mesure d’audience, cartes, etc.).',
+    heading: 'Cookies et mesure d’audience',
+    paragraphs: [
+      'Le site utilise Google Analytics (Google Ireland Limited) pour mesurer sa fréquentation : pages vues, provenance des visites (moteur de recherche, réseau social, lien direct), type d’appareil, ville approximative, et clics sur les boutons d’appel, WhatsApp et de demande de devis. Les signaux publicitaires de Google sont désactivés.',
+      'Ces cookies (_ga, _ga_*) ne sont déposés qu’après votre accord, donné dans la bannière affichée lors de votre première visite. Sans accord, aucun script Google n’est chargé. Votre choix est conservé 6 mois ; vous pouvez le modifier à tout moment avec le lien « Gérer les cookies » en bas de chaque page.',
+      'Les données de mesure d’audience sont conservées 14 mois au maximum. Elles peuvent être traitées par Google en dehors de l’Union européenne, dans le cadre du Data Privacy Framework UE–États-Unis.',
+      'Le site ne dépose aucun autre cookie. Les formulaires n’utilisent pas de cookies.',
+    ],
   },
 ];
 

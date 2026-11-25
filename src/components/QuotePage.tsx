@@ -17,7 +17,9 @@ import {
 } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import type { BrandConfig } from '../utils/navigation';
-import { createQuoteReference, QUOTE_DOMAINS, type QuoteDomain } from '../utils/quoteForm';
+import { QUOTE_DOMAINS, type QuoteDomain } from '../utils/quoteForm';
+import { sendFormRequest } from '../utils/formDelivery';
+import { DeliveryErrorNotice, HoneypotField } from './FormDelivery';
 import {
   buildQuoteSummary,
   CALLBACK_OPTIONS,
@@ -135,6 +137,10 @@ export function QuotePage({ brand, routerMode, prefill }: QuotePageProps) {
   const [step, setStep] = useState<QuoteStepId>(() => (prefill?.domain ? 'precisions' : 'besoin'));
   const [errors, setErrors] = useState<QuoteWizardErrors>({});
   const [reference, setReference] = useState<string | null>(null);
+  const [honeypot, setHoneypot] = useState('');
+  const [startedAt, setStartedAt] = useState(() => Date.now());
+  const [sending, setSending] = useState(false);
+  const [failure, setFailure] = useState<'reseau' | 'limite' | 'refus' | null>(null);
   const cardRef = useRef<HTMLDivElement | null>(null);
   const headingRef = useRef<HTMLHeadingElement | null>(null);
   const firstRender = useRef(true);
@@ -181,20 +187,27 @@ export function QuotePage({ brand, routerMode, prefill }: QuotePageProps) {
     goTo(QUOTE_STEPS[Math.min(stepIndex + 1, QUOTE_STEPS.length - 1)].id);
   };
 
-  const submit = () => {
+  const submit = async () => {
+    if (sending) return;
     const blocking = firstIncompleteStep(draft);
     if (blocking !== 'recap') {
       goTo(blocking);
       setErrors(validateQuoteStep(blocking, draft));
       return;
     }
-    const now = new Date();
-    setReference(createQuoteReference(now, now.getMilliseconds() + draft.fullName.length * 17));
+    setSending(true);
+    setFailure(null);
+    const result = await sendFormRequest({ kind: 'devis', rows: buildQuoteSummary(draft), startedAt, honeypot });
+    setSending(false);
+    if (result.ok) setReference(result.reference);
+    else setFailure(result.reason);
   };
 
   const restart = () => {
     setDraft(createInitialDraft());
     setReference(null);
+    setFailure(null);
+    setStartedAt(Date.now());
     goTo('besoin');
   };
 
@@ -562,6 +575,13 @@ export function QuotePage({ brand, routerMode, prefill }: QuotePageProps) {
                       )}
                     </div>
 
+                    {step === 'recap' && (
+                      <div className="relative mt-6">
+                        <HoneypotField value={honeypot} onChange={setHoneypot} />
+                        {failure && <DeliveryErrorNotice reason={failure} />}
+                      </div>
+                    )}
+
                     {/* Navigation */}
                     <div className="mt-9 flex flex-col-reverse gap-3 border-t border-[#1C1F21]/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
                       {stepIndex > 0 ? (
@@ -574,9 +594,9 @@ export function QuotePage({ brand, routerMode, prefill }: QuotePageProps) {
                         <span />
                       )}
                       {step === 'recap' ? (
-                        <button type="button" onClick={submit}
-                          className="inline-flex h-11 items-center justify-center gap-2.5 rounded-full bg-[#B79A62] px-5 text-[15px] font-semibold text-[#1C1F21] hover:bg-[#C6AA73] active:bg-[#A68952] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1C1F21] cursor-pointer">
-                          Envoyer ma demande
+                        <button type="button" onClick={submit} disabled={sending} aria-busy={sending}
+                          className="inline-flex h-11 items-center justify-center gap-2.5 rounded-full bg-[#B79A62] px-5 text-[15px] font-semibold text-[#1C1F21] hover:bg-[#C6AA73] active:bg-[#A68952] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1C1F21] disabled:cursor-wait disabled:opacity-70 cursor-pointer">
+                          {sending ? 'Envoi en cours…' : 'Envoyer ma demande'}
                           <ArrowRight className="h-4 w-4" aria-hidden="true" />
                         </button>
                       ) : (

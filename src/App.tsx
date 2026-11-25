@@ -7,6 +7,7 @@ import { PageRenderer } from './components/PageRenderer';
 import { DomainsSection } from './components/DomainsSection';
 import { FaqSection } from './components/FaqSection';
 import { FooterSection } from './components/FooterSection';
+import { CookieBanner } from './components/CookieBanner';
 import { FocusHeader } from './components/FocusHeader';
 import { HeaderSection, type HeaderNavLink } from './components/HeaderSection';
 import { HeroSection } from './components/HeroSection';
@@ -343,6 +344,9 @@ export default function App() {
         onClose={() => setPhotoModalOpen(false)}
       />
 
+
+      {/* Consentement cookies (Google Analytics) */}
+      <CookieBanner privacyHref={pageHref('confidentialite')} />
 
       {/* Bouton flottant WhatsApp urgence */}
       <WhatsAppFloatingButton config={WHATSAPP_CONFIG} />
