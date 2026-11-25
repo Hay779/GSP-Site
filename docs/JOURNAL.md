@@ -5,7 +5,7 @@ Hermes lit ce fichier avant de travailler. Ses propres recherches sont dans `doc
 
 ## 2026-11-25 — Fusion et mise en ligne (Black Friday + annuaires)
 - Fusion dans `main` de `claude/youthful-pascal-btj1i4` (Black Friday mobile, offres confirmées), puis de `claude/annuaires-pagesjaunes`. Seul conflit : ce journal, résolu en gardant les deux entrées.
-- Vérifications : `tsc` OK, 100 tests OK, `npm run build:prod` OK (18 pages dont `/promotions`).
+- Vérifications : `tsc` OK, 100 tests OK, `npm run build:prod` OK (18 pages dont `/promotions`). Pendant la séance, la version PC et tablette du Black Friday (PR #17) est arrivée sur `main` : elle a été intégrée, revérifiée et mise en ligne aussi.
 - Envoi sur OVH : 81 fichiers de `dist/` par FTP, sans suppression. `www/signature/`, `~/config-formulaires.php` et `~/demandes/` intacts. `api/demande.php` identique à la version du serveur.
 - Le `.htaccess` en ligne est maintenant la version corrigée : redirections en `https://` complet, sans « :443 ».
 - Contrôlé en ligne : `/`, `/promotions`, `/devis`, `/agences-contact`, sitemap, robots, llms.txt, signature → 200. Les redirections `.html`, `index.html` et http sans www → 301 propres. Le formulaire répond 405 en GET (normal).
