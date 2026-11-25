@@ -5,6 +5,8 @@ import type { PageId } from '../utils/router';
 import { buildWhatsAppUrl } from '../utils/whatsapp';
 import { BrandMark } from './BrandMark';
 import { ContactCtaSection } from './ContactCtaSection';
+import { openCookieSettings } from './CookieBanner';
+import { GA_MEASUREMENT_ID } from '../utils/analytics';
 
 interface FooterSectionProps {
   readonly brand: BrandConfig;
@@ -180,6 +182,11 @@ export function FooterSection({
             <a href={pageHref('confidentialite')} className={LINK_CLASS}>
               Confidentialité
             </a>
+            {GA_MEASUREMENT_ID && (
+              <button type="button" onClick={openCookieSettings} className={`${LINK_CLASS} cursor-pointer`}>
+                Gérer les cookies
+              </button>
+            )}
           </div>
         </div>
       </div>

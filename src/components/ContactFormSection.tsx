@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { CalendarDays, Check, FileText, HelpCircle, MapPin, MessageCircle, Phone, Send, type LucideIcon } from 'lucide-react';
 import type { AgencyItem, WhatsAppConfig } from '../data/sectionsContent';
 import {
+  buildContactSummary,
   CONTACT_SUBJECTS,
-  createContactReference,
   INITIAL_CONTACT_DRAFT,
   validateContactDraft,
   type ContactDraft,
@@ -13,6 +13,8 @@ import {
 import type { BrandConfig } from '../utils/navigation';
 import { hrefForPage, type RouterMode } from '../utils/router';
 import { buildWhatsAppUrl } from '../utils/whatsapp';
+import { sendFormRequest } from '../utils/formDelivery';
+import { DeliveryErrorNotice, HoneypotField } from './FormDelivery';
 
 const SUBJECT_ICONS: Readonly<Record<ContactSubject, LucideIcon>> = {
   question: HelpCircle,
@@ -47,6 +49,10 @@ export function ContactFormSection({ id, kicker, title, brand, whatsapp, agencie
   const [draft, setDraft] = useState<ContactDraft>(INITIAL_CONTACT_DRAFT);
   const [errors, setErrors] = useState<ContactErrors>({});
   const [reference, setReference] = useState<string | null>(null);
+  const [honeypot, setHoneypot] = useState('');
+  const [startedAt, setStartedAt] = useState(() => Date.now());
+  const [sending, setSending] = useState(false);
+  const [failure, setFailure] = useState<'reseau' | 'limite' | 'refus' | null>(null);
   const whatsappUrl = buildWhatsAppUrl(whatsapp.phoneDisplay, whatsapp.prefilledMessage);
 
   const update = (patch: Partial<ContactDraft>) => {
@@ -58,16 +64,21 @@ export function ContactFormSection({ id, kicker, title, brand, whatsapp, agencie
     });
   };
 
-  const submit = (event: React.FormEvent<HTMLFormElement>) => {
+  const submit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (sending) return;
     const found = validateContactDraft(draft);
     setErrors(found);
     if (Object.keys(found).length > 0) {
       event.currentTarget.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus();
       return;
     }
-    const now = new Date();
-    setReference(createContactReference(now, now.getMilliseconds() + draft.fullName.length * 11));
+    setSending(true);
+    setFailure(null);
+    const result = await sendFormRequest({ kind: 'contact', rows: buildContactSummary(draft), startedAt, honeypot });
+    setSending(false);
+    if (result.ok) setReference(result.reference);
+    else setFailure(result.reason);
   };
 
   const input = (key: 'fullName' | 'phone' | 'email', label: string, opts: { type?: string; auto?: string; ph?: string; optional?: boolean } = {}) => (
@@ -117,6 +128,7 @@ export function ContactFormSection({ id, kicker, title, brand, whatsapp, agencie
                   onClick={() => {
                     setDraft(INITIAL_CONTACT_DRAFT);
                     setReference(null);
+                    setStartedAt(Date.now());
                   }}
                   className="mt-6 inline-flex h-11 items-center rounded-full border border-[#1C1F21]/25 px-5 text-[15px] font-medium hover:border-[#1C1F21] cursor-pointer"
                 >
@@ -124,7 +136,8 @@ export function ContactFormSection({ id, kicker, title, brand, whatsapp, agencie
                 </button>
               </div>
             ) : (
-              <form onSubmit={submit} noValidate className="flex flex-col gap-5">
+              <form onSubmit={submit} noValidate className="relative flex flex-col gap-5">
+                <HoneypotField value={honeypot} onChange={setHoneypot} />
                 <fieldset>
                   <legend className="text-[15px] font-medium">Votre demande concerne</legend>
                   <div className="mt-2 grid grid-cols-2 gap-2.5">
@@ -187,12 +200,16 @@ export function ContactFormSection({ id, kicker, title, brand, whatsapp, agencie
                   <ErrorText id="c-consent-err" message={errors.consent} />
                 </div>
 
+                {failure && <DeliveryErrorNotice reason={failure} />}
+
                 <button
                   type="submit"
-                  className="inline-flex h-12 w-full items-center justify-center gap-2.5 rounded-full bg-[#1C1F21] px-7 text-[16px] font-semibold text-[#F3F0E7] hover:bg-[#292D2F] sm:w-auto cursor-pointer [&_svg]:text-[#B79A62]"
+                  disabled={sending}
+                  aria-busy={sending}
+                  className="inline-flex h-12 w-full items-center justify-center gap-2.5 rounded-full bg-[#1C1F21] px-7 text-[16px] font-semibold text-[#F3F0E7] hover:bg-[#292D2F] disabled:cursor-wait disabled:opacity-70 sm:w-auto cursor-pointer [&_svg]:text-[#B79A62]"
                 >
                   <Send className="h-4 w-4" aria-hidden="true" />
-                  Envoyer mon message
+                  {sending ? 'Envoi en cours…' : 'Envoyer mon message'}
                 </button>
               </form>
             )}

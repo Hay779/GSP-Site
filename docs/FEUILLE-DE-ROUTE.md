@@ -13,7 +13,7 @@ Mise à jour : 23/11/2026. Liste de référence des chantiers restants. On coche
 - [ ] **FAQ enrichie** à partir des vraies questions entendues au téléphone et en boutique. Prix indicatifs si l'entreprise le souhaite (« à partir de… »).
 - [ ] **Page « À propos »** : histoire de l'entreprise (reprise en juin 2026), savoir-faire, gérant, marques partenaires (Bricard, Vachette, Fichet…), certifications ou labels éventuels. Les IA s'appuient sur ces signaux de confiance.
 - [ ] **Annuaires et citations** : PagesJaunes, Apple Plans (Business Connect), Bing Places, Waze, annuaires d'artisans, Chambre de métiers. Partout le **même nom, la même adresse et le même téléphone**.
-- [ ] **Bing Webmaster Tools** et **Bing Places** : ChatGPT et Copilot s'appuient sur l'index de Bing.
+- [x] **Bing Webmaster Tools** (25/11/2026) — [ ] **Bing Places** : ChatGPT et Copilot s'appuient sur l'index de Bing.
 - [ ] **Avis Google** : continuer à en obtenir (affiche QR, messages), répondre à chaque avis, y compris les 2 avis négatifs sans réponse. Mettre à jour la note affichée sur le site.
 - [ ] **Fiche Google Business** : voir `docs/AUDIT-GOOGLE-BUSINESS.md`.
   - Urgent : mettre le vrai nom et « Serrurier » en catégorie principale.
@@ -22,10 +22,10 @@ Mise à jour : 23/11/2026. Liste de référence des chantiers restants. On coche
 - [ ] Décider s'il faut bloquer les robots d'**entraînement** des IA (GPTBot, Google-Extended, CCBot). Ils sont autorisés aujourd'hui, ce qui donne plus de visibilité.
 
 ## B. Référencement Google classique
-- [ ] Nom de domaine définitif → `SITE_URL` dans `src/utils/seo.ts`.
-- [ ] Google Search Console et envoi du `sitemap.xml`.
+- [x] Nom de domaine définitif → `SITE_URL` dans `src/utils/seo.ts` (serrurerierepublique.fr).
+- [x] Google Search Console et envoi du `sitemap.xml` (25/11/2026, compte gspserrurerie13@gmail.com).
 - [ ] Image de partage dédiée (1200×630) avec le logo, pour WhatsApp, Facebook et LinkedIn.
-- [ ] Coordonnées GPS des 2 agences dans les données structurées (`geo`).
+- [x] Coordonnées GPS des 2 agences dans les données structurées (`geo`).
 - [ ] Liens internes : depuis chaque page métier, lien vers la page locale du quartier concerné (quand elles existeront).
 - [ ] Blog ou conseils (optionnel) : « Que faire après un cambriolage ? », « Porte claquée : les bons réflexes », « Choisir un cylindre haute sécurité ».
 
@@ -37,21 +37,22 @@ Mise à jour : 23/11/2026. Liste de référence des chantiers restants. On coche
 ## D. Technique et performance
 - [ ] Découper le code JavaScript (654 Ko, 189 Ko compressé) pour accélérer le premier affichage.
 - [ ] Photos en WebP et `width`/`height` sur les images, pour éviter les décalages au chargement.
-- [ ] Test PageSpeed Insights (objectif ≥ 90 sur mobile) une fois en ligne.
+- [ ] Test PageSpeed Insights (objectif ≥ 90 sur mobile) : 78 le 23/11/2026, LCP 5,7 s à corriger (titre et photo d'accueil visibles sans JavaScript).
 
 ## E. Mise en ligne (OVH)
 Voir `docs/SEO-SECURITE-MISE-EN-LIGNE.md`, section 2 :
-1. domaine ;
-2. SSL ;
-3. envoi de `dist/` avec `.htaccess` ;
-4. hébergeur dans les mentions légales ;
+1. ✅ domaine (serrurerierepublique.fr) ;
+2. ✅ SSL ;
+3. ✅ envoi de `dist/` avec `.htaccess` (en ligne le 23/11/2026) ;
+4. ✅ hébergeur dans les mentions légales ;
 5. Search Console et Bing ;
 6. tests (securityheaders.com, rich results).
 
 ## F. Formulaires (à la fin, sur OVH)
-- [ ] 4 formulaires à brancher : devis, contact, devenir partenaire, photos après sinistre (avec pièces jointes).
-- [ ] Destination : l'adresse Hotmail de l'entreprise, **jamais affichée sur le site**.
-- [ ] Protection anti-spam, message d'erreur avec repli téléphone et WhatsApp, service ajouté dans `connect-src` de la CSP.
+- [x] 4 formulaires branchés : devis, contact, devenir partenaire, photos après sinistre (avec pièces jointes) → `public/api/demande.php`.
+- [x] Destination : contact@serrurerierepublique.fr, **jamais affichée sur le site** (réglage dans `~/config-formulaires.php` sur OVH).
+- [x] Protection anti-spam, message d'erreur avec repli téléphone et WhatsApp (pas de service externe : `connect-src 'self'` suffit).
+- [ ] Plus tard : relier les demandes au serveur et à la base de données de l'entreprise (`webhook_url`).
 
 ## Déjà fait (rappel)
 - Balises SEO par page, données structurées (entreprise, 2 agences, services, FAQ, fil d'Ariane).

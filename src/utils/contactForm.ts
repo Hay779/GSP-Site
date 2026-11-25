@@ -45,3 +45,14 @@ export function createContactReference(date: Date = new Date(), seed = 1042): st
   const suffix = String((Math.abs(Math.floor(seed)) % 9000) + 1000);
   return `CT-${date.getFullYear()}${pad(date.getMonth() + 1)}${pad(date.getDate())}-${suffix}`;
 }
+
+/** Lignes envoyées au récepteur (libellés « Nom » et « Téléphone » attendus par le serveur). */
+export function buildContactSummary(draft: ContactDraft): readonly { readonly label: string; readonly value: string }[] {
+  return [
+    { label: 'Sujet', value: CONTACT_SUBJECTS.find((s) => s.id === draft.subject)?.label ?? '—' },
+    { label: 'Nom', value: draft.fullName.trim() },
+    { label: 'Téléphone', value: draft.phone.trim() },
+    { label: 'E-mail', value: draft.email.trim() || 'Non renseigné' },
+    { label: 'Message', value: draft.message.trim() },
+  ];
+}

@@ -2,7 +2,7 @@ import { useRef, useState, type ReactNode } from 'react';
 import { Building2, Check, KeyRound, Phone, Send, ShieldCheck, Users } from 'lucide-react';
 import type { BrandConfig } from '../utils/navigation';
 import {
-  createPartnerReference,
+  buildPartnerSummary,
   INITIAL_PARTNER_DRAFT,
   ORGANIZATION_TYPES,
   PARTNER_NEEDS,
@@ -14,6 +14,8 @@ import {
 } from '../utils/partnerForm';
 import { hrefForPage, type RouterMode } from '../utils/router';
 import { PageHero } from './PageHero';
+import { sendFormRequest } from '../utils/formDelivery';
+import { DeliveryErrorNotice, HoneypotField } from './FormDelivery';
 
 const ORG_ICONS: Readonly<Record<OrganizationType, typeof Building2>> = {
   'Syndic / gestionnaire de copropriété': Building2,
@@ -88,6 +90,10 @@ export function PartnerPage({ brand, routerMode }: { readonly brand: BrandConfig
   const [draft, setDraft] = useState<PartnerDraft>(INITIAL_PARTNER_DRAFT);
   const [errors, setErrors] = useState<PartnerErrors>({});
   const [reference, setReference] = useState<string | null>(null);
+  const [honeypot, setHoneypot] = useState('');
+  const [startedAt] = useState(() => Date.now());
+  const [sending, setSending] = useState(false);
+  const [failure, setFailure] = useState<'reseau' | 'limite' | 'refus' | null>(null);
   const formRef = useRef<HTMLFormElement | null>(null);
   const doneRef = useRef<HTMLHeadingElement | null>(null);
 
@@ -102,8 +108,9 @@ export function PartnerPage({ brand, routerMode }: { readonly brand: BrandConfig
     });
   };
 
-  const submit = (event: React.FormEvent) => {
+  const submit = async (event: React.FormEvent) => {
     event.preventDefault();
+    if (sending) return;
     const found = validatePartnerDraft(draft);
     setErrors(found);
     if (Object.keys(found).length > 0) {
@@ -112,8 +119,15 @@ export function PartnerPage({ brand, routerMode }: { readonly brand: BrandConfig
       first?.scrollIntoView({ block: 'center', behavior: 'smooth' });
       return;
     }
-    const now = new Date();
-    setReference(createPartnerReference(now, now.getMilliseconds() + draft.company.length * 13));
+    setSending(true);
+    setFailure(null);
+    const result = await sendFormRequest({ kind: 'partenaire', rows: buildPartnerSummary(draft), startedAt, honeypot });
+    setSending(false);
+    if (!result.ok) {
+      setFailure(result.reason);
+      return;
+    }
+    setReference(result.reference);
     window.requestAnimationFrame(() => {
       doneRef.current?.focus();
       doneRef.current?.scrollIntoView({ block: 'center', behavior: 'smooth' });
@@ -177,7 +191,8 @@ export function PartnerPage({ brand, routerMode }: { readonly brand: BrandConfig
                   </a>
                 </div>
               ) : (
-                <form ref={formRef} onSubmit={submit} noValidate className="flex flex-col gap-7">
+                <form ref={formRef} onSubmit={submit} noValidate className="relative flex flex-col gap-7">
+                  <HoneypotField value={honeypot} onChange={setHoneypot} />
                   <Group title="Votre structure">
                     <fieldset data-invalid={Boolean(errors.organizationType)} tabIndex={-1} aria-describedby={errors.organizationType ? 'org-err' : undefined}>
                       <legend className="sr-only">Type de structure</legend>
@@ -249,10 +264,11 @@ export function PartnerPage({ brand, routerMode }: { readonly brand: BrandConfig
                     <ErrorText id="consent-err" message={errors.consent} />
                   </Group>
 
-                  <div className="border-t border-[#1C1F21]/10 pt-6">
-                    <button type="submit" className="inline-flex h-12 w-full items-center justify-center gap-2.5 rounded-full bg-[#1C1F21] px-7 text-[16px] font-semibold text-[#F3F0E7] hover:bg-[#292D2F] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62] sm:w-auto cursor-pointer [&_svg]:text-[#B79A62]">
+                  <div className="flex flex-col gap-4 border-t border-[#1C1F21]/10 pt-6">
+                    {failure && <DeliveryErrorNotice reason={failure} />}
+                    <button type="submit" disabled={sending} aria-busy={sending} className="inline-flex h-12 w-full items-center justify-center gap-2.5 rounded-full bg-[#1C1F21] px-7 text-[16px] font-semibold text-[#F3F0E7] hover:bg-[#292D2F] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62] disabled:cursor-wait disabled:opacity-70 sm:w-auto sm:self-start cursor-pointer [&_svg]:text-[#B79A62]">
                       <Send className="h-4 w-4" aria-hidden="true" />
-                      Envoyer ma demande
+                      {sending ? 'Envoi en cours…' : 'Envoyer ma demande'}
                     </button>
                   </div>
                 </form>

@@ -9,7 +9,7 @@ import { resolvePageDefinition, type PageDefinition } from '../data/pages';
 import { AGENCIES_CONFIG, DOMAINS_CONFIG, FAQ_CONFIG, type FaqItem } from '../data/sectionsContent';
 import { DOMAIN_SLUGS, PAGE_SLUGS, type PageId, type Route } from './router';
 
-export const SITE_URL = ((import.meta.env?.VITE_SITE_URL as string | undefined) || 'https://www.serrurerie-republique.fr').replace(/\/+$/, '');
+export const SITE_URL = ((import.meta.env?.VITE_SITE_URL as string | undefined) || 'https://www.serrurerierepublique.fr').replace(/\/+$/, '');
 
 export const SITE_NAME = 'Serrurerie de la République';
 const DEFAULT_IMAGE = '/src/assets/images/hero_serrurier_marseille_1795288791942.jpg';
@@ -70,6 +70,12 @@ const OPENING_HOURS = [
 
 const ORG_ID = `${SITE_URL}/#organisation`;
 
+/** Coordonnées GPS des boutiques (Base Adresse Nationale, api-adresse.data.gouv.fr). */
+const AGENCY_GEO: Readonly<Record<string, { readonly latitude: number; readonly longitude: number }>> = {
+  republique: { latitude: 43.300116, longitude: 5.371197 },
+  rome: { latitude: 43.289255, longitude: 5.381727 },
+};
+
 function organization(): Record<string, unknown> {
   return {
     '@type': 'Organization',
@@ -78,7 +84,16 @@ function organization(): Record<string, unknown> {
     legalName: 'SERRURERIE DE LA REPUBLIQUE',
     url: `${SITE_URL}/`,
     logo: absoluteUrl(LOGO),
+    image: absoluteUrl(LOGO),
     telephone: '+33491905165',
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: '48 rue de la République',
+      postalCode: '13002',
+      addressLocality: 'Marseille',
+      addressRegion: 'Provence-Alpes-Côte d’Azur',
+      addressCountry: 'FR',
+    },
     vatID: 'FR93106157118',
     taxID: '10615711800014',
     founder: { '@type': 'Person', name: 'Grigor Galstyan' },
@@ -106,6 +121,7 @@ function agencies(): Record<string, unknown>[] {
         addressRegion: 'Provence-Alpes-Côte d’Azur',
         addressCountry: 'FR',
       },
+      ...(AGENCY_GEO[agency.id] ? { geo: { '@type': 'GeoCoordinates', ...AGENCY_GEO[agency.id] } } : {}),
       openingHoursSpecification: OPENING_HOURS,
       areaServed: { '@type': 'City', name: 'Marseille' },
       hasMap: agency.directionsUrl,

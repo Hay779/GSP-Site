@@ -5,18 +5,22 @@ import {
   INCIDENT_TYPES,
   INITIAL_INCIDENT_DRAFT,
   MAX_INCIDENT_PHOTOS,
-  createIncidentReference,
+  buildIncidentSummary,
   validateIncidentPhotoReport,
   validateIncomingPhotoFiles,
   type IncidentPhotoDraft,
   type IncidentPhotoErrors,
   type IncidentType,
 } from '../utils/incidentPhotos';
+import { sendFormRequest } from '../utils/formDelivery';
+import { compressPhoto } from '../utils/photoCompression';
+import { DeliveryErrorNotice, HoneypotField } from './FormDelivery';
 
 interface AttachedPhoto {
   readonly id: string;
   readonly name: string;
   readonly previewUrl: string;
+  readonly file: File;
 }
 
 interface IncidentSubmissionSummary {
@@ -43,6 +47,10 @@ export function IncidentPhotoModal({
   const [errors, setErrors] = useState<IncidentPhotoErrors>({});
   const [fileWarning, setFileWarning] = useState<string | null>(null);
   const [submission, setSubmission] = useState<IncidentSubmissionSummary | null>(null);
+  const [honeypot, setHoneypot] = useState('');
+  const [startedAt, setStartedAt] = useState(() => Date.now());
+  const [sending, setSending] = useState(false);
+  const [failure, setFailure] = useState<'reseau' | 'limite' | 'refus' | null>(null);
   const firstInputRef = useRef<HTMLSelectElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const photosRef = useRef<readonly AttachedPhoto[]>([]);
@@ -120,6 +128,7 @@ export function IncidentPhotoModal({
           id: `${file.name}-${file.size}-${Date.now()}-${idx}`,
           name: file.name,
           previewUrl: URL.createObjectURL(file),
+          file,
         };
       });
       setPhotos((prev) => [...prev, ...additions]);
@@ -146,17 +155,32 @@ export function IncidentPhotoModal({
     setFileWarning(null);
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (sending) return;
     const validationErrors = validateIncidentPhotoReport(draft, photos.length);
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
 
-    const now = new Date();
+    setSending(true);
+    setFailure(null);
+    const compressed = await Promise.all(photos.map((item) => compressPhoto(item.file)));
+    const result = await sendFormRequest({
+      kind: 'sinistre',
+      rows: buildIncidentSummary(draft),
+      startedAt,
+      honeypot,
+      photos: compressed,
+    });
+    setSending(false);
+    if (!result.ok) {
+      setFailure(result.reason);
+      return;
+    }
     setSubmission({
-      reference: createIncidentReference(now, now.getMilliseconds() + photos.length * 31),
+      reference: result.reference,
       incidentType: draft.incidentType,
       fullName: draft.fullName.trim(),
       phone: draft.phone.trim(),
@@ -175,6 +199,8 @@ export function IncidentPhotoModal({
     setErrors({});
     setFileWarning(null);
     setSubmission(null);
+    setFailure(null);
+    setStartedAt(Date.now());
   };
 
   const inputBaseClass =
@@ -279,7 +305,8 @@ export function IncidentPhotoModal({
               </div>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-3">
+            <form onSubmit={handleSubmit} noValidate className="relative flex flex-col gap-3">
+              <HoneypotField value={honeypot} onChange={setHoneypot} />
               <div>
                 <label
                   htmlFor="incident-type"
@@ -474,6 +501,8 @@ export function IncidentPhotoModal({
                 />
               </div>
 
+              {failure && <DeliveryErrorNotice reason={failure} tone="dark" />}
+
               <div className="mt-2 flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-3 border-t border-[#F3F0E7]/10 pt-4">
                 <a
                   href={brand.phoneHref}
@@ -493,10 +522,12 @@ export function IncidentPhotoModal({
                   </button>
                   <button
                     type="submit"
-                    className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-[#B79A62] hover:bg-[#C6AA73] active:bg-[#A68952] px-5 text-[14px] font-semibold text-[#1C1F21] whitespace-nowrap transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F3F0E7] cursor-pointer"
+                    disabled={sending}
+                    aria-busy={sending}
+                    className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-[#B79A62] hover:bg-[#C6AA73] active:bg-[#A68952] px-5 text-[14px] font-semibold text-[#1C1F21] whitespace-nowrap transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F3F0E7] disabled:cursor-wait disabled:opacity-70 cursor-pointer"
                   >
                     <Camera className="h-4 w-4 shrink-0" aria-hidden="true" />
-                    <span>Transmettre mes photos</span>
+                    <span>{sending ? 'Envoi en cours…' : 'Transmettre mes photos'}</span>
                   </button>
                 </div>
               </div>
