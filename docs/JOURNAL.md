@@ -3,6 +3,25 @@
 Ce que Claude Code a fait sur le site, séance par séance (plus récent en haut).
 Hermes lit ce fichier avant de travailler. Ses propres recherches sont dans `docs/seo/`.
 
+## 2026-11-25 — PagesJaunes revendiquée et corrigée
+- Compte **Solocal Manager** créé avec « Continuer avec Google » (gspserrurerie13@gmail.com), fiche PagesJaunes n° 65378857 **revendiquée** (code par appel vocal depuis le 04 91 90 51 65, saisi par le client).
+- Modifié dans Solocal Manager :
+  - nom « Serrurerie de la République » (le nom secondaire « SERRURERIE DE LA REPUBLIQUE » est gardé) ;
+  - adresse 48 rue de la République, 13002 ;
+  - horaires lun–sam 9h–19h, dimanche fermé ;
+  - téléphones 04 91 90 51 65 (Boutique) + 06 50 70 44 52 (Mobile / WhatsApp – urgences) ;
+  - moyens de paiement (CB, Visa, Mastercard, Amex, espèces, chèque, virement, PayPal, Apple Pay, Google Pay, Paylib) ;
+  - description longue + « Agréé assurances » + « Urgences aussi le soir et le dimanche » ;
+  - site https://www.serrurerierepublique.fr ;
+  - activités secondaires « serrurerie (dépannage) » et « vitrerie » (la principale « clés (reproduction) » est gardée, comme sur Google) ;
+  - prestations « duplication de clé » et « reproduction de badge d'immeuble ».
+- Pas d'e-mail public (décision client). Aucune certification ajoutée : la liste ne propose que des labels officiels (A2P…), pas « agréé assurances ».
+- Nom, adresse, téléphones et activités sont **en vérification chez Solocal** (jusqu'à 48 h, réponse par e-mail).
+- Google : **on n'y touche pas** (décision client).
+
+### Questions pour Hermes
+- Dans `docs/seo/annuaires.md`, passer PagesJaunes à « corrigé (en vérification Solocal) ». Vérifier la fiche publique dans 2–3 jours, puis 118 712 et Mappy, qui reprennent PagesJaunes.
+
 ## 2026-11-25 — fiche « infos officielles » pour les annuaires
 - Nouveau fichier **`docs/INFOS-OFFICIELLES.md`**, validé par le client : seule source de vérité pour toutes les fiches (nom, adresse, téléphones, e-mail, horaires, dépannage d'urgence, catégories, descriptions, prestations détaillées, zone, logos, infos légales).
 - Décisions du client :
