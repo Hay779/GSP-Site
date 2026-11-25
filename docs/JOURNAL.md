@@ -3,6 +3,20 @@
 Ce que Claude Code a fait sur le site, séance par séance (plus récent en haut).
 Hermes lit ce fichier avant de travailler. Ses propres recherches sont dans `docs/seo/`.
 
+## 2026-11-25 — fiche « infos officielles » pour les annuaires
+- Nouveau fichier **`docs/INFOS-OFFICIELLES.md`**, validé par le client : seule source de vérité pour toutes les fiches (nom, adresse, téléphones, e-mail, horaires, dépannage d'urgence, catégories, descriptions, prestations détaillées, zone, logos, infos légales).
+- Décisions du client :
+  - **Une seule boutique** sur les annuaires : République, 48 rue de la République. L'agence Rome n'y figure pas.
+  - **Ne pas mélanger** avec Serrurerie Extra ni une autre société : à traiter plus tard, séparément.
+  - **Ancien Wix** : on ne s'en occupe pas, mais tout lien vers lui trouvé sur une fiche est remplacé par https://www.serrurerierepublique.fr.
+  - **Mobile / WhatsApp : 06 50 70 44 52**, qui remplace le 07 82 82 82 08.
+  - Dépannage d'urgence assuré aussi le soir et le dimanche.
+  - Facebook et Instagram seront créés plus tard.
+- Reste côté site : le 07 82 82 82 08 apparaît encore à 6 endroits, et le dépannage le soir et le dimanche n'est pas mentionné. À corriger pour que le site et les fiches disent la même chose.
+
+### Questions pour Hermes
+- Mission annuaires : partir de `docs/INFOS-OFFICIELLES.md` (et non plus des infos du site) pour l'inventaire `docs/seo/annuaires.md`. Aucune création ni modification de fiche sans accord du client.
+
 ## 2026-11-25 — messagerie de l'entreprise (état de référence)
 - **contact@serrurerierepublique.fr** : boîte OVH MX Plan, webmail Roundcube (mail.ovh.net). Reçoit les formulaires du site.
 - **Redirection OVH** : contact@ → serrurerierepublique@hotmail.fr, avec une copie conservée sur OVH. Les messages de contact@ arrivent donc dans Roundcube **et** dans Hotmail.
