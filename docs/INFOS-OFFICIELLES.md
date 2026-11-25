@@ -8,6 +8,8 @@ Dernière mise à jour : 25/11/2026 (validée par le client)
 
 ## Règles pour les annuaires
 
+- **Fiche Google : on n'y touche pas** (décision client du 25/11/2026). Nom long, catégorie « Reproduction de clés » et description actuelle sont conservés volontairement : la fiche est bien référencée ainsi. Le site et les horaires y sont déjà corrects.
+
 - **Une seule boutique** sur les fiches : République, 48 rue de la République. On ne parle pas de l'agence Rome ici.
 - **Ne pas mélanger** avec le site Serrurerie Extra ni avec une autre société : ils seront traités plus tard, séparément.
 - **Ancien site Wix** (serrurerierepubliq.wixsite.com) : on ne s'en occupe pas. Mais partout où on trouve un lien vers lui, on le **remplace par https://www.serrurerierepublique.fr**.
@@ -25,6 +27,7 @@ Dernière mise à jour : 25/11/2026 (validée par le client)
 | Site web | https://www.serrurerierepublique.fr |
 | Horaires boutique | Lundi au samedi : 9h – 19h · Dimanche : fermé |
 | Dépannage d'urgence | Oui, aussi en dehors des horaires (soir et dimanche), par téléphone |
+| Assurances | **Agréé assurances** (confirmé par le client) |
 | GPS | 43.300116, 5.371197 |
 | Fiche Google | https://www.google.com/maps?cid=8005087096552407541 |
 | Catégorie principale | **Serrurier** |
@@ -46,7 +49,7 @@ Dernière mise à jour : 25/11/2026 (validée par le client)
 Serrurier à Marseille : dépannage d'urgence, ouverture de porte, serrures, clés et badges, vitrerie, fermetures. Syndics, copropriétés et assurances.
 
 **Longue (≈ 700 caractères)**
-Serrurerie de la République, 48 rue de la République à Marseille (2e), intervient pour les particuliers, les commerces et les professionnels : dépannage d'urgence (porte claquée, porte forcée, vitre cassée, rideau métallique bloqué), changement de serrure et de cylindre, blindage de porte, reproduction de clés et de badges, vitrerie, menuiserie et fermetures. Nous accompagnons les syndics et copropriétés (portes de hall, badges résidents, parties communes), les assureurs et experts (mise en sécurité, devis avec photos, remise en état après sinistre) et les agences immobilières. Devis détaillé avant chaque intervention, dans tout Marseille et les communes voisines.
+Serrurerie de la République, 48 rue de la République à Marseille (2e), intervient pour les particuliers, les commerces et les professionnels : dépannage d'urgence (porte claquée, porte forcée, vitre cassée, rideau métallique bloqué), changement de serrure et de cylindre, blindage de porte, reproduction de clés et de badges, vitrerie, menuiserie et fermetures. Nous accompagnons les syndics et copropriétés (portes de hall, badges résidents, parties communes), les assureurs et experts (mise en sécurité, devis avec photos, remise en état après sinistre) et les agences immobilières. Agréé assurances. Devis détaillé avant chaque intervention, dans tout Marseille et les communes voisines.
 
 ## Prestations détaillées
 
