@@ -47,7 +47,7 @@
 - [ ] Marseille Centre : vérifier la fiche dans 1-2 semaines (réponse éventuelle dans le Hotmail).
 - [ ] Serrurier24 : vérifier la validation (horaires, photos). **Doublon public confirmé par Hermes** (ancienne société, SIRET 539 656 173 00017) : demander sa suppression via https://serrurier24.fr/contact — décision client en attente.
 - [ ] **Trustup** : horaires faux dans la description (lun-ven 8h-12h / 14h-16h). Écrire à Trustup (correction ou retrait de la fiche) ou laisser — décision client en attente.
-- [ ] Dans Chrome avec le client (Hermes bloqué) : voir la fiche Yelp, la prestation Kompass, Yably, et cliquer le lien du site sur Cybo.
+- [x] Vérifié dans Chrome le 26/11 (fin de journée) : lien du site Cybo → https://www.serrurerierepublique.fr OK (« serrureriepublique » venait de la traduction Chrome). Yelp : toujours en attente des modérateurs. Kompass : prestation pas encore publiée. Yably : toujours les données Cylex anciennes (site Solocal, 8h-16h) → attendre le traitement Cylex.
 - [ ] Relancer Marseille Centre et Guide Jalis si rien n'a bougé au 03/12.
 - Veille du lundi 9h (tâche 07ee78b1b178, profil default) : partie B ajoutée par Hermes le 26/11 avec les 12 URL, les horaires et la lecture d'annuaires@.
 - [ ] Annuaire-Professionnel : réessayer quand un contact sera publié.
