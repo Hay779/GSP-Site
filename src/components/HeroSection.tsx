@@ -154,12 +154,12 @@ export function HeroSection({
       id="02_Hero"
       data-section="02_Hero"
       aria-labelledby="02_Hero-title"
-      className={`relative w-full overflow-hidden bg-[#16191B] lg:bg-[#24282B] scroll-mt-[74px] lg:scroll-mt-[88px] flex flex-col ${hasPromoBar ? 'h-[calc(100svh-112px)]' : 'h-[calc(100svh-74px)]'} min-h-[540px] sm:h-auto sm:min-h-0 lg:flex-row ${hasPromoBar ? 'lg:min-h-[min(calc(100svh-126px),740px)]' : 'lg:min-h-[min(calc(100svh-88px),740px)]'} lg:items-center`}
+      className={`relative w-full overflow-hidden bg-[#16191B] lg:bg-[#24282B] scroll-mt-[74px] lg:scroll-mt-[88px] flex flex-col ${hasPromoBar ? 'h-[calc(100svh-112px)]' : 'h-[calc(100svh-74px)]'} min-h-[400px] sm:h-auto sm:min-h-0 lg:flex-row ${hasPromoBar ? 'lg:min-h-[min(calc(100svh-126px),740px)]' : 'lg:min-h-[min(calc(100svh-88px),740px)]'} lg:items-center`}
     >
       {/* Couche média plein écran : vidéo HTML5 + poster artisanal avec parallaxe immersif au scroll */}
       <div
         data-testid="hero-media-layer"
-        className="relative min-h-[150px] flex-1 sm:h-[54svh] sm:max-h-[520px] sm:flex-none w-full lg:absolute lg:inset-0 lg:h-auto lg:min-h-0 lg:max-h-none z-0 overflow-hidden bg-[#16191B] lg:bg-[#24282B]"
+        className="relative min-h-[110px] flex-1 sm:h-[54svh] sm:max-h-[520px] sm:flex-none w-full lg:absolute lg:inset-0 lg:h-auto lg:min-h-0 lg:max-h-none z-0 overflow-hidden bg-[#16191B] lg:bg-[#24282B]"
         aria-hidden="true"
       >
         {/* Repli stylisé si ni vidéo ni poster ne chargent */}
@@ -238,7 +238,7 @@ export function HeroSection({
       <motion.div
         data-testid="hero-parallax-content"
         style={prefersReducedMotion ? undefined : { y: contentParallaxY }}
-        className="relative z-10 mx-auto w-full max-w-[1280px] shrink-0 px-5 sm:px-8 lg:px-10 pt-1 pb-5 sm:pt-2 sm:pb-20 lg:pt-24 lg:pb-32 will-change-transform"
+        className="relative z-10 mx-auto w-full max-w-[1280px] shrink-0 px-5 sm:px-8 lg:px-10 pt-1 pb-[clamp(12px,calc(6.9svh-25.5px),20px)] sm:pt-2 sm:pb-20 lg:pt-24 lg:pb-32 will-change-transform"
       >
         <div className="flex flex-col items-start max-w-[640px]">
           {config.kicker && (
@@ -254,7 +254,7 @@ export function HeroSection({
 
           <h1
             id="02_Hero-title"
-            className={`${config.kicker ? 'mt-4' : 'mt-2'} font-display text-[clamp(2.15rem,4vw,3.5rem)] font-semibold leading-[1.08] tracking-[-0.015em] text-white`}
+            className={`${config.kicker ? 'mt-4' : 'mt-2'} font-display text-[clamp(2.15rem,4vw,3.5rem)] max-sm:text-[clamp(1.95rem,calc(3.2svh+0.9rem),2.15rem)] font-semibold leading-[1.08] tracking-[-0.015em] text-white`}
           >
             <span className="block overflow-hidden pb-1">
               <motion.span
@@ -294,13 +294,13 @@ export function HeroSection({
               delay: prefersReducedMotion ? 0 : 0.3,
               ease: REVEAL_EASE,
             }}
-            className="mt-3 sm:mt-5 max-w-[490px] text-[15.5px] sm:text-[18px] leading-[1.6] text-white/92"
+            className="mt-3 sm:mt-5 max-w-[490px] text-[clamp(14.5px,calc(1.5svh+5.6px),15.5px)] sm:text-[18px] leading-[1.6] text-white/92"
           >
             {config.subtitle}
           </motion.p>
 
           {/* Mobile : emplacement de la barre d'actions (Devis · SOS · Contact), qui se fixe en bas au défilement */}
-          <div id="hero-action-slot" className="mt-9 w-full sm:hidden" />
+          <div id="hero-action-slot" className="mt-[clamp(20px,calc(13.8svh-55px),36px)] w-full sm:hidden" />
 
           {/* Deux boutons d'appel à l'action (tablette & ordinateur) */}
           <motion.div
