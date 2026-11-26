@@ -1,4 +1,4 @@
-import { FileText, MapPin, Phone, ShieldCheck, Store, Timer } from 'lucide-react';
+import { AppWindow, Blinds, FileText, KeyRound, Lock, MapPin, Nfc, PanelsTopLeft, Phone, ShieldAlert, ShieldCheck, Store, Timer, Warehouse } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
 import type { UrgencyConfig } from '../data/sectionsContent';
 import type { BrandConfig } from '../utils/navigation';
@@ -9,6 +9,17 @@ interface UrgencySectionProps {
   readonly brand: BrandConfig;
 }
 
+const CASE_ICONS = {
+  lock: Lock,
+  shield: ShieldAlert,
+  glass: PanelsTopLeft,
+  store: Store,
+  window: AppWindow,
+  shutter: Blinds,
+  garage: Warehouse,
+  key: KeyRound,
+  badge: Nfc,
+} as const;
 const ASSURANCE_ICONS = { timer: Timer, shield: ShieldCheck, file: FileText, store: Store, pin: MapPin } as const;
 
 /**
@@ -56,6 +67,7 @@ export function UrgencySection({ config, brand }: UrgencySectionProps) {
         {/* Deux cas d'urgence : texte à gauche, photo en fondu à droite */}
         <ul className="mt-8 lg:mt-10 grid gap-4 md:grid-cols-2 lg:gap-6">
           {config.cases.map((item) => {
+            const Icon = CASE_ICONS[item.icon];
             return (
               <li
                 key={item.title}
@@ -88,6 +100,14 @@ export function UrgencySection({ config, brand }: UrgencySectionProps) {
                   />
                 )}
                 <div className="flex h-full max-w-[62%] flex-col justify-center p-5 sm:p-6">
+                  {!config.hideCaseIcons && (
+                    <span
+                      aria-hidden="true"
+                      className="mb-3 grid h-11 w-11 place-items-center rounded-full border border-[var(--urg-accent)]/70 text-[var(--urg-accent)]"
+                    >
+                      <Icon className="h-5 w-5" strokeWidth={1.6} />
+                    </span>
+                  )}
                   <h3 className="font-display text-[22px] sm:text-[24px] font-semibold leading-tight text-[var(--urg-card-ink)]">
                     {item.title}
                   </h3>
