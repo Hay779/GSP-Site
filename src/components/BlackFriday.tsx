@@ -1,6 +1,6 @@
 /**
  * Black Friday sur mobile (maquette validée `docs/maquettes/black-friday/8-presentation-onglet-popup.png`) :
- * bandeau doré défilant, rond flottant « Black Friday -20 % » et pop-up des offres.
+ * bandeau doré défilant, rond flottant « Black Friday jusqu’à -25 % » et pop-up des offres.
  * Rien ne s'ouvre tout seul. Textes et dates : `data/promotions.ts`.
  */
 import { Fragment, useEffect, useRef, useState } from 'react';
@@ -115,7 +115,7 @@ export function PromoFloatingBadge({
         onClick={onOpen}
         tabIndex={visible ? 0 : -1}
         aria-haspopup="dialog"
-        aria-label={`${promo.name} -20 % : voir les offres`}
+        aria-label={`${promo.name} : jusqu’à ${promo.headlineDiscount}, voir les offres`}
         className="relative grid h-[80px] w-[80px] cursor-pointer place-items-center rounded-full border-2 border-[#D9BD82] bg-[#0B0C0D] text-center shadow-[0_10px_26px_rgba(0,0,0,0.5)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62]"
       >
         <span aria-hidden="true" className="absolute -left-0.5 top-0.5 h-3 w-3 rounded-full bg-[#C0392B] ring-2 ring-[#C0392B]/30 motion-safe:animate-pulse" />
@@ -125,7 +125,8 @@ export function PromoFloatingBadge({
             <br />
             Friday
           </span>
-          <span className={`mt-0.5 font-display text-[22px] font-extrabold tracking-[-0.02em] ${PROMO_GOLD_TEXT}`}>-20%</span>
+          <span className="mt-0.5 text-[8.5px] font-semibold uppercase tracking-[0.08em] text-[#F3F0E7]/80">jusqu’à</span>
+          <span className={`font-display text-[20px] font-extrabold tracking-[-0.02em] ${PROMO_GOLD_TEXT}`}>{promoBadgeText(promo.headlineDiscount)}</span>
         </span>
       </button>
       <button
@@ -154,7 +155,7 @@ export function PromoHeroBadge({ promo, onOpen }: { readonly promo: Promotion; r
       type="button"
       onClick={onOpen}
       aria-haspopup="dialog"
-      aria-label={`${promo.name} : jusqu’à -20 %, ${promo.untilShortLabel}. Voir les offres`}
+      aria-label={`${promo.name} : jusqu’à ${promo.headlineDiscount}, ${promo.untilShortLabel}. Voir les offres`}
       className="absolute right-[6%] top-10 z-20 hidden h-[150px] w-[150px] -rotate-[10deg] cursor-pointer place-items-center rounded-full border-[2.5px] border-[#D9BD82] bg-[#0B0C0D] text-center shadow-[0_18px_40px_rgba(0,0,0,0.45)] transition-transform duration-300 hover:-rotate-[4deg] hover:scale-105 motion-reduce:transition-none focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#E5C57B] lg:grid"
     >
       <span className="flex flex-col items-center leading-none">
@@ -163,7 +164,8 @@ export function PromoHeroBadge({ promo, onOpen }: { readonly promo: Promotion; r
           <br />
           Friday
         </span>
-        <span className={`mt-1 font-display text-[44px] font-extrabold tracking-[-0.03em] ${PROMO_GOLD_TEXT}`}>-20%</span>
+        <span className="mt-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-[#F3F0E7]/85">jusqu’à</span>
+        <span className={`font-display text-[42px] font-extrabold tracking-[-0.03em] ${PROMO_GOLD_TEXT}`}>{promoBadgeText(promo.headlineDiscount)}</span>
         <span className="mt-0.5 text-[12px] text-[#F3F0E7]/85">{promo.untilShortLabel}</span>
       </span>
     </button>
@@ -212,7 +214,7 @@ export function PromoDesktopBadge({
         onClick={onOpen}
         tabIndex={visible ? 0 : -1}
         aria-haspopup="dialog"
-        aria-label={`${promo.name} -20 % : voir les offres`}
+        aria-label={`${promo.name} : jusqu’à ${promo.headlineDiscount}, voir les offres`}
         className="group relative grid h-[96px] w-[96px] cursor-pointer place-items-center rounded-full border-2 border-[#D9BD82] bg-[#0B0C0D] text-center shadow-[0_12px_30px_rgba(0,0,0,0.45)] transition-transform duration-200 hover:scale-105 motion-reduce:transition-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62]"
       >
         <span aria-hidden="true" className="absolute left-0.5 top-1 h-3.5 w-3.5 rounded-full bg-[#C0392B] ring-2 ring-[#C0392B]/30 motion-safe:animate-pulse" />
@@ -222,7 +224,8 @@ export function PromoDesktopBadge({
             <br />
             Friday
           </span>
-          <span className={`mt-1 font-display text-[26px] font-extrabold tracking-[-0.02em] ${PROMO_GOLD_TEXT}`}>-20%</span>
+          <span className="mt-0.5 text-[9px] font-semibold uppercase tracking-[0.1em] text-[#F3F0E7]/80">jusqu’à</span>
+          <span className={`font-display text-[24px] font-extrabold tracking-[-0.02em] ${PROMO_GOLD_TEXT}`}>{promoBadgeText(promo.headlineDiscount)}</span>
         </span>
       </button>
       <button
@@ -364,24 +367,27 @@ export function PromoSheet({ promo, brand, open, onClose, promoHref, shopAddress
                 {promo.name}
               </h2>
 
-              <ul className="mt-3 flex flex-col gap-2">
+              <ul className="mt-3 flex flex-col gap-1.5">
                 {promo.offers.map((offer) => (
                   <li
                     key={offer.id}
-                    className="flex items-center gap-3 rounded-2xl border border-[#D9BD82]/35 bg-[#111315] p-2"
+                    className="flex items-center gap-3 rounded-2xl border border-[#D9BD82]/35 bg-[#111315] p-1.5"
                   >
                     <img
                       src={offer.imageSrc}
                       alt=""
                       loading="lazy"
-                      className="h-[72px] w-[72px] shrink-0 rounded-xl bg-[#16191B] object-cover"
+                      className="h-[60px] w-[60px] shrink-0 rounded-xl bg-[#16191B] object-cover"
                     />
                     <div className="min-w-0">
                       <p className={`font-display text-[21px] font-extrabold leading-none tracking-[-0.02em] ${PROMO_GOLD_TEXT}`}>
+                        {offer.badgePrefix && (
+                          <span className="mr-1 font-sans text-[11px] font-semibold uppercase tracking-[0.08em] text-[#F3F0E7]/80">{offer.badgePrefix}</span>
+                        )}
                         {promoBadgeText(offer.badge)}
                       </p>
-                      <p className="mt-1 font-display text-[15px] font-semibold leading-tight">{offer.title}</p>
-                      <p className="text-[12.5px] leading-snug text-[#F3F0E7]/70">{offer.summary}</p>
+                      <p className="mt-0.5 font-display text-[15px] font-semibold leading-tight">{offer.title}</p>
+                      <p className="line-clamp-2 text-[12px] leading-snug text-[#F3F0E7]/70">{offer.summary}</p>
                     </div>
                   </li>
                 ))}
@@ -412,7 +418,7 @@ export function PromoSheet({ promo, brand, open, onClose, promoHref, shopAddress
               </div>
 
               <p className="mt-2.5 text-center text-[10.5px] uppercase tracking-[0.06em] text-[#F3F0E7]/55">
-                Offres valables du 24 au 30 novembre · non cumulables
+                {promo.sheetFootnote}
               </p>
             </div>
           </motion.div>

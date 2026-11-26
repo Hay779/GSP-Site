@@ -280,9 +280,9 @@ function baseSeoForRoute(route: Route): SeoData {
     crumbs.push({ name: active ? promo.name : 'Promotions', path });
     return active
       ? {
-          title: `${promo.name} serrurier Marseille : -20 % portes blindées`,
+          title: `${promo.name} Marseille : jusqu’à -25 % sur vos projets`,
           description:
-            '-20 % sur les portes blindées (fourniture et pose), 3e double de clé offert, -20 % sur les tampons dès le 2e. Du 24 au 30/11/2026 à Marseille 2e.',
+            'Jusqu’à -25 % sur vos projets, -20 % portes blindées posées, 3e double de clé à -50 %, -20 % tampons. Jusqu’au 30/11, devis signé avant le 31/12.',
           path,
           image: promo.offers[0].imageSrc,
           noindex: false,

@@ -9,12 +9,14 @@
  */
 import type { FaqItem } from './sectionsContent';
 
-export type PromoOfferId = 'portes-blindees' | 'double-cle' | 'tampons';
+export type PromoOfferId = 'projets' | 'portes-blindees' | 'double-cle' | 'tampons';
 
 export interface PromoOffer {
   readonly id: PromoOfferId;
   /** Pastille dorée (ex. « -20 % » ou « Offert »). */
   readonly badge: string;
+  /** Petit mot au-dessus de la pastille (ex. « Jusqu’à »). */
+  readonly badgePrefix?: string;
   readonly title: string;
   /** Accroche façon affiche (« sur les portes blindées »). */
   readonly headline: string;
@@ -42,6 +44,10 @@ export interface Promotion {
   readonly periodLabel: string;
   readonly tagline: string;
   readonly offers: readonly PromoOffer[];
+  /** Remise la plus forte, affichée sur les ronds et le macaron (« -25 % »). */
+  readonly headlineDiscount: string;
+  /** Rappel court des conditions sous la pop-up. */
+  readonly sheetFootnote: string;
   readonly conditions: readonly string[];
   readonly faq: readonly FaqItem[];
 }
@@ -55,29 +61,49 @@ export const BLACK_FRIDAY_2026: Promotion = {
   untilShortLabel: 'jusqu’au 30/11',
   tagline: 'Jusqu’à -25 % sur vos projets',
   periodLabel: 'Du 24 au 30 novembre 2026',
+  headlineDiscount: '-25 %',
+  sheetFootnote: 'Demandes du 24 au 30/11 · devis signé avant le 31/12 · non cumulables',
+  // Offres revues avec le client le 26/11 (inspirées de l'étude Tryba : conditions précises, une seule règle de cumul).
   offers: [
+    {
+      id: 'projets',
+      badge: '-25 %',
+      badgePrefix: 'Jusqu’à',
+      title: 'Projets',
+      headline: 'sur vos projets',
+      summary: 'Fenêtres, portes, vitrage, menuiserie et fermetures, sur devis.',
+      includes: [
+        'Fenêtres et portes-fenêtres, vitrage, vitrines',
+        'Portes, menuiserie, volets, rideaux métalliques',
+        'Devis signé jusqu’au 31 décembre 2026',
+      ],
+      tickerLabel: 'Jusqu’à -25 % sur vos projets',
+      imageSrc: '/src/assets/images/domaine_menuiserie_1795289934186.webp',
+      imageAlt: 'Menuisier réglant une fenêtre en aluminium anthracite.',
+      cta: { kind: 'quote', label: 'Demander un devis' },
+    },
     {
       id: 'portes-blindees',
       badge: '-20 %',
       title: 'Portes blindées',
       headline: 'sur les portes blindées',
-      summary: 'Fourniture et pose d’un bloc-porte blindé certifié A2P.',
-      // Confirmé par le client le 25/11 : pose comprise, modèles A2P, jusqu'à -25 % selon le projet.
-      includes: ['Pose comprise, par nos serruriers', 'Modèles certifiés A2P', 'Jusqu’à -25 % selon votre projet, sur devis'],
-      tickerLabel: '-20 % portes blindées',
+      // Client 26/11 : fourniture et pose, seulement en remplacement complet ou en création.
+      summary: 'Bloc-porte blindé A2P fourni et posé, en remplacement complet ou en création.',
+      includes: ['Pose comprise, par nos serruriers', 'Modèles certifiés A2P', 'Remplacement complet ou création'],
+      tickerLabel: '-20 % portes blindées posées',
       imageSrc: '/src/assets/images/promo/bf_porte_blindee.webp',
       imageAlt: 'Bloc-porte blindé gris anthracite posé dans une entrée.',
       cta: { kind: 'quote', label: 'Demander un devis' },
     },
     {
       id: 'double-cle',
-      badge: '3e offert',
+      badge: '-50 %',
       title: 'Double de clé',
-      headline: '3e double de clé offert',
-      // Confirmé par le client le 25/11 : le 3e offert pour 2 achetés.
-      summary: 'Pour 2 doubles achetés, le 3e est offert.',
+      headline: 'sur le 3e double de clé',
+      // Client 26/11 : le 3e à -50 % (et non plus offert).
+      summary: 'Pour 2 doubles achetés, le 3e à moitié prix.',
       includes: ['Reproduction sur place, en boutique', 'Clés plates et clés de sécurité', 'Conseils sur votre serrure'],
-      tickerLabel: '3e double de clé offert',
+      tickerLabel: '3e double de clé à -50 %',
       imageSrc: '/src/assets/images/promo/bf_double_cle.webp',
       imageAlt: 'Deux clés de sécurité reproduites.',
       cta: { kind: 'shop', label: 'Venir en boutique' },
@@ -88,7 +114,6 @@ export const BLACK_FRIDAY_2026: Promotion = {
       title: 'Tampons personnalisés',
       headline: 'sur les tampons personnalisés',
       summary: 'Dès le 2e tampon commandé.',
-      // Confirmé par le client le 25/11 : en boutique ou par téléphone, prêts dans la journée.
       includes: ['Tampons d’entreprise, adresse, signature', 'Commande en boutique ou par téléphone', 'Prêts dans la journée'],
       tickerLabel: '-20 % tampons dès le 2e',
       imageSrc: '/src/assets/images/promo/bf_tampon.webp',
@@ -97,15 +122,31 @@ export const BLACK_FRIDAY_2026: Promotion = {
     },
   ],
   conditions: [
-    'Offres valables du 24 au 30 novembre 2026 inclus, non cumulables entre elles ni avec d’autres remises.',
+    'Offres valables pour toute demande faite du 24 au 30 novembre 2026, en boutique, par téléphone ou en ligne. Pour les projets et les portes blindées : devis signé au plus tard le 31 décembre 2026.',
+    'Projets (jusqu’à -25 %) : fenêtres, portes, vitrage, menuiserie, fermetures et serrures posées, sur devis. Hors dépannage et interventions d’urgence (ouverture de porte, mise en sécurité).',
+    'Portes blindées (-20 %) : fourniture et pose d’un bloc-porte blindé certifié A2P, en remplacement complet ou en création.',
+    'Double de clé : pour 2 doubles achetés, le 3e à -50 %. Tampons : -20 % dès le 2e tampon commandé.',
+    'Offres non cumulables entre elles ni avec d’autres remises, hors devis déjà signés avant le 24 novembre 2026.',
     'Réductions calculées sur nos prix habituels pratiqués dans les 30 jours précédents. Détail de chaque offre en boutique.',
   ],
   faq: [
     {
+      id: 'bf-projets',
+      question: 'Quels projets profitent de la remise jusqu’à -25 % ?',
+      answer:
+        'Les travaux sur devis : fenêtres et portes-fenêtres, vitrage et vitrines, portes et menuiserie, volets, rideaux métalliques, portes de garage, serrures posées. Le dépannage et les interventions d’urgence ne sont pas concernés.',
+    },
+    {
+      id: 'bf-delai',
+      question: 'J’ai jusqu’à quand pour signer mon devis ?',
+      answer:
+        'Faites votre demande avant le 30 novembre 2026, en boutique, par téléphone au 04 91 90 51 65 ou en ligne. Vous avez ensuite jusqu’au 31 décembre 2026 pour signer le devis et garder la remise.',
+    },
+    {
       id: 'bf-pose',
       question: 'La pose est-elle comprise pour la porte blindée ?',
       answer:
-        'Oui : l’offre porte sur la fourniture et la pose d’un bloc-porte blindé certifié A2P par nos serruriers. Nous venons prendre les mesures et vous remettons un devis détaillé : jusqu’à -25 % selon votre projet.',
+        'Oui : -20 % sur la fourniture et la pose d’un bloc-porte blindé certifié A2P par nos serruriers, en remplacement complet ou en création. Nous venons prendre les mesures et vous remettons un devis détaillé.',
     },
     {
       id: 'bf-tampons',
@@ -117,7 +158,7 @@ export const BLACK_FRIDAY_2026: Promotion = {
       id: 'bf-pros',
       question: 'L’offre s’applique-t-elle aux professionnels ?',
       answer:
-        'Oui, les offres Black Friday s’adressent aux particuliers comme aux professionnels, dans les mêmes conditions, du 24 au 30 novembre 2026.',
+        'Oui, les offres Black Friday s’adressent aux particuliers comme aux professionnels, dans les mêmes conditions.',
     },
   ],
 };

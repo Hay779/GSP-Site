@@ -140,12 +140,15 @@ export function PromotionsPage({ promo, active, agency, phoneDisplay, phoneHref,
             ))}
           </div>
 
-          {/* Les 3 offres */}
+          {/* Les offres */}
           </div>
           <div className="mt-6 lg:mt-0">
           <h2 className="sr-only">Les offres {promo.name}</h2>
           <article className="flex max-w-[720px] lg:max-w-none overflow-hidden rounded-2xl border-[1.5px] border-[#D9BD82]/55 bg-[#111315]">
             <div className="flex min-w-0 flex-1 flex-col p-4 sm:p-6">
+              {main.badgePrefix && (
+                <p className="text-[12px] font-semibold uppercase tracking-[0.14em] text-[#F3F0E7]/80">{main.badgePrefix}</p>
+              )}
               <p className={`font-display text-[46px] sm:text-[60px] font-extrabold leading-none tracking-[-0.03em] ${PROMO_GOLD_TEXT}`}>
                 {promoBadgeText(main.badge)}
               </p>
@@ -169,7 +172,7 @@ export function PromotionsPage({ promo, active, agency, phoneDisplay, phoneHref,
             <img src={main.imageSrc} alt={main.imageAlt} className="w-[38%] max-w-[260px] shrink-0 object-cover sm:max-h-[320px]" />
           </article>
 
-          <div className="mt-2.5 grid max-w-[720px] grid-cols-2 gap-2.5 lg:max-w-none">
+          <div className="mt-2.5 grid max-w-[720px] grid-cols-2 gap-2.5 sm:grid-cols-3 lg:max-w-none [&>*:last-child:nth-child(odd)]:col-span-2 sm:[&>*:last-child:nth-child(odd)]:col-span-1">
             {others.map((offer) => (
               <article key={offer.id} className="flex flex-col overflow-hidden rounded-2xl border-[1.5px] border-[#D9BD82]/55 bg-[#111315] text-center">
                 <h3 className="px-2 pt-3.5 font-display text-[15px] sm:text-[18px] font-extrabold uppercase leading-[1.15]">

@@ -30,10 +30,12 @@ test('countdown counts days, hours and minutes left, never below zero', () => {
   });
 });
 
-test('three offers, with the legal conditions', () => {
-  assert.equal(BLACK_FRIDAY_2026.offers.length, 3);
+test('four offers, with the legal conditions', () => {
+  assert.equal(BLACK_FRIDAY_2026.offers.length, 4);
   const text = BLACK_FRIDAY_2026.conditions.join(' ');
   assert.match(text, /non cumulables/);
+  assert.match(text, /Hors dépannage/);
+  assert.match(text, /31 décembre 2026/);
   assert.match(text, /30 jours précédents/);
   // Tout se passe à République : aucune mention de l'agence Rome.
   assert.doesNotMatch(JSON.stringify(BLACK_FRIDAY_2026), /Rome/);
