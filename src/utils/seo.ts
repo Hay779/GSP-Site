@@ -324,7 +324,7 @@ function baseSeoForRoute(route: Route): SeoData {
   if (faqs.length > 0) {
     jsonLd.push(faqPage(faqs));
   }
-  const legal = route.kind === 'page' && (route.id === 'mentions-legales' || route.id === 'confidentialite');
+  const legal = route.kind === 'page' && (route.id === 'mentions-legales' || route.id === 'confidentialite' || route.id === 'cgv');
   return {
     title: page.seoTitle,
     description: page.seoDescription,
