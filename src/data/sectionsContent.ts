@@ -10,14 +10,20 @@ export interface UrgencyCase {
   readonly imageAlt: string;
   /** Cadrage CSS (object-position) de la photo dans la carte. */
   readonly imagePosition?: string;
+  /** Texture de fond de la carte, derrière le texte (ex. mur de pierre de la photo). */
+  readonly textureSrc?: string;
 }
 
 export interface UrgencyConfig {
   readonly kicker: string;
   readonly title: string;
   readonly subtitle: string;
+  /** Phrase mise en gras à la suite du sous-titre (facultatif). */
+  readonly subtitleStrong?: string;
+  /** Masque le rond avec l'icône en haut de chaque carte. */
+  readonly hideCaseIcons?: boolean;
   readonly cases: readonly UrgencyCase[];
-  readonly assurances: readonly { readonly label: string; readonly icon: 'timer' | 'shield' | 'file' | 'store' }[];
+  readonly assurances: readonly { readonly label: string; readonly icon: 'timer' | 'shield' | 'file' | 'store' | 'pin' }[];
   readonly ctaPrefix: string;
 }
 
@@ -258,30 +264,34 @@ export interface WhatsAppConfig {
 
 export const URGENCY_CONFIG: UrgencyConfig = {
   kicker: 'Dépannage en urgence',
-  title: 'Un problème de porte ?',
+  title: 'Besoin d’une intervention à Marseille\u00A0?',
   subtitle:
-    'Porte claquée, serrure forcée ou endommagée\u00A0: notre équipe vous accompagne rapidement à Marseille.',
+    'Porte claquée, serrure endommagée ou accès à sécuriser\u00A0: notre équipe intervient chez vous et dans vos locaux.',
+  subtitleStrong: 'Devis détaillé avant intervention.',
+  hideCaseIcons: true,
   cases: [
     {
-      title: 'Porte claquée',
-      text: 'Clés oubliées, porte fermée par inadvertance.',
+      title: 'Ouverture de porte',
+      text: 'Porte claquée ou verrouillée\u00A0: ouverture sans dégradation lorsque cela est possible.',
       icon: 'lock',
-      imageSrc: '/src/assets/images/domaine_serrurerie_1795289920360.webp',
-      imageAlt: 'Cylindre de serrure sur une porte d’entrée, mur en pierre claire.',
+      imageSrc: '/src/assets/images/urgence_ouverture_porte.webp',
+      textureSrc: '/src/assets/images/urgence_texture_pierre.webp',
+      imageAlt: 'Mains d’un serrurier ouvrant sans dégradation la serrure d’une porte d’entrée anthracite.',
+      imagePosition: '55% 45%',
     },
     {
-      title: 'Porte forcée',
-      text: 'Serrure endommagée, tentative d’effraction ou intrusion.',
+      title: 'Mise en sécurité',
+      text: 'Après effraction\u00A0: sécurisation de vos accès et accompagnement pour votre assurance.',
       icon: 'shield',
       imageSrc: '/src/assets/images/apres_sinistre_diagnostic_1795291186729.webp',
-      imageAlt: 'Serrurier examinant une porte d’entrée après une tentative d’effraction.',
-      imagePosition: '92% 50%',
+      imageAlt: 'Serrurier présentant son diagnostic sur tablette à une cliente, devant sa porte d’entrée.',
+      imagePosition: '62% 50%',
     },
   ],
   assurances: [
-    { label: 'Intervention rapide', icon: 'timer' },
-    { label: 'Mise en sécurité', icon: 'shield' },
-    { label: 'Devis clair avant intervention', icon: 'file' },
+    { label: 'Artisans basés à Marseille', icon: 'pin' },
+    { label: 'Devis clair avant travaux', icon: 'file' },
+    { label: 'Suivi après sinistre', icon: 'shield' },
   ],
   ctaPrefix: 'Appeler le',
 };

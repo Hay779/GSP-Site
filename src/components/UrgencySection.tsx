@@ -1,4 +1,4 @@
-import { AppWindow, Blinds, FileText, KeyRound, Lock, Nfc, PanelsTopLeft, Phone, ShieldAlert, ShieldCheck, Store, Timer, Warehouse } from 'lucide-react';
+import { AppWindow, Blinds, FileText, KeyRound, Lock, MapPin, Nfc, PanelsTopLeft, Phone, ShieldAlert, ShieldCheck, Store, Timer, Warehouse } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
 import type { UrgencyConfig } from '../data/sectionsContent';
 import type { BrandConfig } from '../utils/navigation';
@@ -20,10 +20,10 @@ const CASE_ICONS = {
   key: KeyRound,
   badge: Nfc,
 } as const;
-const ASSURANCE_ICONS = { timer: Timer, shield: ShieldCheck, file: FileText, store: Store } as const;
+const ASSURANCE_ICONS = { timer: Timer, shield: ShieldCheck, file: FileText, store: Store, pin: MapPin } as const;
 
 /**
- * Bloc « Un problème de porte ? » : deux cas d'urgence illustrés (porte claquée, porte forcée),
+ * Bloc « Besoin d'une intervention à Marseille ? » : deux cas d'urgence illustrés (ouverture de porte, mise en sécurité),
  * trois engagements et l'appel direct.
  */
 export function UrgencySection({ config, brand }: UrgencySectionProps) {
@@ -52,7 +52,15 @@ export function UrgencySection({ config, brand }: UrgencySectionProps) {
             <h2 id="03_Urgence-title" className="section-title mt-3 text-[var(--urg-ink)]">
               {config.title}
             </h2>
-            <p className="section-subtitle mt-3 text-[var(--urg-text)]">{config.subtitle}</p>
+            <p className="section-subtitle mt-3 text-[var(--urg-text)]">
+              {config.subtitle}
+              {config.subtitleStrong && (
+                <>
+                  {' '}
+                  <strong className="font-semibold text-[var(--urg-ink)]">{config.subtitleStrong}</strong>
+                </>
+              )}
+            </p>
             <CallButton brand={brand} prefix={config.ctaPrefix} className="mt-5 inline-flex" />
         </div>
 
@@ -65,25 +73,42 @@ export function UrgencySection({ config, brand }: UrgencySectionProps) {
                 key={item.title}
                 className="relative isolate overflow-hidden rounded-2xl border border-[var(--urg-line)] bg-[var(--urg-card)] min-h-[190px] sm:min-h-[210px]"
               >
+                {item.textureSrc && (
+                  <>
+                    {/* Texture de pierre chaude derrière le texte, voilée pour la lisibilité */}
+                    <span
+                      aria-hidden="true"
+                      style={{ backgroundImage: `url(${item.textureSrc})` }}
+                      className="absolute inset-0 -z-20 bg-cover bg-left"
+                    />
+                    <span aria-hidden="true" className="absolute inset-0 -z-20 bg-[#F7EFDD]/45" />
+                  </>
+                )}
                 <img
                   src={item.imageSrc}
                   alt={item.imageAlt}
                   loading="lazy"
                   style={item.imagePosition ? { objectPosition: item.imagePosition } : undefined}
-                  className="absolute inset-y-0 right-0 -z-10 h-full w-[55%] object-cover"
+                  className={`absolute inset-y-0 right-0 -z-10 h-full w-[55%] object-cover ${
+                    item.textureSrc ? '[mask-image:linear-gradient(to_right,transparent,black_45%)]' : ''
+                  }`}
                 />
-                <span
-                  aria-hidden="true"
-                  className="absolute inset-y-0 right-0 -z-10 w-[55%] bg-gradient-to-r from-[var(--urg-card)] via-[color-mix(in_srgb,var(--urg-card)_45%,transparent)] to-transparent"
-                />
-                <div className="flex h-full max-w-[62%] flex-col justify-center p-5 sm:p-6">
+                {!item.textureSrc && (
                   <span
                     aria-hidden="true"
-                    className="grid h-11 w-11 place-items-center rounded-full border border-[var(--urg-accent)]/70 text-[var(--urg-accent)]"
-                  >
-                    <Icon className="h-5 w-5" strokeWidth={1.6} />
-                  </span>
-                  <h3 className="mt-3 font-display text-[22px] sm:text-[24px] font-semibold leading-tight text-[var(--urg-card-ink)]">
+                    className="absolute inset-y-0 right-0 -z-10 w-[55%] bg-gradient-to-r from-[var(--urg-card)] via-[color-mix(in_srgb,var(--urg-card)_45%,transparent)] to-transparent"
+                  />
+                )}
+                <div className="flex h-full max-w-[62%] flex-col justify-center p-5 sm:p-6">
+                  {!config.hideCaseIcons && (
+                    <span
+                      aria-hidden="true"
+                      className="mb-3 grid h-11 w-11 place-items-center rounded-full border border-[var(--urg-accent)]/70 text-[var(--urg-accent)]"
+                    >
+                      <Icon className="h-5 w-5" strokeWidth={1.6} />
+                    </span>
+                  )}
+                  <h3 className="font-display text-[22px] sm:text-[24px] font-semibold leading-tight text-[var(--urg-card-ink)]">
                     {item.title}
                   </h3>
                   <p className="mt-1.5 text-[14.5px] leading-[1.5] text-[var(--urg-card-text)]">{item.text}</p>
