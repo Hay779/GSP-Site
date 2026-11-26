@@ -1,4 +1,4 @@
-# Passation — annuaires et présence en ligne (état au 26/11/2026)
+# Passation — annuaires et présence en ligne (état au 26/11/2026, soir)
 
 > À lire **en premier** par Hermes et par toute nouvelle conversation Claude Code qui reprend les annuaires.
 > Ensuite, lire `docs/INFOS-OFFICIELLES.md` (seule source de vérité), `docs/SYNCHRO-ANNUAIRES.md` (procédure) et `docs/seo/annuaires.md` (inventaire de Hermes).
@@ -24,7 +24,19 @@
 | **Bing Places** | ✅ importée de Google | via Google (gspserrurerie13) | **synchro automatique hebdomadaire avec Google** ; 8 photos et logo ajoutés ; publication sous 7 à 12 jours |
 | **Apple Plans** | ⏳ en attente de validation Apple | compte Apple géré contact@serrurerierepublique.fr (mot de passe chez le client) | ancienne fiche « Galstyan Grigor, 61 » revendiquée et corrigée au 48 ; description, site, logo, couverture, 7 photos. Après validation : ajouter les « Éléments en vedette » |
 | Waze | rien à faire | — | se nourrit de Google |
-| **Petits annuaires** | ⏳ **prochaine étape** | — | voir section 4 |
+| **Hoodspot** (annuaire.petitesaffiches.fr) | ✅ revendiquée et complétée (26/11) | annuaires@ (Grigor Galstyan) | site, mobile, description, horaires, logo, 8 photos ; gérant affiché = Grigor Galstyan |
+| **Yelp** | ⏳ créée, attente modérateurs Yelp | Yelp for Business, annuaires@ | lun-sam 9h-19h vérifié ; fiche « Bisaccia Service Minute » (ancien propriétaire) laissée volontairement |
+| **Kompass** | ⏳ prestation en attente Kompass | annuaires@ | fiche FRA0FF20J (bon SIRET) ; logo = offre payante, non pris |
+| **Cybo** | ✅ revendiquée et corrigée (26/11) | annuaires@ (lien magique) | https://www.cybo.com/FR-biz/serrurerie-de-la-r%C3%A9publique_20 ; horaires vérifiés en ligne |
+| **Cylex** (+ **Yably**, même données) | ⏳ corrections envoyées, attente Cylex | annuaires@, mobile vérifié par SMS | revendication = file manuelle 2-3 semaines (non faite) ; Yably reprendra Cylex |
+| **NosAvis** | ⏳ signalement envoyé (fiche 723) | annuaires@ (pseudo SerrurerieRepublique) | demande de rattacher la fiche au compte, sans doublon |
+| **Marseille Centre** | ⏳ e-mail envoyé à contact@marseille-centre.fr | depuis serrurerierepublique@hotmail.fr | 13001→13002, horaires, site, retrait e-mail |
+| **Serrurier24** | ⏳ fiche réclamée, corrections + 5 photos en validation | annuaires@ | https://serrurier24.fr/13/marseille/serrurerie-de-la-republique-7eu ; doublon « même adresse » à vérifier |
+| **Trustup** | ✅ correcte (notre numéro), laissée | — | classée « menuisier », pas modifiable gratuitement |
+| **Guide Jalis** | ⏳ message de correction envoyé | annuaires@ | faux numéro 04 11 88 06 67 → 04 91 90 51 65 |
+| **Annuaire-Professionnel** | ⛔ aucun contact publié sur le site | — | à réessayer plus tard |
+
+Détail complet, liens et « Reste à faire » : `docs/JOURNAL.md`, entrée « 2026-11-26 (soir) ».
 
 ## 3. Le site (pour info)
 
@@ -50,4 +62,8 @@
 
 **Bilan de la mission Hermes du 26/11** (détail : `docs/seo/annuaires.md`, sections 6 et 7) : depuis le serveur, Hermes est **bloqué par les protections anti-robot** de la plupart des petits annuaires (Cylex, Yelp, Kompass, Cybo, Yably, Trustup ; NosAvis a refusé l'envoi). 118000 est déjà correct. Conclusion : **les petits annuaires se font dans le Chrome du client avec Claude Code** (vraie connexion, le client coche les cases anti-robot). Hermes garde la préparation, la vérification des fiches publiées, la lecture de la boîte annuaires@ et la veille du lundi. Les fiches prêtes à copier et un texte de correction commun sont dans la section 7 de `docs/seo/annuaires.md`.
 
-**Claude Code (nouvelle conversation) + client** : reprend la section « À faire avec Claude Code + client » de `docs/seo/annuaires.md`, crée les comptes dans Chrome (connexion Google gspserrurerie13 quand c'est possible), le client saisit les mots de passe et les codes, puis Claude met à jour le journal.
+**Fait le 26/11/2026 (soir) par Claude Code + client dans Chrome** : les 12 annuaires de la liste (voir tableau section 2 et `docs/JOURNAL.md`). Leçons : couper le **VPN du PC** sinon Cylex bloque ; sur Cybo, relire la fiche publique après chaque enregistrement d'horaires ; le client coche lui-même les cases « J'accepte les conditions » et anti-robot.
+
+**Hermes, suite (mission du 26/11)** : vérifier chaque fiche publiée, valider les liens reçus dans annuaires@ (seulement ceux de ces annuaires), compléter sans compte quand c'est possible, ajouter ces annuaires à la veille du lundi.
+
+**Avant le 26/11 — Claude Code (nouvelle conversation) + client** : reprend la section « À faire avec Claude Code + client » de `docs/seo/annuaires.md`, crée les comptes dans Chrome (connexion Google gspserrurerie13 quand c'est possible), le client saisit les mots de passe et les codes, puis Claude met à jour le journal.
