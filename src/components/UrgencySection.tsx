@@ -100,13 +100,15 @@ export function UrgencySection({ config, brand }: UrgencySectionProps) {
                   />
                 )}
                 <div className="flex h-full max-w-[62%] flex-col justify-center p-5 sm:p-6">
-                  <span
-                    aria-hidden="true"
-                    className="grid h-11 w-11 place-items-center rounded-full border border-[var(--urg-accent)]/70 text-[var(--urg-accent)]"
-                  >
-                    <Icon className="h-5 w-5" strokeWidth={1.6} />
-                  </span>
-                  <h3 className="mt-3 font-display text-[22px] sm:text-[24px] font-semibold leading-tight text-[var(--urg-card-ink)]">
+                  {!config.hideCaseIcons && (
+                    <span
+                      aria-hidden="true"
+                      className="mb-3 grid h-11 w-11 place-items-center rounded-full border border-[var(--urg-accent)]/70 text-[var(--urg-accent)]"
+                    >
+                      <Icon className="h-5 w-5" strokeWidth={1.6} />
+                    </span>
+                  )}
+                  <h3 className="font-display text-[22px] sm:text-[24px] font-semibold leading-tight text-[var(--urg-card-ink)]">
                     {item.title}
                   </h3>
                   <p className="mt-1.5 text-[14.5px] leading-[1.5] text-[var(--urg-card-text)]">{item.text}</p>

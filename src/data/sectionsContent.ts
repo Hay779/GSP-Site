@@ -20,6 +20,8 @@ export interface UrgencyConfig {
   readonly subtitle: string;
   /** Phrase mise en gras à la suite du sous-titre (facultatif). */
   readonly subtitleStrong?: string;
+  /** Masque le rond avec l'icône en haut de chaque carte. */
+  readonly hideCaseIcons?: boolean;
   readonly cases: readonly UrgencyCase[];
   readonly assurances: readonly { readonly label: string; readonly icon: 'timer' | 'shield' | 'file' | 'store' | 'pin' }[];
   readonly ctaPrefix: string;
@@ -266,6 +268,7 @@ export const URGENCY_CONFIG: UrgencyConfig = {
   subtitle:
     'Porte claquée, serrure endommagée ou accès à sécuriser\u00A0: notre équipe intervient chez vous et dans vos locaux.',
   subtitleStrong: 'Devis détaillé avant intervention.',
+  hideCaseIcons: true,
   cases: [
     {
       title: 'Ouverture de porte',
