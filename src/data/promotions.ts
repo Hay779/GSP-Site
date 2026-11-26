@@ -79,7 +79,7 @@ export const BLACK_FRIDAY_2026: Promotion = {
       ],
       tickerLabel: 'Jusqu’à -25 % sur vos projets',
       imageSrc: '/src/assets/images/domaine_menuiserie_1795289934186.webp',
-      imageAlt: 'Artisan réglant une fenêtre.',
+      imageAlt: 'Menuisier réglant une fenêtre en aluminium anthracite.',
       cta: { kind: 'quote', label: 'Demander un devis' },
     },
     {

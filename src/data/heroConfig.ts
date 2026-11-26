@@ -57,7 +57,7 @@ export const HERO_CONFIG: HeroConfig = {
     slides: [
       {
         src: '/src/assets/images/hero_serrurier_marseille_1795288791942.webp',
-        alt: 'Serrurier de la Serrurerie de la République changeant le cylindre d’une porte d’entrée à Marseille.',
+        alt: 'Artisan serrurier ajustant un cylindre de porte à Marseille en présence d’une cliente.',
         label: 'Serrurerie',
         objectPositionMobile: '80% 30%',
         objectPositionDesktop: '70% 40%',
@@ -71,14 +71,14 @@ export const HERO_CONFIG: HeroConfig = {
       },
       {
         src: '/src/assets/images/domaine_vitrerie_1795289921283.webp',
-        alt: 'Vitrier de la Serrurerie de la République posant une vitrine de commerce dans une rue de Marseille.',
+        alt: 'Vitrier posant une vitrine de commerce à l’aide de ventouses.',
         label: 'Vitrerie',
-        objectPositionMobile: '72% 30%',
-        objectPositionDesktop: '68% 35%',
+        objectPositionMobile: '45% 35%',
+        objectPositionDesktop: '65% 40%',
       },
       {
         src: '/src/assets/images/domaine_menuiserie_1795289934186.webp',
-        alt: 'Artisan réglant la fenêtre d’un appartement marseillais.',
+        alt: 'Menuisier réglant une fenêtre aluminium avec vue sur la mer.',
         label: 'Menuiserie',
         objectPositionMobile: '40% 35%',
         objectPositionDesktop: '65% 40%',

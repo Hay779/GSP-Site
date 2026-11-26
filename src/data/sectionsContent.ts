@@ -283,7 +283,7 @@ export const URGENCY_CONFIG: UrgencyConfig = {
       icon: 'shield',
       imageSrc: '/src/assets/images/apres_sinistre_diagnostic_1795291186729.webp',
       imageAlt: 'Serrurier présentant son diagnostic sur tablette à une cliente, devant sa porte d’entrée.',
-      imagePosition: '42% 40%',
+      imagePosition: '62% 50%',
     },
   ],
   assurances: [
@@ -324,7 +324,7 @@ export const URGENCY_VARIANTS: Readonly<Record<UrgencyVariant, UrgencyConfig>> =
         icon: 'store',
         imageSrc: '/src/assets/images/domaine_vitrerie_1795289921283.webp',
         imageAlt: 'Artisan intervenant sur la vitrine d’un commerce.',
-        imagePosition: '75% 30%',
+        imagePosition: '55% 40%',
       },
     ],
     assurances: STANDARD_ASSURANCES,
@@ -341,7 +341,7 @@ export const URGENCY_VARIANTS: Readonly<Record<UrgencyVariant, UrgencyConfig>> =
         icon: 'window',
         imageSrc: '/src/assets/images/domaine_menuiserie_1795289934186.webp',
         imageAlt: 'Artisan réglant une fenêtre.',
-        imagePosition: '35% 35%',
+        imagePosition: '45% 40%',
       },
       {
         title: 'Porte qui ferme mal',
@@ -349,7 +349,7 @@ export const URGENCY_VARIANTS: Readonly<Record<UrgencyVariant, UrgencyConfig>> =
         icon: 'lock',
         imageSrc: '/src/assets/images/hero_serrurier_marseille_1795288791942.webp',
         imageAlt: 'Artisan intervenant sur une porte d’entrée.',
-        imagePosition: '76% 35%',
+        imagePosition: '70% 40%',
       },
     ],
     assurances: [
@@ -473,7 +473,7 @@ export const DOMAINS_CONFIG: DomainsConfig = {
       ctaLabel: 'En savoir plus',
       imageSrc: '/src/assets/images/domaine_vitrerie_1795289921283.webp',
       imageAlt:
-        'Vitrier posant une nouvelle vitrine de commerce dans une rue piétonne de Marseille.',
+        'Vitrier manipulant un double vitrage de vitrine à l’aide de ventouses professionnelles dans une rue de Marseille.',
       pageIntro:
         'Bris de glace, vitrine de commerce ou double vitrage à remplacer : nous mettons en sécurité, remplaçons à l’identique et posons vos vitrages et miroirs sur mesure à Marseille.',
       seoTitle: 'Vitrier à Marseille — Vitrerie & miroiterie | Serrurerie de la République',
@@ -495,7 +495,7 @@ export const DOMAINS_CONFIG: DomainsConfig = {
       ctaLabel: 'En savoir plus',
       imageSrc: '/src/assets/images/domaine_menuiserie_1795289934186.webp',
       imageAlt:
-        'Artisan réglant la poignée et l’alignement d’une fenêtre dans un appartement marseillais.',
+        'Menuisier réglant la poignée et l’alignement d’une fenêtre en aluminium anthracite.',
       pageIntro:
         'Portes d’entrée, fenêtres et portes-fenêtres en aluminium, PVC, bois ou métal : fourniture, pose, réglage et réparation pour gagner en confort, en isolation et en sécurité.',
       seoTitle: 'Menuiserie à Marseille — Portes & fenêtres alu, PVC, bois | Serrurerie de la République',
