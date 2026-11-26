@@ -1,0 +1,4 @@
+# 2026-11-26 — Passation annuaires, boîte annuaires@, mission Hermes
+- `docs/PASSATION-ANNUAIRES.md` créé (état complet, décisions du client, qui fait quoi). Référencé dans `CLAUDE.md`.
+- Boîte **annuaires@serrurerierepublique.fr** créée (OVH MX Plan). Le mot de passe a été généré et enregistré par Chrome dans le Gestionnaire de mots de passe Google du client, puis rangé par le client dans `~/.hermes/.env` sur le serveur. Hermes la lit en lecture seule avec `~/bin/annuaires-mail` (connexion testée OK).
+- Mission Hermes « petits annuaires » (profil claude, Sonnet) : aucune fiche créée, à cause des blocages anti-robot depuis le serveur. 118000 est déjà correct. Fiches et texte de correction prêts dans `docs/seo/annuaires.md` (section 7). Suite : dans une nouvelle conversation Claude Code, à faire dans Chrome avec le client.

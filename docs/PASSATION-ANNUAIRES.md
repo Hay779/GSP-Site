@@ -36,11 +36,25 @@
 | **Guide Jalis** | ⏳ message de correction envoyé | annuaires@ | faux numéro 04 11 88 06 67 → 04 91 90 51 65 |
 | **Annuaire-Professionnel** | ⛔ aucun contact publié sur le site | — | à réessayer plus tard |
 
-Détail complet, liens et « Reste à faire » : `docs/JOURNAL.md`, entrée « 2026-11-26 (soir) ».
+### Reste à faire (suivi, à reprendre tant que ce n'est pas coché)
+- [ ] **Cylex** : corrections envoyées le 26/11 (VPN coupé). À vérifier quand Cylex aura traité (e-mail de suivi sur annuaires@), puis relire horaires/site/e-mail sur la fiche publique. Revendication (logo, photos) : refaire plus tard via « C'est mon entreprise » → file manuelle 2-3 semaines.
+- [x] **Hoodspot** : « Cedric MARRONNEAU – Gérant » remplacé par **Grigor Galstyan – Gérant** (décision client, 26/11).
+- [x] Horaires revérifiés en ligne le 26/11 : Hoodspot et Yelp = lun-sam 9h-19h, dimanche fermé.
+- [x] **Yelp** : fiche « Bisaccia Service Minute » (https://m.yelp.com/biz/bisaccia-service-minute-marseille) = **ancien propriétaire de la boutique (depuis 2008)**, d'après le client ; elle affiche notre numéro. **Décision client (26/11) : on la laisse** (elle renvoie vers notre numéro, gêne minime). À reconsidérer seulement si elle pose problème. Vérifier la validation de notre fiche par les modérateurs.
+- [ ] **Kompass** : vérifier la validation de la prestation par Kompass.
+- [x] **Cybo** : enregistré et vérifié en ligne (26/11).
+- [ ] NosAvis : vérifier la fiche 723 après traitement et si elle est rattachée au compte (puis ajouter logo/photos).
+- [ ] Marseille Centre : vérifier la fiche dans 1-2 semaines (réponse éventuelle dans le Hotmail).
+- [ ] Serrurier24 : vérifier la validation (horaires, photos) et le doublon « Même adresse ».
+- [ ] Annuaire-Professionnel : réessayer quand un contact sera publié.
+- [ ] Guide Jalis : vérifier la correction du numéro (réponse éventuelle sur annuaires@).
+- Outil Hermes `~/bin/annuaires-mail list` corrigé le 26/11 (guillemets dans les en-têtes ; copie de l'ancien : `~/bin/annuaires-mail.bak`).
+
+Détail complet et liens : `docs/journal/2026-11-26-petits-annuaires.md`. Suivi d'Hermes : `docs/seo/annuaires.md`.
 
 ## 3. Le site (pour info)
 
-- En ligne sur OVH : https://www.serrurerierepublique.fr. Procédure d'envoi : `CLAUDE.md` et `docs/JOURNAL.md`.
+- En ligne sur OVH : https://www.serrurerierepublique.fr. Procédure d'envoi : `CLAUDE.md` et le journal (`docs/journal/`).
 - **Black Friday** en ligne jusqu'au 30/11 : jusqu'à -25 % sur les projets (hors dépannage), -20 % porte blindée (remplacement ou création), 3e double de clé à -50 %, -20 % tampons. Demande avant le 30/11, devis signé avant le 31/12/2026.
 - **01/12 à 8h** : rappel Hermes sur Telegram pour reconstruire et renvoyer le site (retirer `/promotions`).
 - Nouvelle icône du site (bouclier doré avec trou de serrure) depuis le 26/11.
@@ -62,8 +76,8 @@ Détail complet, liens et « Reste à faire » : `docs/JOURNAL.md`, entrée « 2
 
 **Bilan de la mission Hermes du 26/11** (détail : `docs/seo/annuaires.md`, sections 6 et 7) : depuis le serveur, Hermes est **bloqué par les protections anti-robot** de la plupart des petits annuaires (Cylex, Yelp, Kompass, Cybo, Yably, Trustup ; NosAvis a refusé l'envoi). 118000 est déjà correct. Conclusion : **les petits annuaires se font dans le Chrome du client avec Claude Code** (vraie connexion, le client coche les cases anti-robot). Hermes garde la préparation, la vérification des fiches publiées, la lecture de la boîte annuaires@ et la veille du lundi. Les fiches prêtes à copier et un texte de correction commun sont dans la section 7 de `docs/seo/annuaires.md`.
 
-**Fait le 26/11/2026 (soir) par Claude Code + client dans Chrome** : les 12 annuaires de la liste (voir tableau section 2 et `docs/JOURNAL.md`). Leçons : couper le **VPN du PC** sinon Cylex bloque ; sur Cybo, relire la fiche publique après chaque enregistrement d'horaires ; le client coche lui-même les cases « J'accepte les conditions » et anti-robot.
+**Fait le 26/11/2026 (soir) par Claude Code + client dans Chrome** : les 12 annuaires de la liste (voir tableau section 2 et `docs/journal/2026-11-26-petits-annuaires.md`). Leçons : couper le **VPN du PC** sinon Cylex bloque ; sur Cybo, relire la fiche publique après chaque enregistrement d'horaires ; le client coche lui-même les cases « J'accepte les conditions » et anti-robot.
 
 **Hermes, suite (mission du 26/11)** : vérifier chaque fiche publiée, valider les liens reçus dans annuaires@ (seulement ceux de ces annuaires), compléter sans compte quand c'est possible, ajouter ces annuaires à la veille du lundi.
 
-**Avant le 26/11 — Claude Code (nouvelle conversation) + client** : reprend la section « À faire avec Claude Code + client » de `docs/seo/annuaires.md`, crée les comptes dans Chrome (connexion Google gspserrurerie13 quand c'est possible), le client saisit les mots de passe et les codes, puis Claude met à jour le journal.
+**Avant le 26/11 — Claude Code (nouvelle conversation) + client** : reprend la section « À faire avec Claude Code + client » de `docs/seo/annuaires.md`, crée les comptes dans Chrome (connexion Google gspserrurerie13 quand c'est possible), le client saisit les mots de passe et les codes, puis Claude écrit son fichier de séance dans `docs/journal/`.

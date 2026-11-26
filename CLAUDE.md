@@ -8,13 +8,14 @@
 - `docs/MESSAGERIE.md` : **état de référence des e-mails** (adresses, qui reçoit et envoie, SPF/DKIM/DMARC, signature). À lire avant de toucher aux e-mails, à la signature ou à la zone DNS.
 - `docs/SEO-SECURITE-MISE-EN-LIGNE.md` : ce qui est en place côté SEO et sécurité, et la check-list de mise en ligne OVH.
 - `docs/seo/` : recherches écrites par **Hermes** (mots-clés, concurrents, annuaires, avis). À lire avant de créer ou modifier une page.
-- `docs/JOURNAL.md` : ce que Claude Code a fait, séance par séance.
+- `docs/journal/` : ce que Claude Code a fait, **un fichier par séance** (`AAAA-MM-JJ-sujet.md`). Avant le 26/11/2026 : `docs/JOURNAL-ARCHIVE.md` (archive, on n'y écrit plus).
 
 ## Travail avec Hermes
 Hermes (agent sur le serveur) fait la recherche, le SEO, les annuaires et le suivi Google ; Claude Code fait le développement du site.
-- **Avant de travailler** : `git pull` sur `main`, puis lire `docs/seo/` et la fin de `docs/JOURNAL.md`.
-- **Après une séance** : ajouter une entrée datée en haut de `docs/JOURNAL.md` (ce qui a été fait, pages créées ou modifiées, ce qui reste, questions pour Hermes).
-- **Ne jamais modifier `docs/seo/`** : c'est le dossier de Hermes. Pour lui demander quelque chose, l'écrire dans le journal sous « Questions pour Hermes ».
+- **Avant de travailler** : `git pull` sur `main`, puis lire `docs/seo/` et les derniers fichiers de `docs/journal/`.
+- **Après une séance** : créer **son propre fichier** `docs/journal/AAAA-MM-JJ-sujet.md` (ex. `2026-11-26-barre-mobile.md`) : ce qui a été fait, pages créées ou modifiées, questions pour Hermes. Ne jamais modifier le fichier d'une autre séance, pas de sommaire commun (sinon conflits entre conversations).
+- **L'état à jour et le « reste à faire »** vont dans le fichier du chantier (ex. `docs/PASSATION-ANNUAIRES.md`, `docs/MESSAGERIE.md`), pas dans le journal. Le journal ne sert qu'à l'historique.
+- **Ne jamais modifier `docs/seo/`** : c'est le dossier de Hermes. Pour lui demander quelque chose, l'écrire dans son fichier de séance (`docs/journal/`) sous « Questions pour Hermes ».
 - Hermes publie directement sur `main`, mais uniquement dans `docs/seo/` (aucun effet sur le site).
 
 ## Contexte
