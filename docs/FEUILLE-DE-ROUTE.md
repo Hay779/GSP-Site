@@ -1,6 +1,30 @@
 # Feuille de route — améliorations à apporter
 
-Mise à jour : 23/11/2026. Liste de référence des chantiers restants. On coche au fur et à mesure.
+Mise à jour : 26/11/2026. Liste de référence des chantiers restants. On coche au fur et à mesure.
+
+## ⏭️ Prochaines étapes (état au 26/11/2026)
+
+### Obligations légales
+- [ ] **Médiateur de la consommation** : le client adhère à un médiateur (CM2C proposé). Ensuite Claude Code l'ajoute aux mentions légales et à l'article 20 des CGV. Obligatoire pour les clients particuliers (amende DGCCRF sinon).
+- [ ] **Relecture des CGV** par le comptable ou un avocat (articles 5, 6, 12, 13, 15 à 18).
+- [ ] **Case « J'ai lu les CGV »** sous le formulaire de devis.
+- [ ] **Page Tarifs** avec le barème des prestations principales (obligation du dépannage à domicile, voir l'étude Tryba). Après le Black Friday. Décision du client à reprendre : il ne voulait pas afficher de prix (26/11).
+
+### Dates
+- [ ] **01/12/2026** (rappel Hermes à 8h) : la promo Black Friday disparaît toute seule le 01/12 à 0h ; reconstruire et renvoyer le site pour retirer la page `/promotions`. Le client a dit « on garde » le 26/11 : lui redemander s'il veut prolonger (nouvelle date, nouveau nom) avant de retirer.
+- [ ] **Vers le 06/12/2026** : la clé fal.ai donnée le 26/11 expire ; le client la supprime sur fal.ai. Pour de nouvelles images, lui en redemander une (ne jamais l'écrire dans un fichier).
+
+### Site
+- [ ] Blocs urgence des services (vitrerie, menuiserie, fermetures, clés) : ils affichent encore « Intervention rapide ». Laissé tel quel à la demande du client (26/11), à reprendre s'il le souhaite.
+- [ ] Vitesse mobile : passer à `hydrateRoot` ou découper le code par page (section D).
+- [ ] Pages locales (8 à 12 quartiers ou communes, contenu unique) : attendre l'avis de Hermes sur l'étude Tryba.
+- [ ] Campagne d'avis Google (QR code en boutique, SMS après intervention) : voir l'étude Tryba.
+- Images : la procédure est dans `docs/images-site/LISEZMOI.md`. Les serruriers IA A et D ne servent que dans la partie Professionnels (le client a refusé de les mettre ailleurs).
+
+### Annuaires (autre conversation, voir `docs/PASSATION-ANNUAIRES.md`)
+- [ ] Trustup (horaires faux, correction payante) et doublon Serrurier24 : le client a répondu « oui pour les deux » (écrire aux deux).
+- [ ] Suivi des fiches en attente (Cylex, Yelp, Kompass, NosAvis, Marseille Centre, Serrurier24, Jalis) : veille Hermes du lundi 9h.
+
 
 ## A. Référencement IA (ChatGPT, Claude, Perplexity, Gemini, Copilot)
 - [ ] **Pages locales par quartier ou besoin.** Par exemple :
