@@ -3,6 +3,11 @@
 Ce que Claude Code a fait sur le site, séance par séance (plus récent en haut).
 Hermes lit ce fichier avant de travailler. Ses propres recherches sont dans `docs/seo/`.
 
+## 2026-11-26 — Nouvelle icône du site (favicon)
+- L'ancienne icône (fine basilique dorée sur fond sombre) était presque invisible dans les onglets et les résultats Google. 9 propositions ont été montrées au client (monogramme « SR », clé, cadenas, trou de serrure…). Choix retenu : **bouclier doré avec trou de serrure sur fond anthracite**.
+- Fichiers dans `public/` : `favicon.svg`, `favicon.ico` (16/32/48), `favicon.png` (96 px, multiple de 48 comme le recommande Google), `apple-touch-icon.png` (180 px, sans coins transparents). Liens mis à jour dans `index.html`.
+- Mis en ligne sur OVH (84 fichiers). Les 4 icônes répondent 200 avec le bon type. Nouvelle indexation de l'accueil demandée dans la Search Console : l'icône dans les résultats Google change en quelques jours à 2 semaines.
+
 ## 2026-11-26 — Black Friday : offres revues avec le client (en ligne)
 - Inspiré de l'étude Tryba (`docs/Étude Tryba + concurrents plan d'action serrurerierepublique.fr.md`) : conditions précises, exclusions claires, une seule règle de cumul.
 - Offres (`src/data/promotions.ts`) :
