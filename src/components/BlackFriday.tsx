@@ -106,7 +106,7 @@ export function PromoFloatingBadge({
   return (
     <div
       aria-hidden={!visible}
-      className={`fixed bottom-[98px] right-4 z-[57] transition-all duration-300 motion-reduce:transition-none sm:hidden ${
+      className={`fixed bottom-[calc(var(--mobile-bar-bottom)_+_74px)] right-4 z-[57] transition-all duration-300 motion-reduce:transition-none sm:hidden ${
         visible ? 'translate-y-0 scale-100 opacity-100' : 'pointer-events-none translate-y-4 scale-90 opacity-0'
       }`}
     >

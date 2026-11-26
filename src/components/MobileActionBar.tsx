@@ -4,7 +4,7 @@ import { FileText, KeyRound, MessageCircle, Phone, X } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import type { WhatsAppConfig } from '../data/sectionsContent';
 import type { BrandConfig } from '../utils/navigation';
-import { resolveActionBarVisible } from '../utils/mobileActionBar';
+import { resolveActionBarVisible, resolveScrollHidden } from '../utils/mobileActionBar';
 import { REVEAL_EASE } from '../utils/scrollReveal';
 import { buildWhatsAppUrl } from '../utils/whatsapp';
 
@@ -28,7 +28,7 @@ function WhatsAppIcon({ className }: { readonly className?: string }) {
 }
 
 const ITEM =
-  'flex flex-1 flex-col items-center gap-0.5 py-1 text-[12px] font-semibold text-white [text-shadow:0_1px_1px_rgba(0,0,0,0.35)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62] rounded-lg';
+  'flex flex-1 flex-col items-center gap-0 py-0.5 text-[12px] leading-[14px] font-semibold text-white [text-shadow:0_1px_1px_rgba(0,0,0,0.35)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62] rounded-lg';
 
 /**
  * Barre d'actions mobile (Devis · SOS · Contact), façon application.
@@ -64,18 +64,26 @@ export function MobileActionBar({ brand, whatsapp, quoteHref, contactHref, route
     return () => observer.disconnect();
   }, [slot]);
 
-  // Barre fixe : visible dès qu'on a quitté le haut de page, sauf sur le pied de page.
+  // Barre fixe : visible dès qu'on a quitté le haut de page, sauf sur le pied de page,
+  // et cachée pendant qu'on fait défiler vers le bas (elle revient dès qu'on remonte).
   useEffect(() => {
+    let scrollState = { hidden: false, anchorY: window.scrollY };
     const update = () => {
       const footer = document.getElementById('11_Pied_De_Page');
       const nearFooter = footer ? footer.getBoundingClientRect().top < window.innerHeight - 40 : false;
+      scrollState = resolveScrollHidden({
+        currentY: window.scrollY,
+        anchorY: scrollState.anchorY,
+        wasHidden: scrollState.hidden,
+      });
       setNearFooter(nearFooter);
       setVisible(
-        resolveActionBarVisible({
-          scrollY: window.scrollY,
-          revealAfterY: window.innerHeight * 0.35,
-          nearFooter,
-        })
+        !scrollState.hidden &&
+          resolveActionBarVisible({
+            scrollY: window.scrollY,
+            revealAfterY: window.innerHeight * 0.35,
+            nearFooter,
+          })
       );
     };
     update();
@@ -108,7 +116,7 @@ export function MobileActionBar({ brand, whatsapp, quoteHref, contactHref, route
   const renderButtons = (focusable: boolean, inline: boolean) => (
         <div className="flex items-center justify-between">
           <a href={quoteHref} tabIndex={focusable ? 0 : -1} className={ITEM}>
-            <FileText className="h-[21px] w-[21px] text-[#EBCB82]" strokeWidth={1.9} aria-hidden="true" />
+            <FileText className="h-[19px] w-[19px] text-[#EBCB82]" strokeWidth={1.9} aria-hidden="true" />
             Devis
           </a>
           <button
@@ -120,26 +128,26 @@ export function MobileActionBar({ brand, whatsapp, quoteHref, contactHref, route
             aria-label="SOS urgence : appeler ou envoyer une photo"
             className={`${ITEM} cursor-pointer`}
           >
-            <span className="-mt-7 grid h-[54px] w-[54px] place-items-center rounded-full border-[3px] border-[#F3F0E7]/90 bg-[#C0392B] text-white shadow-[0_8px_20px_rgba(192,57,43,0.5)]">
-              <KeyRound className="h-6 w-6" strokeWidth={2} aria-hidden="true" />
+            <span className="-mt-[26px] grid h-[48px] w-[48px] place-items-center rounded-full border-[3px] border-[#F3F0E7]/90 bg-[#C0392B] text-white shadow-[0_8px_20px_rgba(192,57,43,0.5)]">
+              <KeyRound className="h-[22px] w-[22px]" strokeWidth={2} aria-hidden="true" />
             </span>
             SOS
           </button>
           <a href={contactHref} tabIndex={focusable ? 0 : -1} className={ITEM}>
-            <MessageCircle className="h-[21px] w-[21px] text-[#EBCB82]" strokeWidth={1.9} aria-hidden="true" />
+            <MessageCircle className="h-[19px] w-[19px] text-[#EBCB82]" strokeWidth={1.9} aria-hidden="true" />
             Contact
           </a>
         </div>
   );
 
   const PILL =
-    'rounded-full border border-[#F3F0E7]/20 bg-[#16191B]/80 px-3.5 py-1.5 shadow-[0_10px_30px_rgba(0,0,0,0.25)] backdrop-blur-xl backdrop-saturate-150';
+    'rounded-full border border-[#F3F0E7]/20 bg-[#16191B]/80 px-4 py-1 shadow-[0_10px_30px_rgba(0,0,0,0.25)] backdrop-blur-xl backdrop-saturate-150';
 
   return (
     <div className="sm:hidden">
       {slot &&
         createPortal(
-          <nav aria-label="Actions rapides (haut de page)" className={`mx-auto w-[min(320px,100%)] ${PILL} !bg-[#2C3134]/85 !border-white/25`}>
+          <nav aria-label="Actions rapides (haut de page)" className={`w-full ${PILL} !bg-[#2C3134]/85 !border-white/25`}>
             {renderButtons(true, true)}
           </nav>,
           slot
@@ -166,7 +174,7 @@ export function MobileActionBar({ brand, whatsapp, quoteHref, contactHref, route
               animate={{ opacity: 1, y: 0 }}
               exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: 24 }}
               transition={{ duration: prefersReducedMotion ? 0 : 0.22, ease: REVEAL_EASE }}
-              className="fixed inset-x-3 bottom-[92px] z-[59] rounded-2xl border border-[#F3F0E7]/18 bg-[#16191B]/85 p-4 text-[#F3F0E7] backdrop-blur-xl"
+              className="fixed inset-x-3 bottom-[calc(var(--mobile-bar-bottom)_+_76px)] z-[59] rounded-2xl border border-[#F3F0E7]/18 bg-[#16191B]/85 p-4 text-[#F3F0E7] backdrop-blur-xl"
             >
               <div className="flex items-start justify-between gap-3">
                 <div>
@@ -206,7 +214,7 @@ export function MobileActionBar({ brand, whatsapp, quoteHref, contactHref, route
       <nav
         aria-label="Actions rapides"
         aria-hidden={!shown}
-        className={`fixed bottom-3.5 left-1/2 z-[60] w-[min(320px,calc(100%-40px))] -translate-x-1/2 ${PILL} transition-all duration-300 ${
+        className={`fixed inset-x-2.5 bottom-[var(--mobile-bar-bottom)] z-[60] ${PILL} transition-all duration-300 ${
           shown ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-[140%] opacity-0'
         }`}
       >
