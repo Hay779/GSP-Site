@@ -5,6 +5,7 @@
 - `docs/BLACK-FRIDAY.md` : **chantier en cours** — promo Black Friday 24-30/11/2026 validée en maquettes (`docs/maquettes/black-friday/`), à coder (mobile d'abord).
 - `docs/PASSATION-ANNUAIRES.md` : **état complet des annuaires et de la présence en ligne, et qui fait quoi (Hermes / Claude Code / client)**. À lire avant tout travail sur les annuaires.
 - `docs/SYNCHRO-ANNUAIRES.md` : **tout ajout sur Google (posts, photos, horaires) ou dans `docs/INFOS-OFFICIELLES.md` doit être recopié sur tous les annuaires** ; procédure et état ici.
+- `docs/MESSAGERIE.md` : **état de référence des e-mails** (adresses, qui reçoit et envoie, SPF/DKIM/DMARC, signature). À lire avant de toucher aux e-mails, à la signature ou à la zone DNS.
 - `docs/SEO-SECURITE-MISE-EN-LIGNE.md` : ce qui est en place côté SEO et sécurité, et la check-list de mise en ligne OVH.
 - `docs/seo/` : recherches écrites par **Hermes** (mots-clés, concurrents, annuaires, avis). À lire avant de créer ou modifier une page.
 - `docs/JOURNAL.md` : ce que Claude Code a fait, séance par séance.
