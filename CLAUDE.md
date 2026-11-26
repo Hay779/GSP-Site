@@ -9,6 +9,7 @@
 - `docs/SEO-SECURITE-MISE-EN-LIGNE.md` : ce qui est en place côté SEO et sécurité, et la check-list de mise en ligne OVH.
 - `docs/INFOS-OFFICIELLES.md` : **seule source de vérité** (nom, adresse, téléphones, horaires, descriptions).
 - `docs/Étude Tryba + concurrents plan d'action serrurerierepublique.fr.md` : étude du 26/11/2026 (Tryba, concurrents marseillais, audit du site, conformité prix, plan d'action en 10 points). Base des prochains chantiers : page Tarifs, pages locales, avis, offres.
+- `docs/images-site/` : **copie de référence de toutes les images du site, rangées par partie du site**, avec le tableau « quelle image apparaît où » et la procédure de remplacement (`0-a-remplacer/` puis « remplace les images »). Le site utilise `src/assets/images/` : garder les deux à jour.
 - `docs/seo/` : recherches écrites par **Hermes** (mots-clés, concurrents, annuaires, avis). À lire avant de créer ou modifier une page.
 - `docs/journal/` : ce que Claude Code a fait, **un fichier par séance** (`AAAA-MM-JJ-sujet.md`). Avant le 26/11/2026 : `docs/JOURNAL-ARCHIVE.md` (archive, on n'y écrit plus).
 
