@@ -3,6 +3,7 @@
 ## À lire en premier
 - `docs/FEUILLE-DE-ROUTE.md` : **liste des améliorations restantes** (référencement IA, Google, contenu, technique, mise en ligne, formulaires). Cocher au fur et à mesure.
 - `docs/BLACK-FRIDAY.md` : **chantier en cours** — promo Black Friday 24-30/11/2026 validée en maquettes (`docs/maquettes/black-friday/`), à coder (mobile d'abord).
+- `docs/PASSATION-ANNUAIRES.md` : **état complet des annuaires et de la présence en ligne, et qui fait quoi (Hermes / Claude Code / client)**. À lire avant tout travail sur les annuaires.
 - `docs/SYNCHRO-ANNUAIRES.md` : **tout ajout sur Google (posts, photos, horaires) ou dans `docs/INFOS-OFFICIELLES.md` doit être recopié sur tous les annuaires** ; procédure et état ici.
 - `docs/SEO-SECURITE-MISE-EN-LIGNE.md` : ce qui est en place côté SEO et sécurité, et la check-list de mise en ligne OVH.
 - `docs/seo/` : recherches écrites par **Hermes** (mots-clés, concurrents, annuaires, avis). À lire avant de créer ou modifier une page.
