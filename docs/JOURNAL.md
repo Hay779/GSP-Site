@@ -123,7 +123,7 @@ Hermes lit ce fichier avant de travailler. Ses propres recherches sont dans `doc
 ## 2026-11-25 — signature e-mail (hors site)
 - Dossier `www/signature/` sur OVH : logo et bandeau de la signature e-mail, plus une page d'aperçu (noindex, `.htaccess` propre au dossier). **Ne pas le supprimer lors d'un envoi du site** : les signatures Gmail, Outlook et Roundcube pointent vers ces images.
 - Sources dans `Projects/Signature_Republique_Gmail_Outlook_OVH/signature_mail_republique/final`.
-- Gmail : la version adaptable se repliait mal dans la petite fenêtre « Nouveau message » (moins de 640 px). Elle est remplacée par une version à largeur fixe (440 px), `final/signature-fixe.html`. Outlook et Roundcube gardent la version adaptable pour l'instant. Copie du dossier aussi dans `Projects/GSP/`.
+- Gmail : la version adaptable se repliait mal dans la petite fenêtre « Nouveau message » (moins de 640 px). Elle est remplacée par une version à largeur fixe (440 px, 3 colonnes serrées : logo, numéros, coordonnées), `final/signature-fixe.html`. Roundcube avait le même problème (blocs empilés) : version fixe installée aussi le 26/11/2026. Outlook garde la version adaptable (sa fenêtre de rédaction est assez large, affichage vérifié correct). Copie du dossier aussi dans `Projects/GSP/`.
 - Numéro de dépannage et WhatsApp de la signature : 06 50 70 44 52. Différent du WhatsApp du site (07 82 82 82 08) : à harmoniser si le client le confirme.
 
 ## 2026-11-25 — vitesse mobile
