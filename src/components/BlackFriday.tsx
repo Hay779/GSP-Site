@@ -380,11 +380,9 @@ export function PromoSheet({ promo, brand, open, onClose, promoHref, shopAddress
                       className="h-[60px] w-[60px] shrink-0 rounded-xl bg-[#16191B] object-cover"
                     />
                     <div className="min-w-0">
-                      <p className={`font-display text-[21px] font-extrabold leading-none tracking-[-0.02em] ${PROMO_GOLD_TEXT}`}>
-                        {offer.badgePrefix && (
-                          <span className="mr-1 font-sans text-[11px] font-semibold uppercase tracking-[0.08em] text-[#F3F0E7]/80">{offer.badgePrefix}</span>
-                        )}
-                        {promoBadgeText(offer.badge)}
+                      <p className={`flex items-baseline gap-1.5 font-display text-[21px] font-extrabold leading-none tracking-[-0.02em] ${PROMO_GOLD_TEXT}`}>
+                        {offer.badgePrefix && <span className="text-[14px] font-bold tracking-normal">{offer.badgePrefix}</span>}
+                        <span>{promoBadgeText(offer.badge)}</span>
                       </p>
                       <p className="mt-0.5 font-display text-[15px] font-semibold leading-tight">{offer.title}</p>
                       <p className="line-clamp-2 text-[12px] leading-snug text-[#F3F0E7]/70">{offer.summary}</p>

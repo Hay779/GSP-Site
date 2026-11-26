@@ -146,11 +146,9 @@ export function PromotionsPage({ promo, active, agency, phoneDisplay, phoneHref,
           <h2 className="sr-only">Les offres {promo.name}</h2>
           <article className="flex max-w-[720px] lg:max-w-none overflow-hidden rounded-2xl border-[1.5px] border-[#D9BD82]/55 bg-[#111315]">
             <div className="flex min-w-0 flex-1 flex-col p-4 sm:p-6">
-              {main.badgePrefix && (
-                <p className="text-[12px] font-semibold uppercase tracking-[0.14em] text-[#F3F0E7]/80">{main.badgePrefix}</p>
-              )}
-              <p className={`font-display text-[46px] sm:text-[60px] font-extrabold leading-none tracking-[-0.03em] ${PROMO_GOLD_TEXT}`}>
-                {promoBadgeText(main.badge)}
+              <p className={`flex flex-wrap items-baseline gap-x-2 gap-y-0.5 font-display text-[46px] sm:text-[60px] font-extrabold leading-none tracking-[-0.03em] ${PROMO_GOLD_TEXT}`}>
+                {main.badgePrefix && <span className="text-[20px] sm:text-[26px] font-bold tracking-normal">{main.badgePrefix}</span>}
+                <span>{promoBadgeText(main.badge)}</span>
               </p>
               <h3 className="mt-2 font-display text-[17px] sm:text-[21px] font-extrabold uppercase leading-tight">
                 {main.headline.replace(main.title.toLowerCase(), '')}
@@ -169,7 +167,7 @@ export function PromotionsPage({ promo, active, agency, phoneDisplay, phoneHref,
                 <OfferAction offer={main} quoteHref={quoteHref} wide />
               </div>
             </div>
-            <img src={main.imageSrc} alt={main.imageAlt} className="w-[38%] max-w-[260px] shrink-0 object-cover sm:max-h-[320px]" />
+            <img src={main.imageSrc} alt={main.imageAlt} className="w-[38%] max-w-[260px] shrink-0 object-cover object-[30%_center] sm:max-h-[320px]" />
           </article>
 
           <div className="mt-2.5 grid max-w-[720px] grid-cols-2 gap-2.5 sm:grid-cols-3 lg:max-w-none [&>*:last-child:nth-child(odd)]:col-span-2 sm:[&>*:last-child:nth-child(odd)]:col-span-1">

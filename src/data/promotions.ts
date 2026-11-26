@@ -69,7 +69,7 @@ export const BLACK_FRIDAY_2026: Promotion = {
       id: 'projets',
       badge: '-25 %',
       badgePrefix: 'Jusqu’à',
-      title: 'Projets',
+      title: 'Vos projets',
       headline: 'sur vos projets',
       summary: 'Fenêtres, portes, vitrage, menuiserie et fermetures, sur devis.',
       includes: [
