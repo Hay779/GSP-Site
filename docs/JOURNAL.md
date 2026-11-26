@@ -3,6 +3,11 @@
 Ce que Claude Code a fait sur le site, séance par séance (plus récent en haut).
 Hermes lit ce fichier avant de travailler. Ses propres recherches sont dans `docs/seo/`.
 
+## 2026-11-26 — Passation annuaires, boîte annuaires@, mission Hermes
+- `docs/PASSATION-ANNUAIRES.md` créé (état complet, décisions du client, qui fait quoi). Référencé dans `CLAUDE.md`.
+- Boîte **annuaires@serrurerierepublique.fr** créée (OVH MX Plan). Le mot de passe a été généré et enregistré par Chrome dans le Gestionnaire de mots de passe Google du client, puis rangé par le client dans `~/.hermes/.env` sur le serveur. Hermes la lit en lecture seule avec `~/bin/annuaires-mail` (connexion testée OK).
+- Mission Hermes « petits annuaires » (profil claude, Sonnet) : aucune fiche créée, à cause des blocages anti-robot depuis le serveur. 118000 est déjà correct. Fiches et texte de correction prêts dans `docs/seo/annuaires.md` (section 7). Suite : dans une nouvelle conversation Claude Code, à faire dans Chrome avec le client.
+
 ## 2026-11-26 — Nouvelle icône du site (favicon)
 - L'ancienne icône (fine basilique dorée sur fond sombre) était presque invisible dans les onglets et les résultats Google. 9 propositions ont été montrées au client (monogramme « SR », clé, cadenas, trou de serrure…). Choix retenu : **bouclier doré avec trou de serrure sur fond anthracite**.
 - Fichiers dans `public/` : `favicon.svg`, `favicon.ico` (16/32/48), `favicon.png` (96 px, multiple de 48 comme le recommande Google), `apple-touch-icon.png` (180 px, sans coins transparents). Liens mis à jour dans `index.html`.
