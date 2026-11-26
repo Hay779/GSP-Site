@@ -10,6 +10,8 @@ export interface UrgencyCase {
   readonly imageAlt: string;
   /** Cadrage CSS (object-position) de la photo dans la carte. */
   readonly imagePosition?: string;
+  /** Texture de fond de la carte, derrière le texte (ex. mur de pierre de la photo). */
+  readonly textureSrc?: string;
 }
 
 export interface UrgencyConfig {
@@ -270,6 +272,7 @@ export const URGENCY_CONFIG: UrgencyConfig = {
       text: 'Porte claquée ou verrouillée\u00A0: ouverture sans dégradation lorsque cela est possible.',
       icon: 'lock',
       imageSrc: '/src/assets/images/urgence_ouverture_porte.webp',
+      textureSrc: '/src/assets/images/urgence_texture_pierre.webp',
       imageAlt: 'Mains d’un serrurier ouvrant sans dégradation la serrure d’une porte d’entrée anthracite.',
       imagePosition: '55% 45%',
     },

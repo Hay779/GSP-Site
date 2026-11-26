@@ -73,17 +73,32 @@ export function UrgencySection({ config, brand }: UrgencySectionProps) {
                 key={item.title}
                 className="relative isolate overflow-hidden rounded-2xl border border-[var(--urg-line)] bg-[var(--urg-card)] min-h-[190px] sm:min-h-[210px]"
               >
+                {item.textureSrc && (
+                  <>
+                    {/* Texture de pierre chaude derrière le texte, voilée pour la lisibilité */}
+                    <span
+                      aria-hidden="true"
+                      style={{ backgroundImage: `url(${item.textureSrc})` }}
+                      className="absolute inset-0 -z-20 bg-cover bg-left"
+                    />
+                    <span aria-hidden="true" className="absolute inset-0 -z-20 bg-[#F7EFDD]/45" />
+                  </>
+                )}
                 <img
                   src={item.imageSrc}
                   alt={item.imageAlt}
                   loading="lazy"
                   style={item.imagePosition ? { objectPosition: item.imagePosition } : undefined}
-                  className="absolute inset-y-0 right-0 -z-10 h-full w-[55%] object-cover"
+                  className={`absolute inset-y-0 right-0 -z-10 h-full w-[55%] object-cover ${
+                    item.textureSrc ? '[mask-image:linear-gradient(to_right,transparent,black_45%)]' : ''
+                  }`}
                 />
-                <span
-                  aria-hidden="true"
-                  className="absolute inset-y-0 right-0 -z-10 w-[55%] bg-gradient-to-r from-[var(--urg-card)] via-[color-mix(in_srgb,var(--urg-card)_45%,transparent)] to-transparent"
-                />
+                {!item.textureSrc && (
+                  <span
+                    aria-hidden="true"
+                    className="absolute inset-y-0 right-0 -z-10 w-[55%] bg-gradient-to-r from-[var(--urg-card)] via-[color-mix(in_srgb,var(--urg-card)_45%,transparent)] to-transparent"
+                  />
+                )}
                 <div className="flex h-full max-w-[62%] flex-col justify-center p-5 sm:p-6">
                   <span
                     aria-hidden="true"
