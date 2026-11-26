@@ -1,4 +1,4 @@
-import { AppWindow, Blinds, FileText, KeyRound, Lock, Nfc, PanelsTopLeft, Phone, ShieldAlert, ShieldCheck, Store, Timer, Warehouse } from 'lucide-react';
+import { AppWindow, Blinds, FileText, KeyRound, Lock, MapPin, Nfc, PanelsTopLeft, Phone, ShieldAlert, ShieldCheck, Store, Timer, Warehouse } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
 import type { UrgencyConfig } from '../data/sectionsContent';
 import type { BrandConfig } from '../utils/navigation';
@@ -20,10 +20,10 @@ const CASE_ICONS = {
   key: KeyRound,
   badge: Nfc,
 } as const;
-const ASSURANCE_ICONS = { timer: Timer, shield: ShieldCheck, file: FileText, store: Store } as const;
+const ASSURANCE_ICONS = { timer: Timer, shield: ShieldCheck, file: FileText, store: Store, pin: MapPin } as const;
 
 /**
- * Bloc « Un problème de porte ? » : deux cas d'urgence illustrés (porte claquée, porte forcée),
+ * Bloc « Besoin d'une intervention à Marseille ? » : deux cas d'urgence illustrés (ouverture de porte, mise en sécurité),
  * trois engagements et l'appel direct.
  */
 export function UrgencySection({ config, brand }: UrgencySectionProps) {
@@ -52,7 +52,15 @@ export function UrgencySection({ config, brand }: UrgencySectionProps) {
             <h2 id="03_Urgence-title" className="section-title mt-3 text-[var(--urg-ink)]">
               {config.title}
             </h2>
-            <p className="section-subtitle mt-3 text-[var(--urg-text)]">{config.subtitle}</p>
+            <p className="section-subtitle mt-3 text-[var(--urg-text)]">
+              {config.subtitle}
+              {config.subtitleStrong && (
+                <>
+                  {' '}
+                  <strong className="font-semibold text-[var(--urg-ink)]">{config.subtitleStrong}</strong>
+                </>
+              )}
+            </p>
             <CallButton brand={brand} prefix={config.ctaPrefix} className="mt-5 inline-flex" />
         </div>
 
