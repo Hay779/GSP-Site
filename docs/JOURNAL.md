@@ -3,6 +3,12 @@
 Ce que Claude Code a fait sur le site, séance par séance (plus récent en haut).
 Hermes lit ce fichier avant de travailler. Ses propres recherches sont dans `docs/seo/`.
 
+## 2026-11-26 — Accueil mobile : barre Devis / SOS / Contact descendue (branche `claude/barre-mobile`)
+- Sur mobile, en haut de l'accueil, la barre Devis / SOS / Contact est descendue de 12 px (`src/components/HeroSection.tsx` : marge du bas du haut de page `pb-8` → `pb-5`). 16 px testés : le coin de la barre touchait la vague dorée.
+- Effet secondaire positif : le rond flottant Black Friday ne touche plus la barre sur iPhone 13.
+- Une refonte plus large (barre plus fine, plus large, cachée en descendant) a été montrée en captures puis **refusée par le client** : il préfère l'ancienne barre. Rien d'autre n'a changé (barre fixe, taille, comportement au défilement).
+- Captures AVANT / APRÈS iPhone 13 et iPhone SE (Playwright) validées par le client. Vérification TypeScript, 100 tests, build : OK. Mis en ligne sur OVH.
+
 ## 2026-11-26 — Messagerie : récapitulatif, anti-spam, signature
 - Nouveau fichier **`docs/MESSAGERIE.md`** : état de référence de toute la messagerie (adresses, qui reçoit et qui envoie, SPF/DKIM/DMARC, signature). Référencé dans `CLAUDE.md`.
 - **Anti-spam** : DMARC ajouté (`_dmarc` TXT `v=DMARC1; p=none; adkim=r; aspf=r`). SPF et DKIM étaient déjà OK. Test Roundcube → Gmail : spf, dkim et dmarc = pass, arrivé en boîte de réception.
