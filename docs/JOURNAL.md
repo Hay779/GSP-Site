@@ -3,6 +3,19 @@
 Ce que Claude Code a fait sur le site, séance par séance (plus récent en haut).
 Hermes lit ce fichier avant de travailler. Ses propres recherches sont dans `docs/seo/`.
 
+## 2026-11-26 — Black Friday : offres revues avec le client (en ligne)
+- Inspiré de l'étude Tryba (`docs/Étude Tryba + concurrents plan d'action serrurerierepublique.fr.md`) : conditions précises, exclusions claires, une seule règle de cumul.
+- Offres (`src/data/promotions.ts`) :
+  - **Jusqu'à -25 % sur vos projets** (nouvelle offre principale) : fenêtres, portes, vitrage, menuiserie, fermetures, serrures posées, sur devis. **Hors dépannage et urgences.**
+  - **-20 % porte blindée** : fourniture et pose A2P, **seulement en remplacement complet ou en création**. Pas de mention de couleur (décision client).
+  - **Double de clé : 3e à -50 %** pour 2 achetés (avant : offert).
+  - Tampons : inchangé (-20 % dès le 2e).
+- **Demande du 24 au 30/11, devis signé jusqu'au 31/12/2026.** Affiché sur la carte, dans la pop-up et dans les conditions.
+- Ronds et macaron : « jusqu'à -25 % » (nouveau champ `headlineDiscount`). Ajout de 2 questions dans la FAQ (projets concernés, délai de signature). Titre et description SEO mis à jour. Pop-up compactée pour que les 4 offres tiennent sur iPhone.
+- Pas de prix affichés pour l'instant (décision client) : les clients passent en boutique, appellent ou font une demande en ligne.
+- Vérifié : `tsc`, 100 tests, construction, captures PC et iPhone (13 et SE). Mis en ligne sur OVH (81 fichiers), contrôles en ligne OK.
+- Reste ouvert : faut-il préciser « -50 % sur le moins cher des 3 » pour les clés ? Page Tarifs (obligation légale, voir l'étude), à faire après le Black Friday.
+
 ## 2026-11-25 — Fusion et mise en ligne (Black Friday + annuaires)
 - Fusion dans `main` de `claude/youthful-pascal-btj1i4` (Black Friday mobile, offres confirmées), puis de `claude/annuaires-pagesjaunes`. Seul conflit : ce journal, résolu en gardant les deux entrées.
 - Vérifications : `tsc` OK, 100 tests OK, `npm run build:prod` OK (18 pages dont `/promotions`). Pendant la séance, la version PC et tablette du Black Friday (PR #17) est arrivée sur `main` : elle a été intégrée, revérifiée et mise en ligne aussi.
