@@ -270,8 +270,8 @@ export const URGENCY_CONFIG: UrgencyConfig = {
       text: 'Porte claquée ou verrouillée\u00A0: ouverture sans dégradation lorsque cela est possible.',
       icon: 'lock',
       imageSrc: '/src/assets/images/urgence_ouverture_porte.webp',
-      imageAlt: 'Serrurier ouvrant une serrure de porte d’entrée sans la dégrader.',
-      imagePosition: '30% 50%',
+      imageAlt: 'Mains d’un serrurier ouvrant sans dégradation la serrure d’une porte d’entrée anthracite.',
+      imagePosition: '55% 45%',
     },
     {
       title: 'Mise en sécurité',
