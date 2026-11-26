@@ -52,6 +52,10 @@ Conseils : photos d'au moins la taille indiquée, format paysage sauf indication
 | `9-professionnels/pro_immobilier.jpg` | Menu « Professionnels » : Agences & bailleurs ; haut de la page Agences & bailleurs | 1600 × 893 |
 | `9-professionnels/pro_partenaire.jpg` | Menu « Professionnels » : Devenir partenaire | 1600 × 893 |
 
+## Serruriers créés par IA (`serruriers-ia/`)
+
+Portraits et descriptions des deux serruriers des images Professionnels, à réutiliser pour garder les mêmes personnes sur les prochaines images. Voir `serruriers-ia/LISEZMOI.md`.
+
 ## Logos et icônes (`8-logos-icones/`)
 
 - `logo_republique_dark.png` : logo du site.
