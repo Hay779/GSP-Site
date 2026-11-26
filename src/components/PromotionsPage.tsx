@@ -167,7 +167,7 @@ export function PromotionsPage({ promo, active, agency, phoneDisplay, phoneHref,
                 <OfferAction offer={main} quoteHref={quoteHref} wide />
               </div>
             </div>
-            <img src={main.imageSrc} alt={main.imageAlt} className="w-[38%] max-w-[260px] shrink-0 object-cover object-[30%_center] sm:max-h-[320px]" />
+            <img src={main.imageSrc} alt={main.imageAlt} className="w-[38%] max-w-[260px] shrink-0 object-cover object-[42%_center] sm:max-h-[320px]" />
           </article>
 
           <div className="mt-2.5 grid max-w-[720px] grid-cols-2 gap-2.5 sm:grid-cols-3 lg:max-w-none [&>*:last-child:nth-child(odd)]:col-span-2 sm:[&>*:last-child:nth-child(odd)]:col-span-1">
