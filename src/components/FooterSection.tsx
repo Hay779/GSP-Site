@@ -182,6 +182,9 @@ export function FooterSection({
             <a href={pageHref('confidentialite')} className={LINK_CLASS}>
               Confidentialité
             </a>
+            <a href={pageHref('cgv')} className={LINK_CLASS}>
+              CGV
+            </a>
             {GA_MEASUREMENT_ID && (
               <button type="button" onClick={openCookieSettings} className={`${LINK_CLASS} cursor-pointer`}>
                 Gérer les cookies
