@@ -34,6 +34,23 @@ Hermes lit ce fichier avant de travailler. Ses propres recherches sont dans `doc
 - [ ] Guide Jalis : vérifier la correction du numéro (réponse éventuelle sur annuaires@).
 - Outil Hermes `~/bin/annuaires-mail list` corrigé le 26/11 (guillemets dans les en-têtes ; copie de l'ancien : `~/bin/annuaires-mail.bak`).
 
+## 2026-11-26 — Accueil mobile : barre Devis / SOS / Contact descendue (branche `claude/barre-mobile`)
+- Sur mobile, en haut de l'accueil, la barre Devis / SOS / Contact est descendue de 12 px (`src/components/HeroSection.tsx` : marge du bas du haut de page `pb-8` → `pb-5`). 16 px testés : le coin de la barre touchait la vague dorée.
+- Effet secondaire positif : le rond flottant Black Friday ne touche plus la barre sur iPhone 13.
+- Une refonte plus large (barre plus fine, plus large, cachée en descendant) a été montrée en captures puis **refusée par le client** : il préfère l'ancienne barre. Rien d'autre n'a changé (barre fixe, taille, comportement au défilement).
+- Captures AVANT / APRÈS iPhone 13 et iPhone SE (Playwright) validées par le client. Vérification TypeScript, 100 tests, build : OK. Mis en ligne sur OVH.
+
+## 2026-11-26 — Messagerie : récapitulatif, anti-spam, signature
+- Nouveau fichier **`docs/MESSAGERIE.md`** : état de référence de toute la messagerie (adresses, qui reçoit et qui envoie, SPF/DKIM/DMARC, signature). Référencé dans `CLAUDE.md`.
+- **Anti-spam** : DMARC ajouté (`_dmarc` TXT `v=DMARC1; p=none; adkim=r; aspf=r`). SPF et DKIM étaient déjà OK. Test Roundcube → Gmail : spf, dkim et dmarc = pass, arrivé en boîte de réception.
+- **Roundcube** : nom d'expéditeur réglé sur « Serrurerie de la République » (avant : « contact »). Gmail garde « Serrurerie République » (choix du client).
+- **Signature** : version fixe 440 px dans Gmail et Roundcube ; Outlook garde la version adaptable.
+
+### Pour Hermes
+- Avant toute action sur les e-mails, la signature ou la zone DNS : lire `docs/MESSAGERIE.md`.
+- Ne jamais supprimer les enregistrements DNS SPF, DKIM (`ovhmo-selector-1/2._domainkey`), `_dmarc`, ni le TXT google-site-verification, ni le dossier `www/signature/` sur OVH.
+- Si un client ou un annuaire signale des mails de contact@ en spam : vérifier d'abord les en-têtes (spf/dkim/dmarc) avant de changer quoi que ce soit.
+
 ## 2026-11-26 — Passation annuaires, boîte annuaires@, mission Hermes
 - `docs/PASSATION-ANNUAIRES.md` créé (état complet, décisions du client, qui fait quoi). Référencé dans `CLAUDE.md`.
 - Boîte **annuaires@serrurerierepublique.fr** créée (OVH MX Plan). Le mot de passe a été généré et enregistré par Chrome dans le Gestionnaire de mots de passe Google du client, puis rangé par le client dans `~/.hermes/.env` sur le serveur. Hermes la lit en lecture seule avec `~/bin/annuaires-mail` (connexion testée OK).
@@ -155,6 +172,8 @@ Hermes lit ce fichier avant de travailler. Ses propres recherches sont dans `doc
 - Dossier `www/signature/` sur OVH : logo et bandeau de la signature e-mail, plus une page d'aperçu (noindex, `.htaccess` propre au dossier). **Ne pas le supprimer lors d'un envoi du site** : les signatures Gmail, Outlook et Roundcube pointent vers ces images.
 - Sources dans `Projects/Signature_Republique_Gmail_Outlook_OVH/signature_mail_republique/final`.
 - Gmail : la version adaptable se repliait mal dans la petite fenêtre « Nouveau message » (moins de 640 px). Elle est remplacée par une version à largeur fixe (440 px, 3 colonnes serrées : logo, numéros, coordonnées), `final/signature-fixe.html`. Roundcube avait le même problème (blocs empilés) : version fixe installée aussi le 26/11/2026. Outlook garde la version adaptable (sa fenêtre de rédaction est assez large, affichage vérifié correct). Copie du dossier aussi dans `Projects/GSP/`.
+
+- Anti-spam (26/11/2026) : SPF (`include:mx.ovh.com -all`) et DKIM OVH (vert dans MX Plan) déjà en place ; **DMARC ajouté** dans la zone DNS OVH : `_dmarc` TXT `v=DMARC1; p=none; adkim=r; aspf=r` (surveillance seule, ne bloque rien). À durcir plus tard (`p=quarantine`) une fois vérifié que les formulaires du site passent SPF/DKIM.
 - Numéro de dépannage et WhatsApp de la signature : 06 50 70 44 52. Différent du WhatsApp du site (07 82 82 82 08) : à harmoniser si le client le confirme.
 
 ## 2026-11-25 — vitesse mobile
