@@ -7,11 +7,14 @@
 - `docs/SYNCHRO-ANNUAIRES.md` : **tout ajout sur Google (posts, photos, horaires) ou dans `docs/INFOS-OFFICIELLES.md` doit être recopié sur tous les annuaires** ; procédure et état ici.
 - `docs/MESSAGERIE.md` : **état de référence des e-mails** (adresses, qui reçoit et envoie, SPF/DKIM/DMARC, signature). À lire avant de toucher aux e-mails, à la signature ou à la zone DNS.
 - `docs/SEO-SECURITE-MISE-EN-LIGNE.md` : ce qui est en place côté SEO et sécurité, et la check-list de mise en ligne OVH.
+- `docs/INFOS-OFFICIELLES.md` : **seule source de vérité** (nom, adresse, téléphones, horaires, descriptions).
+- `docs/Étude Tryba + concurrents plan d'action serrurerierepublique.fr.md` : étude du 26/11/2026 (Tryba, concurrents marseillais, audit du site, conformité prix, plan d'action en 10 points). Base des prochains chantiers : page Tarifs, pages locales, avis, offres.
 - `docs/seo/` : recherches écrites par **Hermes** (mots-clés, concurrents, annuaires, avis). À lire avant de créer ou modifier une page.
 - `docs/journal/` : ce que Claude Code a fait, **un fichier par séance** (`AAAA-MM-JJ-sujet.md`). Avant le 26/11/2026 : `docs/JOURNAL-ARCHIVE.md` (archive, on n'y écrit plus).
 
 ## Travail avec Hermes
 Hermes (agent sur le serveur) fait la recherche, le SEO, les annuaires et le suivi Google ; Claude Code fait le développement du site.
+- **Hermes lit lui aussi la liste « À lire en premier »** avant chaque mission GSP, pour être au courant de tout le projet.
 - **Avant de travailler** : `git pull` sur `main`, puis lire `docs/seo/` et les derniers fichiers de `docs/journal/`.
 - **Après une séance** : créer **son propre fichier** `docs/journal/AAAA-MM-JJ-sujet.md` (ex. `2026-11-26-barre-mobile.md`) : ce qui a été fait, pages créées ou modifiées, questions pour Hermes. Ne jamais modifier le fichier d'une autre séance, pas de sommaire commun (sinon conflits entre conversations).
 - **L'état à jour et le « reste à faire »** vont dans le fichier du chantier (ex. `docs/PASSATION-ANNUAIRES.md`, `docs/MESSAGERIE.md`), pas dans le journal. Le journal ne sert qu'à l'historique.
