@@ -1,6 +1,6 @@
 # Black Friday 2026 — cahier des charges
 
-> **État (25/11)** : version **mobile codée** sur `claude/youthful-pascal-btj1i4`, d'après la présentation validée `8-presentation-onglet-popup.png` (onglet flottant + pop-up, style des affiches du client, aucune photo du magasin). Elle remplace le macaron et le bouton doré des maquettes 1 à 4. Version PC et tablette codée ensuite (voir le journal). Offres confirmées par le client le 25/11.
+> **État (25/11)** : version **mobile codée** sur `claude/youthful-pascal-btj1i4`, d'après la présentation validée `8-presentation-onglet-popup.png` (onglet flottant + pop-up, style des affiches du client, aucune photo du magasin). Elle remplace le macaron et le bouton doré des maquettes 1 à 4. Version PC et tablette codée ensuite (voir `docs/JOURNAL-ARCHIVE.md`). Offres confirmées par le client le 25/11.
 
 Maquettes de référence : `docs/maquettes/black-friday/` (0 = parcours complet).
 

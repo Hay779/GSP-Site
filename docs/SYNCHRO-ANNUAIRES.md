@@ -32,7 +32,7 @@ Google n'est pas modifié par nous : c'est la **source**. Le client y publie lui
 ## Fonctionnement
 
 1. **Hermes surveille chaque lundi à 9h** (tâche « Veille synchro annuaires ») : il compare la fiche Google et `INFOS-OFFICIELLES.md` avec ce qui a déjà été recopié (`docs/seo/synchro-etat.md`, tenu par Hermes) et écrit la liste de ce qui manque dans `docs/seo/synchro-a-faire.md`, puis envoie un résumé sur Telegram.
-2. **Le client dit à Claude Code « fais la synchro des annuaires »** : Claude lit `docs/seo/synchro-a-faire.md`, publie sur chaque annuaire via Chrome, puis note ce qui a été fait dans `docs/JOURNAL.md`.
+2. **Le client dit à Claude Code « fais la synchro des annuaires »** : Claude lit `docs/seo/synchro-a-faire.md`, publie sur chaque annuaire via Chrome, puis note ce qui a été fait dans un fichier de séance `docs/journal/AAAA-MM-JJ-synchro-annuaires.md`.
 3. Le client peut aussi le demander à tout moment, sans attendre le lundi : « j'ai ajouté X sur Google, synchronise ».
 
 ## État au 25/11/2026 (déjà recopié sur PagesJaunes)
