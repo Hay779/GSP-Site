@@ -31,8 +31,8 @@
 | **Cylex** (+ **Yably**, même données) | ⏳ corrections envoyées, attente Cylex | annuaires@, mobile vérifié par SMS | revendication = file manuelle 2-3 semaines (non faite) ; Yably reprendra Cylex |
 | **NosAvis** | ⏳ signalement envoyé (fiche 723) | annuaires@ (pseudo SerrurerieRepublique) | demande de rattacher la fiche au compte, sans doublon |
 | **Marseille Centre** | ⏳ e-mail envoyé à contact@marseille-centre.fr | depuis serrurerierepublique@hotmail.fr | 13001→13002, horaires, site, retrait e-mail |
-| **Serrurier24** | ⏳ fiche réclamée, corrections + 5 photos en validation | annuaires@ | https://serrurier24.fr/13/marseille/serrurerie-de-la-republique-7eu ; doublon « même adresse » à vérifier |
-| **Trustup** | ✅ correcte (notre numéro), laissée | — | classée « menuisier », pas modifiable gratuitement |
+| **Serrurier24** | ⏳ fiche réclamée, corrections + 5 photos en validation | annuaires@ | https://serrurier24.fr/13/marseille/serrurerie-de-la-republique-7eu ; **doublon public** = ancienne société (SIRET 539 656 173 00017, numéro surtaxé) |
+| **Trustup** | ⚠️ numéro bon, **horaires faux** dans la description | — | description publique : lun-ven 8h-12h / 14h-16h (relevé Hermes 26/11) ; classée « menuisier » ; modification payante → décision client |
 | **Guide Jalis** | ⏳ message de correction envoyé | annuaires@ | faux numéro 04 11 88 06 67 → 04 91 90 51 65 |
 | **Annuaire-Professionnel** | ⛔ aucun contact publié sur le site | — | à réessayer plus tard |
 
@@ -45,7 +45,11 @@
 - [x] **Cybo** : enregistré et vérifié en ligne (26/11).
 - [ ] NosAvis : vérifier la fiche 723 après traitement et si elle est rattachée au compte (puis ajouter logo/photos).
 - [ ] Marseille Centre : vérifier la fiche dans 1-2 semaines (réponse éventuelle dans le Hotmail).
-- [ ] Serrurier24 : vérifier la validation (horaires, photos) et le doublon « Même adresse ».
+- [ ] Serrurier24 : vérifier la validation (horaires, photos). **Doublon public confirmé par Hermes** (ancienne société, SIRET 539 656 173 00017) : demander sa suppression via https://serrurier24.fr/contact — décision client en attente.
+- [ ] **Trustup** : horaires faux dans la description (lun-ven 8h-12h / 14h-16h). Écrire à Trustup (correction ou retrait de la fiche) ou laisser — décision client en attente.
+- [ ] Dans Chrome avec le client (Hermes bloqué) : voir la fiche Yelp, la prestation Kompass, Yably, et cliquer le lien du site sur Cybo.
+- [ ] Relancer Marseille Centre et Guide Jalis si rien n'a bougé au 03/12.
+- Veille du lundi 9h (tâche 07ee78b1b178, profil default) : partie B ajoutée par Hermes le 26/11 avec les 12 URL, les horaires et la lecture d'annuaires@.
 - [ ] Annuaire-Professionnel : réessayer quand un contact sera publié.
 - [ ] Guide Jalis : vérifier la correction du numéro (réponse éventuelle sur annuaires@).
 - Outil Hermes `~/bin/annuaires-mail list` corrigé le 26/11 (guillemets dans les en-têtes ; copie de l'ancien : `~/bin/annuaires-mail.bak`).
