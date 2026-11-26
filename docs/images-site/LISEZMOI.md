@@ -47,6 +47,14 @@ Conseils : photos d'au moins la taille indiquée, format paysage sauf indication
 | `7-promotions/bf_double_cle.webp` | 558 × 528 | Black Friday : offre double de clé |
 | `7-promotions/bf_tampon.webp` | 344 × 394 | Black Friday : offre tampons |
 | `8-logos-icones/logo_republique_dark.png` | 580 × 371 | Logo du site (en-tête, pied de page, données Google) |
+| `9-professionnels/pro_syndics.jpg` | Menu « Professionnels » : Syndics & gestionnaires ; haut de la page Syndics & copropriétés | 1600 × 893 |
+| `9-professionnels/pro_assureurs.jpg` | Menu « Professionnels » : Assureurs & experts ; haut de la page Assureurs & experts | 1600 × 893 |
+| `9-professionnels/pro_immobilier.jpg` | Menu « Professionnels » : Agences & bailleurs ; haut de la page Agences & bailleurs | 1600 × 893 |
+| `9-professionnels/pro_partenaire.jpg` | Menu « Professionnels » : Devenir partenaire | 1600 × 893 |
+
+## Serruriers créés par IA (`serruriers-ia/`)
+
+Portraits et descriptions des deux serruriers des images Professionnels, à réutiliser pour garder les mêmes personnes sur les prochaines images. Voir `serruriers-ia/LISEZMOI.md`.
 
 ## Logos et icônes (`8-logos-icones/`)
 

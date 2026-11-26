@@ -150,7 +150,7 @@ export default function App() {
           label: 'Syndics & gestionnaires',
           description: 'COPROPRIÉTÉS',
           href: pageHref('pro-syndics'),
-          imageSrc: DOMAINS_CONFIG.items.find((d) => d.id === 'fermetures')?.imageSrc,
+          imageSrc: '/src/assets/images/pro_syndics.webp',
           isActive: currentPageId === 'pro-syndics',
         },
         {
@@ -158,7 +158,7 @@ export default function App() {
           label: 'Assureurs & experts',
           description: 'SINISTRES',
           href: pageHref('pro-assureurs'),
-          imageSrc: AFTER_INCIDENT_CONFIG.imageSrc,
+          imageSrc: '/src/assets/images/pro_assureurs.webp',
           isActive: currentPageId === 'pro-assureurs',
         },
         {
@@ -166,7 +166,7 @@ export default function App() {
           label: 'Agences & bailleurs',
           description: 'GESTION LOCATIVE',
           href: pageHref('pro-immobilier'),
-          imageSrc: DOMAINS_CONFIG.items.find((d) => d.id === 'serrurerie')?.imageSrc,
+          imageSrc: '/src/assets/images/pro_immobilier.webp',
           isActive: currentPageId === 'pro-immobilier',
         },
         {
@@ -174,7 +174,7 @@ export default function App() {
           label: 'Devenir partenaire',
           description: 'FORMULAIRE PRO',
           href: pageHref('devenir-partenaire'),
-          imageSrc: ZONE_INTERVENTION_CONFIG.bannerSrc,
+          imageSrc: '/src/assets/images/pro_partenaire.webp',
           isActive: currentPageId === 'devenir-partenaire',
         },
       ],

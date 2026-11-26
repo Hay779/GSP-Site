@@ -441,8 +441,8 @@ const PRO_PAGES = {
       title: 'Les accès de vos copropriétés, entre de bonnes mains.',
       intro:
         'Nous intervenons sur les parties communes de vos immeubles et accompagnons la gestion des clés et des badges des résidents.',
-      imageSrc: DOMAINS_CONFIG.items.find((d) => d.id === 'fermetures')?.imageSrc,
-      imagePosition: '55% 50%',
+      imageSrc: '/src/assets/images/pro_syndics.webp',
+      imagePosition: '60% 45%',
       breadcrumbLabel: 'Syndics & gestionnaires',
       actions: [{ kind: 'page', label: 'Devenir partenaire', page: 'devenir-partenaire' }, { kind: 'phone' }],
     },
@@ -483,8 +483,8 @@ const PRO_PAGES = {
       title: 'De la mise en sécurité à la remise en état.',
       intro:
         'Après une effraction, du vandalisme ou un bris de glace, nous sécurisons les lieux et fournissons les éléments utiles à l’instruction du dossier.',
-      imageSrc: AFTER_INCIDENT_CONFIG.imageSrc,
-      imagePosition: '70% 35%',
+      imageSrc: '/src/assets/images/pro_assureurs.webp',
+      imagePosition: '60% 40%',
       breadcrumbLabel: 'Assureurs & experts',
       actions: [{ kind: 'page', label: 'Devenir partenaire', page: 'devenir-partenaire' }, { kind: 'phone' }],
     },
@@ -525,8 +525,8 @@ const PRO_PAGES = {
       title: 'Des logements prêts à être remis en main.',
       intro:
         'Entre deux locataires ou en cours de bail, nous prenons en charge les serrures, les clés et les petites réparations de vos biens.',
-      imageSrc: KEYS_BADGES_CONFIG.imageSrc,
-      imagePosition: '55% 45%',
+      imageSrc: '/src/assets/images/pro_immobilier.webp',
+      imagePosition: '55% 40%',
       breadcrumbLabel: 'Agences immobilières & bailleurs',
       actions: [{ kind: 'page', label: 'Devenir partenaire', page: 'devenir-partenaire' }, { kind: 'phone' }],
     },
