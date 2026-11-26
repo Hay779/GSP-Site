@@ -540,10 +540,9 @@ const LEGAL_CGV: readonly LegalArticle[] = [
     ],
   },
   {
-    heading: 'Article 20 – Réclamations et médiation',
+    heading: 'Article 20 – Réclamations',
     paragraphs: [
       'Toute réclamation s’adresse par écrit à SERRURERIE DE LA REPUBLIQUE, 48 rue de la République, 13002 Marseille (ou via le formulaire du site), avec le numéro du devis ou de la facture. Nous répondons sous 15 jours.',
-      'Le consommateur dont la réclamation n’a pas abouti peut saisir gratuitement le médiateur de la consommation dont les coordonnées lui sont communiquées sur simple demande et figurent sur nos devis.',
     ],
   },
   {

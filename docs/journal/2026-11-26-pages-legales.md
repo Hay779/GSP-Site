@@ -8,7 +8,7 @@ Branche : `claude/pages-legales` (non fusionnée dans main).
 - Nouvelle page `cgv` (21 articles, texte validé par le client le 25/11/2026), lien « CGV » dans le pied de page, `noindex` comme les autres pages légales.
 
 ## À faire avant la mise en ligne
-- Médiateur de la consommation : adhésion à signer (CM2C proposé). L'article 20 dit pour l'instant que les coordonnées sont communiquées sur demande et sur les devis ; ajouter le nom une fois l'adhésion signée.
+- Médiateur de la consommation : volontairement absent du site pour l'instant (décision client). À ajouter (mentions légales + article 20 des CGV) après adhésion à un médiateur (CM2C proposé), obligatoire pour les consommateurs.
 - Relecture des CGV (art. 5, 6, 12, 13, 15 à 18) par un avocat ou le comptable.
 - Case « J'ai lu les CGV » sous le formulaire de devis (non faite : formulaires non branchés avant OVH).
 - Adresse e-mail non affichée sur le site (règle CLAUDE.md).
