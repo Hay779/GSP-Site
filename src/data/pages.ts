@@ -291,11 +291,12 @@ const LEGAL_MENTIONS: readonly LegalArticle[] = [
   {
     heading: 'Éditeur du site',
     paragraphs: [
-      'SERRURERIE DE LA REPUBLIQUE, société à responsabilité limitée (SARL) au capital de 1\u00A0000\u00A0€.',
-      'Siège social\u00A0: 48 rue de la République, 13002 Marseille.',
-      'Immatriculée au RCS de Marseille sous le numéro 106\u00A0157\u00A0118 — SIRET 106\u00A0157\u00A0118\u00A000014.',
-      'TVA intracommunautaire\u00A0: FR93106157118 — Code APE\u00A0: 43.32B (travaux de menuiserie métallique et serrurerie).',
-      'Téléphone\u00A0: 04 91 90 51 65.',
+      'Le site serrurerierepublique.fr est édité par SERRURERIE DE LA REPUBLIQUE, conformément à l’article 6 de la loi du 21 juin 2004 pour la confiance dans l’économie numérique.',
+      'Société à responsabilité limitée (SARL) au capital de 1 000 €.',
+      'Siège social : 48 rue de la République, 13002 Marseille.',
+      'Immatriculée au RCS de Marseille sous le numéro 106 157 118 — SIREN 106 157 118 — SIRET 106 157 118 00014.',
+      'TVA intracommunautaire : FR93106157118 — Code APE : 43.32B (travaux de menuiserie métallique et serrurerie).',
+      'Téléphone : 04 91 90 51 65 — Mobile / WhatsApp : 06 50 70 44 52.',
     ],
   },
   {
@@ -306,13 +307,20 @@ const LEGAL_MENTIONS: readonly LegalArticle[] = [
     heading: 'Hébergement',
     paragraphs: [
       'OVH SAS, 2 rue Kellermann, 59100 Roubaix, France.',
-      'Téléphone : 1007 — site : www.ovhcloud.com.',
+      'Téléphone : 1007 — site : www.ovhcloud.com.',
+    ],
+  },
+  {
+    heading: 'Activité et assurance',
+    paragraphs: [
+      'Services de serrurerie, vitrerie, menuiserie et fermetures, avec dépannage et intervention après sinistre.',
+      'Responsabilité civile professionnelle souscrite auprès d’Allianz. Couverture géographique : France.',
     ],
   },
   {
     heading: 'Propriété intellectuelle',
     paragraphs: [
-      'L’ensemble des contenus de ce site (textes, visuels, logo) est la propriété de SERRURERIE DE LA REPUBLIQUE ou de ses partenaires. Toute reproduction, même partielle, sans autorisation préalable est interdite.',
+      'Les textes, photographies, logos, graphismes et la structure du site sont la propriété de SERRURERIE DE LA REPUBLIQUE ou utilisés avec autorisation. Toute reproduction, représentation, modification ou exploitation, même partielle, sans accord écrit préalable, est interdite et peut engager la responsabilité de son auteur.',
     ],
   },
   {
@@ -321,21 +329,76 @@ const LEGAL_MENTIONS: readonly LegalArticle[] = [
       'Certaines photographies présentes sur le site sont des visuels d’illustration et ne représentent pas nécessairement des interventions réalisées par l’entreprise.',
     ],
   },
+  {
+    heading: 'Responsabilité',
+    paragraphs: [
+      'Les informations du site sont données à titre indicatif et ne remplacent pas un devis. Seul le devis signé engage SERRURERIE DE LA REPUBLIQUE. Nous faisons le nécessaire pour que le site soit exact et accessible, sans garantir l’absence d’interruption ou d’erreur. Nous ne sommes pas responsables du contenu des sites tiers vers lesquels le site renvoie.',
+    ],
+  },
+  {
+    heading: 'Liens hypertextes',
+    paragraphs: [
+      'Un lien vers le site est autorisé s’il ne porte pas atteinte à son image et n’induit pas en erreur sur l’origine des services. Nous pouvons demander le retrait d’un lien à tout moment.',
+    ],
+  },
+  {
+    heading: 'Droit applicable',
+    paragraphs: [
+      'Le site est soumis au droit français. En cas de litige avec un professionnel, les tribunaux de Marseille sont compétents. Un consommateur peut saisir la juridiction de son choix, dans les conditions prévues par la loi.',
+      'Les conditions de vente et d’intervention sont consultables sur la page « Conditions générales de vente ».',
+    ],
+  },
 ];
 
 const LEGAL_PRIVACY: readonly LegalArticle[] = [
   {
-    heading: 'Données collectées',
+    heading: 'Responsable du traitement',
     paragraphs: [
-      'Les informations transmises via les formulaires (demande de devis, envoi de photos après sinistre, demande de partenariat) sont destinées uniquement au traitement de votre demande par SERRURERIE DE LA REPUBLIQUE, responsable du traitement, représentée par son gérant, Grigor Galstyan.',
-      'Elles ne sont ni vendues ni cédées à des tiers.',
+      'SERRURERIE DE LA REPUBLIQUE, 48 rue de la République, 13002 Marseille, représentée par son gérant, Grigor Galstyan.',
+      'Nous n’utilisons vos données que pour répondre à votre demande, établir un devis et réaliser l’intervention. Nous vous rappelons dans les 24 heures suivant l’envoi du formulaire.',
     ],
   },
   {
-    heading: 'Conservation et droits (RGPD)',
+    heading: 'Données collectées',
     paragraphs: [
-      'Vos données sont conservées le temps nécessaire au traitement de votre demande, puis au maximum 3 ans après notre dernier échange.',
-      'Vous disposez d’un droit d’accès, de rectification, d’opposition et de suppression de vos données, par courrier à SERRURERIE DE LA REPUBLIQUE, 48 rue de la République, 13002 Marseille, ou en nous contactant via le formulaire du site. Vous pouvez aussi saisir la CNIL (cnil.fr).',
+      'Via les formulaires du site (demande de devis, envoi de photos après sinistre, demande de partenariat) ou par téléphone : nom, numéro de téléphone, adresse de l’intervention, type de demande et message. Nous ne vous demandons aucune donnée que la demande ne nécessite pas.',
+    ],
+  },
+  {
+    heading: 'Finalités et bases légales',
+    paragraphs: [
+      'Répondre à votre demande et vous rappeler sous 24 h : mesures précontractuelles prises à votre demande.',
+      'Établir le devis, réaliser l’intervention, facturer : exécution du contrat.',
+      'Conserver les documents comptables : obligation légale.',
+      'Nous défendre en cas de litige : intérêt légitime.',
+    ],
+  },
+  {
+    heading: 'Durées de conservation',
+    paragraphs: [
+      'Demande sans suite : 3 ans maximum à compter du dernier contact, puis suppression.',
+      'Devis, factures et pièces comptables : 10 ans, conformément au Code de commerce.',
+      'Enregistrements téléphoniques, s’il y en a : 6 mois.',
+      'Les justificatifs d’identité et d’occupation recueillis avant une ouverture de porte, ainsi que les photos de l’intervention, sont conservés 5 ans pour pouvoir prouver les faits en cas de litige.',
+    ],
+  },
+  {
+    heading: 'Destinataires',
+    paragraphs: [
+      'Vos données sont réservées à SERRURERIE DE LA REPUBLIQUE et à ses prestataires techniques (hébergeur OVH, messagerie, comptable), qui n’agissent que sur nos instructions. Elles ne sont ni vendues ni cédées. Elles peuvent être transmises à votre assureur pour un dossier sinistre, à votre demande, ou à une autorité qui l’exige légalement.',
+    ],
+  },
+  {
+    heading: 'Vos droits (RGPD)',
+    paragraphs: [
+      'Vous disposez d’un droit d’accès, de rectification, d’effacement, d’opposition, de limitation et de portabilité. Exercez-les par courrier à SERRURERIE DE LA REPUBLIQUE, 48 rue de la République, 13002 Marseille, ou en nous contactant via le formulaire du site, en joignant au besoin un justificatif d’identité. Nous répondons dans un délai d’un mois.',
+      'Si la réponse ne vous satisfait pas, vous pouvez saisir la CNIL (cnil.fr).',
+    ],
+  },
+  {
+    heading: 'Sécurité',
+    paragraphs: [
+      'Le site est servi en HTTPS et l’accès aux données est limité aux personnes qui en ont besoin. Aucun traitement ne garantit un risque nul : en cas de violation de données, nous appliquons les obligations de notification prévues par le RGPD.',
     ],
   },
   {
@@ -345,6 +408,149 @@ const LEGAL_PRIVACY: readonly LegalArticle[] = [
       'Ces cookies (_ga, _ga_*) ne sont déposés qu’après votre accord, donné dans la bannière affichée lors de votre première visite. Sans accord, aucun script Google n’est chargé. Votre choix est conservé 6 mois ; vous pouvez le modifier à tout moment avec le lien « Gérer les cookies » en bas de chaque page.',
       'Les données de mesure d’audience sont conservées 14 mois au maximum. Elles peuvent être traitées par Google en dehors de l’Union européenne, dans le cadre du Data Privacy Framework UE–États-Unis.',
       'Le site ne dépose aucun autre cookie. Les formulaires n’utilisent pas de cookies.',
+    ],
+  },
+];
+
+const LEGAL_CGV: readonly LegalArticle[] = [
+  {
+    heading: 'Préambule',
+    paragraphs: [
+      'Ces conditions règlent toute prestation et toute vente de SERRURERIE DE LA REPUBLIQUE, avec un devis préalable, un prix connu avant les travaux et des obligations claires pour chaque partie. Elles sont acceptées par la signature (ou l’acceptation électronique ou orale confirmée par SMS) du devis ou du bon d’intervention.',
+    ],
+  },
+  {
+    heading: 'Article 1 – Objet et champ d’application',
+    paragraphs: [
+      'Elles s’appliquent aux prestations de serrurerie, vitrerie, menuiserie, fermetures et dépannage, à la vente de fournitures et à la reproduction de clés et de badges. Elles s’appliquent aux consommateurs comme aux professionnels, sauf mention contraire. Pour un professionnel, elles prévalent sur ses propres conditions d’achat. Seul un écrit signé par les deux parties y déroge.',
+    ],
+  },
+  {
+    heading: 'Article 2 – Le prestataire',
+    paragraphs: [
+      'SERRURERIE DE LA REPUBLIQUE, SARL au capital de 1 000 €, 48 rue de la République, 13002 Marseille, SIREN 106 157 118, RCS Marseille, TVA FR93106157118. Téléphone : 04 91 90 51 65 — mobile : 06 50 70 44 52.',
+    ],
+  },
+  {
+    heading: 'Article 3 – Devis et commande',
+    paragraphs: [
+      'Un devis détaillé et gratuit est remis avant tout travaux : nature de l’intervention, fournitures, main-d’œuvre, déplacement, majorations éventuelles, TVA et prix total. Il est valable 30 jours. La commande est ferme dès son acceptation par le client. En cas d’urgence, le devis peut être accepté sur place, par signature ou par SMS, avant le début de l’intervention. Aucun travail n’est commencé sans accord sur le prix. Tout travail supplémentaire fait l’objet d’un nouvel accord du client.',
+    ],
+  },
+  {
+    heading: 'Article 4 – Prix',
+    paragraphs: [
+      'Les prix sont en euros. Les prix aux consommateurs sont indiqués toutes taxes comprises, au taux de TVA applicable à la prestation. Les déplacements, le diagnostic et les majorations (50 % sur le déplacement et la main-d’œuvre, de 20 h à 6 h, les dimanches et jours fériés) sont indiqués au devis. Un diagnostic ou un déplacement est dû même si le client renonce aux travaux après avoir reçu le devis. Pour bénéficier d’un taux de TVA réduit, le client remet l’attestation exigée par la loi, à défaut de quoi le taux normal s’applique.',
+    ],
+  },
+  {
+    heading: 'Article 5 – Ouverture de porte et intervention d’urgence',
+    paragraphs: [
+      'Avant toute ouverture, le client justifie de son identité et de son droit d’occuper les lieux (pièce d’identité et justificatif de domicile, bail, titre de propriété ou équivalent). Nous refusons d’intervenir sans justificatif, sans que ce refus ouvre droit à indemnité. Le client garantit qu’il est le légitime occupant ou qu’il agit pour lui, et répond des conséquences d’une fausse déclaration.',
+      'Nous choisissons d’abord la méthode la moins destructrice. Si l’ouverture sans dégât n’est pas possible, le client accepte, avant l’intervention, l’ouverture destructive (perçage, démontage, remplacement de la serrure ou du cylindre), reportée au devis. Nous pouvons remettre les lieux en sécurité provisoirement si la réparation n’est pas possible tout de suite.',
+    ],
+  },
+  {
+    heading: 'Article 6 – Droit de rétractation',
+    paragraphs: [
+      'Quand le contrat est conclu hors de notre boutique (au domicile du client ou à distance), le consommateur dispose en principe de 14 jours pour se rétracter, sans motif. Ce droit ne s’applique pas aux travaux d’entretien ou de réparation à effectuer en urgence au domicile du consommateur et demandés expressément par lui, ni aux biens confectionnés selon ses spécifications ou nettement personnalisés (serrure à mesure, vitrage à la cote, clé reproduite).',
+      'Si le client demande expressément que l’intervention commence avant la fin du délai de 14 jours, il paie la part de prestation déjà réalisée et reconnaît perdre son droit une fois la prestation intégralement exécutée. Un contrat conclu en boutique n’ouvre pas de droit légal de rétractation.',
+    ],
+  },
+  {
+    heading: 'Article 7 – Paiement',
+    paragraphs: [
+      'Le solde est payé comptant à la fin de l’intervention, par carte bancaire, virement ou espèces dans la limite légale. Un acompte de 30 % peut être demandé à la commande pour les devis importants et pour toute fourniture sur mesure, sauf quand la loi l’interdit (contrat conclu à la suite d’un démarchage). Aucun escompte n’est accordé pour paiement anticipé.',
+    ],
+  },
+  {
+    heading: 'Article 8 – Retard de paiement',
+    paragraphs: [
+      'Tout retard de paiement entraîne de plein droit, pour un client professionnel, des pénalités au taux de trois fois le taux d’intérêt légal, ainsi qu’une indemnité forfaitaire de 40 € pour frais de recouvrement, sans préjudice d’une indemnité complémentaire sur justificatif. Pour un consommateur, les sommes dues portent intérêt au taux légal après mise en demeure restée sans effet. Les fournitures restent notre propriété jusqu’au paiement intégral du prix, dans les limites de la loi.',
+    ],
+  },
+  {
+    heading: 'Article 9 – Obligations du client',
+    paragraphs: [
+      'Le client donne des informations exactes, assure l’accès aux lieux et la présence d’un adulte, retire ou protège les objets fragiles ou de valeur, et signale les risques connus (animaux, chantier, installation électrique). Un déplacement inutile est facturé : client absent ou injoignable, adresse erronée, annulation tardive ou refus du devis sur place, selon le tarif de déplacement indiqué au devis. Le technicien peut interrompre une intervention qui met sa sécurité en danger.',
+    ],
+  },
+  {
+    heading: 'Article 10 – Délais',
+    paragraphs: [
+      'Les délais d’intervention ou de livraison sont indicatifs, sauf engagement écrit sur une date. En cas de retard important, le client consommateur peut procéder selon les conditions prévues par la loi. Nous ne sommes pas responsables d’un retard dû à un cas de force majeure, à un défaut d’accès ou à un manquement de fournisseur que nous ne pouvions prévoir.',
+    ],
+  },
+  {
+    heading: 'Article 11 – Garanties',
+    paragraphs: [
+      'Les fournitures bénéficient de la garantie légale de conformité (consommateur) et de la garantie des vices cachés, ainsi que de la garantie du fabricant. Garantie commerciale : notre main-d’œuvre est garantie 3 mois à compter de l’intervention.',
+      'La garantie ne couvre pas l’usure normale, un mauvais usage, une intervention d’un tiers, une nouvelle effraction ou un défaut lié à un support (huisserie, porte, mur) que nous n’avons pas fait remplacer. Pour les ouvrages relevant de la construction, les garanties légales de la loi s’appliquent.',
+    ],
+  },
+  {
+    heading: 'Article 12 – Responsabilité',
+    paragraphs: [
+      'Nous répondons des dommages directs causés par notre faute, dans le cadre de notre assurance de responsabilité civile professionnelle. Notre responsabilité ne couvre pas : les dommages causés par l’état antérieur de la porte, de la serrure ou du support ; les dégâts inhérents à une ouverture destructive acceptée au devis ; les conséquences d’informations inexactes ou d’un justificatif falsifié ; les pertes indirectes (perte d’exploitation, de loyer, de clientèle) ; les dommages dus à un cas de force majeure.',
+      'Envers un professionnel, notre responsabilité est limitée au prix de la prestation concernée. Ces limites ne s’appliquent pas aux dommages corporels, à la faute lourde ou intentionnelle, ni dans les cas où la loi l’interdit, notamment à l’égard des consommateurs.',
+    ],
+  },
+  {
+    heading: 'Article 13 – Clés et badges',
+    paragraphs: [
+      'La reproduction de clés et de badges se fait en boutique, sur présentation de l’original. Pour une clé protégée ou un badge d’immeuble, nous demandons la carte de propriété ou une autorisation écrite du syndic ou du propriétaire, et nous refusons sans justificatif. Le client garantit qu’il est autorisé à reproduire la clé ou le badge. Nous ne garantissons pas le fonctionnement d’un double réalisé à partir d’un original usé ou déformé.',
+    ],
+  },
+  {
+    heading: 'Article 14 – Sinistre et assurance',
+    paragraphs: [
+      'Après un sinistre, nous établissons un devis détaillé avec des photos de l’état constaté, utiles à la déclaration. Le remboursement relève de l’assureur et n’est pas garanti par nous. Sauf convention de paiement direct avec l’assureur, le client reste débiteur du prix, quel que soit le résultat de sa déclaration.',
+    ],
+  },
+  {
+    heading: 'Article 15 – Preuves et réserves',
+    paragraphs: [
+      'Le bon d’intervention signé (sur papier, sur écran ou confirmé par SMS) fait foi de l’intervention et de son prix. Avant et après l’intervention, le technicien peut photographier la porte, la serrure, les lieux et le justificatif présenté. Ces photos et ces justificatifs sont conservés 5 ans et peuvent servir de preuve en cas de litige, ou à la demande d’un assureur ou d’une autorité.',
+      'Le client vérifie le travail en présence du technicien et note toute réserve sur le bon d’intervention. Un défaut apparent non signalé à ce moment doit l’être par écrit sous 8 jours, avec photos, sans réduire les garanties légales du consommateur.',
+    ],
+  },
+  {
+    heading: 'Article 16 – Sécurité et respect des équipes',
+    paragraphs: [
+      'Les injures, menaces, violences ou pressions envers un technicien ou un membre de l’équipe mettent fin à l’intervention. Le déplacement et les travaux déjà réalisés restent dus, et nous pouvons déposer plainte. Le technicien peut refuser ou interrompre une intervention dans des lieux dangereux ou face à une personne agressive.',
+      'Les techniciens agissent au nom et pour le compte de SERRURERIE DE LA REPUBLIQUE : toute réclamation s’adresse à la société, et non à eux à titre personnel, sauf quand la loi en décide autrement.',
+    ],
+  },
+  {
+    heading: 'Article 17 – Prévention de la fraude',
+    paragraphs: [
+      'Nous refusons d’intervenir en cas de doute sur l’identité du client, sur son droit d’occuper les lieux ou sur l’origine d’une demande de double de clé, ou si un tiers conteste la demande. Dans ce cas, le déplacement reste dû, nous ne donnons pas suite à l’ouverture ou à la reproduction, et nous pouvons alerter les forces de l’ordre. Nous coopérons avec les autorités sur réquisition. Celui qui fait une fausse déclaration ou présente un faux justificatif s’expose à des poursuites et nous rembourse les frais et dommages qui en résultent.',
+    ],
+  },
+  {
+    heading: 'Article 18 – Impayés et rétention',
+    paragraphs: [
+      'En cas de non-paiement, nous pouvons retenir les objets qui nous ont été confiés (clés, serrures, pièces à réparer) jusqu’au règlement complet. Un chèque ou un paiement rejeté donne lieu au remboursement des frais bancaires engagés. Le client conteste une facture par écrit sous 8 jours et règle la part non contestée. Nous pouvons refuser une nouvelle intervention à un client qui a un impayé, sauf danger immédiat. Nous recouvrons les sommes dues par tous moyens légaux, y compris par huissier ou en justice, et les frais engagés sont à la charge du client, dans les limites de la loi pour un consommateur.',
+    ],
+  },
+  {
+    heading: 'Article 19 – Données personnelles',
+    paragraphs: [
+      'Les données du client sont traitées selon la politique de confidentialité du site, que le client reconnaît avoir consultée.',
+    ],
+  },
+  {
+    heading: 'Article 20 – Réclamations et médiation',
+    paragraphs: [
+      'Toute réclamation s’adresse par écrit à SERRURERIE DE LA REPUBLIQUE, 48 rue de la République, 13002 Marseille (ou via le formulaire du site), avec le numéro du devis ou de la facture. Nous répondons sous 15 jours.',
+      'Le consommateur dont la réclamation n’a pas abouti peut saisir gratuitement le médiateur de la consommation dont les coordonnées lui sont communiquées sur simple demande et figurent sur nos devis.',
+    ],
+  },
+  {
+    heading: 'Article 21 – Droit applicable et litiges',
+    paragraphs: [
+      'Les présentes conditions sont soumises au droit français. Si une clause est jugée invalide, les autres restent applicables. Pour les litiges avec un professionnel, les tribunaux de Marseille sont compétents. Le consommateur peut saisir la juridiction du lieu de son domicile ou de l’exécution de la prestation, dans les conditions fixées par la loi.',
+      'Dernière mise à jour : 25 novembre 2026.',
     ],
   },
 ];
@@ -769,6 +975,12 @@ export const THEMATIC_PAGES: Readonly<Record<BlockPageId, PageDefinition>> = {
     blocks: [{ type: 'legal', id: 'page-legal', tone: 'light', kicker: 'Mentions légales', title: 'Éditeur & hébergement.', articles: LEGAL_MENTIONS }],
   },
 
+  cgv: {
+    seoTitle: 'Conditions générales de vente — Serrurerie de la République',
+    seoDescription: 'Conditions générales de vente et d’intervention de Serrurerie de la République, Marseille : devis, urgence, ouverture de porte, garanties.',
+    hero: { kicker: 'Informations réglementaires', title: 'Conditions générales de vente.', intro: 'Devis, urgence, paiement, garanties : les règles de nos prestations.', compact: true, actions: [] },
+    blocks: [{ type: 'legal', id: 'page-legal', tone: 'light', kicker: 'CGV', title: 'Vente & intervention.', articles: LEGAL_CGV }],
+  },
   confidentialite: {
     seoTitle: 'Politique de confidentialité — Serrurerie de la République',
     seoDescription: 'Comment Serrurerie de la République traite les données transmises via son site.',

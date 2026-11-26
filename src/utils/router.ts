@@ -21,6 +21,7 @@ export type PageId =
   | 'questions-frequentes'
   | 'mentions-legales'
   | 'confidentialite'
+  | 'cgv'
   | 'devis'
   | 'professionnels'
   | 'pro-syndics'
@@ -52,6 +53,7 @@ export const PAGE_SLUGS: Readonly<Record<PageId, string>> = {
   'questions-frequentes': 'questions-frequentes',
   'mentions-legales': 'mentions-legales',
   confidentialite: 'confidentialite',
+  cgv: 'cgv',
   devis: 'devis',
   professionnels: 'professionnels',
   'pro-syndics': 'syndics-coproprietes',
