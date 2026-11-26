@@ -442,7 +442,7 @@ const PRO_PAGES = {
       intro:
         'Nous intervenons sur les parties communes de vos immeubles et accompagnons la gestion des clés et des badges des résidents.',
       imageSrc: '/src/assets/images/pro_syndics.webp',
-      imagePosition: '60% 45%',
+      imagePosition: '45% 50%',
       breadcrumbLabel: 'Syndics & gestionnaires',
       actions: [{ kind: 'page', label: 'Devenir partenaire', page: 'devenir-partenaire' }, { kind: 'phone' }],
     },
