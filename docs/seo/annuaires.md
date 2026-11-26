@@ -3,7 +3,7 @@
 Inventaire du 25 novembre 2026, fait par Hermes à partir de recherches web publiques. Référence unique : `docs/INFOS-OFFICIELLES.md`.
 Périmètre : une seule boutique (48 rue de la République, 13002 Marseille). Les fiches d'autres boutiques ou d'autres sociétés sont exclues.
 
-**Aucune fiche n'a été créée ni modifiée.** Tout est en attente de l'accord du client.
+**Mise à jour du 26/11/2026 : mission « petits annuaires » passée (sections 6 et 7). Hermes n'a pu créer ni corriger aucune fiche : tout demandait un compte, un e-mail, ou était bloqué par un contrôle anti-robot. Les fiches prêtes à copier sont en section 7.**
 
 Rappel de la fiche officielle : nom « Serrurerie de la République » · 48 rue de la République, 13002 Marseille · 04 91 90 51 65 · https://www.serrurerierepublique.fr · lundi–samedi 9h–19h, dimanche fermé · catégorie « Serrurier » · SIRET 106 157 118 00014.
 
@@ -103,3 +103,82 @@ Rien n'est lancé sans l'accord du client. Chaque point demande une connexion, u
 6. Relecture de chaque fiche publique avant de passer son état à « corrigé ».
 
 Notes de méthode : les avis et notes des sites agrégateurs (Yably, Cylex, Cybo, MySerrurier, Serrurier24…) donnent des chiffres très différents d'un site à l'autre ; aucun n'est repris ici. Seuls les vrais avis Google du site restent valables.
+
+## 6. Mission « petits annuaires » — passage du 26/11/2026 (Hermes)
+
+Règles suivies : formulaires publics sans compte uniquement ; aucun compte, mot de passe, code, paiement ni pièce d'identité ; pas d'e-mail public. Le serveur de Hermes est bloqué par la protection anti-robot (Cloudflare, etc.) de plusieurs sites : je n'ai pas essayé de contourner ces protections.
+
+Bilan : **0 fiche créée, 0 fiche corrigée**. 1 envoi tenté (NosAvis), refusé par le contrôle anti-robot.
+
+| # | Annuaire | URL | État au 26/11/2026 | Ce qui a été fait / envoyé |
+|---|---|---|---|---|
+| 1 | Cylex | https://www.cylex-locale.fr/entreprises/serrurerie-de-la-r%c3%a9publique-10389514.html | existait (relevé du 25/11 : horaires, site, e-mail, SIRET faux) — **à faire avec Claude Code + client** | Page bloquée par Cloudflare depuis le serveur : rien lu ni envoyé. Revendication gratuite à faire depuis le Chrome du client. |
+| 2 | Hoodspot | https://hoodspot.fr | fiche absente — **à faire avec Claude Code + client** | L'ajout d'un pro passe par l'inscription (prénom, nom, e-mail, mot de passe) : aucun formulaire public sans compte. Rien créé. |
+| 3 | Yelp | https://www.yelp.fr | **à faire avec Claude Code + client** | Accès refusé (403) depuis le serveur. Rien lu ni envoyé. Notre propre fiche et le signalement du numéro affiché chez Bisaccia (« Service Minute », 50 rue de la République) demandent un compte Yelp. |
+| 4 | Kompass | https://fr.kompass.com | à créer — **à faire avec Claude Code + client** | Page bloquée depuis le serveur ; la création d'une fiche demande un compte. Rien créé. |
+| 5 | Cybo | https://www.cybo.com/FR/add-business/ | existait (nom long, relevé du 25/11) — **à faire avec Claude Code + client** | Contrôle anti-robot (« Just a moment »). Rien envoyé. Revendication = compte. |
+| 6 | NosAvis (Serruriers) | https://serruriers.nosavis.com/serrurier/bouches+du+rhone-13/marseille-13002/serrurerie+de+la+republique-723/ | existait (fiche n° 723, adresse « 48 rue République », sans horaires ni site) — **envoi tenté, refusé** | Formulaire public « Signaler une erreur » rempli (adresse 48 rue de la République, téléphones, site, horaires, catégorie, description courte, e-mail de validation contact@serrurerierepublique.fr). Réponse : « Votre message n'a pas été envoyé en raison d'une erreur lors de la vérification anti-robot ». À renvoyer par le client depuis son navigateur. |
+| 7 | Yably | https://yably.fr/avis/marseille/serrurerie-de-la-republique-48-rue-de-la-republique | existait, non revendiquée — **à faire avec Claude Code + client** | Page bloquée par Cloudflare. Rien envoyé. Revendication = compte. |
+| 8 | Marseille Centre | https://marseillecentre.fr/boutiques/serrurerie-de-la-republique | existait, **toujours erronée** : 13001, horaires lun–jeu 8h–12h/14h–18h et ven 8h–12h/14h–17h (sans samedi) — **à faire avec Claude Code + client** | Aucun formulaire public sur le site (page contact introuvable). Le contact est un e-mail (contact@marseille-centre.fr, selon le guide du commerçant de la Ville de Marseille ; à confirmer) : Hermes n'a pas d'accès aux e-mails. Message prêt ci-dessous. L'e-mail de la boutique n'apparaît plus sur la fiche (constaté le 26/11). |
+| 9 | Serrurier24 | https://serrurier24.fr/13/marseille/bricard-vachette-serrurerie-de-la-republique-serrurier-porte-blindee-cle-badge-pm | existait au 25/11 ; **page en erreur 404 depuis le serveur** (encore visible dans les moteurs de recherche) — **à revérifier avec Claude Code + client** | Le site propose « Améliorer cette fiche » sur la page de la fiche, ou une inscription gratuite à partir du SIRET. Page introuvable : rien envoyé. Relevé du 25/11 : horaires faux, e-mail affiché, site Solocal, SIRET de l'ancienne société. |
+| 10 | Trustup | https://www.trustup.fr/fr/entreprise/serrurerie-de-la-republique | existait (non lu) — **à faire avec Claude Code + client** | Bloqué par Cloudflare. Rien envoyé. |
+| 11 | 118000 | https://www.118000.fr/search?who=serrurerie+de+la+republique&where=marseille | **existait, conforme** : « serrurerie de la republique », 48 RUE DE LA REPUBLIQUE 13002 Marseille, 04 91 90 51 65, dépannage de serrurerie, serrurier | Rien à corriger sur nom, adresse, téléphone. Horaires, site, description : via l'Espace Pro (compte) — **à faire avec Claude Code + client** (optionnel). Les autres « Serrurerie de la Republique » (Livry-Gargan 93, Boulogne-Billancourt) sont d'autres sociétés : ne pas toucher. |
+| 12 | Annuaire-Professionnel | https://annuaire-professionnel.org/marseille-1er-arrondissement/serrurier/serrurier-porte-blindee-bricard-vachette-badge-vigik-intratone-serrurerie-de-la--5o4tut8e/ | existait, **toujours classée en 1er arrondissement**, nom très long — **à faire avec Claude Code + client** | Aucun formulaire : la page « corriger ma fiche » demande un **e-mail uniquement**, et l'adresse de réception n'y est pas renseignée (« A COMPLETER »). Justificatif SIRET demandé. Hermes ne peut pas envoyer d'e-mail. Message prêt ci-dessous. |
+| 13 | Guide Jalis (Maison) | https://maison.guidejalis.com/details-ou+trouver+un+bon+serrurerie+pour+un+depannage+en+urgence+a+marseille+serrurerie+de+la+republique-46518.html | existait, téléphone faux 04 11 88 06 67 (relevé du 25/11) — **à faire avec Claude Code + client** | Le site ne répond pas au navigateur du serveur (délais dépassés) : fiche non relue, rien envoyé. À signaler depuis Chrome (formulaire de contact du réseau Jalis, à identifier). |
+| 14 | Chambre de métiers PACA | https://www.cmar-paca.fr (« cma-paca.fr » n'existe pas) | à vérifier — **à faire avec Claude Code + client** | Aucun annuaire public d'artisans trouvé (seul un annuaire « artisans éco-durables » existe, non concerné). Contact : contact13@cmar-paca.fr, 04 91 32 24 24. Rien envoyé. |
+| 15 | Obat | https://www.obat.fr | probablement sans objet | La page « annuaire » n'existe pas (404). Obat est un logiciel de devis/factures : seul un « essai gratuit » avec compte est proposé. Rien créé. |
+
+## 7. À faire avec Claude Code + client
+
+Rappel : le client saisit mots de passe et codes lui-même. Connexion Google gspserrurerie13@gmail.com quand l'annuaire la propose. E-mail de validation : contact@serrurerierepublique.fr (**jamais affiché sur une fiche**), avec la mention « lien de confirmation à valider par le client ». Ne pas indiquer Facebook ni Instagram. Ne pas reprendre de note ni de nombre d'avis des agrégateurs.
+
+### Fiche prête à copier (valeurs exactes de `docs/INFOS-OFFICIELLES.md`)
+
+- Nom : Serrurerie de la République
+- Adresse : 48 rue de la République, 13002 Marseille
+- Téléphone fixe : 04 91 90 51 65
+- Mobile / WhatsApp : 06 50 70 44 52
+- Site web : https://www.serrurerierepublique.fr
+- Horaires : lundi au samedi 9h – 19h, dimanche fermé. Dépannage d'urgence aussi en dehors des horaires (soir et dimanche), par téléphone.
+- Catégorie principale : Serrurier. Secondaires : Service de dépannage de serrurerie · Vitrier · Menuisier · Reproduction de clés · Installateur de portes de garage / rideaux métalliques
+- Agréé assurances. SIRET 106 157 118 00014 (pas l'ancien 539 656 173).
+- Description courte : Serrurier à Marseille : dépannage d'urgence, ouverture de porte, serrures, clés et badges, vitrerie, fermetures. Syndics, copropriétés et assurances.
+- Description longue : Serrurerie de la République, 48 rue de la République à Marseille (2e), intervient pour les particuliers, les commerces et les professionnels : dépannage d'urgence (porte claquée, porte forcée, vitre cassée, rideau métallique bloqué), changement de serrure et de cylindre, blindage de porte, reproduction de clés et de badges, vitrerie, menuiserie et fermetures. Nous accompagnons les syndics et copropriétés (portes de hall, badges résidents, parties communes), les assureurs et experts (mise en sécurité, devis avec photos, remise en état après sinistre) et les agences immobilières. Agréé assurances. Devis détaillé avant chaque intervention, dans tout Marseille et les communes voisines.
+- Logo : `docs/logo-google/logo-carre-serre-1080.png` ; vraies photos : `docs/photos-reelles/` (pas les visuels de `posts-marques/`).
+
+### Annuaire par annuaire
+
+| Annuaire | Ce qu'il faut faire | Ce qui bloque |
+|---|---|---|
+| Cylex | Revendiquer la fiche (gratuit). Corriger horaires (lun–sam 9h–19h), site (remplacer l'ancien site Solocal), retirer l'e-mail, SIRET. | Compte + e-mail de validation. Bloqué sur le serveur de Hermes : à faire depuis le Chrome du client. |
+| Hoodspot | Inscription « Vous êtes un pro » puis création de la fiche. | Compte (prénom, nom, e-mail, mot de passe saisi par le client). |
+| Yelp | Créer notre fiche, puis (si le client le confirme) signaler que 04 91 90 51 65 apparaît sur la fiche « Bisaccia Service Minute » (50 rue de la République). | Compte Yelp (connexion Google possible), validation éventuelle par appel/SMS. |
+| Kompass | Créer la fiche entreprise (base gratuite). | Compte + e-mail de validation ; options payantes à ignorer. |
+| Cybo | Revendiquer la fiche : nom « Serrurerie de la République », ajouter le site. | Compte + e-mail ; contrôle anti-robot. |
+| NosAvis | Renvoyer le formulaire « Signaler une erreur » (https://serruriers.nosavis.com/contact.php?titre=Signaler%20une%20erreur%20sur%20la%20fiche%20de%20Serrurerie%20De%20La%20R%C3%A9publique%20(723)&code=1&artisan=723) avec le texte ci-dessous. | Contrôle anti-robot (à passer par le client). Alternative : « Ajouter mon entreprise » (compte gratuit). |
+| Yably | Revendiquer la fiche : horaires, site, retrait de l'ancien site Solocal. | Compte + e-mail ; bloqué sur le serveur. |
+| Marseille Centre | Écrire à contact@marseille-centre.fr (à confirmer) avec le message ci-dessous. | Pas d'accès e-mail pour Hermes : envoi depuis contact@serrurierepublique.fr par le client ou Claude Code. |
+| Serrurier24 | Rouvrir la fiche depuis Chrome. Si elle existe : « Améliorer cette fiche » ; sinon inscription gratuite avec le SIRET 106 157 118 00014. | Page 404 depuis le serveur ; formulaire à voir. |
+| Trustup | Lire la fiche, puis la revendiquer ou la corriger. | Compte ; bloqué sur le serveur. |
+| 118000 | Optionnel : Espace Pro pour ajouter horaires, site, description. Nom, adresse et téléphone sont déjà bons. | Compte (« S'inscrire »). |
+| Annuaire-Professionnel | Envoyer un e-mail de correction avec l'adresse de la page, le nom actuel, les corrections et le SIRET. | Adresse de réception non publiée sur la page : la trouver (page « À propos » ou contact du site) ; envoi depuis contact@serrurierepublique.fr. |
+| Guide Jalis | Signaler le faux numéro 04 11 88 06 67 → 04 91 90 51 65. | Site inaccessible depuis le serveur ; formulaire de contact à identifier. |
+| CMA PACA | Appeler le 04 91 32 24 24 ou écrire à contact13@cmar-paca.fr : demander si l'entreprise figure dans un annuaire public des artisans et comment la compléter. | SIRET demandé, peut-être une pièce d'identité du gérant (seul le client peut la fournir). |
+| Obat | Ne rien faire (pas d'annuaire gratuit identifié). | Logiciel avec compte : hors sujet. |
+
+### Texte de correction prêt à envoyer (NosAvis, Marseille Centre, Annuaire-Professionnel, Jalis)
+
+Objet : Correction de la fiche « Serrurerie de la République » (Marseille 13002)
+
+Bonjour, la fiche de notre entreprise contient des informations erronées. Merci de la corriger ainsi :
+- Nom : Serrurerie de la République
+- Adresse : 48 rue de la République, 13002 Marseille (2e arrondissement)
+- Téléphone : 04 91 90 51 65 · Mobile / WhatsApp : 06 50 70 44 52
+- Site web : https://www.serrurerierepublique.fr
+- Horaires : lundi au samedi 9h – 19h, dimanche fermé. Dépannage d'urgence aussi le soir et le dimanche, par téléphone.
+- Catégorie : Serrurier. Agréé assurances. SIRET 106 157 118 00014.
+- Merci de ne pas afficher d'adresse e-mail.
+Description : Serrurier à Marseille : dépannage d'urgence, ouverture de porte, serrures, clés et badges, vitrerie, fermetures. Syndics, copropriétés et assurances.
+Cordialement, Serrurerie de la République.
+
+Variantes : Marseille Centre : « code postal 13001 → 13002 et horaires du lundi au samedi ». Annuaire-Professionnel : « classer la fiche en Marseille 2e arrondissement ». Jalis : « le numéro 04 11 88 06 67 est faux ; le bon est 04 91 90 51 65 ».
