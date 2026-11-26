@@ -8,7 +8,7 @@
 - **Une seule boutique** sur les annuaires : République, **48 rue de la République, 13002 Marseille**. On ne parle **pas** de l'agence Rome ni de Serrurerie Extra (autre société, traitée plus tard).
 - **Google n'est pas modifié par nous** : c'est la source. Le client y publie lui-même (posts, photos). Son nom long « Bricard Vachette Serrurerie de la République… », sa catégorie « Reproduction de clés » et sa description sont gardés volontairement.
 - Téléphones : **04 91 90 51 65** (boutique) et **06 50 70 44 52** (mobile, WhatsApp, urgences). Le 07 82 82 82 08 n'est plus utilisé.
-- **Pas d'e-mail public** sur les annuaires (spam). Pour les comptes : `gspserrurerie13@gmail.com` (connexion Google), ou `contact@serrurerierepublique.fr` quand une adresse du domaine est exigée.
+- **Pas d'e-mail public** sur les annuaires (spam). **Pour toutes les inscriptions et validations d'annuaires : `annuaires@serrurerierepublique.fr`** (boîte OVH créée le 26/11, réservée aux annuaires, mot de passe dans le Gestionnaire de mots de passe Google du client). `gspserrurerie13@gmail.com` reste le compte des connexions « avec Google » faites par Claude Code dans Chrome avec le client ; **ne jamais le donner à Hermes** (compte maître : fiche Google, Search Console, réinitialisations).
 - **Agréé assurances** (confirmé). Urgences aussi le soir et le dimanche.
 - Tout l'ancien site Wix : on ne s'en occupe pas, mais tout lien vers lui trouvé sur une fiche est remplacé par https://www.serrurerierepublique.fr.
 - **Aucun prix affiché** pour l'instant (décision du 26/11). Facebook et Instagram : à créer plus tard.
@@ -36,10 +36,11 @@
 
 ## 4. Mission « petits annuaires » — qui fait quoi
 
-**Hermes** (navigateur et recherche web, mais **pas d'accès aux boîtes e-mail**) :
+**Hermes** (navigateur, recherche web, et **lecture de la boîte annuaires@** depuis le 26/11) :
+- Lire la boîte : `~/bin/annuaires-mail list` (derniers e-mails), `~/bin/annuaires-mail read UID`, `~/bin/annuaires-mail links UID` (liens de confirmation). Lecture seule. Ouvrir un lien de confirmation **seulement** s'il vient d'un annuaire où Hermes vient de s'inscrire.
 1. Pour chaque annuaire de la liste ci-dessous, vérifier si une fiche existe déjà (nom, adresse, téléphone).
 2. **Si la fiche existe** : noter les écarts avec `INFOS-OFFICIELLES.md`. Si l'annuaire permet de **suggérer une correction sans compte** (formulaire public), l'envoyer avec les infos officielles et le noter.
-3. **Si la fiche n'existe pas et que l'ajout se fait par un simple formulaire public, sans compte ni mot de passe** : remplir et envoyer le formulaire avec les infos officielles (nom « Serrurerie de la République », 48 rue de la République 13002 Marseille, 04 91 90 51 65, site, horaires, catégorie Serrurier, description courte d'`INFOS-OFFICIELLES.md`), **sans e-mail public**. Si un e-mail de contact est obligatoire pour la validation : `contact@serrurerierepublique.fr`, et noter « lien de confirmation à valider par le client ».
+3. **Si la fiche n'existe pas et que l'ajout se fait par un simple formulaire public, sans compte ni mot de passe** : remplir et envoyer le formulaire avec les infos officielles (nom « Serrurerie de la République », 48 rue de la République 13002 Marseille, 04 91 90 51 65, site, horaires, catégorie Serrurier, description courte d'`INFOS-OFFICIELLES.md`), **sans e-mail public**. Si un e-mail est obligatoire : **`annuaires@serrurerierepublique.fr`**, puis lire la boîte et ouvrir le lien de confirmation. Ne pas cocher les e-mails publicitaires.
 4. **Si l'annuaire exige un compte, un mot de passe, un code SMS, un paiement ou une pièce d'identité** : **ne rien créer**. Préparer la fiche prête à copier, et la mettre dans « À faire avec Claude Code + client ».
 5. Tout noter dans `docs/seo/annuaires.md` (une ligne par annuaire : URL, état « existait / créé / corrigé / à faire avec le client », date, ce qui a été envoyé) et publier sur `main` (uniquement `docs/seo/`).
 6. Envoyer un résumé sur Telegram.
