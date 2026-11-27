@@ -45,6 +45,9 @@ import { fetchOffers } from '../utils/gestion';
 import { DEFAULT_SLUG, type OfferConfig } from '../utils/offers';
 import { OffersPanel } from './gestion/OffersPanel';
 import { RequestsPanel } from './gestion/RequestsPanel';
+import { RelancesPanel } from './gestion/RelancesPanel';
+import { fetchRelancesDone, type RelanceDone } from '../utils/gestion';
+import { computeRelances } from '../utils/relances';
 import { fetchRequests, type SiteRequest } from '../utils/gestion';
 import logoUrl from '../assets/images/logo_republique_light.png';
 
@@ -74,7 +77,7 @@ const SECTIONS: readonly { readonly id: SectionId; readonly label: string; reado
   { id: 'demandes', label: 'Demandes', icon: Inbox, ready: true },
   { id: 'offres', label: 'Offres & QR codes', icon: QrCode, ready: true },
   { id: 'inscrits', label: 'Inscrits', icon: Users, ready: true },
-  { id: 'relances', label: 'Relances', icon: Repeat, ready: false },
+  { id: 'relances', label: 'Relances', icon: Repeat, ready: true },
   { id: 'publicite', label: 'Publicité', icon: Megaphone, ready: false },
   { id: 'suivi', label: 'Suivi du site', icon: BarChart3, ready: false },
 ];
@@ -266,10 +269,15 @@ function Dashboard({ routerMode, onLoggedOut }: { readonly routerMode: RouterMod
   const [offerFilter, setOfferFilter] = useState<string>('toutes');
   const [requests, setRequests] = useState<SiteRequest[] | null>(null);
   const newRequests = (requests ?? []).filter((x) => x.status === 'nouvelle').length;
+  const [relancesDone, setRelancesDone] = useState<Record<string, RelanceDone> | null>(null);
+  const relanceCount = useMemo(
+    () => (requests && signups && relancesDone ? computeRelances(requests, signups, relancesDone).length : 0),
+    [requests, signups, relancesDone]
+  );
 
   const load = useCallback(async () => {
     setError(null);
-    const [r, o, d] = await Promise.all([fetchSignups(), fetchOffers(), fetchRequests()]);
+    const [r, o, d, rl] = await Promise.all([fetchSignups(), fetchOffers(), fetchRequests(), fetchRelancesDone()]);
     if (!r.ok && r.reason === 'non_connecte') return onLoggedOut();
     if (r.ok) setSignups(r.data);
     else setError(r.reason);
@@ -277,6 +285,8 @@ function Dashboard({ routerMode, onLoggedOut }: { readonly routerMode: RouterMod
     else if (r.ok) setError(o.reason);
     if (d.ok) setRequests(d.data);
     else if (r.ok && o.ok) setError(d.reason);
+    if (rl.ok) setRelancesDone(rl.data);
+    else if (r.ok && o.ok && d.ok) setError(rl.reason);
   }, [onLoggedOut]);
 
   useEffect(() => {
@@ -367,6 +377,11 @@ function Dashboard({ routerMode, onLoggedOut }: { readonly routerMode: RouterMod
                   >
                     <s.icon className="h-4 w-4" aria-hidden="true" />
                     {s.label}
+                    {s.id === 'relances' && relanceCount > 0 && (
+                      <span className="grid h-5 min-w-5 place-items-center rounded-full bg-[#D98A1E] px-1.5 text-[11.5px] font-bold text-[#FFFFFF]" aria-label={`${relanceCount} à relancer`}>
+                        {relanceCount}
+                      </span>
+                    )}
                     {s.id === 'demandes' && newRequests > 0 && (
                       <span className="grid h-5 min-w-5 place-items-center rounded-full bg-[#C0392B] px-1.5 text-[11.5px] font-bold text-[#FFFFFF]" aria-label={`${newRequests} nouvelles`}>
                         {newRequests}
@@ -387,7 +402,23 @@ function Dashboard({ routerMode, onLoggedOut }: { readonly routerMode: RouterMod
       </header>
 
       <div className="mx-auto w-full max-w-[1180px] flex-1 px-4 py-6 sm:px-6 sm:py-8">
-        {section === 'demandes' ? (
+        {section === 'relances' ? (
+          <>
+            {error && (
+              <p role="alert" className="mb-5 rounded-xl bg-[#FDECEA] px-4 py-3 text-[14.5px] font-medium text-[#A8321F]">
+                {failureMessage(error)}
+              </p>
+            )}
+            <RelancesPanel
+              requests={requests}
+              signups={signups}
+              done={relancesDone}
+              onDoneChange={setRelancesDone}
+              onReload={() => void load()}
+              onError={(reason) => (reason === 'non_connecte' ? onLoggedOut() : setError(reason))}
+            />
+          </>
+        ) : section === 'demandes' ? (
           <>
             {error && (
               <p role="alert" className="mb-5 rounded-xl bg-[#FDECEA] px-4 py-3 text-[14.5px] font-medium text-[#A8321F]">

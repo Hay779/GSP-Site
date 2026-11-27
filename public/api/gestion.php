@@ -13,6 +13,8 @@
  *   GET  ?action=demandes       → demandes des formulaires du site (devis, contact, partenaire, sinistre) + suivi
  *   POST ?action=suivi          → { "reference": "DV-…", "statut": "en_cours", "note": "…" }
  *   GET  ?action=photo&reference=SIN-…&nom=photo-1.jpg → photo d'une demande
+ *   GET  ?action=relances       → relances déjà faites { "DV-…:devis": { "le": …, "note": … } }
+ *   POST ?action=relance        → { "cle": "DV-…:devis", "note": "…" } : relance faite
  *
  * Réglages : ~/config-gestion.php (hors du dossier www, jamais dans Git), créé avec
  * « npm run gestion:mot-de-passe ». Modèle : server/config-gestion.exemple.php.
@@ -392,6 +394,40 @@ if ($action === 'photo' && $methode === 'GET') {
     header('Content-Length: ' . (string) filesize($chemin));
     readfile($chemin);
     exit;
+}
+
+// ---------------------------------------------------------------- relances
+$fichierRelances = $dossierGestion . '/relances.json';
+
+if ($action === 'relances' && $methode === 'GET') {
+    repondre(200, ['ok' => true, 'relances' => (object) lireJson($fichierRelances)]);
+}
+
+if ($action === 'relance' && $methode === 'POST') {
+    $cle = (string) ($corps['cle'] ?? '');
+    if (!preg_match('/^((?:DV|CT|PA|SIN|OFF)-\d{8}-\d{4}):(rappel|devis|suivi|expire|inutilise)$/', $cle, $m) || $dossierDemande($m[1]) === '') {
+        refuser(400, 'relance');
+    }
+    $note = preg_replace('/[\x00-\x1F\x7F]/u', ' ', mb_substr((string) ($corps['note'] ?? ''), 0, 300)) ?? '';
+
+    $f = fopen($fichierRelances, 'c+');
+    if ($f === false || !flock($f, LOCK_EX)) {
+        refuser(500, 'stockage');
+    }
+    $contenu = stream_get_contents($f);
+    $relances = json_decode($contenu === false ? '' : $contenu, true);
+    if (!is_array($relances)) {
+        $relances = [];
+    }
+    $relances[$cle] = ['le' => date('c'), 'note' => trim($note)];
+    ftruncate($f, 0);
+    rewind($f);
+    fwrite($f, (string) json_encode($relances, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+    fflush($f);
+    flock($f, LOCK_UN);
+    fclose($f);
+    @chmod($fichierRelances, 0600);
+    repondre(200, ['ok' => true, 'cle' => $cle, 'le' => $relances[$cle]['le']]);
 }
 
 refuser(400, 'action');

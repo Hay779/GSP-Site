@@ -427,10 +427,10 @@ export function requestPhotoUrl(reference: string, name: string): string {
 
 let demoRequests: SiteRequest[] = [
   {
-    reference: 'DV-20261127-5512',
+    reference: 'DV-20261125-5512',
     type: 'devis',
     title: 'Demande de devis',
-    receivedAt: '2026-11-27T09:41:00+01:00',
+    receivedAt: '2026-11-25T09:41:00+01:00',
     fields: [
       { label: 'Besoin', value: 'Changement de serrure (porte d’entrée)' },
       { label: 'Lieu', value: 'Marseille 4e' },
@@ -493,7 +493,7 @@ let demoRequests: SiteRequest[] = [
     photos: [],
     status: 'devis_envoye',
     note: '',
-    updatedAt: '2026-11-25T10:00:00+01:00',
+    updatedAt: '2026-11-12T10:00:00+01:00',
   },
 ];
 
@@ -528,4 +528,48 @@ export async function saveRequestFollowUp(
       updatedAt: typeof b.maj_le === 'string' ? b.maj_le : new Date().toISOString(),
     },
   };
+}
+
+// --------------------------------------------------------------------------
+// Relances faites (rubrique « Relances », calculs dans relances.ts)
+// --------------------------------------------------------------------------
+export interface RelanceDone {
+  /** Date de la dernière relance (ISO). */
+  readonly at: string;
+  readonly note: string;
+}
+
+export function parseRelancesDone(body: unknown): Record<string, RelanceDone> {
+  const raw = (body as { relances?: unknown } | null)?.relances;
+  const out: Record<string, RelanceDone> = {};
+  if (raw && typeof raw === 'object' && !Array.isArray(raw)) {
+    for (const [k, v] of Object.entries(raw as Record<string, { le?: unknown; note?: unknown }>)) {
+      if (typeof v?.le === 'string') out[k] = { at: v.le, note: typeof v.note === 'string' ? v.note : '' };
+    }
+  }
+  return out;
+}
+
+let demoRelances: Record<string, RelanceDone> = {};
+
+export async function fetchRelancesDone(): Promise<ApiResult<Record<string, RelanceDone>>> {
+  if (isDevPreview()) return demo(() => ({ ok: true, data: demoRelances }));
+  const r = await call('GET', 'relances');
+  if (!r) return { ok: false, reason: 'reseau' };
+  return r.status === 200 ? { ok: true, data: parseRelancesDone(r.body) } : { ok: false, reason: failureFrom(r.status, r.body) };
+}
+
+export async function markRelanceDone(key: string, note = ''): Promise<ApiResult<RelanceDone>> {
+  if (isDevPreview()) {
+    return demo(() => {
+      const done = { at: new Date().toISOString(), note };
+      demoRelances = { ...demoRelances, [key]: done };
+      return { ok: true, data: done };
+    });
+  }
+  const r = await call('POST', 'relance', { cle: key, note });
+  if (!r) return { ok: false, reason: 'reseau' };
+  if (r.status !== 200) return { ok: false, reason: failureFrom(r.status, r.body) };
+  const le = (r.body as { le?: unknown })?.le;
+  return { ok: true, data: { at: typeof le === 'string' ? le : new Date().toISOString(), note } };
 }
