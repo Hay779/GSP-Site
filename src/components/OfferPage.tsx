@@ -16,8 +16,8 @@ import {
   type OfferDraft,
   type OfferErrors,
 } from '../utils/offerForm';
-import { hrefForPage, type RouterMode } from '../utils/router';
-import { PageHero } from './PageHero';
+import { hrefForHome, hrefForPage, type RouterMode } from '../utils/router';
+import { BrandMark } from './BrandMark';
 import { sendFormRequest } from '../utils/formDelivery';
 import { DeliveryErrorNotice, HoneypotField } from './FormDelivery';
 
@@ -166,17 +166,49 @@ export function OfferPage({ brand, routerMode }: { readonly brand: BrandConfig; 
   const pro = isProfessional(draft.customerType);
 
   return (
-    <>
-      <PageHero
-        compact
-        title={`-${OFFER_RATE} % sur votre premier projet.`}
-        intro={`Inscrivez-vous en une minute : vous recevez votre code de réduction, valable ${OFFER_MONTHS} mois sur votre premier achat ou votre première intervention.`}
-      />
+    <div className="flex flex-1 flex-col bg-[#F7F5F0] text-[#1C1F21]">
+      {/* Haut de page : uniquement l'offre (pas de menu du site) */}
+      <section className="relative overflow-hidden bg-[#1C1F21] text-[#F3F0E7]">
+        <div aria-hidden="true" className="pointer-events-none absolute -right-24 -top-24 h-[360px] w-[360px] rounded-full bg-[#B79A62]/12 blur-3xl" />
+        <div className="relative mx-auto max-w-[1080px] px-5 pb-28 pt-5 sm:px-8 sm:pb-32 lg:px-10">
+          <div className="flex items-center justify-between gap-4">
+            <a href={hrefForHome(routerMode)} aria-label={`${brand.name} — site`} className="inline-flex items-center rounded-md py-1 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#B79A62]">
+              <BrandMark brand={brand} compact />
+            </a>
+            <a href={brand.phoneHref} className="inline-flex h-11 items-center gap-2 rounded-full border border-[#F3F0E7]/20 px-4 text-[15px] font-semibold tabular-nums hover:border-[#B79A62] [&_svg]:text-[#B79A62]">
+              <Phone className="h-4 w-4" aria-hidden="true" />
+              <span className="hidden sm:inline">{brand.phoneDisplay}</span>
+              <span className="sm:hidden">Appeler</span>
+            </a>
+          </div>
 
-      <section aria-label="Inscription à l’offre" className="w-full border-t border-[#B79A62]/45 bg-[#F7F5F0] text-[#1C1F21]">
-        <div className="mx-auto grid max-w-[1280px] grid-cols-1 gap-8 px-5 py-12 sm:px-8 sm:py-16 lg:grid-cols-12 lg:gap-12 lg:px-10 lg:py-20">
-          <div className="lg:col-span-8 lg:order-2">
-            <div className="rounded-xl border border-[#1C1F21]/12 bg-[#FFFFFF] p-6 shadow-[0_18px_50px_rgba(28,31,33,0.06)] sm:p-9">
+          <div className="mt-10 grid items-end gap-8 sm:mt-14 lg:grid-cols-[auto_1fr] lg:gap-14">
+            <p className="font-display text-[88px] font-bold leading-[0.9] tracking-[-0.03em] text-[#B79A62] sm:text-[120px]">-{OFFER_RATE}%</p>
+            <div>
+              <p className="text-[13px] font-semibold uppercase tracking-[0.16em] text-[#B79A62]">Offre de bienvenue</p>
+              <h1 className="mt-3 font-display text-[30px] font-semibold leading-[1.1] sm:text-[40px]">
+                sur votre premier achat ou votre première intervention.
+              </h1>
+              <p className="mt-4 text-[16px] leading-[1.6] text-[#F3F0E7]/75">
+                Inscrivez-vous ci-dessous : vous recevez votre code tout de suite, valable {OFFER_MONTHS} mois.
+              </p>
+            </div>
+          </div>
+
+          <ol className="mt-9 grid gap-3 sm:grid-cols-3">
+            {['Inscrivez-vous', 'Recevez votre code', 'Donnez-le au moment du devis'].map((step, i) => (
+              <li key={step} className="flex items-center gap-3 rounded-lg border border-[#F3F0E7]/12 bg-[#F3F0E7]/5 px-4 py-3 text-[15px]">
+                <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-[#B79A62] text-[14px] font-bold text-[#1C1F21]">{i + 1}</span>
+                {step}
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      {/* Formulaire d'inscription */}
+      <section aria-label="Inscription à l’offre" className="relative z-10 mx-auto -mt-20 w-full max-w-[1080px] px-5 sm:px-8 lg:px-10">
+        <div className="rounded-xl border border-[#1C1F21]/12 bg-[#FFFFFF] p-6 shadow-[0_18px_50px_rgba(28,31,33,0.10)] sm:p-9">
               {registered ? (
                 <div>
                   <span className="grid h-14 w-14 place-items-center rounded-full bg-[#B79A62] text-[#1C1F21]">
@@ -270,31 +302,23 @@ export function OfferPage({ brand, routerMode }: { readonly brand: BrandConfig; 
                   </div>
                 </form>
               )}
-            </div>
-          </div>
-
-          <aside className="lg:col-span-4 lg:order-1">
-            <div className="lg:sticky lg:top-28 flex flex-col gap-4">
-              <div className="rounded-xl bg-[#1C1F21] p-6 text-[#F3F0E7]">
-                <p className="font-display text-[44px] font-bold leading-none text-[#B79A62]">-{OFFER_RATE} %</p>
-                <p className="mt-3 text-[16px] leading-[1.5]">
-                  sur votre premier achat ou votre première intervention, valable {OFFER_MONTHS} mois après l’inscription.
-                </p>
-                <p className="mt-4 text-[14px] leading-[1.5] text-[#F3F0E7]/70">
-                  Syndics, copropriétés, agences, assureurs, commerces et particuliers : serrurerie, vitrerie, menuiserie, fermetures, clés et badges.
-                </p>
-              </div>
-              <div className="rounded-xl border border-[#1C1F21]/12 bg-[#FFFFFF] p-6">
-                <p className="font-display text-[16px] font-semibold">Une question ?</p>
-                <a href={brand.phoneHref} className="mt-2 inline-flex items-center gap-2 text-[16px] font-semibold tabular-nums text-[#7D612D] hover:text-[#1C1F21]">
-                  <Phone className="h-4 w-4" aria-hidden="true" />
-                  {brand.phoneDisplay}
-                </a>
-              </div>
-            </div>
-          </aside>
         </div>
       </section>
-    </>
+
+      {/* Bas de page réduit */}
+      <footer className="mx-auto mt-auto w-full max-w-[1080px] px-5 pb-8 pt-12 text-[14px] leading-[1.6] text-[#1C1F21]/65 sm:px-8 lg:px-10">
+        <p className="font-semibold text-[#1C1F21]">{brand.name}</p>
+        <p>
+          48 rue de la République, 13002 Marseille ·{' '}
+          <a href={brand.phoneHref} className="whitespace-nowrap font-semibold text-[#7D612D] hover:text-[#1C1F21]">{brand.phoneDisplay}</a>
+        </p>
+        <p className="mt-3 flex flex-wrap gap-x-4 gap-y-1">
+          <a href={hrefForHome(routerMode)} className="underline hover:text-[#1C1F21]">Découvrir le site</a>
+          <a href={hrefForPage('mentions-legales', routerMode)} className="underline hover:text-[#1C1F21]">Mentions légales</a>
+          <a href={hrefForPage('confidentialite', routerMode)} className="underline hover:text-[#1C1F21]">Confidentialité</a>
+          <a href={hrefForPage('cgv', routerMode)} className="underline hover:text-[#1C1F21]">CGV</a>
+        </p>
+      </footer>
+    </div>
   );
 }
