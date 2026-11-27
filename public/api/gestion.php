@@ -10,6 +10,9 @@
  *   POST ?action=utilisation    → { "reference": "OFF-…", "utilise": true|false, "note": "…" }
  *   GET  ?action=offres         → toutes les offres (voir _offres.php)
  *   POST ?action=offre          → { "offre": {…}, "nouvelle": true|false } : créer ou modifier une offre
+ *   GET  ?action=demandes       → demandes des formulaires du site (devis, contact, partenaire, sinistre) + suivi
+ *   POST ?action=suivi          → { "reference": "DV-…", "statut": "en_cours", "note": "…" }
+ *   GET  ?action=photo&reference=SIN-…&nom=photo-1.jpg → photo d'une demande
  *
  * Réglages : ~/config-gestion.php (hors du dossier www, jamais dans Git), créé avec
  * « npm run gestion:mot-de-passe ». Modèle : server/config-gestion.exemple.php.
@@ -26,6 +29,10 @@ const DUREE_CONNEXION = 30 * 24 * 3600;
 const ESSAIS_MAX = 5;
 const FENETRE_ESSAIS = 15 * 60;
 const DOMAINES_PAR_DEFAUT = ['www.serrurerierepublique.fr', 'serrurerierepublique.fr'];
+/** Demandes des formulaires (les inscriptions OFF- sont dans « Inscrits »). */
+const MOTIF_DEMANDE = '/^(DV|CT|PA|SIN)-\d{8}-\d{4}$/';
+const STATUTS_DEMANDE = ['nouvelle', 'en_cours', 'devis_envoye', 'terminee', 'sans_suite'];
+const MAX_DEMANDES = 500;
 
 require __DIR__ . '/_offres.php';
 
@@ -282,6 +289,109 @@ if ($action === 'offre' && $methode === 'POST') {
 
     $offre['ouverte'] = offreOuverte($offre);
     repondre(200, ['ok' => true, 'offre' => $offre]);
+}
+
+// ---------------------------------------------------------------- demandes du site
+$fichierSuivi = $dossierGestion . '/demandes-suivi.json';
+
+/** Dossier d'une demande (référence déjà contrôlée), ou '' si elle n'existe pas. */
+$dossierDemande = static function (string $reference) use ($dossierDemandes): string {
+    $trouves = glob($dossierDemandes . '/*/' . $reference . '/demande.json') ?: [];
+    return count($trouves) > 0 ? dirname($trouves[0]) : '';
+};
+
+if ($action === 'demandes' && $methode === 'GET') {
+    $suivi = lireJson($fichierSuivi);
+    $liste = [];
+    $fichiers = glob($dossierDemandes . '/*/*/demande.json') ?: [];
+    rsort($fichiers); // dossiers AAAA-MM puis références datées : les plus récentes d'abord
+    foreach ($fichiers as $fichier) {
+        if (count($liste) >= MAX_DEMANDES) {
+            break;
+        }
+        $d = lireJson($fichier);
+        $ref = is_string($d['reference'] ?? null) ? $d['reference'] : '';
+        if (!preg_match(MOTIF_DEMANDE, $ref)) {
+            continue;
+        }
+        $champs = [];
+        foreach (($d['champs'] ?? []) as $c) {
+            if (is_array($c) && is_string($c['libelle'] ?? null) && is_string($c['valeur'] ?? null)) {
+                $champs[] = ['libelle' => $c['libelle'], 'valeur' => $c['valeur']];
+            }
+        }
+        $photos = [];
+        foreach (($d['photos'] ?? []) as $nomPhoto) {
+            if (is_string($nomPhoto) && preg_match('/^photo-\d{1,2}\.(jpg|png|webp)$/', $nomPhoto)) {
+                $photos[] = $nomPhoto;
+            }
+        }
+        $s = is_array($suivi[$ref] ?? null) ? $suivi[$ref] : [];
+        $liste[] = [
+            'reference' => $ref,
+            'type' => (string) ($d['type'] ?? ''),
+            'titre' => (string) ($d['titre'] ?? ''),
+            'recu_le' => (string) ($d['recu_le'] ?? ''),
+            'champs' => $champs,
+            'photos' => $photos,
+            'statut' => in_array($s['statut'] ?? '', STATUTS_DEMANDE, true) ? $s['statut'] : 'nouvelle',
+            'note' => (string) ($s['note'] ?? ''),
+            'maj_le' => (string) ($s['le'] ?? ''),
+        ];
+    }
+    usort($liste, static function (array $a, array $b): int {
+        return strcmp($b['recu_le'], $a['recu_le']);
+    });
+    repondre(200, ['ok' => true, 'demandes' => $liste]);
+}
+
+if ($action === 'suivi' && $methode === 'POST') {
+    $reference = (string) ($corps['reference'] ?? '');
+    $statut = (string) ($corps['statut'] ?? '');
+    if (!preg_match(MOTIF_DEMANDE, $reference) || $dossierDemande($reference) === '' || !in_array($statut, STATUTS_DEMANDE, true)) {
+        refuser(400, 'suivi');
+    }
+    $note = trim(str_replace("\r", '', mb_substr((string) ($corps['note'] ?? ''), 0, 1000)));
+    $note = preg_replace('/[\x00-\x09\x0B-\x1F\x7F]/u', ' ', $note) ?? '';
+
+    $f = fopen($fichierSuivi, 'c+');
+    if ($f === false || !flock($f, LOCK_EX)) {
+        refuser(500, 'stockage');
+    }
+    $contenu = stream_get_contents($f);
+    $suivi = json_decode($contenu === false ? '' : $contenu, true);
+    if (!is_array($suivi)) {
+        $suivi = [];
+    }
+    $suivi[$reference] = ['statut' => $statut, 'note' => $note, 'le' => date('c')];
+    ftruncate($f, 0);
+    rewind($f);
+    fwrite($f, (string) json_encode($suivi, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+    fflush($f);
+    flock($f, LOCK_UN);
+    fclose($f);
+    @chmod($fichierSuivi, 0600);
+    repondre(200, ['ok' => true, 'reference' => $reference, 'statut' => $statut, 'note' => $note, 'maj_le' => $suivi[$reference]['le']]);
+}
+
+if ($action === 'photo' && $methode === 'GET') {
+    $reference = (string) ($_GET['reference'] ?? '');
+    $nom = (string) ($_GET['nom'] ?? '');
+    if (!preg_match(MOTIF_DEMANDE, $reference) || !preg_match('/^photo-\d{1,2}\.(jpg|png|webp)$/', $nom, $m)) {
+        refuser(400, 'photo');
+    }
+    $dossier = $dossierDemande($reference);
+    $chemin = $dossier === '' ? '' : $dossier . '/' . $nom;
+    if ($chemin === '' || !is_file($chemin)) {
+        refuser(404, 'photo');
+    }
+    $types = ['jpg' => 'image/jpeg', 'png' => 'image/png', 'webp' => 'image/webp'];
+    header('Content-Type: ' . $types[$m[1]]);
+    header('Cache-Control: private, max-age=3600');
+    header('X-Content-Type-Options: nosniff');
+    header('Content-Length: ' . (string) filesize($chemin));
+    readfile($chemin);
+    exit;
 }
 
 refuser(400, 'action');

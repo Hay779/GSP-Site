@@ -315,3 +315,217 @@ export async function saveOffer(offer: OfferConfig, isNew: boolean): Promise<Api
   const saved = parseOffer((r.body as { offre?: unknown })?.offre);
   return saved ? { ok: true, data: saved } : { ok: false, reason: 'reseau' };
 }
+
+// --------------------------------------------------------------------------
+// Demandes du site (rubrique « Demandes »)
+// --------------------------------------------------------------------------
+export type RequestType = 'devis' | 'contact' | 'partenaire' | 'sinistre';
+export type RequestStatus = 'nouvelle' | 'en_cours' | 'devis_envoye' | 'terminee' | 'sans_suite';
+
+export interface SiteRequest {
+  readonly reference: string;
+  readonly type: RequestType;
+  readonly title: string;
+  readonly receivedAt: string;
+  /** Lignes du formulaire, dans l'ordre. */
+  readonly fields: readonly { readonly label: string; readonly value: string }[];
+  readonly photos: readonly string[];
+  readonly status: RequestStatus;
+  readonly note: string;
+  readonly updatedAt: string;
+}
+
+export const REQUEST_TYPE_LABELS: Readonly<Record<RequestType, string>> = {
+  devis: 'Devis',
+  contact: 'Contact',
+  partenaire: 'Partenaire',
+  sinistre: 'Après sinistre',
+};
+
+export const REQUEST_STATUS_LABELS: Readonly<Record<RequestStatus, string>> = {
+  nouvelle: 'Nouvelle',
+  en_cours: 'En cours',
+  devis_envoye: 'Devis envoyé',
+  terminee: 'Terminée',
+  sans_suite: 'Sans suite',
+};
+
+const REQUEST_TYPES = new Set<RequestType>(['devis', 'contact', 'partenaire', 'sinistre']);
+const REQUEST_STATUSES = new Set<RequestStatus>(['nouvelle', 'en_cours', 'devis_envoye', 'terminee', 'sans_suite']);
+
+export function requestField(r: SiteRequest, ...labels: string[]): string {
+  for (const label of labels) {
+    const v = r.fields.find((f) => f.label.toLowerCase() === label.toLowerCase())?.value.trim();
+    if (v && v !== '—') return v;
+  }
+  return '';
+}
+
+/** Résumé d'une ligne : besoin / sujet / type de sinistre / structure. */
+export function requestSummary(r: SiteRequest): string {
+  return requestField(r, 'Besoin', 'Besoins', 'Type de sinistre', 'Sujet', 'Structure', 'Message');
+}
+
+export function matchesRequestSearch(r: SiteRequest, query: string): boolean {
+  const q = normalize(query.trim());
+  if (!q) return true;
+  const haystack = normalize([r.reference, r.title, r.note, ...r.fields.map((f) => f.value)].join(' '));
+  if (haystack.includes(q)) return true;
+  const digits = q.replace(/\D/g, '');
+  return digits.length >= 4 && requestField(r, 'Téléphone').replace(/\D/g, '').includes(digits);
+}
+
+export function parseRequests(body: unknown): SiteRequest[] {
+  const list = (body as { demandes?: unknown } | null)?.demandes;
+  if (!Array.isArray(list)) return [];
+  return list.flatMap((item: Record<string, unknown>) => {
+    if (typeof item?.reference !== 'string' || !REQUEST_TYPES.has(item.type as RequestType)) return [];
+    const fields = Array.isArray(item.champs)
+      ? item.champs.flatMap((c: { libelle?: unknown; valeur?: unknown }) =>
+          typeof c?.libelle === 'string' && typeof c.valeur === 'string' ? [{ label: c.libelle, value: c.valeur }] : []
+        )
+      : [];
+    return [
+      {
+        reference: item.reference,
+        type: item.type as RequestType,
+        title: typeof item.titre === 'string' ? item.titre : '',
+        receivedAt: typeof item.recu_le === 'string' ? item.recu_le : '',
+        fields,
+        photos: Array.isArray(item.photos) ? item.photos.filter((p): p is string => typeof p === 'string') : [],
+        status: REQUEST_STATUSES.has(item.statut as RequestStatus) ? (item.statut as RequestStatus) : 'nouvelle',
+        note: typeof item.note === 'string' ? item.note : '',
+        updatedAt: typeof item.maj_le === 'string' ? item.maj_le : '',
+      },
+    ];
+  });
+}
+
+/** Export Excel des demandes (une colonne par libellé rencontré). */
+export function requestsToCsv(list: readonly SiteRequest[]): string {
+  const cell = (v: string) => (/[;"\n]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v);
+  const labels = [...new Set(list.flatMap((r) => r.fields.map((f) => f.label)))];
+  const head = ['Référence', 'Type', 'Reçue le', 'Suivi', 'Note', ...labels, 'Photos'];
+  const rows = list.map((r) => [
+    r.reference,
+    REQUEST_TYPE_LABELS[r.type],
+    formatDateTime(r.receivedAt),
+    REQUEST_STATUS_LABELS[r.status],
+    r.note,
+    ...labels.map((l) => clean(r.fields.find((f) => f.label === l)?.value)),
+    String(r.photos.length),
+  ]);
+  return '﻿' + [head, ...rows].map((r) => r.map(cell).join(';')).join('\r\n');
+}
+
+export function requestPhotoUrl(reference: string, name: string): string {
+  if (isDevPreview()) {
+    return `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 3"><rect width="4" height="3" fill="#cfe3ea"/><path d="M0 3 1.4 1.6 2.3 2.4 3 1.8 4 3Z" fill="#8fb4c2"/></svg>')}`;
+  }
+  return `${ENDPOINT}?action=photo&reference=${encodeURIComponent(reference)}&nom=${encodeURIComponent(name)}`;
+}
+
+let demoRequests: SiteRequest[] = [
+  {
+    reference: 'DV-20261127-5512',
+    type: 'devis',
+    title: 'Demande de devis',
+    receivedAt: '2026-11-27T09:41:00+01:00',
+    fields: [
+      { label: 'Besoin', value: 'Changement de serrure (porte d’entrée)' },
+      { label: 'Lieu', value: 'Marseille 4e' },
+      { label: 'Délai', value: 'Cette semaine' },
+      { label: 'Nom', value: 'Exemple E.' },
+      { label: 'Téléphone', value: '06 00 00 00 05' },
+      { label: 'E-mail', value: 'exemple-e@exemple.fr' },
+      { label: 'Message', value: 'Serrure qui accroche, 3 points, porte blindée.' },
+    ],
+    photos: [],
+    status: 'nouvelle',
+    note: '',
+    updatedAt: '',
+  },
+  {
+    reference: 'SIN-20261126-3301',
+    type: 'sinistre',
+    title: 'Photos après sinistre',
+    receivedAt: '2026-11-26T18:02:00+01:00',
+    fields: [
+      { label: 'Type de sinistre', value: 'Effraction' },
+      { label: 'Lieu', value: 'Marseille 2e' },
+      { label: 'Nom', value: 'Exemple F.' },
+      { label: 'Téléphone', value: '06 00 00 00 06' },
+      { label: 'Assureur', value: 'Exemple Assurances' },
+    ],
+    photos: ['photo-1.jpg', 'photo-2.jpg', 'photo-3.jpg'],
+    status: 'en_cours',
+    note: 'Rappelé le 26 au soir, passage prévu demain 9h.',
+    updatedAt: '2026-11-26T19:10:00+01:00',
+  },
+  {
+    reference: 'CT-20261125-0817',
+    type: 'contact',
+    title: 'Message de contact',
+    receivedAt: '2026-11-25T11:20:00+01:00',
+    fields: [
+      { label: 'Sujet', value: 'Une question' },
+      { label: 'Nom', value: 'Exemple G.' },
+      { label: 'Téléphone', value: '06 00 00 00 07' },
+      { label: 'Message', value: 'Faites-vous des doubles de badges Vigik ?' },
+    ],
+    photos: [],
+    status: 'terminee',
+    note: 'Oui, répondu par téléphone.',
+    updatedAt: '2026-11-25T14:00:00+01:00',
+  },
+  {
+    reference: 'PA-20261124-4410',
+    type: 'partenaire',
+    title: 'Demande de partenariat',
+    receivedAt: '2026-11-24T16:45:00+01:00',
+    fields: [
+      { label: 'Structure', value: 'Syndic de copropriété' },
+      { label: 'Société', value: 'Cabinet Exemple' },
+      { label: 'Nom', value: 'Exemple H.' },
+      { label: 'Téléphone', value: '06 00 00 00 08' },
+      { label: 'Volume', value: '30 immeubles' },
+    ],
+    photos: [],
+    status: 'devis_envoye',
+    note: '',
+    updatedAt: '2026-11-25T10:00:00+01:00',
+  },
+];
+
+export async function fetchRequests(): Promise<ApiResult<SiteRequest[]>> {
+  if (isDevPreview()) return demo(() => ({ ok: true, data: demoRequests }));
+  const r = await call('GET', 'demandes');
+  if (!r) return { ok: false, reason: 'reseau' };
+  return r.status === 200 ? { ok: true, data: parseRequests(r.body) } : { ok: false, reason: failureFrom(r.status, r.body) };
+}
+
+export async function saveRequestFollowUp(
+  reference: string,
+  status: RequestStatus,
+  note: string
+): Promise<ApiResult<{ status: RequestStatus; note: string; updatedAt: string }>> {
+  if (isDevPreview()) {
+    return demo(() => {
+      const updatedAt = new Date().toISOString();
+      demoRequests = demoRequests.map((x) => (x.reference === reference ? { ...x, status, note, updatedAt } : x));
+      return { ok: true, data: { status, note, updatedAt } };
+    });
+  }
+  const r = await call('POST', 'suivi', { reference, statut: status, note });
+  if (!r) return { ok: false, reason: 'reseau' };
+  if (r.status !== 200) return { ok: false, reason: failureFrom(r.status, r.body) };
+  const b = r.body as { statut?: unknown; note?: unknown; maj_le?: unknown };
+  return {
+    ok: true,
+    data: {
+      status: REQUEST_STATUSES.has(b.statut as RequestStatus) ? (b.statut as RequestStatus) : status,
+      note: typeof b.note === 'string' ? b.note : note,
+      updatedAt: typeof b.maj_le === 'string' ? b.maj_le : new Date().toISOString(),
+    },
+  };
+}
