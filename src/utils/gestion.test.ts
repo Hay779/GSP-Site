@@ -6,6 +6,7 @@ const base: OfferSignup = {
   reference: 'OFF-20261127-4821',
   receivedAt: '2026-11-27T10:12:00+01:00',
   validUntil: '27/04/2027',
+  offer: 'bienvenue',
   fields: { 'Vous êtes': 'Syndic / copropriété', Société: 'Cabinet Étoile', Nom: 'Ana Bel', Téléphone: '06 12 34 56 78', 'E-mail': 'ana@exemple.fr' },
   usedAt: null,
   note: '',

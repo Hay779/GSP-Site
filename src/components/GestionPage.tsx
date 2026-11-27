@@ -17,6 +17,7 @@ import {
   RefreshCw,
   Repeat,
   Search,
+  QrCode,
   Ticket,
   Undo2,
   Users,
@@ -39,6 +40,9 @@ import {
   type OfferSignup,
   type SignupStatus,
 } from '../utils/gestion';
+import { fetchOffers } from '../utils/gestion';
+import { DEFAULT_SLUG, type OfferConfig } from '../utils/offers';
+import { OffersPanel } from './gestion/OffersPanel';
 import logoUrl from '../assets/images/logo_republique_light.png';
 
 /* Même univers que la page /offre : bleu mer, turquoise, vert d'eau. */
@@ -61,14 +65,16 @@ const FILTERS: readonly { readonly id: Filter; readonly label: string }[] = [
   { id: 'perime', label: 'Périmés' },
 ];
 
-/** Rubriques de l'espace : seule « Offre -5 % » existe pour l'instant. */
-const SECTIONS = [
-  { id: 'offre', label: 'Offre -5 %', icon: Ticket, ready: true },
+/** Rubriques de l'espace (celles « Bientôt » restent à construire). */
+type SectionId = 'offres' | 'inscrits' | 'demandes' | 'relances' | 'publicite' | 'suivi';
+const SECTIONS: readonly { readonly id: SectionId; readonly label: string; readonly icon: typeof Ticket; readonly ready: boolean }[] = [
+  { id: 'offres', label: 'Offres & QR codes', icon: QrCode, ready: true },
+  { id: 'inscrits', label: 'Inscrits', icon: Users, ready: true },
   { id: 'demandes', label: 'Demandes', icon: Inbox, ready: false },
   { id: 'relances', label: 'Relances', icon: Repeat, ready: false },
   { id: 'publicite', label: 'Publicité', icon: Megaphone, ready: false },
   { id: 'suivi', label: 'Suivi du site', icon: BarChart3, ready: false },
-] as const;
+];
 
 function Logo({ routerMode, className = '' }: { readonly routerMode: RouterMode; readonly className?: string }) {
   return (
@@ -164,7 +170,7 @@ function field(s: OfferSignup, key: string): string {
   return v && v !== '—' ? v : '';
 }
 
-function SignupCard({ signup, busy, onToggle }: { readonly signup: OfferSignup; readonly busy: boolean; readonly onToggle: () => void }) {
+function SignupCard({ signup, offerName, busy, onToggle }: { readonly signup: OfferSignup; readonly offerName: string; readonly busy: boolean; readonly onToggle: () => void }) {
   const status = signupStatus(signup);
   const company = field(signup, 'Société');
   const role = field(signup, 'Fonction');
@@ -178,6 +184,10 @@ function SignupCard({ signup, busy, onToggle }: { readonly signup: OfferSignup; 
           <div className="flex flex-wrap items-center gap-2">
             <p className="font-mono text-[16px] font-bold tracking-[0.02em]">{signup.reference}</p>
             <span className={`rounded-full px-2.5 py-0.5 text-[12.5px] font-semibold ${STATUS_STYLE[status]}`}>{STATUS_LABELS[status]}</span>
+            <span className="inline-flex max-w-full items-center gap-1 truncate rounded-full bg-[#F0F9FC] px-2.5 py-0.5 text-[12.5px] font-semibold text-[#0E6BA8]">
+              <Ticket className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+              {offerName}
+            </span>
           </div>
           <p className="mt-1 text-[13.5px] text-[#0B2A3C]/55">
             Inscrit le {formatDateTime(signup.receivedAt)} · valable jusqu’au {signup.validUntil || '—'}
@@ -237,13 +247,18 @@ function Dashboard({ routerMode, onLoggedOut }: { readonly routerMode: RouterMod
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState<Filter>('tous');
   const [busyRef, setBusyRef] = useState<string | null>(null);
+  const [section, setSection] = useState<SectionId>('offres');
+  const [offers, setOffers] = useState<OfferConfig[] | null>(null);
+  const [offerFilter, setOfferFilter] = useState<string>('toutes');
 
   const load = useCallback(async () => {
     setError(null);
-    const r = await fetchSignups();
+    const [r, o] = await Promise.all([fetchSignups(), fetchOffers()]);
+    if (!r.ok && r.reason === 'non_connecte') return onLoggedOut();
     if (r.ok) setSignups(r.data);
-    else if (r.reason === 'non_connecte') onLoggedOut();
     else setError(r.reason);
+    if (o.ok) setOffers(o.data);
+    else if (r.ok) setError(o.reason);
   }, [onLoggedOut]);
 
   useEffect(() => {
@@ -253,6 +268,7 @@ function Dashboard({ routerMode, onLoggedOut }: { readonly routerMode: RouterMod
   const counts = useMemo(() => {
     const c = { total: 0, actifs: 0, bientot: 0, utilise: 0 };
     for (const s of signups ?? []) {
+      if (offerFilter !== 'toutes' && s.offer !== offerFilter) continue;
       const st = signupStatus(s);
       c.total += 1;
       if (st === 'valide' || st === 'bientot') c.actifs += 1;
@@ -260,18 +276,19 @@ function Dashboard({ routerMode, onLoggedOut }: { readonly routerMode: RouterMod
       if (st === 'utilise') c.utilise += 1;
     }
     return c;
-  }, [signups]);
+  }, [signups, offerFilter]);
 
   const visible = useMemo(
     () =>
       (signups ?? []).filter((s) => {
+        if (offerFilter !== 'toutes' && s.offer !== offerFilter) return false;
         if (!matchesSearch(s, query)) return false;
         const st = signupStatus(s);
         if (filter === 'actifs') return st === 'valide' || st === 'bientot';
         if (filter === 'tous') return true;
         return st === filter;
       }),
-    [signups, query, filter]
+    [signups, query, filter, offerFilter]
   );
 
   const toggle = async (s: OfferSignup) => {
@@ -322,15 +339,24 @@ function Dashboard({ routerMode, onLoggedOut }: { readonly routerMode: RouterMod
           <ul className="flex gap-1.5 pb-2.5">
             {SECTIONS.map((s) => (
               <li key={s.id}>
-                <span
-                  aria-current={s.ready ? 'page' : undefined}
-                  className={`inline-flex h-9 items-center gap-2 whitespace-nowrap rounded-full px-3.5 text-[14px] font-semibold ${s.ready ? 'text-[#FFFFFF] shadow-[0_8px_18px_-10px_rgba(14,107,168,0.9)]' : 'text-[#0B2A3C]/40'}`}
-                  style={s.ready ? { backgroundImage: SEA } : undefined}
-                >
-                  <s.icon className="h-4 w-4" aria-hidden="true" />
-                  {s.label}
-                  {!s.ready && <span className="rounded-full bg-[#0B2A3C]/[0.06] px-2 py-0.5 text-[11px] font-semibold">Bientôt</span>}
-                </span>
+                {s.ready ? (
+                  <button
+                    type="button"
+                    onClick={() => setSection(s.id)}
+                    aria-current={section === s.id ? 'page' : undefined}
+                    className={`inline-flex h-9 cursor-pointer items-center gap-2 whitespace-nowrap rounded-full px-3.5 text-[14px] font-semibold transition ${section === s.id ? 'text-[#FFFFFF] shadow-[0_8px_18px_-10px_rgba(14,107,168,0.9)]' : 'text-[#0B2A3C]/70 hover:bg-[#F0F9FC] hover:text-[#0E6BA8]'}`}
+                    style={section === s.id ? { backgroundImage: SEA } : undefined}
+                  >
+                    <s.icon className="h-4 w-4" aria-hidden="true" />
+                    {s.label}
+                  </button>
+                ) : (
+                  <span className="inline-flex h-9 items-center gap-2 whitespace-nowrap rounded-full px-3.5 text-[14px] font-semibold text-[#0B2A3C]/35">
+                    <s.icon className="h-4 w-4" aria-hidden="true" />
+                    {s.label}
+                    <span className="rounded-full bg-[#0B2A3C]/[0.06] px-2 py-0.5 text-[11px] font-semibold">Bientôt</span>
+                  </span>
+                )}
               </li>
             ))}
           </ul>
@@ -338,10 +364,45 @@ function Dashboard({ routerMode, onLoggedOut }: { readonly routerMode: RouterMod
       </header>
 
       <div className="mx-auto w-full max-w-[1180px] flex-1 px-4 py-6 sm:px-6 sm:py-8">
+        {section === 'offres' ? (
+          <>
+            {error && (
+              <p role="alert" className="mb-5 rounded-xl bg-[#FDECEA] px-4 py-3 text-[14.5px] font-medium text-[#A8321F]">
+                {failureMessage(error)}
+              </p>
+            )}
+            <OffersPanel
+              offers={offers}
+              signups={signups ?? []}
+              onOffersChange={setOffers}
+              onShowSignups={(slug) => {
+                setOfferFilter(slug);
+                setSection('inscrits');
+              }}
+              onError={(reason) => (reason === 'non_connecte' ? onLoggedOut() : setError(reason))}
+            />
+          </>
+        ) : (
+        <>
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
-            <h1 className="font-display text-[26px] font-bold tracking-[-0.02em] sm:text-[30px]">Offre -5 % du flyer</h1>
-            <p className="mt-1 text-[14.5px] text-[#0B2A3C]/60">Inscriptions de la page /offre. Chaque inscription vous est aussi envoyée par e-mail.</p>
+            <h1 className="font-display text-[26px] font-bold tracking-[-0.02em] sm:text-[30px]">Inscrits aux offres</h1>
+            <p className="mt-1 text-[14.5px] text-[#0B2A3C]/60">Chaque inscription vous est aussi envoyée par e-mail.</p>
+            <label className="mt-3 inline-flex items-center gap-2 text-[14px] font-semibold text-[#0B2A3C]/70">
+              Offre :
+              <select
+                value={offerFilter}
+                onChange={(e) => setOfferFilter(e.target.value)}
+                className="h-10 max-w-[260px] cursor-pointer rounded-full border border-[#0B2A3C]/12 bg-[#FFFFFF] px-3.5 text-[14px] font-semibold text-[#0B2A3C] focus:border-[#1391B8] focus:outline-none"
+              >
+                <option value="toutes">Toutes les offres</option>
+                {(offers ?? []).map((o) => (
+                  <option key={o.slug} value={o.slug}>
+                    {o.name}
+                  </option>
+                ))}
+              </select>
+            </label>
           </div>
           <button type="button" onClick={() => void load()} className="inline-flex h-10 cursor-pointer items-center gap-2 rounded-full bg-[#FFFFFF] px-4 text-[14px] font-semibold text-[#0B2A3C]/75 shadow-[0_6px_18px_-12px_rgba(11,42,60,0.5)] ring-1 ring-[#0B2A3C]/[0.08] transition hover:text-[#0E6BA8]">
             <RefreshCw className="h-4 w-4" aria-hidden="true" />
@@ -411,10 +472,18 @@ function Dashboard({ routerMode, onLoggedOut }: { readonly routerMode: RouterMod
             </p>
             <ul className="mt-2 grid gap-3 lg:grid-cols-2">
               {visible.map((s) => (
-                <SignupCard key={s.reference} signup={s} busy={busyRef === s.reference} onToggle={() => void toggle(s)} />
+                <SignupCard
+                  key={s.reference}
+                  signup={s}
+                  offerName={(offers ?? []).find((o) => o.slug === s.offer)?.name ?? (s.offer === DEFAULT_SLUG ? 'Offre de bienvenue' : s.offer)}
+                  busy={busyRef === s.reference}
+                  onToggle={() => void toggle(s)}
+                />
               ))}
             </ul>
           </>
+        )}
+        </>
         )}
       </div>
     </div>

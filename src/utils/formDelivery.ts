@@ -36,6 +36,8 @@ export interface DeliveryInput {
   readonly startedAt: number;
   readonly honeypot: string;
   readonly photos?: readonly Blob[];
+  /** Champs techniques en plus (ex. { offre: 'bienvenue' } pour une inscription). */
+  readonly extra?: Readonly<Record<string, string>>;
 }
 
 export function buildFormData(input: DeliveryInput): FormData {
@@ -47,6 +49,9 @@ export function buildFormData(input: DeliveryInput): FormData {
   );
   data.append('debut', String(Math.floor(input.startedAt)));
   data.append(HONEYPOT_NAME, input.honeypot);
+  for (const [key, value] of Object.entries(input.extra ?? {})) {
+    data.append(key, value);
+  }
   (input.photos ?? []).forEach((photo, index) => {
     data.append('photos[]', photo, `photo-${index + 1}.jpg`);
   });
