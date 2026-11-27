@@ -57,7 +57,8 @@ function outFile(path: string): string {
 }
 
 async function main() {
-  await new Promise<void>((ok) => server.listen(PORT, ok));
+  // 127.0.0.1 (et non « localhost ») : un autre programme peut occuper le même port sur ::1.
+  await new Promise<void>((ok, ko) => server.once('error', ko).listen(PORT, '127.0.0.1', ok));
   const browser = await chromium.launch();
   // Animations désactivées : le contenu est figé dans son état visible.
   const context = await browser.newContext({ reducedMotion: 'reduce', viewport: { width: 1280, height: 900 } });
@@ -68,7 +69,7 @@ async function main() {
   const routes = [...indexableRoutes(), { kind: 'notFound' } as const];
   for (const route of routes) {
     const path = pathForRoute(route);
-    await page.goto(`http://localhost:${PORT}${path === '/404' ? '/page-introuvable-404' : path}`, { waitUntil: 'networkidle' });
+    await page.goto(`http://127.0.0.1:${PORT}${path === '/404' ? '/page-introuvable-404' : path}`, { waitUntil: 'networkidle' });
     await page.waitForTimeout(300);
     // Accueil : la photo du haut de page (élément LCP) est demandée dès la lecture du <head>.
     if (path === '/') {
