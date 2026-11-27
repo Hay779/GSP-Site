@@ -46,6 +46,7 @@ import { DEFAULT_SLUG, type OfferConfig } from '../utils/offers';
 import { OffersPanel } from './gestion/OffersPanel';
 import { RequestsPanel } from './gestion/RequestsPanel';
 import { RelancesPanel } from './gestion/RelancesPanel';
+import { SuiviPanel } from './gestion/SuiviPanel';
 import { fetchRelancesDone, type RelanceDone } from '../utils/gestion';
 import { computeRelances } from '../utils/relances';
 import { fetchRequests, type SiteRequest } from '../utils/gestion';
@@ -79,7 +80,7 @@ const SECTIONS: readonly { readonly id: SectionId; readonly label: string; reado
   { id: 'inscrits', label: 'Inscrits', icon: Users, ready: true },
   { id: 'relances', label: 'Relances', icon: Repeat, ready: true },
   { id: 'publicite', label: 'Publicité', icon: Megaphone, ready: false },
-  { id: 'suivi', label: 'Suivi du site', icon: BarChart3, ready: false },
+  { id: 'suivi', label: 'Suivi du site', icon: BarChart3, ready: true },
 ];
 
 function Logo({ routerMode, className = '' }: { readonly routerMode: RouterMode; readonly className?: string }) {
@@ -269,6 +270,7 @@ function Dashboard({ routerMode, onLoggedOut }: { readonly routerMode: RouterMod
   const [offerFilter, setOfferFilter] = useState<string>('toutes');
   const [requests, setRequests] = useState<SiteRequest[] | null>(null);
   const newRequests = (requests ?? []).filter((x) => x.status === 'nouvelle').length;
+  const onSuiviError = useCallback((reason: ApiFailure) => (reason === 'non_connecte' ? onLoggedOut() : setError(reason)), [onLoggedOut]);
   const [relancesDone, setRelancesDone] = useState<Record<string, RelanceDone> | null>(null);
   const relanceCount = useMemo(
     () => (requests && signups && relancesDone ? computeRelances(requests, signups, relancesDone).length : 0),
@@ -402,7 +404,16 @@ function Dashboard({ routerMode, onLoggedOut }: { readonly routerMode: RouterMod
       </header>
 
       <div className="mx-auto w-full max-w-[1180px] flex-1 px-4 py-6 sm:px-6 sm:py-8">
-        {section === 'relances' ? (
+        {section === 'suivi' ? (
+          <>
+            {error && (
+              <p role="alert" className="mb-5 rounded-xl bg-[#FDECEA] px-4 py-3 text-[14.5px] font-medium text-[#A8321F]">
+                {failureMessage(error)}
+              </p>
+            )}
+            <SuiviPanel requests={requests} signups={signups} offers={offers} onError={onSuiviError} />
+          </>
+        ) : section === 'relances' ? (
           <>
             {error && (
               <p role="alert" className="mb-5 rounded-xl bg-[#FDECEA] px-4 py-3 text-[14.5px] font-medium text-[#A8321F]">

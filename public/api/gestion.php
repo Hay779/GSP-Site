@@ -15,6 +15,7 @@
  *   GET  ?action=photo&reference=SIN-…&nom=photo-1.jpg → photo d'une demande
  *   GET  ?action=relances       → relances déjà faites { "DV-…:devis": { "le": …, "note": … } }
  *   POST ?action=relance        → { "cle": "DV-…:devis", "note": "…" } : relance faite
+ *   GET  ?action=stats&jours=30 → totaux de visites par jour (compteur public/api/stat.php)
  *
  * Réglages : ~/config-gestion.php (hors du dossier www, jamais dans Git), créé avec
  * « npm run gestion:mot-de-passe ». Modèle : server/config-gestion.exemple.php.
@@ -428,6 +429,29 @@ if ($action === 'relance' && $methode === 'POST') {
     fclose($f);
     @chmod($fichierRelances, 0600);
     repondre(200, ['ok' => true, 'cle' => $cle, 'le' => $relances[$cle]['le']]);
+}
+
+// ---------------------------------------------------------------- suivi du site
+if ($action === 'stats' && $methode === 'GET') {
+    $jours = max(1, min(400, (int) ($_GET['jours'] ?? 30)));
+    $dossierStats = $dossierGestion . '/stats';
+    $liste = [];
+    $jour = new DateTimeImmutable('today', new DateTimeZone('Europe/Paris'));
+    for ($i = $jours - 1; $i >= 0; $i--) {
+        $date = $jour->modify('-' . $i . ' days')->format('Y-m-d');
+        $t = lireJson($dossierStats . '/' . $date . '.json');
+        $liste[] = [
+            'jour' => $date,
+            'vues' => (int) ($t['vues'] ?? 0),
+            'entrees' => (int) ($t['entrees'] ?? 0),
+            'pages' => (object) (is_array($t['pages'] ?? null) ? $t['pages'] : []),
+            'sources' => (object) (is_array($t['sources'] ?? null) ? $t['sources'] : []),
+            'offres' => (object) (is_array($t['offres'] ?? null) ? $t['offres'] : []),
+            'mobile' => (int) ($t['mobile'] ?? 0),
+            'ordinateur' => (int) ($t['ordinateur'] ?? 0),
+        ];
+    }
+    repondre(200, ['ok' => true, 'jours' => $liste]);
 }
 
 refuser(400, 'action');
