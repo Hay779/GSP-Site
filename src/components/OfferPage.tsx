@@ -48,12 +48,21 @@ import logoUrl from '../assets/images/logo_republique_light.png';
 const INK = '#0B2A3C';
 const SEA = 'linear-gradient(120deg,#0E6BA8 0%,#1391B8 50%,#17B3A3 100%)';
 
-const TYPES: Readonly<Record<CustomerType, { short: string; icon: typeof Building2 }>> = {
-  'Syndic / copropriété': { short: 'Syndic', icon: Building2 },
-  'Agence immobilière / bailleur': { short: 'Agence / bailleur', icon: KeyRound },
-  'Assureur / expert': { short: 'Assureur', icon: ShieldCheck },
-  'Commerce / entreprise': { short: 'Entreprise', icon: Store },
-  Particulier: { short: 'Particulier', icon: UserRound },
+interface TypeInfo {
+  readonly short: string;
+  readonly hint: string;
+  readonly icon: typeof Building2;
+  /** Libellé et exemple du champ « nom de la société » pour ce type. */
+  readonly companyLabel?: string;
+  readonly companyPlaceholder?: string;
+}
+
+const TYPES: Readonly<Record<CustomerType, TypeInfo>> = {
+  'Syndic / copropriété': { short: 'Syndic', hint: 'Copropriétés', icon: Building2, companyLabel: 'Nom complet du syndic ou du cabinet', companyPlaceholder: 'Ex. Cabinet Martin Immobilier' },
+  'Agence immobilière / bailleur': { short: 'Agence / bailleur', hint: 'Gestion locative', icon: KeyRound, companyLabel: 'Nom complet de l’agence ou du bailleur', companyPlaceholder: 'Ex. Agence du Vieux-Port' },
+  'Assureur / expert': { short: 'Assureur / expert', hint: 'Sinistres', icon: ShieldCheck, companyLabel: 'Nom complet de la compagnie ou du cabinet', companyPlaceholder: 'Ex. Cabinet d’expertise Provence' },
+  'Commerce / entreprise': { short: 'Entreprise', hint: 'Commerces, bureaux', icon: Store, companyLabel: 'Nom complet de l’entreprise', companyPlaceholder: 'Ex. Boulangerie du Panier' },
+  Particulier: { short: 'Particulier', hint: 'Votre logement', icon: UserRound },
 };
 
 const FIELD =
@@ -264,19 +273,31 @@ export function OfferPage({ brand, routerMode }: { readonly brand: BrandConfig; 
                 <form ref={formRef} onSubmit={submit} noValidate className="relative flex flex-col gap-5">
                   <fieldset data-invalid={Boolean(errors.customerType)} tabIndex={-1} aria-describedby={errors.customerType ? 'type-err' : undefined} className="focus:outline-none">
                     <legend className="text-[14px] font-semibold text-[#0B2A3C]/80">Vous êtes</legend>
-                    <div className="mt-2 flex flex-wrap gap-2">
-                      {CUSTOMER_TYPES.map((type) => {
+                    <div className="mt-2.5 grid grid-cols-2 gap-2.5 sm:grid-cols-6">
+                      {CUSTOMER_TYPES.map((type, index) => {
                         const t = TYPES[type];
                         const checked = draft.customerType === type;
                         return (
-                          <label key={type} title={type} className="relative cursor-pointer">
+                          <label key={type} title={type} className={`relative cursor-pointer ${index < 3 ? 'sm:col-span-2' : 'sm:col-span-3'} ${index === 4 ? 'col-span-2' : ''}`}>
                             <input type="radio" name="type" aria-label={type} checked={checked} onChange={() => update({ customerType: type })} className="peer sr-only" />
                             <span
-                              className={`inline-flex h-11 items-center gap-2 rounded-full px-4 text-[14.5px] font-medium transition-all duration-200 peer-focus-visible:ring-4 peer-focus-visible:ring-[#1391B8]/25 ${checked ? 'text-[#FFFFFF] shadow-[0_8px_20px_-10px_rgba(14,107,168,0.9)]' : 'border border-[#0B2A3C]/12 bg-[#F5FAFC] hover:border-[#1391B8]/50'}`}
-                              style={checked ? { backgroundImage: SEA } : undefined}
+                              className={`relative flex h-full gap-2.5 rounded-2xl border-2 p-3.5 transition-all ${index === 4 ? 'flex-row items-center sm:flex-col sm:items-start' : 'flex-col items-start'} duration-200 peer-focus-visible:ring-4 peer-focus-visible:ring-[#1391B8]/25 ${checked ? 'border-[#1391B8] bg-[#EAF6FB] shadow-[0_10px_24px_-14px_rgba(14,107,168,0.9)]' : 'border-[#0B2A3C]/10 bg-[#FFFFFF] hover:-translate-y-0.5 hover:border-[#1391B8]/45 hover:shadow-[0_10px_24px_-16px_rgba(11,42,60,0.5)]'}`}
                             >
-                              {checked ? <Check className="h-4 w-4" strokeWidth={2.6} aria-hidden="true" /> : <t.icon className="h-4 w-4 text-[#1391B8]" strokeWidth={1.9} aria-hidden="true" />}
-                              {t.short}
+                              <span
+                                className={`grid h-10 w-10 shrink-0 place-items-center rounded-xl transition-colors duration-200 ${checked ? 'text-[#FFFFFF]' : 'bg-[#E9F6F8] text-[#0E6BA8]'}`}
+                                style={checked ? { backgroundImage: SEA } : undefined}
+                              >
+                                <t.icon className="h-5 w-5" strokeWidth={2} aria-hidden="true" />
+                              </span>
+                              <span className="min-w-0 leading-tight">
+                                <span className="block text-[14.5px] font-bold">{t.short}</span>
+                                <span className="mt-0.5 block text-[12.5px] text-[#0B2A3C]/55">{t.hint}</span>
+                              </span>
+                              {checked && (
+                                <span className="absolute -right-1.5 -top-1.5 grid h-6 w-6 place-items-center rounded-full text-[#FFFFFF] ring-2 ring-[#FFFFFF]" style={{ backgroundImage: SEA }} aria-hidden="true">
+                                  <Check className="h-3.5 w-3.5" strokeWidth={3} />
+                                </span>
+                              )}
                             </span>
                           </label>
                         );
@@ -285,8 +306,28 @@ export function OfferPage({ brand, routerMode }: { readonly brand: BrandConfig; 
                     <ErrorText id="type-err" message={errors.customerType} />
                   </fieldset>
 
-                  {pro && (
-                    <TextField id="o-company" label="Société" autoComplete="organization" placeholder="Nom de la société" value={draft.company} onChange={(v) => update({ company: v })} error={errors.company} />
+                  {pro && draft.customerType && (
+                    <div className="rounded-2xl border border-[#1391B8]/25 bg-[#F0F9FC] p-4 sm:p-5">
+                      <p className="flex items-center gap-2 text-[14.5px] font-bold text-[#0E6BA8]">
+                        <Building2 className="h-4 w-4" aria-hidden="true" />
+                        Votre société
+                      </p>
+                      <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                        <div className="sm:col-span-2">
+                          <TextField
+                            id="o-company"
+                            label={TYPES[draft.customerType].companyLabel ?? 'Nom complet de la société'}
+                            autoComplete="organization"
+                            placeholder={TYPES[draft.customerType].companyPlaceholder}
+                            value={draft.company}
+                            onChange={(v) => update({ company: v })}
+                            error={errors.company}
+                          />
+                        </div>
+                        <TextField id="o-role" label="Votre fonction (facultatif)" autoComplete="organization-title" placeholder="Ex. gestionnaire" value={draft.role} onChange={(v) => update({ role: v })} />
+                        <TextField id="o-city" label="Ville (facultatif)" autoComplete="address-level2" placeholder="Ex. Marseille 6e" value={draft.city} onChange={(v) => update({ city: v })} />
+                      </div>
+                    </div>
                   )}
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <TextField id="o-name" label="Nom et prénom" autoComplete="name" value={draft.fullName} onChange={(v) => update({ fullName: v })} error={errors.fullName} />

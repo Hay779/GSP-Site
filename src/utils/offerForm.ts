@@ -31,6 +31,8 @@ export interface OfferDraft {
   readonly customerType: CustomerType | null;
   /** Obligatoire sauf pour un particulier. */
   readonly company: string;
+  /** Fonction dans la société (facultatif). */
+  readonly role: string;
   readonly fullName: string;
   readonly phone: string;
   /** Obligatoire : le code y est envoyé. */
@@ -45,6 +47,7 @@ export type OfferErrors = Partial<Record<keyof OfferDraft, string>>;
 export const INITIAL_OFFER_DRAFT: OfferDraft = {
   customerType: null,
   company: '',
+  role: '',
   fullName: '',
   phone: '',
   email: '',
@@ -63,7 +66,7 @@ export function validateOfferDraft(draft: OfferDraft): OfferErrors {
     errors.customerType = 'Indiquez qui vous êtes.';
   }
   if (isProfessional(draft.customerType) && draft.company.trim().length < 2) {
-    errors.company = 'Indiquez le nom de votre société.';
+    errors.company = 'Indiquez le nom complet de votre société.';
   }
   if (draft.fullName.trim().length < 2) {
     errors.fullName = 'Indiquez votre nom.';
@@ -102,6 +105,7 @@ export function buildOfferSummary(draft: OfferDraft): readonly { readonly label:
     { label: 'Offre', value: `-${OFFER_RATE} % flyer (valable ${OFFER_MONTHS} mois)` },
     { label: 'Vous êtes', value: draft.customerType ?? '—' },
     { label: 'Société', value: draft.company.trim() || '—' },
+    { label: 'Fonction', value: draft.role.trim() || '—' },
     { label: 'Nom', value: draft.fullName.trim() },
     { label: 'Téléphone', value: draft.phone.trim() },
     { label: 'E-mail', value: draft.email.trim() },

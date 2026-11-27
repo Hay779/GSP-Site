@@ -12,6 +12,7 @@ import {
 const filled: OfferDraft = {
   customerType: 'Syndic / copropriété',
   company: 'Syndic du Port',
+  role: '',
   fullName: 'Ana Bel',
   phone: '06 12 34 56 78',
   email: 'ana@syndic.fr',
