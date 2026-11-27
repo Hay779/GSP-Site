@@ -163,6 +163,10 @@ if ($type === 'inscription') {
         refuser(410, 'offre');
     }
     $offre = $offres[$slugOffre];
+    // Questions ajoutées à l'offre dans /gestion : obligatoires remplies, choix existants.
+    if (erreurReponses($offre, $valeurDe) !== '') {
+        refuser(400, 'question');
+    }
     // Anti-doublon par offre (clés sans préfixe = offre de bienvenue, comme avant).
     $prefixeCle = $slugOffre === OFFRE_DEFAUT ? '' : $slugOffre . '|';
     $emailInscrit = mb_strtolower(uneLigne($valeurDe('E-mail'), 254));

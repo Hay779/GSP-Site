@@ -4,6 +4,8 @@
  * c'est celle du premier flyer (QR code vers /offre).
  */
 import { SITE_URL } from './seo';
+import { parseQuestions, serializeQuestions, validateQuestions, type OfferQuestion } from './offerQuestions';
+import { DEFAULT_PAGE, parsePage, serializePage, validatePage, type PageSettings } from './offerPage';
 
 export type ReductionType = 'pourcent' | 'euros';
 
@@ -25,6 +27,10 @@ export interface OfferConfig {
   readonly start: string;
   readonly end: string;
   readonly active: boolean;
+  /** Questions en plus du formulaire de base. */
+  readonly questions: readonly OfferQuestion[];
+  /** Couleurs, textes et blocs de la page. */
+  readonly page: PageSettings;
 }
 
 export const DEFAULT_SLUG = 'bienvenue';
@@ -52,6 +58,8 @@ export const DEFAULT_OFFER: OfferConfig = {
   start: '',
   end: '',
   active: true,
+  questions: [],
+  page: DEFAULT_PAGE,
 };
 
 /** « -5 % » ou « -50 € » (espace insécable). */
@@ -109,7 +117,7 @@ export function slugify(text: string): string {
 
 export const SLUG_PATTERN = /^[a-z0-9](?:[a-z0-9-]{1,38}[a-z0-9])$/;
 
-export type OfferErrors = Partial<Record<'slug' | 'name' | 'title' | 'description' | 'reductionValue' | 'months' | 'conditions' | 'end', string>>;
+export type OfferErrors = Partial<Record<'slug' | 'name' | 'title' | 'description' | 'reductionValue' | 'months' | 'conditions' | 'end' | 'questions' | 'page', string>>;
 
 export function validateOffer(offer: OfferConfig, existingSlugs: readonly string[] = [], isNew = false): OfferErrors {
   const e: OfferErrors = {};
@@ -125,6 +133,10 @@ export function validateOffer(offer: OfferConfig, existingSlugs: readonly string
   if (!Number.isInteger(offer.months) || offer.months < 1 || offer.months > 24) e.months = 'Entre 1 et 24 mois.';
   if (offer.conditions.filter((c) => c.trim()).length === 0) e.conditions = 'Ajoutez au moins une condition.';
   if (offer.start && offer.end && offer.end < offer.start) e.end = 'La fin doit être après le début.';
+  const q = validateQuestions(offer.questions);
+  if (q) e.questions = q;
+  const pageError = validatePage(offer.page);
+  if (pageError) e.page = pageError;
   return e;
 }
 
@@ -140,6 +152,8 @@ interface RawOffer {
   debut?: unknown;
   fin?: unknown;
   actif?: unknown;
+  questions?: unknown;
+  page?: unknown;
 }
 
 /** Offre reçue du serveur (noms français) → objet du site. */
@@ -158,6 +172,8 @@ export function parseOffer(raw: unknown): OfferConfig | null {
     start: typeof r.debut === 'string' ? r.debut : '',
     end: typeof r.fin === 'string' ? r.fin : '',
     active: r.actif !== false,
+    questions: parseQuestions(r.questions),
+    page: parsePage(r.page),
   };
 }
 
@@ -175,6 +191,8 @@ export function serializeOffer(o: OfferConfig): Record<string, unknown> {
     debut: o.start,
     fin: o.end,
     actif: o.active,
+    questions: serializeQuestions(o.questions),
+    page: serializePage(o.page),
   };
 }
 

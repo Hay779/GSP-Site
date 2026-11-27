@@ -14,6 +14,12 @@ if (realpath((string) ($_SERVER['SCRIPT_FILENAME'] ?? '')) === __FILE__) {
 date_default_timezone_set('Europe/Paris');
 
 const OFFRE_DEFAUT = 'bienvenue';
+const TYPES_QUESTIONS = ['texte', 'paragraphe', 'choix', 'cases', 'oui_non', 'nombre', 'date'];
+const LIBELLES_RESERVES = ['offre', 'vous êtes', 'société', 'fonction', 'nom', 'téléphone', 'e-mail', 'ville'];
+const MAX_QUESTIONS = 10;
+const MAX_CHOIX = 12;
+const THEMES_PAGE = ['mer', 'soleil', 'calanques', 'lavande'];
+const BLOCS_PAGE = ['etapes', 'avis', 'infos'];
 
 function offreBienvenue(): array
 {
@@ -86,10 +92,47 @@ function libelleReduction(array $offre): string
     return '-' . $texte . (($offre['reduction_type'] ?? '') === 'euros' ? ' €' : ' %');
 }
 
+/**
+ * Vérifie les réponses aux questions de l'offre (lignes « libellé : valeur » envoyées par le site).
+ * Renvoie '' si tout va bien, sinon le libellé de la question en défaut.
+ */
+function erreurReponses(array $offre, callable $valeurDe): string
+{
+    foreach (($offre['questions'] ?? []) as $q) {
+        $v = trim((string) $valeurDe((string) $q['libelle']));
+        if ($v === '' || $v === '—') {
+            if (!empty($q['obligatoire'])) {
+                return (string) $q['libelle'];
+            }
+            continue;
+        }
+        $type = (string) ($q['type'] ?? '');
+        $options = is_array($q['options'] ?? null) ? $q['options'] : [];
+        $ok = true;
+        if ($type === 'choix') {
+            $ok = in_array($v, $options, true);
+        } elseif ($type === 'cases') {
+            foreach (explode(', ', $v) as $morceau) {
+                $ok = $ok && in_array($morceau, $options, true);
+            }
+        } elseif ($type === 'oui_non') {
+            $ok = in_array($v, ['Oui', 'Non'], true);
+        } elseif ($type === 'nombre') {
+            $ok = (bool) preg_match('/^-?\d+(?:[.,]\d+)?$/', $v);
+        } elseif ($type === 'date') {
+            $ok = (bool) preg_match('/^\d{2}\/\d{2}\/\d{4}$/', $v);
+        }
+        if (!$ok) {
+            return (string) $q['libelle'];
+        }
+    }
+    return '';
+}
+
 /** Champs visibles par le public (page /offre). */
 function offrePublique(array $offre): array
 {
-    $champs = ['slug', 'titre', 'description', 'reduction_type', 'reduction_valeur', 'duree_mois', 'conditions'];
+    $champs = ['slug', 'titre', 'description', 'reduction_type', 'reduction_valeur', 'duree_mois', 'conditions', 'questions', 'page'];
     return array_intersect_key($offre, array_flip($champs));
 }
 
@@ -123,6 +166,59 @@ function validerOffre(array $o): array
             $conditions[] = $c;
         }
     }
+    // Questions ajoutées (constructeur de formulaire).
+    $questions = [];
+    $libellesVus = [];
+    $brutes = is_array($o['questions'] ?? null) ? $o['questions'] : [];
+    if (count($brutes) > MAX_QUESTIONS) {
+        return [[], 'questions'];
+    }
+    foreach ($brutes as $q) {
+        if (!is_array($q)) {
+            return [[], 'questions'];
+        }
+        $idQ = is_string($q['id'] ?? null) ? $q['id'] : '';
+        $libelle = $texte($q['libelle'] ?? '', 80);
+        $typeQ = is_string($q['type'] ?? null) ? $q['type'] : '';
+        $cle = mb_strtolower($libelle);
+        if (!preg_match('/^q[a-z0-9]{1,12}$/', $idQ) || mb_strlen($libelle) < 2 || !in_array($typeQ, TYPES_QUESTIONS, true)
+            || in_array($cle, LIBELLES_RESERVES, true) || isset($libellesVus[$cle]) || isset($libellesVus['#' . $idQ])) {
+            return [[], 'questions'];
+        }
+        $libellesVus[$cle] = true;
+        $libellesVus['#' . $idQ] = true;
+        $options = [];
+        if ($typeQ === 'choix' || $typeQ === 'cases') {
+            foreach ((is_array($q['options'] ?? null) ? $q['options'] : []) as $opt) {
+                $opt = $texte($opt, 60);
+                if ($opt !== '' && strpos($opt, ',') === false && !in_array($opt, $options, true)) {
+                    $options[] = $opt;
+                }
+            }
+            if (count($options) < 2 || count($options) > MAX_CHOIX) {
+                return [[], 'questions'];
+            }
+        }
+        $questions[] = ['id' => $idQ, 'libelle' => $libelle, 'type' => $typeQ, 'obligatoire' => ($q['obligatoire'] ?? false) === true, 'options' => $options];
+    }
+
+    // Page : thème, textes, blocs (chacun une fois, ordre libre).
+    $pageBrute = is_array($o['page'] ?? null) ? $o['page'] : [];
+    $theme = is_string($pageBrute['theme'] ?? null) && in_array($pageBrute['theme'], THEMES_PAGE, true) ? $pageBrute['theme'] : 'mer';
+    $blocs = [];
+    foreach ((is_array($pageBrute['blocs'] ?? null) ? $pageBrute['blocs'] : []) as $b) {
+        $idB = is_array($b) && is_string($b['id'] ?? null) ? $b['id'] : '';
+        if (in_array($idB, BLOCS_PAGE, true) && !in_array($idB, array_column($blocs, 'id'), true)) {
+            $blocs[] = ['id' => $idB, 'visible' => ($b['visible'] ?? true) !== false];
+        }
+    }
+    foreach (BLOCS_PAGE as $idB) {
+        if (!in_array($idB, array_column($blocs, 'id'), true)) {
+            $blocs[] = ['id' => $idB, 'visible' => true];
+        }
+    }
+    $page = ['theme' => $theme, 'bouton' => $texte($pageBrute['bouton'] ?? '', 40), 'message' => $texte($pageBrute['message'] ?? '', 90), 'blocs' => $blocs];
+
     $date = static function ($v): string {
         return is_string($v) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $v) ? $v : '';
     };
@@ -138,6 +234,8 @@ function validerOffre(array $o): array
         'debut' => $date($o['debut'] ?? ''),
         'fin' => $date($o['fin'] ?? ''),
         'actif' => ($o['actif'] ?? true) === true,
+        'questions' => $questions,
+        'page' => $page,
     ];
     if (mb_strlen($propre['nom']) < 3 || mb_strlen($propre['titre']) < 3 || mb_strlen($propre['description']) < 10 || count($conditions) === 0) {
         return [[], 'champs'];

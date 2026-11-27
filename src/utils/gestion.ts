@@ -97,10 +97,20 @@ export const STATUS_LABELS: Readonly<Record<SignupStatus, string>> = {
   utilise: 'Utilisé',
 };
 
-/** Fichier CSV lisible par Excel (séparateur « ; », accents conservés). */
+/** Libellés envoyés par le formulaire de base (le reste = questions propres à l'offre). */
+const BASE_LABELS = new Set(['Offre', 'Vous êtes', 'Société', 'Fonction', 'Nom', 'Téléphone', 'E-mail', 'Ville']);
+
+/** Réponses aux questions ajoutées dans l'offre (libellé → réponse), sans les réponses vides. */
+export function extraAnswers(s: OfferSignup): [string, string][] {
+  return Object.entries(s.fields).filter(([k, v]) => !BASE_LABELS.has(k) && v.trim() !== '' && v !== '—');
+}
+
+/** Fichier CSV lisible par Excel (séparateur « ; », accents conservés ; une colonne par question). */
 export function signupsToCsv(list: readonly OfferSignup[]): string {
   const cell = (v: string) => (/[;"\n]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v);
-  const rows = [CSV_COLUMNS.map((c) => c.label), ...list.map((s) => CSV_COLUMNS.map((c) => c.value(s)))];
+  const extraLabels = [...new Set(list.flatMap((s) => Object.keys(s.fields).filter((k) => !BASE_LABELS.has(k))))];
+  const columns = [...CSV_COLUMNS, ...extraLabels.map((label) => ({ label, value: (s: OfferSignup) => clean(s.fields[label]) }))];
+  const rows = [columns.map((c) => c.label), ...list.map((s) => columns.map((c) => c.value(s)))];
   return '﻿' + rows.map((r) => r.map(cell).join(';')).join('\r\n');
 }
 
@@ -155,7 +165,7 @@ function isDevPreview(): boolean {
 let demoConnected = false;
 const demoUsed = new Map<string, string>();
 const DEMO: readonly OfferSignup[] = [
-  { reference: 'OFF-20261127-4821', receivedAt: '2026-11-27T10:12:00+01:00', validUntil: '27/04/2027', offer: 'syndics-printemps', fields: { 'Vous êtes': 'Syndic / copropriété', Société: 'Cabinet Exemple Immobilier', Fonction: 'Gestionnaire', Nom: 'Exemple A.', Téléphone: '06 00 00 00 01', 'E-mail': 'exemple-a@exemple.fr', Ville: 'Marseille 6e' }, usedAt: null, note: '' },
+  { reference: 'OFF-20261127-4821', receivedAt: '2026-11-27T10:12:00+01:00', validUntil: '27/04/2027', offer: 'syndics-printemps', fields: { 'Vous êtes': 'Syndic / copropriété', Société: 'Cabinet Exemple Immobilier', Fonction: 'Gestionnaire', Nom: 'Exemple A.', Téléphone: '06 00 00 00 01', 'E-mail': 'exemple-a@exemple.fr', Ville: 'Marseille 6e', 'Nombre de lots gérés': '120', 'Travaux prévus': 'Serrures, Contrôle d’accès' }, usedAt: null, note: '' },
   { reference: 'OFF-20261126-1937', receivedAt: '2026-11-26T16:40:00+01:00', validUntil: '26/04/2027', offer: DEFAULT_SLUG, fields: { 'Vous êtes': 'Particulier', Société: '—', Fonction: '—', Nom: 'Exemple B.', Téléphone: '06 00 00 00 02', 'E-mail': 'exemple-b@exemple.fr', Ville: '—' }, usedAt: null, note: '' },
   { reference: 'OFF-20261120-7310', receivedAt: '2026-11-20T09:05:00+01:00', validUntil: '20/04/2027', offer: DEFAULT_SLUG, fields: { 'Vous êtes': 'Commerce / entreprise', Société: 'Commerce Exemple', Fonction: 'Gérant', Nom: 'Exemple C.', Téléphone: '06 00 00 00 03', 'E-mail': 'exemple-c@exemple.fr', Ville: 'Marseille 2e' }, usedAt: '2026-11-25T11:00:00+01:00', note: '' },
   { reference: 'OFF-20260705-2208', receivedAt: '2026-07-05T14:20:00+02:00', validUntil: '05/12/2026', offer: DEFAULT_SLUG, fields: { 'Vous êtes': 'Agence immobilière / bailleur', Société: 'Agence Exemple', Fonction: '—', Nom: 'Exemple D.', Téléphone: '06 00 00 00 04', 'E-mail': 'exemple-d@exemple.fr', Ville: 'Marseille 1er' }, usedAt: null, note: '' },
@@ -275,6 +285,10 @@ let demoOffers: OfferConfig[] = [
     conditions: ['-10 % sur devis signé, pour les syndics et gestionnaires.', 'Valable 3 mois après l’inscription.', 'Non cumulable avec une autre offre ou promotion en cours.'],
     start: '2027-03-01',
     end: '2027-05-31',
+    questions: [
+      { id: 'q1', label: 'Nombre de lots gérés', type: 'nombre', required: true, options: [] },
+      { id: 'q2', label: 'Travaux prévus', type: 'cases', required: false, options: ['Serrures', 'Portes blindées', 'Contrôle d’accès', 'Vitrerie'] },
+    ],
   },
 ];
 

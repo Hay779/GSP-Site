@@ -35,6 +35,7 @@ import {
   setSignupUsed,
   signupStatus,
   signupsToCsv,
+  extraAnswers,
   STATUS_LABELS,
   type ApiFailure,
   type OfferSignup,
@@ -175,6 +176,7 @@ function SignupCard({ signup, offerName, busy, onToggle }: { readonly signup: Of
   const company = field(signup, 'Société');
   const role = field(signup, 'Fonction');
   const city = field(signup, 'Ville');
+  const extras = extraAnswers(signup);
   const phone = field(signup, 'Téléphone');
   const email = field(signup, 'E-mail');
   return (
@@ -237,6 +239,16 @@ function SignupCard({ signup, offerName, busy, onToggle }: { readonly signup: Of
           )}
         </div>
       </div>
+      {extras.length > 0 && (
+        <dl className="mt-4 grid gap-x-4 gap-y-2 rounded-xl bg-[#F5FAFC] p-3.5 text-[14px] sm:grid-cols-2">
+          {extras.map(([label, value]) => (
+            <div key={label} className="min-w-0">
+              <dt className="text-[12.5px] font-semibold text-[#0B2A3C]/55">{label}</dt>
+              <dd className="break-words font-medium">{value}</dd>
+            </div>
+          ))}
+        </dl>
+      )}
     </li>
   );
 }
