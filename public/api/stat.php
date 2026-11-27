@@ -4,8 +4,8 @@
  * Sans cookie, sans identifiant, sans adresse IP enregistrée : seuls des totaux par jour sont gardés
  * (pages vues, entrées sur le site, provenance générale, offre vue, type d'appareil).
  *
- * POST /api/stat.php  corps JSON : { "p": "/chemin", "e": true|false, "s": "google", "o": "bienvenue", "m": true|false }
- *   p : page vue ; e : entrée sur le site (arrivée depuis l'extérieur) ; s : provenance ; o : offre ; m : téléphone.
+ * POST /api/stat.php  corps JSON : { "p": "/chemin", "e": true|false, "s": "google", "o": "bienvenue", "c": "flyer-syndics", "m": true|false }
+ *   p : page vue ; e : entrée sur le site (arrivée depuis l'extérieur) ; s : provenance ; o : offre ; c : campagne ; m : téléphone.
  * Stockage : ~/gestion/stats/AAAA-MM-JJ.json (hors du site).
  */
 declare(strict_types=1);
@@ -54,6 +54,7 @@ if (!preg_match('#^/[a-z0-9/-]{0,80}$#', $page)) {
 $entree = ($d['e'] ?? false) === true;
 $source = is_string($d['s'] ?? null) && in_array($d['s'], SOURCES, true) ? $d['s'] : 'direct';
 $offre = is_string($d['o'] ?? null) && preg_match('/^[a-z0-9-]{1,40}$/', $d['o']) ? $d['o'] : '';
+$campagne = is_string($d['c'] ?? null) && preg_match('/^[a-z0-9-]{1,40}$/', $d['c']) ? $d['c'] : '';
 $mobile = ($d['m'] ?? false) === true;
 
 date_default_timezone_set('Europe/Paris');
@@ -98,7 +99,7 @@ if ($f === false || !flock($f, LOCK_EX)) {
 $contenu = stream_get_contents($f);
 $t = json_decode($contenu === false ? '' : $contenu, true);
 if (!is_array($t)) {
-    $t = ['vues' => 0, 'entrees' => 0, 'pages' => [], 'sources' => [], 'offres' => [], 'mobile' => 0, 'ordinateur' => 0];
+    $t = ['vues' => 0, 'entrees' => 0, 'pages' => [], 'sources' => [], 'offres' => [], 'campagnes' => [], 'mobile' => 0, 'ordinateur' => 0];
 }
 $t['vues'] = (int) ($t['vues'] ?? 0) + 1;
 $t['pages'][$page] = (int) ($t['pages'][$page] ?? 0) + 1;
@@ -106,6 +107,9 @@ if ($entree) {
     $t['entrees'] = (int) ($t['entrees'] ?? 0) + 1;
     $t['sources'][$source] = (int) ($t['sources'][$source] ?? 0) + 1;
     $t[$mobile ? 'mobile' : 'ordinateur'] = (int) ($t[$mobile ? 'mobile' : 'ordinateur'] ?? 0) + 1;
+}
+if ($entree && $campagne !== '' && count($t['campagnes'] ?? []) < 200) {
+    $t['campagnes'][$campagne] = (int) ($t['campagnes'][$campagne] ?? 0) + 1;
 }
 if ($offre !== '') {
     $t['offres'][$offre] = (int) ($t['offres'][$offre] ?? 0) + 1;

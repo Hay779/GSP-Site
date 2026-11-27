@@ -16,6 +16,8 @@
  *   GET  ?action=relances       → relances déjà faites { "DV-…:devis": { "le": …, "note": … } }
  *   POST ?action=relance        → { "cle": "DV-…:devis", "note": "…" } : relance faite
  *   GET  ?action=stats&jours=30 → totaux de visites par jour (compteur public/api/stat.php)
+ *   GET  ?action=campagnes      → campagnes de publicité (~/gestion/campagnes.json)
+ *   POST ?action=campagne       → { "campagne": {…}, "nouvelle": true|false } : créer ou modifier une campagne
  *
  * Réglages : ~/config-gestion.php (hors du dossier www, jamais dans Git), créé avec
  * « npm run gestion:mot-de-passe ». Modèle : server/config-gestion.exemple.php.
@@ -447,11 +449,95 @@ if ($action === 'stats' && $methode === 'GET') {
             'pages' => (object) (is_array($t['pages'] ?? null) ? $t['pages'] : []),
             'sources' => (object) (is_array($t['sources'] ?? null) ? $t['sources'] : []),
             'offres' => (object) (is_array($t['offres'] ?? null) ? $t['offres'] : []),
+            'campagnes' => (object) (is_array($t['campagnes'] ?? null) ? $t['campagnes'] : []),
             'mobile' => (int) ($t['mobile'] ?? 0),
             'ordinateur' => (int) ($t['ordinateur'] ?? 0),
         ];
     }
     repondre(200, ['ok' => true, 'jours' => $liste]);
+}
+
+// ---------------------------------------------------------------- publicité : campagnes
+$fichierCampagnes = $dossierGestion . '/campagnes.json';
+const CANAUX = ['flyer', 'affiche', 'google', 'facebook', 'instagram', 'annuaire', 'autre'];
+
+if ($action === 'campagnes' && $methode === 'GET') {
+    $liste = array_values(array_filter(lireJson($fichierCampagnes), 'is_array'));
+    repondre(200, ['ok' => true, 'campagnes' => $liste]);
+}
+
+if ($action === 'campagne' && $methode === 'POST') {
+    $c = is_array($corps['campagne'] ?? null) ? $corps['campagne'] : [];
+    $texteC = static function ($v, int $max): string {
+        $v = is_string($v) ? $v : '';
+        return trim(mb_substr(preg_replace('/[\x00-\x1F\x7F]/u', ' ', $v) ?? '', 0, $max));
+    };
+    $dateC = static function ($v): string {
+        return is_string($v) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $v) ? $v : '';
+    };
+    $id = is_string($c['id'] ?? null) ? $c['id'] : '';
+    $budget = is_int($c['budget'] ?? null) || is_float($c['budget'] ?? null) ? (float) $c['budget'] : 0.0;
+    $propre = [
+        'id' => $id,
+        'nom' => $texteC($c['nom'] ?? '', 80),
+        'canal' => is_string($c['canal'] ?? null) && in_array($c['canal'], CANAUX, true) ? $c['canal'] : 'autre',
+        'offre' => is_string($c['offre'] ?? null) && preg_match('/^[a-z0-9-]{1,40}$/', $c['offre']) ? $c['offre'] : '',
+        'debut' => $dateC($c['debut'] ?? ''),
+        'fin' => $dateC($c['fin'] ?? ''),
+        'budget' => round(max(0.0, min(1000000.0, $budget)), 2),
+        'notes' => $texteC($c['notes'] ?? '', 500),
+        'archivee' => ($c['archivee'] ?? false) === true,
+    ];
+    if (!preg_match('/^[a-z0-9](?:[a-z0-9-]{1,38}[a-z0-9])$/', $id) || mb_strlen($propre['nom']) < 3
+        || ($propre['debut'] !== '' && $propre['fin'] !== '' && $propre['fin'] < $propre['debut'])) {
+        refuser(400, 'campagne');
+    }
+    $nouvelle = ($corps['nouvelle'] ?? false) === true;
+
+    $f = fopen($fichierCampagnes, 'c+');
+    if ($f === false || !flock($f, LOCK_EX)) {
+        refuser(500, 'stockage');
+    }
+    $contenu = stream_get_contents($f);
+    $campagnes = json_decode($contenu === false ? '' : $contenu, true);
+    if (!is_array($campagnes)) {
+        $campagnes = [];
+    }
+    $index = null;
+    foreach ($campagnes as $i => $existante) {
+        if (is_array($existante) && ($existante['id'] ?? '') === $id) {
+            $index = $i;
+        }
+    }
+    if ($nouvelle && $index !== null) {
+        flock($f, LOCK_UN);
+        fclose($f);
+        refuser(409, 'slug_existe');
+    }
+    if (!$nouvelle && $index === null) {
+        flock($f, LOCK_UN);
+        fclose($f);
+        refuser(404, 'campagne_inconnue');
+    }
+    if (count($campagnes) >= 300 && $nouvelle) {
+        flock($f, LOCK_UN);
+        fclose($f);
+        refuser(400, 'trop_de_campagnes');
+    }
+    $propre['cree_le'] = $nouvelle ? date('c') : (string) ($campagnes[$index]['cree_le'] ?? date('c'));
+    if ($nouvelle) {
+        $campagnes[] = $propre;
+    } else {
+        $campagnes[$index] = $propre;
+    }
+    ftruncate($f, 0);
+    rewind($f);
+    fwrite($f, (string) json_encode(array_values($campagnes), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+    fflush($f);
+    flock($f, LOCK_UN);
+    fclose($f);
+    @chmod($fichierCampagnes, 0600);
+    repondre(200, ['ok' => true, 'campagne' => $propre]);
 }
 
 refuser(400, 'action');
