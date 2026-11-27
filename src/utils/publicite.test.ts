@@ -6,9 +6,9 @@ import { buildVisualSvg, wrapText } from './adVisual';
 import { DEFAULT_OFFER } from './offers';
 import type { DayStats, OfferSignup } from './gestion';
 
-const flyer: Campaign = { id: 'flyer-6e', name: 'Flyers 6e', channel: 'flyer', offer: 'bienvenue', start: '2026-11-01', end: '2026-11-30', budget: 200, notes: '', archived: false };
+const flyer: Campaign = { id: 'flyer-6e', name: 'Flyers 6e', channel: 'flyer', offer: 'bienvenue', start: '2026-11-01', end: '2026-11-30', budget: 200, notes: '', archived: false, countDirect: false };
 
-const day = (d: string, c: number, o: number): DayStats => ({ day: d, views: 0, entries: c, pages: {}, sources: {}, offers: { bienvenue: o }, campaigns: { 'flyer-6e': c }, mobile: 0, desktop: 0 });
+const day = (d: string, c: number, o: number): DayStats => ({ day: d, views: 0, entries: c, pages: {}, sources: {}, offers: { bienvenue: o }, campaigns: { 'flyer-6e': c }, offerDirect: { bienvenue: 3 }, mobile: 0, desktop: 0 });
 
 test('campaign link keeps the offer address', () => {
   assert.equal(campaignUrl(flyer), 'https://www.serrurerierepublique.fr/offre?c=flyer-6e');
@@ -27,6 +27,8 @@ test('campaign results: visits in period, signups, clients and costs', () => {
   const r = campaignResult(flyer, stats, signups);
   assert.deepEqual(r, { visits: 40, offerViews: 50, signups: 2, clients: 1, costPerVisit: 5, costPerSignup: 100, costPerClient: 200 });
   assert.equal(campaignResult({ ...flyer, budget: 0 }, stats, signups).costPerClient, null);
+  // Ancien QR code imprimé sans lien de campagne : ses arrivées comptent si la case est cochée (2 jours dans la période).
+  assert.equal(campaignResult({ ...flyer, countDirect: true }, stats, signups).visits, 46);
 });
 
 test('campaign validation and server format', () => {

@@ -222,6 +222,15 @@ function CampaignEditor({
             ))}
           </select>
         )}
+        {c.offer && (
+          <label className="flex cursor-pointer items-start gap-3 rounded-xl bg-[#F5FAFC] px-4 py-3 ring-1 ring-[#0B2A3C]/[0.06]">
+            <input type="checkbox" className="mt-1 h-4 w-4 shrink-0 cursor-pointer accent-[#0E6BA8]" checked={c.countDirect} onChange={(e) => set({ countDirect: e.target.checked })} />
+            <span className="text-[14px] leading-snug">
+              <span className="font-semibold">Compter aussi les visites de l’ancien QR code</span>
+              <span className="block text-[13px] text-[#0B2A3C]/60">Pour des flyers ou affiches déjà imprimés avec l’adresse de l’offre, sans le lien de cette campagne. À ne cocher que sur une seule campagne de cette offre à la fois.</span>
+            </span>
+          </label>
+        )}
         <div className="grid gap-4 sm:grid-cols-3">
           {label('cp-budget', 'Budget (€)', errors.budget, <input id="cp-budget" type="number" min={0} step="any" inputMode="decimal" className={`${INPUT} ${err('budget')}`} value={Number.isFinite(c.budget) ? c.budget : ''} onChange={(e) => set({ budget: e.target.value === '' ? 0 : Number(e.target.value) })} />)}
           {label('cp-start', 'Début', undefined, <input id="cp-start" type="date" className={INPUT} value={c.start} onChange={(e) => set({ start: e.target.value })} />)}
@@ -272,7 +281,7 @@ function CampaignsTab({ offers, signups, onError, prefill, onPrefillUsed }: { re
   }, [onError]);
 
   const blank = useCallback(
-    (p: Partial<Campaign> = {}): Campaign => ({ name: '', channel: 'flyer', offer: DEFAULT_SLUG, start: new Date().toISOString().slice(0, 10), end: '', budget: 0, notes: '', archived: false, ...p, id: p.id ?? (p.name ? slugify(p.name) : '') }),
+    (p: Partial<Campaign> = {}): Campaign => ({ name: '', channel: 'flyer', offer: DEFAULT_SLUG, start: new Date().toISOString().slice(0, 10), end: '', budget: 0, notes: '', archived: false, countDirect: false, ...p, id: p.id ?? (p.name ? slugify(p.name) : '') }),
     []
   );
 
@@ -355,6 +364,7 @@ function CampaignsTab({ offers, signups, onError, prefill, onPrefillUsed }: { re
                 <p className="mt-1 text-[13.5px] text-[#0B2A3C]/55">
                   {c.start ? `Depuis le ${fmtDay(c.start)}` : 'Sans date'}
                   {c.end ? ` jusqu’au ${fmtDay(c.end)}` : ''} · {c.offer ? offerName.get(c.offer) ?? c.offer : 'Accueil du site'} · budget {formatEuros(c.budget)}
+                  {c.offer && c.countDirect ? ' · ancien QR code compté' : ''}
                 </p>
                 {r && (
                   <div className="mt-4 grid grid-cols-2 gap-2 rounded-xl bg-[#F5FAFC] p-3 text-center sm:grid-cols-4">

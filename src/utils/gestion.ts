@@ -589,6 +589,8 @@ export interface DayStats {
   readonly offers: Readonly<Record<string, number>>;
   /** Arrivées par lien de campagne (« ?c=… »). */
   readonly campaigns: Readonly<Record<string, number>>;
+  /** Arrivées sur la page d'une offre sans lien de campagne (ancien QR code du flyer…). */
+  readonly offerDirect: Readonly<Record<string, number>>;
   readonly mobile: number;
   readonly desktop: number;
 }
@@ -617,6 +619,7 @@ export function parseDayStats(body: unknown): DayStats[] {
             sources: numberMap(d.sources),
             offers: numberMap(d.offres),
             campaigns: numberMap(d.campagnes),
+            offerDirect: numberMap(d.offres_sans_lien),
             mobile: typeof d.mobile === 'number' ? d.mobile : 0,
             desktop: typeof d.ordinateur === 'number' ? d.ordinateur : 0,
           },
@@ -642,6 +645,7 @@ function demoStats(days: number): DayStats[] {
       sources: { google: Math.round(entries * 0.55), direct: Math.round(entries * 0.2), annuaire: Math.round(entries * 0.12), qr: Math.round(seed / 4), reseau_social: Math.round(entries * 0.05) },
       offers: { bienvenue: Math.round(seed / 3) },
       campaigns: { 'flyer-syndics-6e': Math.round(seed / 5), 'google-ads-serrurier': Math.round(entries * 0.1) },
+      offerDirect: { bienvenue: Math.round(seed / 6) },
       mobile: Math.round(entries * 0.68),
       desktop: Math.round(entries * 0.32),
     });

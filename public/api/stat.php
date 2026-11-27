@@ -113,6 +113,10 @@ if ($entree && $campagne !== '' && count($t['campagnes'] ?? []) < 200) {
 }
 if ($offre !== '') {
     $t['offres'][$offre] = (int) ($t['offres'][$offre] ?? 0) + 1;
+    // Arrivées sur la page d'une offre sans lien de campagne (ex. QR code d'un flyer imprimé avant les campagnes).
+    if ($entree && $campagne === '') {
+        $t['offres_sans_lien'][$offre] = (int) ($t['offres_sans_lien'][$offre] ?? 0) + 1;
+    }
 }
 ftruncate($f, 0);
 rewind($f);

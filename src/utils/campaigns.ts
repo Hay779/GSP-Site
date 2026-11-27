@@ -33,6 +33,8 @@ export interface Campaign {
   readonly budget: number;
   readonly notes: string;
   readonly archived: boolean;
+  /** Compter aussi les arrivées sur la page de l'offre sans lien de campagne (QR code imprimé avant la campagne). */
+  readonly countDirect: boolean;
 }
 
 export interface CampaignResult {
@@ -74,6 +76,7 @@ export function campaignResult(c: Campaign, stats: readonly DayStats[], signups:
   for (const d of stats) {
     if (!inPeriod(d.day, c)) continue;
     visits += d.campaigns[c.id] ?? 0;
+    if (c.offer && c.countDirect) visits += d.offerDirect[c.offer] ?? 0;
     if (c.offer) offerViews += d.offers[c.offer] ?? 0;
   }
   const own = c.offer ? signups.filter((s) => s.offer === c.offer && inPeriod(isoDay(s.receivedAt), c)) : [];
@@ -120,16 +123,17 @@ export function parseCampaign(raw: unknown): Campaign | null {
     budget: typeof r.budget === 'number' ? r.budget : Number(r.budget) || 0,
     notes: typeof r.notes === 'string' ? r.notes : '',
     archived: r.archivee === true,
+    countDirect: r.sans_lien === true,
   };
 }
 
 export function serializeCampaign(c: Campaign): Record<string, unknown> {
-  return { id: c.id, nom: c.name.trim(), canal: c.channel, offre: c.offer, debut: c.start, fin: c.end, budget: c.budget, notes: c.notes.trim(), archivee: c.archived };
+  return { id: c.id, nom: c.name.trim(), canal: c.channel, offre: c.offer, debut: c.start, fin: c.end, budget: c.budget, notes: c.notes.trim(), archivee: c.archived, sans_lien: c.countDirect };
 }
 
 let demoCampaigns: Campaign[] = [
-  { id: 'flyer-syndics-6e', name: 'Flyers syndics Marseille 6e', channel: 'flyer', offer: DEFAULT_SLUG, start: '2026-11-01', end: '', budget: 180, notes: '500 flyers déposés chez 12 syndics.', archived: false },
-  { id: 'google-ads-serrurier', name: 'Google Ads « serrurier Marseille »', channel: 'google', offer: '', start: '2026-11-10', end: '2026-12-10', budget: 300, notes: '', archived: false },
+  { id: 'flyer-syndics-6e', name: 'Flyers syndics Marseille 6e', channel: 'flyer', offer: DEFAULT_SLUG, start: '2026-11-01', end: '', budget: 180, notes: '500 flyers déposés chez 12 syndics.', archived: false, countDirect: true },
+  { id: 'google-ads-serrurier', name: 'Google Ads « serrurier Marseille »', channel: 'google', offer: '', start: '2026-11-10', end: '2026-12-10', budget: 300, notes: '', archived: false, countDirect: false },
 ];
 
 export async function fetchCampaigns(): Promise<ApiResult<Campaign[]>> {

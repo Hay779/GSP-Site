@@ -25,6 +25,7 @@ const day = (d: string, entries: number, extra: Partial<DayStats> = {}): DayStat
   sources: { google: entries },
   offers: {},
   campaigns: {},
+  offerDirect: {},
   mobile: entries,
   desktop: 0,
   ...extra,

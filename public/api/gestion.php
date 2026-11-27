@@ -487,6 +487,7 @@ if ($action === 'campagne' && $methode === 'POST') {
         'budget' => round(max(0.0, min(1000000.0, $budget)), 2),
         'notes' => $texteC($c['notes'] ?? '', 500),
         'archivee' => ($c['archivee'] ?? false) === true,
+        'sans_lien' => ($c['sans_lien'] ?? false) === true,
     ];
     if (!preg_match('/^[a-z0-9](?:[a-z0-9-]{1,38}[a-z0-9])$/', $id) || mb_strlen($propre['nom']) < 3
         || ($propre['debut'] !== '' && $propre['fin'] !== '' && $propre['fin'] < $propre['debut'])) {
