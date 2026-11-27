@@ -46,6 +46,13 @@ function isDevPreview(): boolean {
   return Boolean((import.meta as { env?: { DEV?: boolean } }).env?.DEV);
 }
 
+/** Campagne de publicité de l'adresse (« ?c=… » ou « utm_campaign=… »), si elle est valide. */
+export function campaignFromSearch(search: string): string {
+  const params = new URLSearchParams(search);
+  const c = (params.get('c') ?? params.get('utm_campaign') ?? '').toLowerCase();
+  return /^[a-z0-9-]{1,40}$/.test(c) ? c : '';
+}
+
 let firstHit = true;
 let lastPath = '';
 
@@ -75,6 +82,8 @@ export function recordVisit(): void {
   const payload: Record<string, unknown> = { p: path.toLowerCase().slice(0, 80), e: entry };
   if (entry) {
     payload.s = source;
+    const campaign = campaignFromSearch(search);
+    if (campaign) payload.c = campaign;
     payload.m = window.matchMedia?.('(pointer: coarse)').matches === true;
   }
   if (path === '/offre') payload.o = slugFromSearch(search);

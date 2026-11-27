@@ -149,7 +149,7 @@ export function parseSignups(body: unknown): OfferSignup[] {
   });
 }
 
-function failureFrom(status: number, body: unknown): ApiFailure {
+export function failureFrom(status: number, body: unknown): ApiFailure {
   const code = (body as { erreur?: unknown } | null)?.erreur;
   if (code === 'non_connecte' || code === 'mot_de_passe' || code === 'trop_d_essais' || code === 'non_configure' || code === 'slug_existe') return code;
   return status >= 400 && status < 500 ? 'refus' : 'reseau';
@@ -158,7 +158,7 @@ function failureFrom(status: number, body: unknown): ApiFailure {
 // --------------------------------------------------------------------------
 // Aperçu de développement (pas de PHP) : données d'exemple en mémoire.
 // --------------------------------------------------------------------------
-function isDevPreview(): boolean {
+export function isDevPreview(): boolean {
   return Boolean((import.meta as { env?: { DEV?: boolean } }).env?.DEV);
 }
 
@@ -171,7 +171,7 @@ const DEMO: readonly OfferSignup[] = [
   { reference: 'OFF-20260705-2208', receivedAt: '2026-07-05T14:20:00+02:00', validUntil: '05/12/2026', offer: DEFAULT_SLUG, fields: { 'Vous êtes': 'Agence immobilière / bailleur', Société: 'Agence Exemple', Fonction: '—', Nom: 'Exemple D.', Téléphone: '06 00 00 00 04', 'E-mail': 'exemple-d@exemple.fr', Ville: 'Marseille 1er' }, usedAt: null, note: '' },
 ];
 
-async function demo<T>(make: () => ApiResult<T>): Promise<ApiResult<T>> {
+export async function demo<T>(make: () => ApiResult<T>): Promise<ApiResult<T>> {
   await new Promise((r) => setTimeout(r, 300));
   return make();
 }
@@ -179,7 +179,7 @@ async function demo<T>(make: () => ApiResult<T>): Promise<ApiResult<T>> {
 // --------------------------------------------------------------------------
 // Appels au serveur
 // --------------------------------------------------------------------------
-async function call(method: 'GET' | 'POST', action: string, payload?: unknown): Promise<{ status: number; body: unknown } | null> {
+export async function call(method: 'GET' | 'POST', action: string, payload?: unknown): Promise<{ status: number; body: unknown } | null> {
   try {
     const response = await fetch(`${ENDPOINT}?action=${action}`, {
       method,
@@ -587,6 +587,8 @@ export interface DayStats {
   readonly pages: Readonly<Record<string, number>>;
   readonly sources: Readonly<Record<string, number>>;
   readonly offers: Readonly<Record<string, number>>;
+  /** Arrivées par lien de campagne (« ?c=… »). */
+  readonly campaigns: Readonly<Record<string, number>>;
   readonly mobile: number;
   readonly desktop: number;
 }
@@ -614,6 +616,7 @@ export function parseDayStats(body: unknown): DayStats[] {
             pages: numberMap(d.pages),
             sources: numberMap(d.sources),
             offers: numberMap(d.offres),
+            campaigns: numberMap(d.campagnes),
             mobile: typeof d.mobile === 'number' ? d.mobile : 0,
             desktop: typeof d.ordinateur === 'number' ? d.ordinateur : 0,
           },
@@ -638,6 +641,7 @@ function demoStats(days: number): DayStats[] {
       pages: { '/': entries, '/devis': Math.round(entries * 0.4), '/cles-badges': Math.round(entries * 0.3), '/offre': Math.round(seed / 3), '/vitrerie-miroiterie': Math.round(entries * 0.2), '/zone-intervention': Math.round(entries * 0.15) },
       sources: { google: Math.round(entries * 0.55), direct: Math.round(entries * 0.2), annuaire: Math.round(entries * 0.12), qr: Math.round(seed / 4), reseau_social: Math.round(entries * 0.05) },
       offers: { bienvenue: Math.round(seed / 3) },
+      campaigns: { 'flyer-syndics-6e': Math.round(seed / 5), 'google-ads-serrurier': Math.round(entries * 0.1) },
       mobile: Math.round(entries * 0.68),
       desktop: Math.round(entries * 0.32),
     });

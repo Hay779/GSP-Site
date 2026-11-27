@@ -47,6 +47,7 @@ import { OffersPanel } from './gestion/OffersPanel';
 import { RequestsPanel } from './gestion/RequestsPanel';
 import { RelancesPanel } from './gestion/RelancesPanel';
 import { SuiviPanel } from './gestion/SuiviPanel';
+import { AdsPanel } from './gestion/AdsPanel';
 import { fetchRelancesDone, type RelanceDone } from '../utils/gestion';
 import { computeRelances } from '../utils/relances';
 import { fetchRequests, type SiteRequest } from '../utils/gestion';
@@ -79,7 +80,7 @@ const SECTIONS: readonly { readonly id: SectionId; readonly label: string; reado
   { id: 'offres', label: 'Offres & QR codes', icon: QrCode, ready: true },
   { id: 'inscrits', label: 'Inscrits', icon: Users, ready: true },
   { id: 'relances', label: 'Relances', icon: Repeat, ready: true },
-  { id: 'publicite', label: 'Publicité', icon: Megaphone, ready: false },
+  { id: 'publicite', label: 'Publicité', icon: Megaphone, ready: true },
   { id: 'suivi', label: 'Suivi du site', icon: BarChart3, ready: true },
 ];
 
@@ -404,7 +405,16 @@ function Dashboard({ routerMode, onLoggedOut }: { readonly routerMode: RouterMod
       </header>
 
       <div className="mx-auto w-full max-w-[1180px] flex-1 px-4 py-6 sm:px-6 sm:py-8">
-        {section === 'suivi' ? (
+        {section === 'publicite' ? (
+          <>
+            {error && (
+              <p role="alert" className="mb-5 rounded-xl bg-[#FDECEA] px-4 py-3 text-[14.5px] font-medium text-[#A8321F]">
+                {failureMessage(error)}
+              </p>
+            )}
+            <AdsPanel offers={offers} signups={signups} onError={onSuiviError} />
+          </>
+        ) : section === 'suivi' ? (
           <>
             {error && (
               <p role="alert" className="mb-5 rounded-xl bg-[#FDECEA] px-4 py-3 text-[14.5px] font-medium text-[#A8321F]">
