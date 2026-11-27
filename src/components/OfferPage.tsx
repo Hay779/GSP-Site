@@ -1,5 +1,22 @@
 import { useRef, useState } from 'react';
-import { ArrowRight, Building2, Check, ChevronDown, KeyRound, Mail, MousePointerClick, Phone, ShieldCheck, Sparkles, Store, Ticket, UserRound } from 'lucide-react';
+import {
+  ArrowRight,
+  Building2,
+  Check,
+  ChevronDown,
+  Clock3,
+  KeyRound,
+  Mail,
+  MapPin,
+  MessageCircle,
+  MousePointerClick,
+  Phone,
+  ShieldCheck,
+  Star,
+  Store,
+  Ticket,
+  UserRound,
+} from 'lucide-react';
 import type { BrandConfig } from '../utils/navigation';
 import {
   buildOfferSummary,
@@ -19,14 +36,17 @@ import {
 import { hrefForHome, hrefForPage, type RouterMode } from '../utils/router';
 import { sendFormRequest } from '../utils/formDelivery';
 import { DeliveryErrorNotice, HoneypotField } from './FormDelivery';
-import basiliqueUrl from '../assets/images/logo_basilique_brass.png';
+import { REAL_REVIEWS, REVIEWS_SOURCE } from '../data/reviewsContent';
+import { WHATSAPP_CONFIG } from '../data/sectionsContent';
+import { buildWhatsAppUrl } from '../utils/whatsapp';
+import logoUrl from '../assets/images/logo_republique_light.png';
 
 /*
- * Identité propre à la campagne -5 % (volontairement différente du site) :
- * fond blanc, grand dégradé lumineux violet → rose → orange, carte en verre dépoli.
+ * Identité propre à la campagne -5 % : couleurs de la mer à Marseille
+ * (bleu profond, bleu mer, turquoise, vert d'eau), fond clair.
  */
-const INK = '#16132B';
-const GRADIENT = 'linear-gradient(100deg,#6D4BFF 0%,#C14BFF 35%,#FF4F9A 65%,#FF8A3D 100%)';
+const INK = '#0B2A3C';
+const SEA = 'linear-gradient(120deg,#0E6BA8 0%,#1391B8 50%,#17B3A3 100%)';
 
 const TYPES: Readonly<Record<CustomerType, { short: string; icon: typeof Building2 }>> = {
   'Syndic / copropriété': { short: 'Syndic', icon: Building2 },
@@ -37,31 +57,14 @@ const TYPES: Readonly<Record<CustomerType, { short: string; icon: typeof Buildin
 };
 
 const FIELD =
-  'mt-1.5 h-12 w-full rounded-2xl border bg-[#FFFFFF]/80 px-4 text-[16px] text-[#16132B] placeholder:text-[#16132B]/30 transition-all duration-200 focus:border-[#A35BFF] focus:bg-[#FFFFFF] focus:outline-none focus:ring-4 focus:ring-[#A35BFF]/15';
+  'mt-1.5 h-12 w-full rounded-xl border bg-[#FFFFFF] px-4 text-[16px] text-[#0B2A3C] placeholder:text-[#0B2A3C]/30 transition-all duration-200 focus:border-[#1391B8] focus:outline-none focus:ring-4 focus:ring-[#1391B8]/15';
 
-const PAGE_CSS = `
-@keyframes offre-flotte-a { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(60px,40px) scale(1.12); } }
-@keyframes offre-flotte-b { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-70px,30px) scale(0.9); } }
-@keyframes offre-flotte-c { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(30px,-50px) scale(1.08); } }
-@keyframes offre-brille { from { background-position: 0% 50%; } to { background-position: 200% 50%; } }
-.offre-a { animation: offre-flotte-a 18s ease-in-out infinite; }
-.offre-b { animation: offre-flotte-b 22s ease-in-out infinite; }
-.offre-c { animation: offre-flotte-c 20s ease-in-out infinite; }
-.offre-brille { background-size: 200% 100%; animation: offre-brille 6s linear infinite; }
-@media (prefers-reduced-motion: reduce) { .offre-a, .offre-b, .offre-c, .offre-brille { animation: none; } }
-`;
-
-function GradientText({ children, className = '' }: { readonly children: React.ReactNode; readonly className?: string }) {
-  return (
-    <span className={`bg-clip-text text-transparent ${className}`} style={{ backgroundImage: GRADIENT }}>
-      {children}
-    </span>
-  );
-}
+/** Avis Google réels (aucun avis inventé) : trois avis courts. */
+const REVIEWS = REAL_REVIEWS.filter((r) => r.rating === 5 && r.text.length >= 60 && r.text.length <= 240).slice(0, 3);
 
 function ErrorText({ id, message }: { readonly id: string; readonly message?: string }) {
   return message ? (
-    <p id={id} role="alert" className="mt-1.5 text-[13.5px] font-medium text-[#D02D5B]">
+    <p id={id} role="alert" className="mt-1.5 text-[13.5px] font-medium text-[#C0392B]">
       {message}
     </p>
   ) : null;
@@ -90,7 +93,7 @@ function TextField({
 }) {
   return (
     <div>
-      <label htmlFor={id} className="text-[13.5px] font-semibold text-[#16132B]/70">
+      <label htmlFor={id} className="text-[14px] font-semibold text-[#0B2A3C]/80">
         {label}
       </label>
       <input
@@ -103,28 +106,27 @@ function TextField({
         onChange={(e) => onChange(e.target.value)}
         aria-invalid={Boolean(error)}
         aria-describedby={error ? `${id}-err` : undefined}
-        className={`${FIELD} ${error ? 'border-[#D02D5B]' : 'border-[#16132B]/10'}`}
+        className={`${FIELD} ${error ? 'border-[#C0392B]' : 'border-[#0B2A3C]/15'}`}
       />
       <ErrorText id={`${id}-err`} message={error} />
     </div>
   );
 }
 
-/** Bon -5 % en verre, avec le code une fois inscrit. */
-function CodeCard({ code, validUntil }: { readonly code: string; readonly validUntil: string }) {
+/** Vague décorative (bas d'une zone colorée). */
+function Wave({ className = '', fill }: { readonly className?: string; readonly fill: string }) {
   return (
-    <div className="rounded-[26px] p-[1.5px] shadow-[0_24px_60px_-20px_rgba(193,75,255,0.55)]" style={{ backgroundImage: GRADIENT }}>
-      <div className="relative overflow-hidden rounded-[25px] bg-[#FFFFFF] px-6 py-6 text-center">
-        <div aria-hidden="true" className="pointer-events-none absolute -right-10 -top-16 h-40 w-40 rounded-full bg-[#FF4F9A]/15 blur-2xl" />
-        <div aria-hidden="true" className="pointer-events-none absolute -bottom-16 -left-10 h-40 w-40 rounded-full bg-[#6D4BFF]/15 blur-2xl" />
-        <p className="relative text-[12px] font-semibold uppercase tracking-[0.2em] text-[#16132B]/50">Votre code -{OFFER_RATE} %</p>
-        <p className="relative mt-2 break-all font-display text-[23px] font-bold tabular-nums tracking-[0.01em] sm:text-[32px]">
-          <GradientText>{code}</GradientText>
-        </p>
-        <p className="relative mt-2 text-[14.5px] text-[#16132B]/60">
-          Valable jusqu’au <strong className="font-semibold text-[#16132B]">{validUntil}</strong>
-        </p>
-      </div>
+    <svg aria-hidden="true" viewBox="0 0 1440 80" preserveAspectRatio="none" className={`block h-10 w-full sm:h-16 ${className}`}>
+      <path d="M0 40 C 240 80 480 0 720 36 C 960 72 1200 8 1440 40 L1440 80 L0 80 Z" fill={fill} />
+    </svg>
+  );
+}
+
+function SectionTitle({ kicker, title }: { readonly kicker: string; readonly title: string }) {
+  return (
+    <div className="text-center">
+      <p className="text-[13px] font-bold uppercase tracking-[0.18em] text-[#1391B8]">{kicker}</p>
+      <h2 className="mt-2 font-display text-[28px] font-bold leading-tight tracking-[-0.02em] sm:text-[36px]">{title}</h2>
     </div>
   );
 }
@@ -189,207 +191,285 @@ export function OfferPage({ brand, routerMode }: { readonly brand: BrandConfig; 
   };
 
   const pro = isProfessional(draft.customerType);
+  const whatsappHref = buildWhatsAppUrl(WHATSAPP_CONFIG.phoneDisplay, 'Bonjour, je viens de la page de l’offre -5 %.');
 
   return (
     <div className="relative flex flex-1 flex-col overflow-x-clip bg-[#FFFFFF]" style={{ color: INK }}>
-      <style>{PAGE_CSS}</style>
+      {/* ===== Haut : logo + inscription directe ===== */}
+      <div className="relative bg-[linear-gradient(180deg,#E6F4FA_0%,#E4F7F3_100%)]">
+        <div aria-hidden="true" className="pointer-events-none absolute -left-24 top-10 h-72 w-72 rounded-full bg-[#7FD3E6]/35 blur-3xl" />
+        <div aria-hidden="true" className="pointer-events-none absolute -right-24 top-40 h-80 w-80 rounded-full bg-[#7FE0C9]/35 blur-3xl" />
 
-      {/* Dégradé lumineux en fond (taches floues qui bougent lentement) */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-[900px] overflow-hidden">
-        <div className="offre-a absolute -left-[10%] top-[-180px] h-[520px] w-[520px] rounded-full bg-[#7B5CFF] opacity-45 blur-[110px] sm:h-[680px] sm:w-[680px]" />
-        <div className="offre-b absolute right-[-12%] top-[-120px] h-[480px] w-[480px] rounded-full bg-[#FF5CA8] opacity-40 blur-[110px] sm:h-[640px] sm:w-[640px]" />
-        <div className="offre-c absolute left-[30%] top-[220px] h-[420px] w-[420px] rounded-full bg-[#FF9A3D] opacity-35 blur-[120px] sm:h-[560px] sm:w-[560px]" />
-        <div className="absolute inset-x-0 bottom-0 h-[320px] bg-[linear-gradient(to_bottom,rgba(255,255,255,0),#FFFFFF)]" />
-        {/* grain très léger */}
-        <div className="absolute inset-0 opacity-[0.25] mix-blend-soft-light [background-image:radial-gradient(rgba(255,255,255,0.9)_1px,transparent_1px)] [background-size:3px_3px]" />
+        <header className="relative mx-auto flex w-full max-w-[1100px] items-center justify-between gap-4 px-5 pt-4 sm:px-8 sm:pt-6">
+          <a href={hrefForHome(routerMode)} aria-label={`${brand.name} — site`} className="rounded-md focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#1391B8]">
+            <img src={logoUrl} alt={`${brand.name} — ${brand.city}`} width={580} height={371} className="h-[58px] w-auto sm:h-[74px]" />
+          </a>
+          <a href={brand.phoneHref} className="inline-flex h-11 shrink-0 items-center gap-2 rounded-full bg-[#FFFFFF] px-4 text-[15px] font-semibold tabular-nums shadow-[0_6px_20px_-8px_rgba(11,42,60,0.3)] transition hover:text-[#0E6BA8]">
+            <Phone className="h-4 w-4 text-[#1391B8]" aria-hidden="true" />
+            <span className="hidden sm:inline">{brand.phoneDisplay}</span>
+            <span className="sm:hidden">Appeler</span>
+          </a>
+        </header>
+
+        <section aria-label="Inscription à l’offre" className="relative mx-auto w-full max-w-[640px] px-4 pb-6 pt-5 sm:px-8 sm:pt-8">
+          <div className="overflow-hidden rounded-[28px] bg-[#FFFFFF] shadow-[0_30px_80px_-30px_rgba(14,107,168,0.45),0_8px_24px_-12px_rgba(11,42,60,0.15)]">
+            {/* Bandeau de l'offre */}
+            <div className="relative flex items-center gap-4 px-6 py-5 text-[#FFFFFF] sm:gap-5 sm:px-8 sm:py-6" style={{ backgroundImage: SEA }}>
+              <div aria-hidden="true" className="pointer-events-none absolute -right-8 -top-10 h-36 w-36 rounded-full bg-[#FFFFFF]/10" />
+              <div aria-hidden="true" className="pointer-events-none absolute -bottom-14 right-16 h-28 w-28 rounded-full bg-[#FFFFFF]/10" />
+              <span className="relative grid h-[76px] w-[76px] shrink-0 place-items-center rounded-full bg-[#FFFFFF] font-display text-[26px] font-extrabold tracking-[-0.04em] text-[#0E6BA8] shadow-[0_8px_20px_-8px_rgba(0,0,0,0.35)] sm:h-[86px] sm:w-[86px] sm:text-[30px]">
+                -{OFFER_RATE}%
+              </span>
+              <div className="relative">
+                <h1 className="font-display text-[21px] font-bold leading-tight tracking-[-0.01em] sm:text-[24px]">Inscription à l’offre de bienvenue</h1>
+                <p className="mt-1 text-[14.5px] leading-[1.5] text-[#FFFFFF]/90 sm:text-[15.5px]">
+                  {OFFER_RATE} % de réduction sur votre premier achat ou votre première intervention, valable {OFFER_MONTHS} mois.
+                </p>
+              </div>
+            </div>
+
+            <div className="p-6 sm:p-8">
+              {registered ? (
+                <div className="text-center">
+                  <span className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-[#E4F7F3] text-[#0F8F80]">
+                    <Check className="h-7 w-7" strokeWidth={2.6} aria-hidden="true" />
+                  </span>
+                  <h2 ref={doneRef} tabIndex={-1} className="mt-4 font-display text-[26px] font-bold leading-tight tracking-[-0.02em] focus:outline-none">
+                    {registered.alreadyRegistered ? 'Vous êtes déjà inscrit.' : 'C’est fait, votre réduction est activée.'}
+                  </h2>
+                  <div className="mt-6 rounded-2xl border-2 border-dashed border-[#1391B8]/50 bg-[#F0F9FC] px-5 py-5">
+                    <p className="text-[12.5px] font-bold uppercase tracking-[0.18em] text-[#0E6BA8]">Votre code -{OFFER_RATE} %</p>
+                    <p className="mt-2 break-all font-display text-[24px] font-extrabold tabular-nums tracking-[0.01em] sm:text-[30px]">{registered.code}</p>
+                    <p className="mt-1.5 text-[14.5px] text-[#0B2A3C]/65">
+                      Valable jusqu’au <strong className="font-semibold text-[#0B2A3C]">{registered.validUntil}</strong>
+                    </p>
+                  </div>
+                  <p className="mx-auto mt-5 max-w-[28rem] text-[15.5px] leading-[1.6] text-[#0B2A3C]/70">
+                    {registered.alreadyRegistered
+                      ? 'Il vous a déjà été envoyé par e-mail.'
+                      : `Nous vous l’envoyons aussi par e-mail à ${draft.email.trim()}.`}{' '}
+                    Donnez ce code au moment du devis, en boutique ou par téléphone.
+                  </p>
+                  <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
+                    <a href={brand.phoneHref} className="inline-flex h-12 items-center justify-center gap-2 rounded-full px-6 text-[15px] font-semibold text-[#FFFFFF] shadow-[0_12px_28px_-12px_rgba(14,107,168,0.8)] transition hover:brightness-110" style={{ backgroundImage: SEA }}>
+                      <Phone className="h-4 w-4" aria-hidden="true" />
+                      {brand.phoneDisplay}
+                    </a>
+                    <a href={hrefForPage('devis', routerMode)} className="inline-flex h-12 items-center justify-center rounded-full border border-[#0B2A3C]/15 px-6 text-[15px] font-semibold transition hover:border-[#1391B8]">
+                      Demander un devis
+                    </a>
+                  </div>
+                </div>
+              ) : (
+                <form ref={formRef} onSubmit={submit} noValidate className="relative flex flex-col gap-5">
+                  <fieldset data-invalid={Boolean(errors.customerType)} tabIndex={-1} aria-describedby={errors.customerType ? 'type-err' : undefined} className="focus:outline-none">
+                    <legend className="text-[14px] font-semibold text-[#0B2A3C]/80">Vous êtes</legend>
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {CUSTOMER_TYPES.map((type) => {
+                        const t = TYPES[type];
+                        const checked = draft.customerType === type;
+                        return (
+                          <label key={type} title={type} className="relative cursor-pointer">
+                            <input type="radio" name="type" aria-label={type} checked={checked} onChange={() => update({ customerType: type })} className="peer sr-only" />
+                            <span
+                              className={`inline-flex h-11 items-center gap-2 rounded-full px-4 text-[14.5px] font-medium transition-all duration-200 peer-focus-visible:ring-4 peer-focus-visible:ring-[#1391B8]/25 ${checked ? 'text-[#FFFFFF] shadow-[0_8px_20px_-10px_rgba(14,107,168,0.9)]' : 'border border-[#0B2A3C]/12 bg-[#F5FAFC] hover:border-[#1391B8]/50'}`}
+                              style={checked ? { backgroundImage: SEA } : undefined}
+                            >
+                              {checked ? <Check className="h-4 w-4" strokeWidth={2.6} aria-hidden="true" /> : <t.icon className="h-4 w-4 text-[#1391B8]" strokeWidth={1.9} aria-hidden="true" />}
+                              {t.short}
+                            </span>
+                          </label>
+                        );
+                      })}
+                    </div>
+                    <ErrorText id="type-err" message={errors.customerType} />
+                  </fieldset>
+
+                  {pro && (
+                    <TextField id="o-company" label="Société" autoComplete="organization" placeholder="Nom de la société" value={draft.company} onChange={(v) => update({ company: v })} error={errors.company} />
+                  )}
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <TextField id="o-name" label="Nom et prénom" autoComplete="name" value={draft.fullName} onChange={(v) => update({ fullName: v })} error={errors.fullName} />
+                    <TextField id="o-phone" label="Téléphone" type="tel" inputMode="tel" autoComplete="tel" placeholder="06 12 34 56 78" value={draft.phone} onChange={(v) => update({ phone: v })} error={errors.phone} />
+                  </div>
+                  <TextField id="o-email" label="E-mail (votre code y est envoyé)" type="email" inputMode="email" autoComplete="email" placeholder="vous@exemple.fr" value={draft.email} onChange={(v) => update({ email: v })} error={errors.email} />
+
+                  <div>
+                    <label className="flex cursor-pointer items-start gap-3 text-[14px] leading-[1.55] text-[#0B2A3C]/70">
+                      <input
+                        type="checkbox"
+                        checked={draft.acceptConditions && draft.consent}
+                        onChange={(e) => update({ acceptConditions: e.target.checked, consent: e.target.checked })}
+                        aria-invalid={Boolean(errors.acceptConditions || errors.consent)}
+                        aria-describedby={errors.acceptConditions || errors.consent ? 'cond-err' : undefined}
+                        className="mt-0.5 h-5 w-5 shrink-0 accent-[#0E6BA8]"
+                      />
+                      <span>
+                        J’accepte les conditions de l’offre et que {brand.name} utilise ces informations pour gérer mon code (
+                        <a href={hrefForPage('confidentialite', routerMode)} className="font-medium text-[#0E6BA8] underline underline-offset-2">confidentialité</a>).
+                      </span>
+                    </label>
+                    <ErrorText id="cond-err" message={errors.acceptConditions ?? errors.consent} />
+                    <details className="group mt-3 rounded-xl bg-[#F0F9FC] px-4 py-3">
+                      <summary className="flex cursor-pointer list-none items-center justify-between text-[14px] font-semibold text-[#0B2A3C]/80 [&::-webkit-details-marker]:hidden">
+                        Conditions de l’offre
+                        <ChevronDown className="h-4 w-4 text-[#0E6BA8] transition-transform duration-200 group-open:rotate-180" aria-hidden="true" />
+                      </summary>
+                      <ul className="mt-3 flex flex-col gap-2 text-[14px] leading-[1.5] text-[#0B2A3C]/75">
+                        {OFFER_CONDITIONS.map((item) => (
+                          <li key={item} className="flex gap-2.5">
+                            <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#17B3A3]" strokeWidth={2.6} aria-hidden="true" />
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </details>
+                  </div>
+
+                  <HoneypotField value={honeypot} onChange={setHoneypot} />
+                  {failure && <DeliveryErrorNotice reason={failure} />}
+                  <button
+                    type="submit"
+                    disabled={sending}
+                    aria-busy={sending}
+                    className="group inline-flex h-14 w-full cursor-pointer items-center justify-center gap-2.5 rounded-full text-[16.5px] font-semibold text-[#FFFFFF] shadow-[0_16px_36px_-14px_rgba(14,107,168,0.9)] transition hover:-translate-y-px hover:brightness-110 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[#1391B8] disabled:cursor-wait disabled:opacity-70"
+                    style={{ backgroundImage: SEA }}
+                  >
+                    {sending ? 'Inscription en cours…' : `Recevoir mon code -${OFFER_RATE} %`}
+                    <ArrowRight className="h-5 w-5 transition-transform duration-200 group-hover:translate-x-1" aria-hidden="true" />
+                  </button>
+                  <p className="-mt-1 text-center text-[13px] text-[#0B2A3C]/50">Gratuit, sans engagement · vos informations restent chez nous</p>
+                </form>
+              )}
+            </div>
+          </div>
+        </section>
+        <Wave fill="#FFFFFF" className="relative" />
       </div>
 
-      {/* En-tête */}
-      <header className="relative mx-auto flex w-full max-w-[1120px] items-center justify-between gap-4 px-5 py-5 sm:px-8">
-        <a href={hrefForHome(routerMode)} className="inline-flex items-center gap-2.5 rounded-full focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#A35BFF]">
-          <img src={basiliqueUrl} alt="" width={560} height={150} className="h-6 w-auto sm:h-7" />
-          <span className="font-display text-[14.5px] font-semibold leading-tight sm:text-[15.5px]">{brand.name}</span>
-        </a>
-        <a href={brand.phoneHref} className="inline-flex h-11 shrink-0 items-center gap-2 rounded-full border border-[#FFFFFF]/70 bg-[#FFFFFF]/60 px-4 text-[15px] font-semibold tabular-nums shadow-[0_4px_20px_-6px_rgba(22,19,43,0.18)] backdrop-blur-xl transition hover:bg-[#FFFFFF]/90">
-          <Phone className="h-4 w-4 text-[#A35BFF]" aria-hidden="true" />
-          <span className="hidden sm:inline">{brand.phoneDisplay}</span>
-          <span className="sm:hidden">Appeler</span>
-        </a>
-      </header>
-
-      {/* Accroche centrée */}
-      <section className="relative mx-auto w-full max-w-[880px] px-5 pt-8 text-center sm:px-8 sm:pt-14">
-        <p className="mx-auto inline-flex items-center gap-2 rounded-full border border-[#FFFFFF]/80 bg-[#FFFFFF]/55 py-1.5 pl-1.5 pr-4 text-[13.5px] font-medium text-[#16132B]/80 shadow-[0_4px_20px_-8px_rgba(22,19,43,0.2)] backdrop-blur-xl">
-          <span className="offre-brille rounded-full px-2.5 py-0.5 text-[12px] font-semibold text-[#FFFFFF]" style={{ backgroundImage: GRADIENT }}>
-            Offre de bienvenue
-          </span>
-          Réservée aux inscrits
-        </p>
-        <h1 className="mt-6 font-display text-[34px] font-semibold leading-[1.08] tracking-[-0.035em] sm:text-[52px]">
-          Votre premier chantier
-          <span className="mt-1 block text-[104px] font-bold leading-[0.95] tracking-[-0.06em] sm:text-[168px]">
-            <GradientText>-{OFFER_RATE} %</GradientText>
-          </span>
-        </h1>
-        <p className="mx-auto mt-4 max-w-[34rem] text-[17px] leading-[1.6] text-[#16132B]/65 sm:text-[18.5px]">
-          Sur votre premier achat ou votre première intervention. Inscrivez-vous en 30 secondes, recevez votre code tout de suite.
-        </p>
-      </section>
-
-      {/* Carte formulaire en verre */}
-      <section aria-label="Inscription à l’offre" className="relative mx-auto mt-10 w-full max-w-[620px] px-4 sm:mt-12 sm:px-8">
-        <div className="rounded-[34px] border border-[#FFFFFF]/80 bg-[#FFFFFF]/65 p-2 shadow-[0_40px_100px_-30px_rgba(109,75,255,0.45),0_10px_30px_-10px_rgba(22,19,43,0.12)] backdrop-blur-2xl">
-          <div className="rounded-[28px] border border-[#16132B]/[0.06] bg-[#FFFFFF]/85 p-6 sm:p-8">
-            {registered ? (
-              <div className="text-center">
-                <span className="mx-auto grid h-14 w-14 place-items-center rounded-full text-[#FFFFFF] shadow-[0_12px_30px_-8px_rgba(193,75,255,0.6)]" style={{ backgroundImage: GRADIENT }}>
-                  <Sparkles className="h-6 w-6" aria-hidden="true" />
-                </span>
-                <h2 ref={doneRef} tabIndex={-1} className="mt-5 font-display text-[28px] font-semibold leading-tight tracking-[-0.03em] focus:outline-none sm:text-[32px]">
-                  {registered.alreadyRegistered ? 'Voici votre code.' : 'C’est fait, votre réduction est activée.'}
-                </h2>
-                <div className="mt-6">
-                  <CodeCard code={registered.code} validUntil={registered.validUntil} />
-                </div>
-                <p className="mx-auto mt-6 max-w-[28rem] text-[15.5px] leading-[1.6] text-[#16132B]/65">
-                  {registered.alreadyRegistered
-                    ? 'Il vous a déjà été envoyé par e-mail.'
-                    : `Nous vous l’envoyons aussi par e-mail à ${draft.email.trim()}.`}{' '}
-                  Donnez ce code au moment du devis, en boutique ou par téléphone.
-                </p>
-                <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
-                  <a href={brand.phoneHref} className="inline-flex h-12 items-center justify-center gap-2 rounded-full px-6 text-[15px] font-semibold text-[#FFFFFF] shadow-[0_12px_30px_-10px_rgba(193,75,255,0.7)] transition hover:brightness-110" style={{ backgroundImage: GRADIENT }}>
-                    <Phone className="h-4 w-4" aria-hidden="true" />
-                    {brand.phoneDisplay}
-                  </a>
-                  <a href={hrefForPage('devis', routerMode)} className="inline-flex h-12 items-center justify-center rounded-full border border-[#16132B]/12 bg-[#FFFFFF] px-6 text-[15px] font-semibold transition hover:border-[#A35BFF]/50">
-                    Demander un devis
-                  </a>
-                </div>
-              </div>
-            ) : (
-              <form ref={formRef} onSubmit={submit} noValidate className="relative flex flex-col gap-5">
-                <fieldset data-invalid={Boolean(errors.customerType)} tabIndex={-1} aria-describedby={errors.customerType ? 'type-err' : undefined} className="focus:outline-none">
-                  <legend className="text-[13.5px] font-semibold text-[#16132B]/70">Vous êtes</legend>
-                  <div className="mt-2 flex flex-wrap gap-2">
-                    {CUSTOMER_TYPES.map((type) => {
-                      const t = TYPES[type];
-                      const checked = draft.customerType === type;
-                      return (
-                        <label key={type} title={type} className="relative cursor-pointer">
-                          <input type="radio" name="type" aria-label={type} checked={checked} onChange={() => update({ customerType: type })} className="peer sr-only" />
-                          <span
-                            className={`inline-flex h-11 items-center gap-2 rounded-full px-4 text-[14.5px] font-medium transition-all duration-200 peer-focus-visible:ring-4 peer-focus-visible:ring-[#A35BFF]/25 ${checked ? 'text-[#FFFFFF] shadow-[0_10px_24px_-10px_rgba(193,75,255,0.8)]' : 'border border-[#16132B]/10 bg-[#FFFFFF] hover:border-[#A35BFF]/40 hover:bg-[#FBF8FF]'}`}
-                            style={checked ? { backgroundImage: GRADIENT } : undefined}
-                          >
-                            {checked ? <Check className="h-4 w-4" strokeWidth={2.6} aria-hidden="true" /> : <t.icon className="h-4 w-4 text-[#A35BFF]" strokeWidth={1.9} aria-hidden="true" />}
-                            {t.short}
-                          </span>
-                        </label>
-                      );
-                    })}
-                  </div>
-                  <ErrorText id="type-err" message={errors.customerType} />
-                </fieldset>
-
-                {pro && (
-                  <TextField id="o-company" label="Société" autoComplete="organization" placeholder="Nom de la société" value={draft.company} onChange={(v) => update({ company: v })} error={errors.company} />
-                )}
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  <TextField id="o-name" label="Nom et prénom" autoComplete="name" value={draft.fullName} onChange={(v) => update({ fullName: v })} error={errors.fullName} />
-                  <TextField id="o-phone" label="Téléphone" type="tel" inputMode="tel" autoComplete="tel" placeholder="06 12 34 56 78" value={draft.phone} onChange={(v) => update({ phone: v })} error={errors.phone} />
-                </div>
-                <TextField id="o-email" label="E-mail (votre code y est envoyé)" type="email" inputMode="email" autoComplete="email" placeholder="vous@exemple.fr" value={draft.email} onChange={(v) => update({ email: v })} error={errors.email} />
-
-                <div>
-                  <label className="flex cursor-pointer items-start gap-3 text-[14px] leading-[1.55] text-[#16132B]/65">
-                    <input
-                      type="checkbox"
-                      checked={draft.acceptConditions && draft.consent}
-                      onChange={(e) => update({ acceptConditions: e.target.checked, consent: e.target.checked })}
-                      aria-invalid={Boolean(errors.acceptConditions || errors.consent)}
-                      aria-describedby={errors.acceptConditions || errors.consent ? 'cond-err' : undefined}
-                      className="mt-0.5 h-5 w-5 shrink-0 accent-[#A35BFF]"
-                    />
-                    <span>
-                      J’accepte les conditions de l’offre et que {brand.name} utilise ces informations pour gérer mon code (
-                      <a href={hrefForPage('confidentialite', routerMode)} className="font-medium text-[#8A3DFF] underline underline-offset-2">confidentialité</a>).
-                    </span>
-                  </label>
-                  <ErrorText id="cond-err" message={errors.acceptConditions ?? errors.consent} />
-                  <details className="group mt-3 rounded-2xl bg-[#F6F3FF] px-4 py-3">
-                    <summary className="flex cursor-pointer list-none items-center justify-between text-[14px] font-semibold text-[#16132B]/75 [&::-webkit-details-marker]:hidden">
-                      Conditions de l’offre
-                      <ChevronDown className="h-4 w-4 text-[#8A3DFF] transition-transform duration-200 group-open:rotate-180" aria-hidden="true" />
-                    </summary>
-                    <ul className="mt-3 flex flex-col gap-2 text-[14px] leading-[1.5] text-[#16132B]/70">
-                      {OFFER_CONDITIONS.map((item) => (
-                        <li key={item} className="flex gap-2.5">
-                          <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#A35BFF]" strokeWidth={2.4} aria-hidden="true" />
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </details>
-                </div>
-
-                <HoneypotField value={honeypot} onChange={setHoneypot} />
-                {failure && <DeliveryErrorNotice reason={failure} />}
-                <button
-                  type="submit"
-                  disabled={sending}
-                  aria-busy={sending}
-                  className="offre-brille group relative inline-flex h-14 w-full cursor-pointer items-center justify-center gap-2.5 overflow-hidden rounded-full text-[16.5px] font-semibold text-[#FFFFFF] shadow-[0_16px_40px_-12px_rgba(193,75,255,0.75)] transition hover:-translate-y-px hover:shadow-[0_20px_44px_-12px_rgba(193,75,255,0.9)] focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[#A35BFF] disabled:cursor-wait disabled:opacity-70"
-                  style={{ backgroundImage: 'linear-gradient(100deg,#6D4BFF 0%,#C14BFF 25%,#FF4F9A 50%,#FF8A3D 75%,#6D4BFF 100%)' }}
-                >
-                  {sending ? 'Inscription en cours…' : `Recevoir mon code -${OFFER_RATE} %`}
-                  <ArrowRight className="h-5 w-5 transition-transform duration-200 group-hover:translate-x-1" aria-hidden="true" />
-                </button>
-                <p className="-mt-1 text-center text-[13px] text-[#16132B]/45">Gratuit, sans engagement · vos informations restent chez nous</p>
-              </form>
-            )}
-          </div>
+      {/* ===== Comment ça marche ===== */}
+      <section aria-labelledby="offre-etapes" className="mx-auto w-full max-w-[1040px] px-5 py-12 sm:px-8 sm:py-16">
+        <div id="offre-etapes">
+          <SectionTitle kicker="Simple et rapide" title="Comment ça marche ?" />
         </div>
-      </section>
-
-      {/* 3 étapes */}
-      <section aria-label="Comment ça marche" className="relative mx-auto mt-14 w-full max-w-[1000px] px-5 pb-16 sm:mt-20 sm:px-8">
-        <ol className="grid gap-4 sm:grid-cols-3">
+        <ol className="relative mt-10 grid gap-8 sm:mt-12 sm:grid-cols-3 sm:gap-6">
+          {/* ligne qui relie les étapes */}
+          <div aria-hidden="true" className="absolute left-[27px] top-2 bottom-2 w-[2px] bg-[linear-gradient(180deg,#0E6BA8,#17B3A3)] opacity-25 sm:left-[16%] sm:right-[16%] sm:top-[27px] sm:bottom-auto sm:h-[2px] sm:w-auto sm:bg-[linear-gradient(90deg,#0E6BA8,#17B3A3)]" />
           {[
-            { icon: MousePointerClick, title: 'Je m’inscris', text: '30 secondes, ici même.' },
-            { icon: Mail, title: 'Je reçois mon code', text: 'À l’écran et par e-mail.' },
-            { icon: Ticket, title: 'Je l’utilise', text: `Au moment du devis, pendant ${OFFER_MONTHS} mois.` },
+            { icon: MousePointerClick, title: 'Je m’inscris', text: 'Je remplis le formulaire ci-dessus : 30 secondes suffisent.' },
+            { icon: Mail, title: 'Je reçois mon code', text: 'Il s’affiche tout de suite à l’écran et arrive aussi par e-mail.' },
+            { icon: Ticket, title: 'J’en profite', text: `Je donne mon code au moment du devis : -${OFFER_RATE} % pendant ${OFFER_MONTHS} mois.` },
           ].map((step, i) => (
-            <li key={step.title} className="relative rounded-[24px] border border-[#16132B]/[0.07] bg-[#FFFFFF]/70 p-5 shadow-[0_10px_30px_-18px_rgba(22,19,43,0.25)] backdrop-blur">
-              <div className="flex items-center justify-between">
-                <span className="grid h-11 w-11 place-items-center rounded-2xl text-[#FFFFFF] shadow-[0_10px_24px_-10px_rgba(193,75,255,0.7)]" style={{ backgroundImage: GRADIENT }}>
-                  <step.icon className="h-5 w-5" strokeWidth={2} aria-hidden="true" />
-                </span>
-                <span className="font-display text-[34px] font-bold leading-none tracking-[-0.04em] text-[#16132B]/[0.08]">0{i + 1}</span>
+            <li key={step.title} className="relative flex gap-5 sm:flex-col sm:items-center sm:text-center">
+              <span className="relative grid h-14 w-14 shrink-0 place-items-center rounded-full text-[#FFFFFF] shadow-[0_10px_24px_-10px_rgba(14,107,168,0.8)] ring-[6px] ring-[#FFFFFF]" style={{ backgroundImage: SEA }}>
+                <step.icon className="h-6 w-6" strokeWidth={2} aria-hidden="true" />
+                <span className="absolute -right-1 -top-1 grid h-6 w-6 place-items-center rounded-full bg-[#0B2A3C] text-[12px] font-bold text-[#FFFFFF]">{i + 1}</span>
+              </span>
+              <div className="pt-1 sm:pt-0">
+                <p className="font-display text-[19px] font-bold tracking-[-0.01em]">{step.title}</p>
+                <p className="mt-1.5 max-w-[17rem] text-[15px] leading-[1.55] text-[#0B2A3C]/65">{step.text}</p>
               </div>
-              <p className="mt-4 font-display text-[17px] font-semibold tracking-[-0.01em]">{step.title}</p>
-              <p className="mt-1 text-[14.5px] leading-[1.5] text-[#16132B]/60">{step.text}</p>
             </li>
           ))}
         </ol>
       </section>
 
-      {/* Bas de page réduit */}
-      <footer className="relative mt-auto border-t border-[#16132B]/[0.07]">
-        <div className="mx-auto flex w-full max-w-[1120px] flex-col justify-between gap-3 px-5 py-7 text-[14px] leading-[1.6] text-[#16132B]/55 sm:flex-row sm:items-end sm:px-8">
-          <div>
-            <p className="font-semibold text-[#16132B]">{brand.name}</p>
-            <p>
-              48 rue de la République, 13002 Marseille ·{' '}
-              <a href={brand.phoneHref} className="whitespace-nowrap font-semibold text-[#16132B] hover:text-[#8A3DFF]">{brand.phoneDisplay}</a>
+      {/* ===== Avis clients (vrais avis Google) ===== */}
+      {REVIEWS.length > 0 && (
+        <section aria-labelledby="offre-avis" className="bg-[#F0F9FC]">
+          <div className="mx-auto w-full max-w-[1100px] px-5 py-12 sm:px-8 sm:py-16">
+            <div id="offre-avis">
+              <SectionTitle kicker="Avis clients" title="Ils nous ont fait confiance" />
+            </div>
+            {REVIEWS_SOURCE.googleAverage && REVIEWS_SOURCE.googleTotalCount ? (
+              <p className="mt-3 flex items-center justify-center gap-2 text-[15px] text-[#0B2A3C]/70">
+                <span className="flex" aria-hidden="true">
+                  {[0, 1, 2, 3, 4].map((n) => (
+                    <Star key={n} className="h-4 w-4 fill-[#F5B731] text-[#F5B731]" />
+                  ))}
+                </span>
+                <span>
+                  <strong className="font-semibold text-[#0B2A3C]">{REVIEWS_SOURCE.googleAverage.toLocaleString('fr-FR')}/5</strong> sur Google · {REVIEWS_SOURCE.googleTotalCount} avis
+                </span>
+              </p>
+            ) : null}
+            <ul className="mt-9 grid gap-4 md:grid-cols-3">
+              {REVIEWS.map((review) => (
+                <li key={review.id} className="flex flex-col rounded-[22px] bg-[#FFFFFF] p-6 shadow-[0_14px_36px_-22px_rgba(11,42,60,0.35)]">
+                  <span className="flex" role="img" aria-label={`${review.rating} sur 5`}>
+                    {Array.from({ length: review.rating }, (_, n) => (
+                      <Star key={n} className="h-4 w-4 fill-[#F5B731] text-[#F5B731]" aria-hidden="true" />
+                    ))}
+                  </span>
+                  <p className="mt-3 flex-1 text-[15.5px] leading-[1.6] text-[#0B2A3C]/80">« {review.text} »</p>
+                  <div className="mt-5 flex items-center gap-3">
+                    <span className="grid h-10 w-10 place-items-center rounded-full font-display text-[15px] font-bold text-[#FFFFFF]" style={{ backgroundImage: SEA }} aria-hidden="true">
+                      {review.author.charAt(0)}
+                    </span>
+                    <div className="leading-tight">
+                      <p className="text-[15px] font-semibold">{review.author}</p>
+                      <p className="text-[13px] text-[#0B2A3C]/55">Avis Google{review.service ? ` · ${review.service}` : ''}</p>
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+            <p className="mt-8 text-center">
+              <a href={REVIEWS_SOURCE.googleProfileUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-[15px] font-semibold text-[#0E6BA8] hover:underline">
+                Voir tous les avis sur Google
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </a>
             </p>
           </div>
-          <p className="flex flex-wrap gap-x-4 gap-y-1">
-            <a href={hrefForHome(routerMode)} className="hover:text-[#8A3DFF]">Découvrir le site</a>
-            <a href={hrefForPage('mentions-legales', routerMode)} className="hover:text-[#8A3DFF]">Mentions légales</a>
-            <a href={hrefForPage('confidentialite', routerMode)} className="hover:text-[#8A3DFF]">Confidentialité</a>
-            <a href={hrefForPage('cgv', routerMode)} className="hover:text-[#8A3DFF]">CGV</a>
-          </p>
+        </section>
+      )}
+
+      {/* ===== Infos de l'entreprise ===== */}
+      <footer className="mt-auto bg-[#0B2A3C] text-[#FFFFFF]">
+        <Wave fill="#F0F9FC" className="rotate-180" />
+        <div className="mx-auto w-full max-w-[1100px] px-5 pb-8 pt-8 sm:px-8 sm:pt-10">
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="sm:col-span-2 lg:col-span-1">
+              <p className="font-display text-[19px] font-bold">{brand.name}</p>
+              <p className="mt-2 text-[14.5px] leading-[1.6] text-[#FFFFFF]/70">Serrurier à Marseille : serrurerie, clés et badges, vitrerie, menuiserie et fermetures.</p>
+            </div>
+            <div className="flex gap-3">
+              <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-[#5FD6C6]" aria-hidden="true" />
+              <div className="text-[14.5px] leading-[1.6]">
+                <p className="font-semibold">Boutique</p>
+                <p className="text-[#FFFFFF]/75">48 rue de la République<br />13002 Marseille</p>
+                <a href={REVIEWS_SOURCE.googleProfileUrl} target="_blank" rel="noopener noreferrer" className="mt-1 inline-block font-medium text-[#5FD6C6] hover:underline">Itinéraire</a>
+              </div>
+            </div>
+            <div className="flex gap-3">
+              <Clock3 className="mt-0.5 h-5 w-5 shrink-0 text-[#5FD6C6]" aria-hidden="true" />
+              <div className="text-[14.5px] leading-[1.6]">
+                <p className="font-semibold">Horaires</p>
+                <p className="text-[#FFFFFF]/75">Lundi au samedi : 9h – 19h<br />Dimanche : fermé</p>
+                <p className="mt-1 text-[#FFFFFF]/75">Dépannage d’urgence aussi le soir et le dimanche, par téléphone.</p>
+              </div>
+            </div>
+            <div className="flex gap-3">
+              <Phone className="mt-0.5 h-5 w-5 shrink-0 text-[#5FD6C6]" aria-hidden="true" />
+              <div className="text-[14.5px] leading-[1.6]">
+                <p className="font-semibold">Contact</p>
+                <a href={brand.phoneHref} className="block whitespace-nowrap font-semibold tabular-nums hover:text-[#5FD6C6]">{brand.phoneDisplay}</a>
+                <a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="mt-1 inline-flex items-center gap-1.5 text-[#FFFFFF]/75 hover:text-[#5FD6C6]">
+                  <MessageCircle className="h-4 w-4" aria-hidden="true" />
+                  WhatsApp
+                </a>
+              </div>
+            </div>
+          </div>
+          <div className="mt-8 flex flex-col justify-between gap-3 border-t border-[#FFFFFF]/12 pt-6 text-[13.5px] text-[#FFFFFF]/60 sm:flex-row">
+            <p>© {new Date().getFullYear()} {brand.name}</p>
+            <p className="flex flex-wrap gap-x-4 gap-y-1">
+              <a href={hrefForHome(routerMode)} className="hover:text-[#FFFFFF]">Découvrir le site</a>
+              <a href={hrefForPage('mentions-legales', routerMode)} className="hover:text-[#FFFFFF]">Mentions légales</a>
+              <a href={hrefForPage('confidentialite', routerMode)} className="hover:text-[#FFFFFF]">Confidentialité</a>
+              <a href={hrefForPage('cgv', routerMode)} className="hover:text-[#FFFFFF]">CGV</a>
+            </p>
+          </div>
         </div>
       </footer>
     </div>
