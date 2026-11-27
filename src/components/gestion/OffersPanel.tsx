@@ -14,6 +14,7 @@ import {
 import { saveOffer, signupStatus, type ApiFailure, type OfferSignup } from '../../utils/gestion';
 import { encodeQr, qrToSvg } from '../../utils/qrcode';
 import { OfferEditor } from './OfferEditor';
+import { DEFAULT_PAGE, themeGradient } from '../../utils/offerPage';
 
 const SEA = 'linear-gradient(120deg,#0E6BA8 0%,#1391B8 50%,#17B3A3 100%)';
 const INK_HEX = '#0B2A3C';
@@ -178,7 +179,7 @@ function OfferCard({
   return (
     <li className="flex flex-col rounded-2xl bg-[#FFFFFF] p-5 shadow-[0_10px_30px_-22px_rgba(11,42,60,0.5)] ring-1 ring-[#0B2A3C]/[0.06]">
       <div className="flex items-start gap-4">
-        <span className="grid h-16 w-16 shrink-0 place-items-center rounded-2xl font-display text-[19px] font-extrabold tracking-[-0.03em] text-[#FFFFFF]" style={{ backgroundImage: SEA }}>
+        <span className="grid h-16 w-16 shrink-0 place-items-center rounded-2xl font-display text-[19px] font-extrabold tracking-[-0.03em] text-[#FFFFFF]" style={{ backgroundImage: themeGradient(offer.page.theme) }}>
           {reductionLabel(offer).replace(' ', '')}
         </span>
         <div className="min-w-0 flex-1">
@@ -238,6 +239,7 @@ const NEW_OFFER: OfferConfig = {
   end: '',
   active: true,
   questions: [],
+  page: DEFAULT_PAGE,
 };
 
 /** Rubrique « Offres & QR codes » de l'espace gestion. */

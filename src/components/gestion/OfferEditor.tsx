@@ -4,6 +4,7 @@ import {
   ArrowDown,
   ArrowUp,
   Calendar,
+  Check,
   CheckSquare,
   CircleDot,
   Hash,
@@ -15,7 +16,8 @@ import {
   Type,
   X,
 } from 'lucide-react';
-import { slugify, serializeOffer, validateOffer, type OfferConfig, type OfferErrors } from '../../utils/offers';
+import { reductionLabel, slugify, serializeOffer, validateOffer, type OfferConfig, type OfferErrors } from '../../utils/offers';
+import { BLOCK_LABELS, MAX_BUTTON_TEXT, MAX_SUCCESS_TEXT, normalizeBlocks, THEMES, themeGradient, type PageBlock, type PageSettings } from '../../utils/offerPage';
 import {
   hasOptions,
   MAX_OPTIONS,
@@ -42,7 +44,7 @@ const TYPE_ICONS: Readonly<Record<QuestionType, typeof Type>> = {
   date: Calendar,
 };
 
-type Tab = 'offre' | 'formulaire' | 'apercu';
+type Tab = 'offre' | 'formulaire' | 'page' | 'apercu';
 
 function Field({ id, label, hint, error, children }: { readonly id: string; readonly label: string; readonly hint?: string; readonly error?: string; readonly children: ReactNode }) {
   return (
@@ -347,6 +349,131 @@ function FormBuilder({ questions, error, onChange }: { readonly questions: reado
   );
 }
 
+// ---------------------------------------------------------------- onglet « Page »
+function BlockRow({
+  block,
+  canUp,
+  canDown,
+  onMove,
+  onToggle,
+}: {
+  readonly block: PageBlock;
+  readonly canUp?: boolean;
+  readonly canDown?: boolean;
+  readonly onMove?: () => void;
+  readonly onToggle: () => void;
+}) {
+  const iconBtn = 'grid h-9 w-9 cursor-pointer place-items-center rounded-lg text-[#0B2A3C]/55 transition hover:bg-[#F0F9FC] hover:text-[#0E6BA8] disabled:cursor-not-allowed disabled:opacity-30';
+  const label = BLOCK_LABELS[block.id].label;
+  return (
+    <li className="flex items-center gap-2 rounded-2xl bg-[#FFFFFF] p-3.5 ring-1 ring-[#0B2A3C]/[0.08]">
+      <div className="min-w-0 flex-1">
+        <p className={`text-[15px] font-semibold ${block.visible ? '' : 'text-[#0B2A3C]/45 line-through'}`}>{label}</p>
+        <p className="text-[12.5px] text-[#0B2A3C]/55">{BLOCK_LABELS[block.id].hint}</p>
+      </div>
+      {onMove && (
+        <>
+          <button type="button" className={iconBtn} disabled={!canUp} onClick={onMove} aria-label={`Monter « ${label} »`}>
+            <ArrowUp className="h-4 w-4" aria-hidden="true" />
+          </button>
+          <button type="button" className={iconBtn} disabled={!canDown} onClick={onMove} aria-label={`Descendre « ${label} »`}>
+            <ArrowDown className="h-4 w-4" aria-hidden="true" />
+          </button>
+        </>
+      )}
+      <label className="inline-flex shrink-0 cursor-pointer items-center gap-2 text-[13.5px] font-semibold text-[#0B2A3C]/70">
+        <input type="checkbox" checked={block.visible} onChange={onToggle} className="h-[18px] w-[18px] accent-[#0E6BA8]" />
+        Afficher
+      </label>
+    </li>
+  );
+}
+
+function PageEditor({
+  page,
+  defaultButton,
+  error,
+  onChange,
+}: {
+  readonly page: PageSettings;
+  readonly defaultButton: string;
+  readonly error?: string;
+  readonly onChange: (p: PageSettings) => void;
+}) {
+  const blocks = normalizeBlocks(page.blocks);
+  const movable = blocks.filter((b) => b.id !== 'infos');
+  const infos = blocks.find((b) => b.id === 'infos') ?? { id: 'infos' as const, visible: true };
+  // « Comment ça marche » et « Avis » : deux blocs, monter l'un = descendre l'autre.
+  const swap = () => onChange({ ...page, blocks: [...[...movable].reverse(), infos] });
+  const toggle = (id: PageBlock['id']) => onChange({ ...page, blocks: blocks.map((b) => (b.id === id ? { ...b, visible: !b.visible } : b)) });
+
+  return (
+    <div className="flex flex-col gap-6">
+      {error && (
+        <p role="alert" className="rounded-xl bg-[#FDECEA] px-3.5 py-2.5 text-[13.5px] font-medium text-[#A8321F]">
+          {error}
+        </p>
+      )}
+      <div>
+        <p className="text-[15px] font-bold">Couleurs</p>
+        <p className="text-[13.5px] text-[#0B2A3C]/55">Thèmes prêts à l’emploi, aux couleurs de Marseille et de la Provence.</p>
+        <div className="mt-3 grid grid-cols-2 gap-2.5" role="radiogroup" aria-label="Thème de couleurs">
+          {THEMES.map((t) => {
+            const checked = page.theme === t.id;
+            return (
+              <button
+                key={t.id}
+                type="button"
+                role="radio"
+                aria-checked={checked}
+                onClick={() => onChange({ ...page, theme: t.id })}
+                className={`relative cursor-pointer overflow-hidden rounded-2xl bg-[#FFFFFF] text-left ring-2 transition ${checked ? 'ring-[#0B2A3C]' : 'ring-[#0B2A3C]/[0.08] hover:ring-[#0B2A3C]/30'}`}
+              >
+                <span className="block h-14" style={{ backgroundImage: themeGradient(t.id) }} />
+                <span className="flex gap-1 px-3 pt-2.5">
+                  {[t.bg1, t.tint, t.blob1, t.blob2].map((c) => (
+                    <span key={c} className="h-3.5 w-3.5 rounded-full ring-1 ring-[#0B2A3C]/10" style={{ backgroundColor: c }} />
+                  ))}
+                </span>
+                <span className="block px-3 pb-3 pt-1.5">
+                  <span className="block text-[15px] font-bold">{t.label}</span>
+                  <span className="block text-[12.5px] text-[#0B2A3C]/55">{t.hint}</span>
+                </span>
+                {checked && (
+                  <span className="absolute right-2 top-2 grid h-6 w-6 place-items-center rounded-full bg-[#FFFFFF] text-[#0B2A3C]">
+                    <Check className="h-4 w-4" strokeWidth={3} aria-hidden="true" />
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-4">
+        <p className="text-[15px] font-bold">Textes</p>
+        <Field id="pg-button" label="Texte du bouton (facultatif)" hint={`Vide : « ${defaultButton} ». ${MAX_BUTTON_TEXT} caractères au maximum.`}>
+          <input id="pg-button" maxLength={MAX_BUTTON_TEXT} className={`${INPUT} border-[#0B2A3C]/15`} placeholder={defaultButton} value={page.buttonText} onChange={(e) => onChange({ ...page, buttonText: e.target.value })} />
+        </Field>
+        <Field id="pg-success" label="Message après l’inscription (facultatif)" hint={`Vide : « C’est fait, votre réduction est activée. » ${MAX_SUCCESS_TEXT} caractères au maximum.`}>
+          <input id="pg-success" maxLength={MAX_SUCCESS_TEXT} className={`${INPUT} border-[#0B2A3C]/15`} placeholder="C’est fait, votre réduction est activée." value={page.successText} onChange={(e) => onChange({ ...page, successText: e.target.value })} />
+        </Field>
+      </div>
+
+      <div>
+        <p className="text-[15px] font-bold">Sous le formulaire</p>
+        <p className="text-[13.5px] text-[#0B2A3C]/55">Choisissez ce qui s’affiche, et dans quel ordre.</p>
+        <ul className="mt-3 flex flex-col gap-2">
+          {movable.map((b, i) => (
+            <BlockRow key={b.id} block={b} canUp={i > 0} canDown={i < movable.length - 1} onMove={swap} onToggle={() => toggle(b.id)} />
+          ))}
+          <BlockRow block={infos} onToggle={() => toggle('infos')} />
+        </ul>
+      </div>
+    </div>
+  );
+}
+
 // ---------------------------------------------------------------- aperçu téléphone
 function PhonePreview({ offer }: { readonly offer: OfferConfig }) {
   const frameRef = useRef<HTMLIFrameElement | null>(null);
@@ -425,7 +552,8 @@ export function OfferEditor({
     const found = validateOffer(current, existingSlugs, isNew);
     setErrors(found);
     if (Object.keys(found).length > 0) {
-      setTab(found.questions && Object.keys(found).length === 1 ? 'formulaire' : 'offre');
+      const only = Object.keys(found).length === 1;
+      setTab(only && found.questions ? 'formulaire' : only && found.page ? 'page' : 'offre');
       return;
     }
     setSaving(true);
@@ -439,6 +567,7 @@ export function OfferEditor({
   const TABS: readonly { id: Tab; label: string; mobileOnly?: boolean }[] = [
     { id: 'offre', label: 'Offre' },
     { id: 'formulaire', label: `Formulaire${offer.questions.length ? ` (${offer.questions.length})` : ''}` },
+    { id: 'page', label: 'Page' },
     { id: 'apercu', label: 'Aperçu', mobileOnly: true },
   ];
 
@@ -498,6 +627,9 @@ export function OfferEditor({
                 onConditionsText={setConditionsText}
                 onChange={change}
               />
+            )}
+            {tab === 'page' && (
+              <PageEditor page={offer.page} defaultButton={`Recevoir mon code ${reductionLabel(current)}`} error={errors.page} onChange={(page) => change({ page })} />
             )}
             {tab === 'formulaire' && <FormBuilder questions={offer.questions} error={errors.questions} onChange={(questions) => change({ questions })} />}
             {tab === 'apercu' && (

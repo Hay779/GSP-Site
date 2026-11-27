@@ -18,6 +18,8 @@ const TYPES_QUESTIONS = ['texte', 'paragraphe', 'choix', 'cases', 'oui_non', 'no
 const LIBELLES_RESERVES = ['offre', 'vous êtes', 'société', 'fonction', 'nom', 'téléphone', 'e-mail', 'ville'];
 const MAX_QUESTIONS = 10;
 const MAX_CHOIX = 12;
+const THEMES_PAGE = ['mer', 'soleil', 'calanques', 'lavande'];
+const BLOCS_PAGE = ['etapes', 'avis', 'infos'];
 
 function offreBienvenue(): array
 {
@@ -130,7 +132,7 @@ function erreurReponses(array $offre, callable $valeurDe): string
 /** Champs visibles par le public (page /offre). */
 function offrePublique(array $offre): array
 {
-    $champs = ['slug', 'titre', 'description', 'reduction_type', 'reduction_valeur', 'duree_mois', 'conditions', 'questions'];
+    $champs = ['slug', 'titre', 'description', 'reduction_type', 'reduction_valeur', 'duree_mois', 'conditions', 'questions', 'page'];
     return array_intersect_key($offre, array_flip($champs));
 }
 
@@ -200,6 +202,23 @@ function validerOffre(array $o): array
         $questions[] = ['id' => $idQ, 'libelle' => $libelle, 'type' => $typeQ, 'obligatoire' => ($q['obligatoire'] ?? false) === true, 'options' => $options];
     }
 
+    // Page : thème, textes, blocs (chacun une fois, ordre libre).
+    $pageBrute = is_array($o['page'] ?? null) ? $o['page'] : [];
+    $theme = is_string($pageBrute['theme'] ?? null) && in_array($pageBrute['theme'], THEMES_PAGE, true) ? $pageBrute['theme'] : 'mer';
+    $blocs = [];
+    foreach ((is_array($pageBrute['blocs'] ?? null) ? $pageBrute['blocs'] : []) as $b) {
+        $idB = is_array($b) && is_string($b['id'] ?? null) ? $b['id'] : '';
+        if (in_array($idB, BLOCS_PAGE, true) && !in_array($idB, array_column($blocs, 'id'), true)) {
+            $blocs[] = ['id' => $idB, 'visible' => ($b['visible'] ?? true) !== false];
+        }
+    }
+    foreach (BLOCS_PAGE as $idB) {
+        if (!in_array($idB, array_column($blocs, 'id'), true)) {
+            $blocs[] = ['id' => $idB, 'visible' => true];
+        }
+    }
+    $page = ['theme' => $theme, 'bouton' => $texte($pageBrute['bouton'] ?? '', 40), 'message' => $texte($pageBrute['message'] ?? '', 90), 'blocs' => $blocs];
+
     $date = static function ($v): string {
         return is_string($v) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $v) ? $v : '';
     };
@@ -216,6 +235,7 @@ function validerOffre(array $o): array
         'fin' => $date($o['fin'] ?? ''),
         'actif' => ($o['actif'] ?? true) === true,
         'questions' => $questions,
+        'page' => $page,
     ];
     if (mb_strlen($propre['nom']) < 3 || mb_strlen($propre['titre']) < 3 || mb_strlen($propre['description']) < 10 || count($conditions) === 0) {
         return [[], 'champs'];
