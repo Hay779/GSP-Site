@@ -7,7 +7,7 @@ import { PAGE_SLUGS, routeKey, type PageId, type Route } from '../utils/router';
 const ALL_ROUTES: readonly Route[] = [
   ...DOMAINS_CONFIG.items.map((item) => ({ kind: 'domain', id: item.id }) as const),
   ...(Object.keys(PAGE_SLUGS) as PageId[])
-    .filter((id) => id !== 'devis' && id !== 'devenir-partenaire' && id !== 'promotions') // pages à part
+    .filter((id) => id !== 'devis' && id !== 'devenir-partenaire' && id !== 'promotions' && id !== 'offre' && id !== 'gestion') // pages à part
     .map((id) => ({ kind: 'page', id }) as const),
 ];
 

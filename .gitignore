@@ -6,3 +6,6 @@ coverage/
 *.log
 .env*
 !.env.example
+
+# Espace gestion : fichier de mot de passe généré localement (jamais dans Git)
+server/prive/

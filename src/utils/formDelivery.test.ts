@@ -55,3 +55,12 @@ test('photos are shrunk to 1600 px on the longest edge, never enlarged', () => {
   assert.deepEqual(fitWithin(3000, 4000), { width: 1200, height: 1600 });
   assert.deepEqual(fitWithin(800, 600), { width: 800, height: 600 });
 });
+
+test('passes the offer validity and "already registered" flag through', () => {
+  assert.deepEqual(interpretResponse(200, { ok: true, reference: 'OFF-20261127-1234', valable_jusqu_au: '27/04/2027', deja_inscrit: true }), {
+    ok: true,
+    reference: 'OFF-20261127-1234',
+    validUntil: '27/04/2027',
+    alreadyRegistered: true,
+  });
+});

@@ -11,6 +11,7 @@
 - `docs/Étude Tryba + concurrents plan d'action serrurerierepublique.fr.md` : étude du 26/11/2026 (Tryba, concurrents marseillais, audit du site, conformité prix, plan d'action en 10 points). Base des prochains chantiers : page Tarifs, pages locales, avis, offres.
 - `docs/images-site/` : **copie de référence de toutes les images du site, rangées par partie du site**, avec le tableau « quelle image apparaît où » et la procédure de remplacement (`0-a-remplacer/` puis « remplace les images »). Le site utilise `src/assets/images/` : garder les deux à jour.
 - `docs/seo/` : recherches écrites par **Hermes** (mots-clés, concurrents, annuaires, avis). À lire avant de créer ou modifier une page.
+- **Espace privé `/gestion`** (mot de passe) : **l'unique interface de gestion de l'équipe**. Aujourd'hui : suivi des inscriptions à l'offre -5 % du flyer (page `/offre`). Prévu ensuite : demandes, relances, publicité, suivi du site. **Toujours l'enrichir (nouvelle rubrique dans `src/components/GestionPage.tsx`), ne jamais créer une autre interface.** Détails : `docs/journal/2026-11-27-offre-flyer.md`.
 - `docs/journal/` : ce que Claude Code a fait, **un fichier par séance** (`AAAA-MM-JJ-sujet.md`). Avant le 26/11/2026 : `docs/JOURNAL-ARCHIVE.md` (archive, on n'y écrit plus).
 
 ## Travail avec Hermes

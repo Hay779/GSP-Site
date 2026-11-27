@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "clean": "rm -rf dist server.js",
     "lint": "tsc --noEmit",
-    "build:prod": "vite build && tsx scripts/prerender.ts"
+    "build:prod": "vite build && tsx scripts/prerender.ts",
+    "gestion:mot-de-passe": "node scripts/mot-de-passe-gestion.mjs"
   },
   "dependencies": {
     "@fontsource-variable/dm-sans": "^5.3.0",

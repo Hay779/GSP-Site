@@ -6,7 +6,7 @@
 
 import { trackEvent } from './analytics';
 
-export type FormKind = 'devis' | 'contact' | 'partenaire' | 'sinistre';
+export type FormKind = 'devis' | 'contact' | 'partenaire' | 'sinistre' | 'inscription';
 
 export interface SummaryRow {
   readonly label: string;
@@ -14,7 +14,14 @@ export interface SummaryRow {
 }
 
 export type DeliveryResult =
-  | { readonly ok: true; readonly reference: string }
+  | {
+      readonly ok: true;
+      readonly reference: string;
+      /** Inscription à l'offre : date de fin de validité (JJ/MM/AAAA) donnée par le serveur. */
+      readonly validUntil?: string;
+      /** Inscription à l'offre : déjà inscrit, le code existant est renvoyé. */
+      readonly alreadyRegistered?: boolean;
+    }
   | { readonly ok: false; readonly reason: 'reseau' | 'limite' | 'refus' };
 
 export const FORM_ENDPOINT = '/api/demande.php';
@@ -47,9 +54,14 @@ export function buildFormData(input: DeliveryInput): FormData {
 }
 
 export function interpretResponse(status: number, body: unknown): DeliveryResult {
-  const data = (body ?? {}) as { ok?: unknown; reference?: unknown };
+  const data = (body ?? {}) as { ok?: unknown; reference?: unknown; valable_jusqu_au?: unknown; deja_inscrit?: unknown };
   if (status >= 200 && status < 300 && data.ok === true && typeof data.reference === 'string') {
-    return { ok: true, reference: data.reference };
+    return {
+      ok: true,
+      reference: data.reference,
+      ...(typeof data.valable_jusqu_au === 'string' ? { validUntil: data.valable_jusqu_au } : {}),
+      ...(data.deja_inscrit === true ? { alreadyRegistered: true } : {}),
+    };
   }
   if (status === 429) return { ok: false, reason: 'limite' };
   if (status >= 400 && status < 500) return { ok: false, reason: 'refus' };
