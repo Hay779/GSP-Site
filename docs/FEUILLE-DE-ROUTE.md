@@ -14,6 +14,9 @@ Mise à jour : 26/11/2026. Liste de référence des chantiers restants. On coche
 - [ ] **01/12/2026** (rappel Hermes à 8h) : la promo Black Friday disparaît toute seule le 01/12 à 0h ; reconstruire et renvoyer le site pour retirer la page `/promotions`. Le client a dit « on garde » le 26/11 : lui redemander s'il veut prolonger (nouvelle date, nouveau nom) avant de retirer.
 - [ ] **Vers le 06/12/2026** : la clé fal.ai donnée le 26/11 expire ; le client la supprime sur fal.ai. Pour de nouvelles images, lui en redemander une (ne jamais l'écrire dans un fichier).
 
+### Agence marketing (27/11/2026)
+- [ ] Le client donne les accès Google (Search Console, lecture seule) et DataForSEO (50 $) : voir `docs/A-FAIRE-CLIENT.md` du dépôt `agence-marketing`. Ensuite, semaine de répétition, puis bascule de la veille de `docs/seo/veille/` vers `clients/gsp/rapports/` de l'agence.
+
 ### Site
 - [ ] Blocs urgence des services (vitrerie, menuiserie, fermetures, clés) : ils affichent encore « Intervention rapide ». Laissé tel quel à la demande du client (26/11), à reprendre s'il le souhaite.
 - [ ] Vitesse mobile : passer à `hydrateRoot` ou découper le code par page (section D).
