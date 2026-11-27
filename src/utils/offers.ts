@@ -6,6 +6,7 @@
 import { SITE_URL } from './seo';
 import { parseQuestions, serializeQuestions, validateQuestions, type OfferQuestion } from './offerQuestions';
 import { DEFAULT_PAGE, parsePage, serializePage, validatePage, type PageSettings } from './offerPage';
+import { DEFAULT_POSTER, parsePoster, serializePoster, validatePoster, type PosterSettings } from './offerPoster';
 
 export type ReductionType = 'pourcent' | 'euros';
 
@@ -31,6 +32,8 @@ export interface OfferConfig {
   readonly questions: readonly OfferQuestion[];
   /** Couleurs, textes et blocs de la page. */
   readonly page: PageSettings;
+  /** Affiche imprimable. */
+  readonly poster: PosterSettings;
 }
 
 export const DEFAULT_SLUG = 'bienvenue';
@@ -60,6 +63,7 @@ export const DEFAULT_OFFER: OfferConfig = {
   active: true,
   questions: [],
   page: DEFAULT_PAGE,
+  poster: DEFAULT_POSTER,
 };
 
 /** « -5 % » ou « -50 € » (espace insécable). */
@@ -117,7 +121,7 @@ export function slugify(text: string): string {
 
 export const SLUG_PATTERN = /^[a-z0-9](?:[a-z0-9-]{1,38}[a-z0-9])$/;
 
-export type OfferErrors = Partial<Record<'slug' | 'name' | 'title' | 'description' | 'reductionValue' | 'months' | 'conditions' | 'end' | 'questions' | 'page', string>>;
+export type OfferErrors = Partial<Record<'slug' | 'name' | 'title' | 'description' | 'reductionValue' | 'months' | 'conditions' | 'end' | 'questions' | 'page' | 'poster', string>>;
 
 export function validateOffer(offer: OfferConfig, existingSlugs: readonly string[] = [], isNew = false): OfferErrors {
   const e: OfferErrors = {};
@@ -137,6 +141,8 @@ export function validateOffer(offer: OfferConfig, existingSlugs: readonly string
   if (q) e.questions = q;
   const pageError = validatePage(offer.page);
   if (pageError) e.page = pageError;
+  const posterError = validatePoster(offer.poster);
+  if (posterError) e.poster = posterError;
   return e;
 }
 
@@ -154,6 +160,7 @@ interface RawOffer {
   actif?: unknown;
   questions?: unknown;
   page?: unknown;
+  affiche?: unknown;
 }
 
 /** Offre reçue du serveur (noms français) → objet du site. */
@@ -174,6 +181,7 @@ export function parseOffer(raw: unknown): OfferConfig | null {
     active: r.actif !== false,
     questions: parseQuestions(r.questions),
     page: parsePage(r.page),
+    poster: parsePoster(r.affiche),
   };
 }
 
@@ -193,6 +201,7 @@ export function serializeOffer(o: OfferConfig): Record<string, unknown> {
     actif: o.active,
     questions: serializeQuestions(o.questions),
     page: serializePage(o.page),
+    affiche: serializePoster(o.poster),
   };
 }
 

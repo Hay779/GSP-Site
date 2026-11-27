@@ -20,6 +20,7 @@ const MAX_QUESTIONS = 10;
 const MAX_CHOIX = 12;
 const THEMES_PAGE = ['mer', 'soleil', 'calanques', 'lavande'];
 const BLOCS_PAGE = ['etapes', 'avis', 'infos'];
+const FORMATS_AFFICHE = ['a4', 'a5', 'carte'];
 
 function offreBienvenue(): array
 {
@@ -219,6 +220,14 @@ function validerOffre(array $o): array
     }
     $page = ['theme' => $theme, 'bouton' => $texte($pageBrute['bouton'] ?? '', 40), 'message' => $texte($pageBrute['message'] ?? '', 90), 'blocs' => $blocs];
 
+    // Affiche imprimable : format et textes (facultatifs).
+    $afficheBrute = is_array($o['affiche'] ?? null) ? $o['affiche'] : [];
+    $affiche = [
+        'format' => is_string($afficheBrute['format'] ?? null) && in_array($afficheBrute['format'], FORMATS_AFFICHE, true) ? $afficheBrute['format'] : 'a4',
+        'titre' => $texte($afficheBrute['titre'] ?? '', 70),
+        'texte' => $texte($afficheBrute['texte'] ?? '', 180),
+    ];
+
     $date = static function ($v): string {
         return is_string($v) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $v) ? $v : '';
     };
@@ -236,6 +245,7 @@ function validerOffre(array $o): array
         'actif' => ($o['actif'] ?? true) === true,
         'questions' => $questions,
         'page' => $page,
+        'affiche' => $affiche,
     ];
     if (mb_strlen($propre['nom']) < 3 || mb_strlen($propre['titre']) < 3 || mb_strlen($propre['description']) < 10 || count($conditions) === 0) {
         return [[], 'champs'];
