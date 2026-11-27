@@ -38,6 +38,12 @@ import { WHATSAPP_CONFIG } from '../data/sectionsContent';
 import { buildWhatsAppUrl } from '../utils/whatsapp';
 import logoUrl from '../assets/images/logo_republique_light.png';
 import { DEFAULT_OFFER, DEFAULT_SLUG, fetchPublicOffer, reductionBadge, reductionLabel, slugFromSearch, type OfferConfig } from '../utils/offers';
+import type { Answer, OfferQuestion } from '../utils/offerQuestions';
+import { parseOffer } from '../utils/offers';
+
+/** Messages entre l'éditeur d'offre (/gestion) et l'aperçu (/offre?apercu=1, dans un cadre). */
+export const PREVIEW_READY = 'offre-apercu-pret';
+export const PREVIEW_UPDATE = 'offre-apercu';
 
 /*
  * Identité propre à la campagne -5 % : couleurs de la mer à Marseille
@@ -75,6 +81,91 @@ function ErrorText({ id, message }: { readonly id: string; readonly message?: st
       {message}
     </p>
   ) : null;
+}
+
+/** Une question ajoutée par l'équipe dans l'espace /gestion. */
+function QuestionField({
+  question,
+  value,
+  error,
+  onChange,
+}: {
+  readonly question: OfferQuestion;
+  readonly value: Answer | undefined;
+  readonly error?: string;
+  readonly onChange: (v: Answer) => void;
+}) {
+  const id = `oq-${question.id}`;
+  const label = (
+    <>
+      {question.label}
+      {!question.required && <span className="font-normal text-[#0B2A3C]/50"> (facultatif)</span>}
+    </>
+  );
+  const describedBy = error ? `${id}-err` : undefined;
+
+  if (question.type === 'choix' || question.type === 'cases' || question.type === 'oui_non') {
+    const options = question.type === 'oui_non' ? ['Oui', 'Non'] : question.options;
+    const multiple = question.type === 'cases';
+    const selected = Array.isArray(value) ? value : typeof value === 'string' && value ? [value] : [];
+    return (
+      <fieldset data-invalid={Boolean(error)} tabIndex={-1} aria-describedby={describedBy} className="focus:outline-none">
+        <legend className="text-[14px] font-semibold text-[#0B2A3C]/80">{label}</legend>
+        <div className="mt-2 flex flex-wrap gap-2">
+          {options.map((option) => {
+            const checked = selected.includes(option);
+            return (
+              <label key={option} className="relative cursor-pointer">
+                <input
+                  type={multiple ? 'checkbox' : 'radio'}
+                  name={id}
+                  checked={checked}
+                  onChange={() =>
+                    onChange(multiple ? (checked ? selected.filter((o) => o !== option) : [...selected, option]) : option)
+                  }
+                  className="peer sr-only"
+                />
+                <span
+                  className={`inline-flex min-h-11 items-center gap-2 rounded-full border-2 px-4 py-2 text-[14.5px] font-medium transition-colors duration-150 peer-focus-visible:ring-4 peer-focus-visible:ring-[#1391B8]/25 ${checked ? 'border-[#1391B8] bg-[#EAF6FB] font-semibold text-[#0E6BA8]' : 'border-[#0B2A3C]/10 bg-[#FFFFFF] hover:border-[#1391B8]/45'}`}
+                >
+                  {checked && <Check className="h-4 w-4" strokeWidth={2.6} aria-hidden="true" />}
+                  {option}
+                </span>
+              </label>
+            );
+          })}
+        </div>
+        <ErrorText id={`${id}-err`} message={error} />
+      </fieldset>
+    );
+  }
+
+  const common = {
+    id,
+    value: typeof value === 'string' ? value : '',
+    'aria-invalid': Boolean(error),
+    'aria-describedby': describedBy,
+  };
+  const border = error ? 'border-[#C0392B]' : 'border-[#0B2A3C]/15';
+  return (
+    <div>
+      <label htmlFor={id} className="text-[14px] font-semibold text-[#0B2A3C]/80">
+        {label}
+      </label>
+      {question.type === 'paragraphe' ? (
+        <textarea {...common} rows={3} onChange={(e) => onChange(e.target.value)} className={`mt-1.5 w-full rounded-xl border bg-[#FFFFFF] px-4 py-3 text-[16px] leading-[1.5] transition-all duration-200 focus:border-[#1391B8] focus:outline-none focus:ring-4 focus:ring-[#1391B8]/15 ${border}`} />
+      ) : (
+        <input
+          {...common}
+          type={question.type === 'date' ? 'date' : 'text'}
+          inputMode={question.type === 'nombre' ? 'decimal' : undefined}
+          onChange={(e) => onChange(e.target.value)}
+          className={`${FIELD} ${border}`}
+        />
+      )}
+      <ErrorText id={`${id}-err`} message={error} />
+    </div>
+  );
 }
 
 function TextField({
@@ -158,8 +249,24 @@ export function OfferPage({ brand, routerMode }: { readonly brand: BrandConfig; 
   // Offre affichée : /offre = offre de bienvenue ; /offre?o=<identifiant> = offre créée dans /gestion.
   const [offer, setOffer] = useState<OfferConfig>(DEFAULT_OFFER);
   const [unavailable, setUnavailable] = useState(false);
+  const [preview, setPreview] = useState(false);
 
   useEffect(() => {
+    // Aperçu dans l'éditeur d'offre : l'offre arrive de la fenêtre parente (même site uniquement).
+    if (new URLSearchParams(window.location.search).get('apercu') === '1' && window.parent !== window) {
+      setPreview(true);
+      const onMessage = (e: MessageEvent) => {
+        if (e.origin !== window.location.origin || (e.data as { type?: unknown })?.type !== PREVIEW_UPDATE) return;
+        const next = parseOffer((e.data as { offre?: unknown }).offre);
+        if (next) {
+          setOffer(next);
+          setUnavailable(false);
+        }
+      };
+      window.addEventListener('message', onMessage);
+      window.parent.postMessage({ type: PREVIEW_READY }, window.location.origin);
+      return () => window.removeEventListener('message', onMessage);
+    }
     const slug = slugFromSearch(window.location.search);
     let alive = true;
     void fetchPublicOffer(slug).then((r) => {
@@ -183,10 +290,19 @@ export function OfferPage({ brand, routerMode }: { readonly brand: BrandConfig; 
     });
   };
 
+  const setAnswer = (id: string, value: Answer) => {
+    setDraft((d) => ({ ...d, answers: { ...d.answers, [id]: value } }));
+    setErrors((e) => {
+      const next = { ...e };
+      delete next[`q:${id}`];
+      return next;
+    });
+  };
+
   const submit = async (event: React.FormEvent) => {
     event.preventDefault();
     if (sending) return;
-    const found = validateOfferDraft(draft);
+    const found = validateOfferDraft(draft, offer);
     setErrors(found);
     if (Object.keys(found).length > 0) {
       const first = formRef.current?.querySelector<HTMLElement>('[aria-invalid="true"], [data-invalid="true"]');
@@ -196,6 +312,12 @@ export function OfferPage({ brand, routerMode }: { readonly brand: BrandConfig; 
     }
     setSending(true);
     setFailure(null);
+    if (preview) {
+      // Aperçu : rien n'est envoyé.
+      setSending(false);
+      setRegistered({ code: 'OFF-APERCU-0000', validUntil: formatFrenchDate(offerValidUntil(new Date(), offer.months)), alreadyRegistered: false });
+      return;
+    }
     const result = await sendFormRequest({
       kind: 'inscription',
       rows: buildOfferSummary(draft, offer),
@@ -370,6 +492,9 @@ export function OfferPage({ brand, routerMode }: { readonly brand: BrandConfig; 
                     <TextField id="o-phone" label="Téléphone" type="tel" inputMode="tel" autoComplete="tel" placeholder="06 12 34 56 78" value={draft.phone} onChange={(v) => update({ phone: v })} error={errors.phone} />
                   </div>
                   <TextField id="o-email" label="E-mail (votre code y est envoyé)" type="email" inputMode="email" autoComplete="email" placeholder="vous@exemple.fr" value={draft.email} onChange={(v) => update({ email: v })} error={errors.email} />
+                  {offer.questions.map((q) => (
+                    <QuestionField key={q.id} question={q} value={draft.answers[q.id]} error={errors[`q:${q.id}`]} onChange={(v) => setAnswer(q.id, v)} />
+                  ))}
 
                   <div>
                     <label className="flex cursor-pointer items-start gap-3 text-[14px] leading-[1.55] text-[#0B2A3C]/70">

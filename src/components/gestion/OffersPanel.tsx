@@ -7,15 +7,13 @@ import {
   offerStatus,
   offerUrl,
   reductionLabel,
-  slugify,
   STANDARD_CONDITIONS,
-  validateOffer,
   type OfferConfig,
-  type OfferErrors,
   type OfferStatus,
 } from '../../utils/offers';
-import { failureMessage, saveOffer, signupStatus, type ApiFailure, type OfferSignup } from '../../utils/gestion';
+import { saveOffer, signupStatus, type ApiFailure, type OfferSignup } from '../../utils/gestion';
 import { encodeQr, qrToSvg } from '../../utils/qrcode';
+import { OfferEditor } from './OfferEditor';
 
 const SEA = 'linear-gradient(120deg,#0E6BA8 0%,#1391B8 50%,#17B3A3 100%)';
 const INK_HEX = '#0B2A3C';
@@ -26,9 +24,6 @@ const STATUS_STYLE: Readonly<Record<OfferStatus, string>> = {
   programmee: 'bg-[#E6F1FA] text-[#0E6BA8]',
   terminee: 'bg-[#FFF4DC] text-[#9A6400]',
 };
-
-const INPUT =
-  'mt-1.5 h-11 w-full rounded-xl border bg-[#FFFFFF] px-3.5 text-[15.5px] focus:border-[#1391B8] focus:outline-none focus:ring-4 focus:ring-[#1391B8]/15';
 
 function formatDay(iso: string): string {
   const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
@@ -150,167 +145,6 @@ function QrModal({ offer, onClose }: { readonly offer: OfferConfig; readonly onC
   );
 }
 
-// ---------------------------------------------------------------- création / modification
-function Field({ id, label, hint, error, children }: { readonly id: string; readonly label: string; readonly hint?: string; readonly error?: string; readonly children: ReactNode }) {
-  return (
-    <div>
-      <label htmlFor={id} className="text-[14px] font-semibold text-[#0B2A3C]/80">
-        {label}
-      </label>
-      {children}
-      {hint && !error && <p className="mt-1 text-[12.5px] text-[#0B2A3C]/50">{hint}</p>}
-      {error && (
-        <p role="alert" className="mt-1 text-[13px] font-medium text-[#C0392B]">
-          {error}
-        </p>
-      )}
-    </div>
-  );
-}
-
-function OfferEditor({
-  initial,
-  isNew,
-  existingSlugs,
-  onClose,
-  onSaved,
-}: {
-  readonly initial: OfferConfig;
-  readonly isNew: boolean;
-  readonly existingSlugs: readonly string[];
-  readonly onClose: () => void;
-  readonly onSaved: (offer: OfferConfig) => void;
-}) {
-  const [offer, setOffer] = useState<OfferConfig>(initial);
-  const [conditionsText, setConditionsText] = useState(initial.conditions.join('\n'));
-  const [slugTouched, setSlugTouched] = useState(!isNew);
-  const [errors, setErrors] = useState<OfferErrors>({});
-  const [saving, setSaving] = useState(false);
-  const [failure, setFailure] = useState<ApiFailure | null>(null);
-
-  const set = (patch: Partial<OfferConfig>) => setOffer((o) => ({ ...o, ...patch }));
-  const err = (k: keyof OfferErrors) => (errors[k] ? 'border-[#C0392B]' : 'border-[#0B2A3C]/15');
-
-  const submit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const final: OfferConfig = { ...offer, conditions: conditionsText.split('\n').map((c) => c.trim()).filter(Boolean) };
-    const found = validateOffer(final, existingSlugs, isNew);
-    setErrors(found);
-    if (Object.keys(found).length > 0) return;
-    setSaving(true);
-    setFailure(null);
-    const r = await saveOffer(final, isNew);
-    setSaving(false);
-    if (r.ok) onSaved(r.data);
-    else setFailure(r.reason);
-  };
-
-  return (
-    <Modal title={isNew ? 'Nouvelle offre' : 'Modifier l’offre'} onClose={onClose}>
-      <form onSubmit={submit} noValidate className="flex flex-col gap-4">
-        <Field id="of-name" label="Nom de l’offre (pour vous)" hint="Ex. Syndics printemps 2027" error={errors.name}>
-          <input
-            id="of-name"
-            className={`${INPUT} ${err('name')}`}
-            value={offer.name}
-            onChange={(e) => set({ name: e.target.value, ...(slugTouched ? {} : { slug: slugify(e.target.value) }) })}
-          />
-        </Field>
-
-        <Field id="of-slug" label="Adresse de la page" hint={isNew ? 'Créée à partir du nom. Elle ne pourra plus changer une fois l’offre créée.' : 'Ne change plus : elle est dans le QR code.'} error={errors.slug}>
-          <div className={`mt-1.5 flex h-11 items-center overflow-hidden rounded-xl border bg-[#F5FAFC] ${err('slug')}`}>
-            <span className="whitespace-nowrap pl-3.5 text-[14px] text-[#0B2A3C]/50">…/offre?o=</span>
-            <input
-              id="of-slug"
-              readOnly={!isNew}
-              className="h-full min-w-0 flex-1 bg-transparent pr-3.5 font-mono text-[14.5px] focus:outline-none read-only:text-[#0B2A3C]/60"
-              value={offer.slug}
-              onChange={(e) => {
-                setSlugTouched(true);
-                set({ slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '') });
-              }}
-            />
-          </div>
-        </Field>
-
-        <div className="grid gap-4 sm:grid-cols-[1fr_1fr]">
-          <Field id="of-value" label="Réduction" error={errors.reductionValue}>
-            <div className="mt-1.5 flex gap-2">
-              <input
-                id="of-value"
-                type="number"
-                min={1}
-                inputMode="decimal"
-                className={`h-11 w-full min-w-0 rounded-xl border bg-[#FFFFFF] px-3.5 text-[15.5px] focus:border-[#1391B8] focus:outline-none focus:ring-4 focus:ring-[#1391B8]/15 ${err('reductionValue')}`}
-                value={Number.isFinite(offer.reductionValue) ? offer.reductionValue : ''}
-                onChange={(e) => set({ reductionValue: e.target.value === '' ? Number.NaN : Number(e.target.value) })}
-              />
-              <div className="flex shrink-0 rounded-xl bg-[#F0F9FC] p-1" role="group" aria-label="Type de réduction">
-                {(['pourcent', 'euros'] as const).map((t) => (
-                  <button
-                    key={t}
-                    type="button"
-                    aria-pressed={offer.reductionType === t}
-                    onClick={() => set({ reductionType: t })}
-                    className={`h-9 w-11 cursor-pointer rounded-lg text-[15px] font-bold transition ${offer.reductionType === t ? 'bg-[#FFFFFF] text-[#0E6BA8] shadow-sm' : 'text-[#0B2A3C]/50'}`}
-                  >
-                    {t === 'pourcent' ? '%' : '€'}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </Field>
-          <Field id="of-months" label="Code valable (mois)" error={errors.months}>
-            <input id="of-months" type="number" min={1} max={24} className={`${INPUT} ${err('months')}`} value={Number.isFinite(offer.months) ? offer.months : ''} onChange={(e) => set({ months: e.target.value === '' ? Number.NaN : Math.round(Number(e.target.value)) })} />
-          </Field>
-        </div>
-
-        <Field id="of-title" label="Titre vu par les clients" hint="Ex. Offre syndics : -10 % ce printemps" error={errors.title}>
-          <input id="of-title" className={`${INPUT} ${err('title')}`} value={offer.title} onChange={(e) => set({ title: e.target.value })} />
-        </Field>
-        <Field id="of-desc" label="Explication en une phrase" hint="Ex. 10 % de réduction sur vos interventions dans vos copropriétés." error={errors.description}>
-          <input id="of-desc" className={`${INPUT} ${err('description')}`} value={offer.description} onChange={(e) => set({ description: e.target.value })} />
-        </Field>
-
-        <div className="grid gap-4 sm:grid-cols-2">
-          <Field id="of-start" label="Début des inscriptions (facultatif)">
-            <input id="of-start" type="date" className={`${INPUT} border-[#0B2A3C]/15`} value={offer.start} onChange={(e) => set({ start: e.target.value })} />
-          </Field>
-          <Field id="of-end" label="Fin des inscriptions (facultatif)" error={errors.end}>
-            <input id="of-end" type="date" className={`${INPUT} ${err('end')}`} value={offer.end} onChange={(e) => set({ end: e.target.value })} />
-          </Field>
-        </div>
-
-        <Field id="of-cond" label="Conditions (une par ligne)" error={errors.conditions}>
-          <textarea id="of-cond" rows={5} className={`mt-1.5 w-full rounded-xl border bg-[#FFFFFF] px-3.5 py-2.5 text-[15px] leading-[1.5] focus:border-[#1391B8] focus:outline-none focus:ring-4 focus:ring-[#1391B8]/15 ${err('conditions')}`} value={conditionsText} onChange={(e) => setConditionsText(e.target.value)} />
-        </Field>
-
-        <label className="flex cursor-pointer items-center justify-between gap-4 rounded-xl bg-[#F5FAFC] px-4 py-3">
-          <span>
-            <span className="block text-[14.5px] font-semibold">Offre active</span>
-            <span className="block text-[13px] text-[#0B2A3C]/55">Décochée : la page affiche « offre plus disponible ».</span>
-          </span>
-          <input type="checkbox" checked={offer.active} onChange={(e) => set({ active: e.target.checked })} className="h-5 w-5 accent-[#0E6BA8]" />
-        </label>
-
-        {failure && (
-          <p role="alert" className="rounded-xl bg-[#FDECEA] px-4 py-3 text-[14px] font-medium text-[#A8321F]">
-            {failureMessage(failure)}
-          </p>
-        )}
-        <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
-          <button type="button" onClick={onClose} className="h-11 cursor-pointer rounded-full border border-[#0B2A3C]/15 px-5 text-[15px] font-semibold hover:border-[#1391B8]">
-            Annuler
-          </button>
-          <button type="submit" disabled={saving} className="h-11 cursor-pointer rounded-full px-6 text-[15px] font-semibold text-[#FFFFFF] shadow-[0_12px_26px_-12px_rgba(14,107,168,0.9)] transition hover:brightness-110 disabled:opacity-60" style={{ backgroundImage: SEA }}>
-            {saving ? 'Enregistrement…' : isNew ? 'Créer l’offre' : 'Enregistrer'}
-          </button>
-        </div>
-      </form>
-    </Modal>
-  );
-}
-
 // ---------------------------------------------------------------- liste des offres
 function OfferCard({
   offer,
@@ -403,6 +237,7 @@ const NEW_OFFER: OfferConfig = {
   start: '',
   end: '',
   active: true,
+  questions: [],
 };
 
 /** Rubrique « Offres & QR codes » de l'espace gestion. */

@@ -4,6 +4,7 @@
  */
 import { isValidFrenchPhone, isValidOptionalEmail } from './quoteForm';
 import { DEFAULT_OFFER, reductionLabel, type OfferConfig } from './offers';
+import { formatAnswer, validateAnswers, type Answers } from './offerQuestions';
 
 /** Durée de validité par défaut (offre de bienvenue), en mois. */
 export const OFFER_MONTHS = DEFAULT_OFFER.months;
@@ -31,9 +32,12 @@ export interface OfferDraft {
   readonly city: string;
   readonly acceptConditions: boolean;
   readonly consent: boolean;
+  /** Réponses aux questions de l'offre, par identifiant de question. */
+  readonly answers: Answers;
 }
 
-export type OfferErrors = Partial<Record<keyof OfferDraft, string>>;
+/** Erreurs par champ ; « q:<id> » pour une question de l'offre. */
+export type OfferErrors = Partial<Record<keyof OfferDraft | `q:${string}`, string>>;
 
 export const INITIAL_OFFER_DRAFT: OfferDraft = {
   customerType: null,
@@ -45,14 +49,18 @@ export const INITIAL_OFFER_DRAFT: OfferDraft = {
   city: '',
   acceptConditions: false,
   consent: false,
+  answers: {},
 };
 
 export function isProfessional(type: CustomerType | null): boolean {
   return type !== null && type !== 'Particulier';
 }
 
-export function validateOfferDraft(draft: OfferDraft): OfferErrors {
+export function validateOfferDraft(draft: OfferDraft, offer: OfferConfig = DEFAULT_OFFER): OfferErrors {
   const errors: OfferErrors = {};
+  for (const [id, message] of Object.entries(validateAnswers(offer.questions, draft.answers))) {
+    errors[`q:${id}`] = message;
+  }
   if (!draft.customerType) {
     errors.customerType = 'Indiquez qui vous êtes.';
   }
@@ -104,5 +112,6 @@ export function buildOfferSummary(
     { label: 'Téléphone', value: draft.phone.trim() },
     { label: 'E-mail', value: draft.email.trim() },
     { label: 'Ville', value: draft.city.trim() || '—' },
+    ...offer.questions.map((q) => ({ label: q.label.trim(), value: formatAnswer(q, draft.answers[q.id]) })),
   ];
 }

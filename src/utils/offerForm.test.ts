@@ -19,6 +19,7 @@ const filled: OfferDraft = {
   city: 'Marseille 2e',
   acceptConditions: true,
   consent: true,
+  answers: {},
 };
 
 test('empty form: every required field is reported', () => {
