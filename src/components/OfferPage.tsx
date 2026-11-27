@@ -1,4 +1,4 @@
-import { useRef, useState, type ReactNode } from 'react';
+import { useRef, useState } from 'react';
 import { Building2, Check, Home, KeyRound, Phone, Send, ShieldCheck, Store, Ticket } from 'lucide-react';
 import type { BrandConfig } from '../utils/navigation';
 import {
@@ -82,15 +82,6 @@ function TextField({
   );
 }
 
-function Group({ title, children }: { readonly title: string; readonly children: ReactNode }) {
-  return (
-    <div className="border-t border-[#1C1F21]/10 pt-7 first:border-t-0 first:pt-0">
-      <h2 className="font-display text-[20px] font-semibold text-[#1C1F21]">{title}</h2>
-      <div className="mt-4">{children}</div>
-    </div>
-  );
-}
-
 function ConditionsList({ className = '' }: { readonly className?: string }) {
   return (
     <ul className={`flex flex-col gap-3 text-[15px] leading-[1.5] text-[#1C1F21]/80 ${className}`}>
@@ -166,142 +157,162 @@ export function OfferPage({ brand, routerMode }: { readonly brand: BrandConfig; 
   const pro = isProfessional(draft.customerType);
 
   return (
-    <div className="flex flex-1 flex-col bg-[#F7F5F0] text-[#1C1F21]">
-      {/* Haut de page : uniquement l'offre (pas de menu du site) */}
-      <section className="relative overflow-hidden bg-[#1C1F21] text-[#F3F0E7]">
-        <div aria-hidden="true" className="pointer-events-none absolute -right-24 -top-24 h-[360px] w-[360px] rounded-full bg-[#B79A62]/12 blur-3xl" />
-        <div className="relative mx-auto max-w-[1080px] px-5 pb-28 pt-5 sm:px-8 sm:pb-32 lg:px-10">
-          <div className="flex items-center justify-between gap-4">
-            <a href={hrefForHome(routerMode)} aria-label={`${brand.name} — site`} className="inline-flex items-center rounded-md py-1 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#B79A62]">
-              <BrandMark brand={brand} compact />
-            </a>
-            <a href={brand.phoneHref} className="inline-flex h-11 items-center gap-2 rounded-full border border-[#F3F0E7]/20 px-4 text-[15px] font-semibold tabular-nums hover:border-[#B79A62] [&_svg]:text-[#B79A62]">
-              <Phone className="h-4 w-4" aria-hidden="true" />
-              <span className="hidden sm:inline">{brand.phoneDisplay}</span>
-              <span className="sm:hidden">Appeler</span>
-            </a>
-          </div>
+    <div className="flex flex-1 flex-col bg-[#FFFBF2] text-[#1C1F21]">
+      {/* Fine barre : logo + appel (le logo est clair, il lui faut un fond foncé) */}
+      <div className="bg-[#1C1F21]">
+        <div className="mx-auto flex max-w-[1080px] items-center justify-between gap-4 px-5 py-1.5 sm:px-8 lg:px-10">
+          <a href={hrefForHome(routerMode)} aria-label={`${brand.name} — site`} className="inline-flex items-center rounded-md focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#B79A62]">
+            <BrandMark brand={brand} compact />
+          </a>
+          <a href={brand.phoneHref} className="inline-flex h-11 items-center gap-2 rounded-full bg-[#B79A62] px-4 text-[15px] font-semibold tabular-nums text-[#1C1F21] hover:bg-[#C9AB70]">
+            <Phone className="h-4 w-4" aria-hidden="true" />
+            <span className="hidden sm:inline">{brand.phoneDisplay}</span>
+            <span className="sm:hidden">Appeler</span>
+          </a>
+        </div>
+      </div>
 
-          <div className="mt-10 grid items-end gap-8 sm:mt-14 lg:grid-cols-[auto_1fr] lg:gap-14">
-            <p className="font-display text-[88px] font-bold leading-[0.9] tracking-[-0.03em] text-[#B79A62] sm:text-[120px]">-{OFFER_RATE}%</p>
-            <div>
-              <p className="text-[13px] font-semibold uppercase tracking-[0.16em] text-[#B79A62]">Offre de bienvenue</p>
-              <h1 className="mt-3 font-display text-[30px] font-semibold leading-[1.1] sm:text-[40px]">
-                sur votre premier achat ou votre première intervention.
-              </h1>
-              <p className="mt-4 text-[16px] leading-[1.6] text-[#F3F0E7]/75">
-                Inscrivez-vous ci-dessous : vous recevez votre code tout de suite, valable {OFFER_MONTHS} mois.
-              </p>
+      {/* Haut de page clair et coloré : uniquement l'offre */}
+      <section className="relative overflow-hidden bg-[linear-gradient(135deg,#FFF3D6_0%,#FDE4B8_45%,#F9D3A0_100%)]">
+        <div aria-hidden="true" className="pointer-events-none absolute -left-20 -top-24 h-[300px] w-[300px] rounded-full bg-[#FFFFFF]/60 blur-3xl" />
+        <div aria-hidden="true" className="pointer-events-none absolute -bottom-32 -right-16 h-[360px] w-[360px] rounded-full bg-[#F2B66B]/45 blur-3xl" />
+        <div className="relative mx-auto grid max-w-[1080px] items-center gap-7 px-5 pb-24 pt-8 sm:px-8 sm:pt-12 lg:grid-cols-[auto_1fr] lg:gap-14 lg:px-10 lg:pb-28">
+          {/* Étiquette -5 % façon bon de réduction */}
+          <div className="mx-auto -rotate-3 rounded-2xl bg-[linear-gradient(135deg,#C9A55C,#E9CB85)] p-2 shadow-[0_16px_40px_rgba(125,97,45,0.30)] lg:mx-0">
+            <div className="rounded-xl border-2 border-dashed border-[#1C1F21]/25 px-7 py-4 text-center sm:px-9">
+              <p className="font-display text-[76px] font-extrabold leading-none tracking-[-0.03em] text-[#1C1F21] sm:text-[100px]">-{OFFER_RATE}%</p>
+              <p className="mt-1 text-[13px] font-bold uppercase tracking-[0.18em] text-[#1C1F21]/80">Offre de bienvenue</p>
             </div>
           </div>
-
-          <ol className="mt-9 grid gap-3 sm:grid-cols-3">
-            {['Inscrivez-vous', 'Recevez votre code', 'Donnez-le au moment du devis'].map((step, i) => (
-              <li key={step} className="flex items-center gap-3 rounded-lg border border-[#F3F0E7]/12 bg-[#F3F0E7]/5 px-4 py-3 text-[15px]">
-                <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-[#B79A62] text-[14px] font-bold text-[#1C1F21]">{i + 1}</span>
-                {step}
-              </li>
-            ))}
-          </ol>
+          <div className="text-center lg:text-left">
+            <h1 className="font-display text-[28px] font-bold leading-[1.12] sm:text-[38px]">
+              Sur votre premier achat ou votre première intervention
+            </h1>
+            <p className="mt-3 text-[16.5px] leading-[1.55] text-[#1C1F21]/75">
+              Inscription en 30 secondes : votre code s’affiche tout de suite, valable {OFFER_MONTHS} mois.
+            </p>
+            <ol className="mt-6 flex flex-wrap justify-center gap-2.5 lg:justify-start">
+              {[
+                { text: 'Je m’inscris', color: 'bg-[#D9732A]' },
+                { text: 'Je reçois mon code', color: 'bg-[#2A8A5E]' },
+                { text: 'Je le donne au devis', color: 'bg-[#2F6FC4]' },
+              ].map((step, i) => (
+                <li key={step.text} className="flex items-center gap-2 rounded-full bg-[#FFFFFF]/80 py-1.5 pl-1.5 pr-4 text-[14.5px] font-medium shadow-sm">
+                  <span className={`grid h-7 w-7 shrink-0 place-items-center rounded-full text-[13.5px] font-bold text-[#FFFFFF] ${step.color}`}>{i + 1}</span>
+                  {step.text}
+                </li>
+              ))}
+            </ol>
+          </div>
         </div>
       </section>
 
-      {/* Formulaire d'inscription */}
-      <section aria-label="Inscription à l’offre" className="relative z-10 mx-auto -mt-20 w-full max-w-[1080px] px-5 sm:px-8 lg:px-10">
-        <div className="rounded-xl border border-[#1C1F21]/12 bg-[#FFFFFF] p-6 shadow-[0_18px_50px_rgba(28,31,33,0.10)] sm:p-9">
-              {registered ? (
-                <div>
-                  <span className="grid h-14 w-14 place-items-center rounded-full bg-[#B79A62] text-[#1C1F21]">
-                    <Ticket className="h-7 w-7" strokeWidth={2} aria-hidden="true" />
-                  </span>
-                  <h2 ref={doneRef} tabIndex={-1} className="mt-5 font-display text-[28px] font-semibold leading-tight focus:outline-none">
-                    {registered.alreadyRegistered ? 'Vous êtes déjà inscrit.' : 'C’est fait, votre réduction est activée.'}
-                  </h2>
-                  <div className="mt-6 rounded-xl border-2 border-dashed border-[#B79A62] bg-[#B79A62]/8 p-5 text-center sm:p-6">
-                    <p className="text-[14px] font-semibold uppercase tracking-[0.12em] text-[#7D612D]">Votre code -{OFFER_RATE} %</p>
-                    <p className="mt-2 font-display text-[30px] font-bold tabular-nums tracking-[0.04em] sm:text-[36px]">{registered.code}</p>
-                    <p className="mt-2 text-[15.5px] text-[#1C1F21]/75">
-                      Valable jusqu’au <strong className="font-semibold text-[#1C1F21]">{registered.validUntil}</strong>
-                    </p>
-                  </div>
-                  <p className="mt-5 text-[16px] leading-[1.6] text-[#1C1F21]/75">
-                    {registered.alreadyRegistered
-                      ? 'Voici le code de votre inscription. Il vous a déjà été envoyé par e-mail.'
-                      : `Nous vous l’envoyons aussi par e-mail à ${draft.email.trim()}.`}{' '}
-                    Donnez ce code au moment du devis, en boutique ou par téléphone.
-                  </p>
-                  <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-                    <a href={brand.phoneHref} className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-[#1C1F21] px-5 text-[15px] font-semibold text-[#F3F0E7] hover:bg-[#292D2F] [&_svg]:text-[#B79A62]">
-                      <Phone className="h-4 w-4" aria-hidden="true" />
-                      {brand.phoneDisplay}
-                    </a>
-                    <a href={hrefForPage('devis', routerMode)} className="inline-flex h-11 items-center justify-center rounded-full border border-[#1C1F21]/20 px-5 text-[15px] font-semibold text-[#1C1F21] hover:border-[#B79A62]">
-                      Demander un devis
-                    </a>
-                  </div>
+      {/* Formulaire d'inscription (court) */}
+      <section aria-label="Inscription à l’offre" className="relative z-10 mx-auto -mt-14 w-full max-w-[760px] px-5 sm:px-8">
+        <div className="rounded-2xl border border-[#E9CB85] bg-[#FFFFFF] p-6 shadow-[0_18px_50px_rgba(125,97,45,0.14)] sm:p-8">
+          {registered ? (
+            <div className="text-center">
+              <span className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-[#2A8A5E] text-[#FFFFFF]">
+                <Ticket className="h-7 w-7" strokeWidth={2} aria-hidden="true" />
+              </span>
+              <h2 ref={doneRef} tabIndex={-1} className="mt-4 font-display text-[26px] font-bold leading-tight focus:outline-none">
+                {registered.alreadyRegistered ? 'Vous êtes déjà inscrit.' : 'C’est fait, votre réduction est activée !'}
+              </h2>
+              <div className="mt-5 rounded-xl border-2 border-dashed border-[#C9A55C] bg-[#FFF3D6] p-5 sm:p-6">
+                <p className="text-[14px] font-semibold uppercase tracking-[0.12em] text-[#7D612D]">Votre code -{OFFER_RATE} %</p>
+                <p className="mt-2 font-display text-[30px] font-bold tabular-nums tracking-[0.04em] sm:text-[36px]">{registered.code}</p>
+                <p className="mt-2 text-[15.5px] text-[#1C1F21]/75">
+                  Valable jusqu’au <strong className="font-semibold text-[#1C1F21]">{registered.validUntil}</strong>
+                </p>
+              </div>
+              <p className="mt-5 text-[16px] leading-[1.6] text-[#1C1F21]/75">
+                {registered.alreadyRegistered
+                  ? 'Voici le code de votre inscription. Il vous a déjà été envoyé par e-mail.'
+                  : `Nous vous l’envoyons aussi par e-mail à ${draft.email.trim()}.`}{' '}
+                Donnez ce code au moment du devis, en boutique ou par téléphone.
+              </p>
+              <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
+                <a href={brand.phoneHref} className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-[#1C1F21] px-5 text-[15px] font-semibold text-[#F3F0E7] hover:bg-[#292D2F] [&_svg]:text-[#E9CB85]">
+                  <Phone className="h-4 w-4" aria-hidden="true" />
+                  {brand.phoneDisplay}
+                </a>
+                <a href={hrefForPage('devis', routerMode)} className="inline-flex h-11 items-center justify-center rounded-full border border-[#1C1F21]/20 px-5 text-[15px] font-semibold text-[#1C1F21] hover:border-[#B79A62]">
+                  Demander un devis
+                </a>
+              </div>
+            </div>
+          ) : (
+            <form ref={formRef} onSubmit={submit} noValidate className="relative flex flex-col gap-6">
+              <h2 className="font-display text-[22px] font-bold">Recevez votre code</h2>
+              <fieldset data-invalid={Boolean(errors.customerType)} tabIndex={-1} aria-describedby={errors.customerType ? 'type-err' : undefined} className="focus:outline-none">
+                <legend className="text-[15px] font-medium">Vous êtes</legend>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {CUSTOMER_TYPES.map((type) => {
+                    const Icon = TYPE_ICONS[type];
+                    const checked = draft.customerType === type;
+                    return (
+                      <label key={type} className="relative cursor-pointer">
+                        <input type="radio" name="type" checked={checked} onChange={() => update({ customerType: type })} className="peer sr-only" />
+                        <span className={`inline-flex h-11 items-center gap-2 rounded-full border px-4 text-[14.5px] transition-colors duration-150 peer-focus-visible:ring-2 peer-focus-visible:ring-[#B79A62] ${checked ? 'border-[#C9A55C] bg-[#FDE4B8] font-semibold' : 'border-[#1C1F21]/15 bg-[#FFFFFF] hover:border-[#C9A55C]'}`}>
+                          {checked ? (
+                            <Check className="h-4 w-4 shrink-0 text-[#7D612D]" strokeWidth={2.6} aria-hidden="true" />
+                          ) : (
+                            <Icon className="h-4 w-4 shrink-0 text-[#7D612D]" strokeWidth={1.8} aria-hidden="true" />
+                          )}
+                          {type}
+                        </span>
+                      </label>
+                    );
+                  })}
                 </div>
-              ) : (
-                <form ref={formRef} onSubmit={submit} noValidate className="relative flex flex-col gap-7">
-                  <Group title="Vous êtes">
-                    <fieldset data-invalid={Boolean(errors.customerType)} tabIndex={-1} aria-describedby={errors.customerType ? 'type-err' : undefined}>
-                      <legend className="sr-only">Vous êtes</legend>
-                      <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
-                        {CUSTOMER_TYPES.map((type) => {
-                          const Icon = TYPE_ICONS[type];
-                          const checked = draft.customerType === type;
-                          return (
-                            <label key={type} className="relative block cursor-pointer">
-                              <input type="radio" name="type" checked={checked} onChange={() => update({ customerType: type })} className="peer sr-only" />
-                              <span className={`flex items-center gap-3 rounded-lg border px-4 py-3.5 text-[15px] transition-colors duration-150 peer-focus-visible:ring-2 peer-focus-visible:ring-[#B79A62] ${checked ? 'border-[#B79A62] bg-[#B79A62]/12 font-medium' : 'border-[#1C1F21]/15 hover:border-[#B79A62]/70'}`}>
-                                <Icon className="h-5 w-5 shrink-0 text-[#7D612D]" strokeWidth={1.7} aria-hidden="true" />
-                                {type}
-                                {checked && <Check className="ml-auto h-4 w-4 text-[#7D612D]" strokeWidth={2.4} aria-hidden="true" />}
-                              </span>
-                            </label>
-                          );
-                        })}
-                      </div>
-                      <ErrorText id="type-err" message={errors.customerType} />
-                    </fieldset>
-                  </Group>
+                <ErrorText id="type-err" message={errors.customerType} />
+              </fieldset>
 
-                  <Group title="Vos coordonnées">
-                    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-                      <TextField id="o-name" label="Nom et prénom" autoComplete="name" value={draft.fullName} onChange={(v) => update({ fullName: v })} error={errors.fullName} />
-                      <TextField id="o-company" label="Société" optional={!pro} autoComplete="organization" value={draft.company} onChange={(v) => update({ company: v })} error={errors.company} />
-                      <TextField id="o-phone" label="Téléphone" type="tel" autoComplete="tel" value={draft.phone} onChange={(v) => update({ phone: v })} error={errors.phone} />
-                      <TextField id="o-email" label="E-mail (pour recevoir votre code)" type="email" autoComplete="email" value={draft.email} onChange={(v) => update({ email: v })} error={errors.email} />
-                      <TextField id="o-city" label="Ville ou arrondissement" optional autoComplete="address-level2" placeholder="Ex. Marseille 2e" value={draft.city} onChange={(v) => update({ city: v })} />
-                    </div>
-                  </Group>
-
-                  <Group title="Conditions de l’offre">
-                    <ConditionsList />
-                    <label className="mt-5 flex cursor-pointer items-start gap-3 text-[14.5px] leading-[1.55] text-[#1C1F21]/80">
-                      <input type="checkbox" checked={draft.acceptConditions} onChange={(e) => update({ acceptConditions: e.target.checked })} aria-invalid={Boolean(errors.acceptConditions)} aria-describedby={errors.acceptConditions ? 'cond-err' : undefined} className="mt-1 h-5 w-5 shrink-0 accent-[#7D612D]" />
-                      <span>J’ai lu et j’accepte les conditions de l’offre.</span>
-                    </label>
-                    <ErrorText id="cond-err" message={errors.acceptConditions} />
-                    <label className="mt-3 flex cursor-pointer items-start gap-3 text-[14.5px] leading-[1.55] text-[#1C1F21]/80">
-                      <input type="checkbox" checked={draft.consent} onChange={(e) => update({ consent: e.target.checked })} aria-invalid={Boolean(errors.consent)} aria-describedby={errors.consent ? 'consent-err' : undefined} className="mt-1 h-5 w-5 shrink-0 accent-[#7D612D]" />
-                      <span>
-                        J’accepte que Serrurerie de la République utilise ces informations pour gérer mon code et me recontacter.{' '}
-                        <a href={hrefForPage('confidentialite', routerMode)} className="text-[#7D612D] underline">En savoir plus</a>
-                      </span>
-                    </label>
-                    <ErrorText id="consent-err" message={errors.consent} />
-                  </Group>
-
-                  <div className="flex flex-col gap-4 border-t border-[#1C1F21]/10 pt-6">
-                    <HoneypotField value={honeypot} onChange={setHoneypot} />
-                    {failure && <DeliveryErrorNotice reason={failure} />}
-                    <button type="submit" disabled={sending} aria-busy={sending} className="inline-flex h-12 w-full items-center justify-center gap-2.5 rounded-full bg-[#1C1F21] px-7 text-[16px] font-semibold text-[#F3F0E7] hover:bg-[#292D2F] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62] disabled:cursor-wait disabled:opacity-70 sm:w-auto sm:self-start cursor-pointer [&_svg]:text-[#B79A62]">
-                      <Send className="h-4 w-4" aria-hidden="true" />
-                      {sending ? 'Inscription en cours…' : `Recevoir mon code -${OFFER_RATE} %`}
-                    </button>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                {pro && (
+                  <div className="sm:col-span-2">
+                    <TextField id="o-company" label="Société" autoComplete="organization" value={draft.company} onChange={(v) => update({ company: v })} error={errors.company} />
                   </div>
-                </form>
-              )}
+                )}
+                <TextField id="o-name" label="Nom et prénom" autoComplete="name" value={draft.fullName} onChange={(v) => update({ fullName: v })} error={errors.fullName} />
+                <TextField id="o-phone" label="Téléphone" type="tel" autoComplete="tel" value={draft.phone} onChange={(v) => update({ phone: v })} error={errors.phone} />
+                <div className="sm:col-span-2">
+                  <TextField id="o-email" label="E-mail (pour recevoir votre code)" type="email" autoComplete="email" value={draft.email} onChange={(v) => update({ email: v })} error={errors.email} />
+                </div>
+              </div>
+
+              <div>
+                <label className="flex cursor-pointer items-start gap-3 text-[14.5px] leading-[1.55] text-[#1C1F21]/80">
+                  <input
+                    type="checkbox"
+                    checked={draft.acceptConditions && draft.consent}
+                    onChange={(e) => update({ acceptConditions: e.target.checked, consent: e.target.checked })}
+                    aria-invalid={Boolean(errors.acceptConditions || errors.consent)}
+                    aria-describedby={errors.acceptConditions || errors.consent ? 'cond-err' : undefined}
+                    className="mt-1 h-5 w-5 shrink-0 accent-[#7D612D]"
+                  />
+                  <span>
+                    J’accepte les conditions de l’offre et que Serrurerie de la République utilise ces informations pour gérer mon code.{' '}
+                    <a href={hrefForPage('confidentialite', routerMode)} className="text-[#7D612D] underline">Confidentialité</a>
+                  </span>
+                </label>
+                <ErrorText id="cond-err" message={errors.acceptConditions ?? errors.consent} />
+                <details className="mt-3 rounded-lg bg-[#FFF8EA] px-4 py-3 text-[14.5px]">
+                  <summary className="cursor-pointer font-semibold text-[#7D612D]">Voir les conditions de l’offre</summary>
+                  <ConditionsList className="mt-3" />
+                </details>
+              </div>
+
+              <div className="flex flex-col gap-4">
+                <HoneypotField value={honeypot} onChange={setHoneypot} />
+                {failure && <DeliveryErrorNotice reason={failure} />}
+                <button type="submit" disabled={sending} aria-busy={sending} className="inline-flex h-[52px] w-full cursor-pointer items-center justify-center gap-2.5 rounded-full bg-[linear-gradient(135deg,#D9732A,#C2611E)] px-7 text-[17px] font-bold text-[#FFFFFF] shadow-[0_10px_24px_rgba(194,97,30,0.35)] hover:brightness-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7D612D] disabled:cursor-wait disabled:opacity-70">
+                  <Send className="h-5 w-5" aria-hidden="true" />
+                  {sending ? 'Inscription en cours…' : `Recevoir mon code -${OFFER_RATE} %`}
+                </button>
+              </div>
+            </form>
+          )}
         </div>
       </section>
 
