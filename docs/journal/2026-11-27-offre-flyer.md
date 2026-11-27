@@ -26,8 +26,11 @@ Flyer recto verso pour syndics, agences, assurances et professionnels (`docs/Fly
 - Mot de passe : le client le choisit lui-même avec `npm run gestion:mot-de-passe` (dans son propre terminal) → `server/prive/config-gestion.php` (jamais dans Git), à envoyer sur OVH en `~/config-gestion.php`. Seule une empreinte est stockée.
 - Page `noindex`, absente du sitemap. Fichiers : `src/components/GestionPage.tsx`, `src/utils/gestion.ts` (+ tests).
 
+## Mise en ligne (27/11/2026)
+- PR #35 fusionnée, site envoyé sur OVH, `~/config-gestion.php` envoyé (mot de passe créé par le client).
+- Essai réel par le client : code affiché sur /offre, e-mail « Votre code -5 % » reçu par le client, e-mail de l'inscription reçu par l'entreprise, inscription visible dans /gestion (« Marquer utilisé » / « Annuler » OK).
+- L'inscription d'essai reste dans `~/demandes/` (on n'y touche pas) : elle bloque le téléphone et l'e-mail du client pour une 2e inscription (anti-doublon).
+
 ## À faire
-- Le client crée son mot de passe (`npm run gestion:mot-de-passe`), puis envoi de `~/config-gestion.php` sur OVH avec la mise en ligne.
-- Tester en vrai après mise en ligne : connexion /gestion, mauvais mot de passe, « Marquer utilisé ».
-- Partie PHP non testée en local (pas de PHP sur le poste) : faire une vraie inscription test après la mise en ligne.
 - Générer le QR code vers https://www.serrurerierepublique.fr/offre pour le flyer.
+- Espace /gestion : prochaines rubriques (demandes, relances, publicité, suivi du site) à la demande du client.
