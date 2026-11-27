@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   ArrowRight,
   Building2,
@@ -24,9 +24,6 @@ import {
   formatFrenchDate,
   INITIAL_OFFER_DRAFT,
   isProfessional,
-  OFFER_CONDITIONS,
-  OFFER_MONTHS,
-  OFFER_RATE,
   offerValidUntil,
   validateOfferDraft,
   type CustomerType,
@@ -40,6 +37,7 @@ import { REAL_REVIEWS, REVIEWS_SOURCE } from '../data/reviewsContent';
 import { WHATSAPP_CONFIG } from '../data/sectionsContent';
 import { buildWhatsAppUrl } from '../utils/whatsapp';
 import logoUrl from '../assets/images/logo_republique_light.png';
+import { DEFAULT_OFFER, DEFAULT_SLUG, fetchPublicOffer, reductionBadge, reductionLabel, slugFromSearch, type OfferConfig } from '../utils/offers';
 
 /*
  * Identité propre à la campagne -5 % : couleurs de la mer à Marseille
@@ -157,6 +155,22 @@ export function OfferPage({ brand, routerMode }: { readonly brand: BrandConfig; 
   const [failure, setFailure] = useState<'reseau' | 'limite' | 'refus' | null>(null);
   const formRef = useRef<HTMLFormElement | null>(null);
   const doneRef = useRef<HTMLHeadingElement | null>(null);
+  // Offre affichée : /offre = offre de bienvenue ; /offre?o=<identifiant> = offre créée dans /gestion.
+  const [offer, setOffer] = useState<OfferConfig>(DEFAULT_OFFER);
+  const [unavailable, setUnavailable] = useState(false);
+
+  useEffect(() => {
+    const slug = slugFromSearch(window.location.search);
+    let alive = true;
+    void fetchPublicOffer(slug).then((r) => {
+      if (!alive) return;
+      if (r.ok) setOffer(r.offer);
+      else if (r.reason === 'indisponible' || slug !== DEFAULT_SLUG) setUnavailable(true);
+    });
+    return () => {
+      alive = false;
+    };
+  }, []);
 
   const update = (patch: Partial<OfferDraft>) => {
     setDraft((d) => ({ ...d, ...patch }));
@@ -182,7 +196,13 @@ export function OfferPage({ brand, routerMode }: { readonly brand: BrandConfig; 
     }
     setSending(true);
     setFailure(null);
-    const result = await sendFormRequest({ kind: 'inscription', rows: buildOfferSummary(draft), startedAt, honeypot });
+    const result = await sendFormRequest({
+      kind: 'inscription',
+      rows: buildOfferSummary(draft, offer),
+      startedAt,
+      honeypot,
+      extra: { offre: offer.slug },
+    });
     setSending(false);
     if (!result.ok) {
       setFailure(result.reason);
@@ -190,7 +210,7 @@ export function OfferPage({ brand, routerMode }: { readonly brand: BrandConfig; 
     }
     setRegistered({
       code: result.reference,
-      validUntil: result.validUntil ?? formatFrenchDate(offerValidUntil()),
+      validUntil: result.validUntil ?? formatFrenchDate(offerValidUntil(new Date(), offer.months)),
       alreadyRegistered: result.alreadyRegistered === true,
     });
     window.requestAnimationFrame(() => {
@@ -200,7 +220,7 @@ export function OfferPage({ brand, routerMode }: { readonly brand: BrandConfig; 
   };
 
   const pro = isProfessional(draft.customerType);
-  const whatsappHref = buildWhatsAppUrl(WHATSAPP_CONFIG.phoneDisplay, 'Bonjour, je viens de la page de l’offre -5 %.');
+  const whatsappHref = buildWhatsAppUrl(WHATSAPP_CONFIG.phoneDisplay, `Bonjour, je viens de la page de l’offre ${reductionLabel(offer)}.`);
 
   return (
     <div className="relative flex flex-1 flex-col overflow-x-clip bg-[#FFFFFF]" style={{ color: INK }}>
@@ -227,18 +247,34 @@ export function OfferPage({ brand, routerMode }: { readonly brand: BrandConfig; 
               <div aria-hidden="true" className="pointer-events-none absolute -right-8 -top-10 h-36 w-36 rounded-full bg-[#FFFFFF]/10" />
               <div aria-hidden="true" className="pointer-events-none absolute -bottom-14 right-16 h-28 w-28 rounded-full bg-[#FFFFFF]/10" />
               <span className="relative grid h-[76px] w-[76px] shrink-0 place-items-center rounded-full bg-[#FFFFFF] font-display text-[26px] font-extrabold tracking-[-0.04em] text-[#0E6BA8] shadow-[0_8px_20px_-8px_rgba(0,0,0,0.35)] sm:h-[86px] sm:w-[86px] sm:text-[30px]">
-                -{OFFER_RATE}%
+                {unavailable ? '%' : reductionBadge(offer)}
               </span>
               <div className="relative">
-                <h1 className="font-display text-[21px] font-bold leading-tight tracking-[-0.01em] sm:text-[24px]">Inscription à l’offre de bienvenue</h1>
+                <h1 className="font-display text-[21px] font-bold leading-tight tracking-[-0.01em] sm:text-[24px]">{unavailable ? 'Offre terminée' : offer.title}</h1>
                 <p className="mt-1 text-[14.5px] leading-[1.5] text-[#FFFFFF]/90 sm:text-[15.5px]">
-                  {OFFER_RATE} % de réduction sur votre premier achat ou votre première intervention, valable {OFFER_MONTHS} mois.
+                  {unavailable ? 'Merci de votre intérêt pour nos offres.' : `${offer.description} Valable ${offer.months} mois.`}
                 </p>
               </div>
             </div>
 
             <div className="p-6 sm:p-8">
-              {registered ? (
+              {unavailable ? (
+                <div className="text-center">
+                  <h2 className="font-display text-[24px] font-bold leading-tight tracking-[-0.02em]">Cette offre n’est plus disponible.</h2>
+                  <p className="mx-auto mt-3 max-w-[26rem] text-[15.5px] leading-[1.6] text-[#0B2A3C]/70">
+                    Elle est terminée ou en pause. Appelez-nous : nous vous dirons quelles offres sont en cours.
+                  </p>
+                  <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
+                    <a href={brand.phoneHref} className="inline-flex h-12 items-center justify-center gap-2 rounded-full px-6 text-[15px] font-semibold text-[#FFFFFF] shadow-[0_12px_28px_-12px_rgba(14,107,168,0.8)] transition hover:brightness-110" style={{ backgroundImage: SEA }}>
+                      <Phone className="h-4 w-4" aria-hidden="true" />
+                      {brand.phoneDisplay}
+                    </a>
+                    <a href={hrefForHome(routerMode)} className="inline-flex h-12 items-center justify-center rounded-full border border-[#0B2A3C]/15 px-6 text-[15px] font-semibold transition hover:border-[#1391B8]">
+                      Découvrir le site
+                    </a>
+                  </div>
+                </div>
+              ) : registered ? (
                 <div className="text-center">
                   <span className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-[#E4F7F3] text-[#0F8F80]">
                     <Check className="h-7 w-7" strokeWidth={2.6} aria-hidden="true" />
@@ -247,7 +283,7 @@ export function OfferPage({ brand, routerMode }: { readonly brand: BrandConfig; 
                     {registered.alreadyRegistered ? 'Vous êtes déjà inscrit.' : 'C’est fait, votre réduction est activée.'}
                   </h2>
                   <div className="mt-6 rounded-2xl border-2 border-dashed border-[#1391B8]/50 bg-[#F0F9FC] px-5 py-5">
-                    <p className="text-[12.5px] font-bold uppercase tracking-[0.18em] text-[#0E6BA8]">Votre code -{OFFER_RATE} %</p>
+                    <p className="text-[12.5px] font-bold uppercase tracking-[0.18em] text-[#0E6BA8]">Votre code {reductionLabel(offer)}</p>
                     <p className="mt-2 break-all font-display text-[24px] font-extrabold tabular-nums tracking-[0.01em] sm:text-[30px]">{registered.code}</p>
                     <p className="mt-1.5 text-[14.5px] text-[#0B2A3C]/65">
                       Valable jusqu’au <strong className="font-semibold text-[#0B2A3C]">{registered.validUntil}</strong>
@@ -357,7 +393,7 @@ export function OfferPage({ brand, routerMode }: { readonly brand: BrandConfig; 
                         <ChevronDown className="h-4 w-4 text-[#0E6BA8] transition-transform duration-200 group-open:rotate-180" aria-hidden="true" />
                       </summary>
                       <ul className="mt-3 flex flex-col gap-2 text-[14px] leading-[1.5] text-[#0B2A3C]/75">
-                        {OFFER_CONDITIONS.map((item) => (
+                        {offer.conditions.map((item) => (
                           <li key={item} className="flex gap-2.5">
                             <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#17B3A3]" strokeWidth={2.6} aria-hidden="true" />
                             {item}
@@ -376,7 +412,7 @@ export function OfferPage({ brand, routerMode }: { readonly brand: BrandConfig; 
                     className="group inline-flex h-14 w-full cursor-pointer items-center justify-center gap-2.5 rounded-full text-[16.5px] font-semibold text-[#FFFFFF] shadow-[0_16px_36px_-14px_rgba(14,107,168,0.9)] transition hover:-translate-y-px hover:brightness-110 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[#1391B8] disabled:cursor-wait disabled:opacity-70"
                     style={{ backgroundImage: SEA }}
                   >
-                    {sending ? 'Inscription en cours…' : `Recevoir mon code -${OFFER_RATE} %`}
+                    {sending ? 'Inscription en cours…' : `Recevoir mon code ${reductionLabel(offer)}`}
                     <ArrowRight className="h-5 w-5 transition-transform duration-200 group-hover:translate-x-1" aria-hidden="true" />
                   </button>
                   <p className="-mt-1 text-center text-[13px] text-[#0B2A3C]/50">Gratuit, sans engagement · vos informations restent chez nous</p>
@@ -399,7 +435,7 @@ export function OfferPage({ brand, routerMode }: { readonly brand: BrandConfig; 
           {[
             { icon: MousePointerClick, title: 'Je m’inscris', text: 'Je remplis le formulaire ci-dessus : 30 secondes suffisent.' },
             { icon: Mail, title: 'Je reçois mon code', text: 'Il s’affiche tout de suite à l’écran et arrive aussi par e-mail.' },
-            { icon: Ticket, title: 'J’en profite', text: `Je donne mon code au moment du devis : -${OFFER_RATE} % pendant ${OFFER_MONTHS} mois.` },
+            { icon: Ticket, title: 'J’en profite', text: `Je donne mon code au moment du devis : ${reductionLabel(offer)} pendant ${offer.months} mois.` },
           ].map((step, i) => (
             <li key={step.title} className="relative flex gap-5 sm:flex-col sm:items-center sm:text-center">
               <span className="relative grid h-14 w-14 shrink-0 place-items-center rounded-full text-[#FFFFFF] shadow-[0_10px_24px_-10px_rgba(14,107,168,0.8)] ring-[6px] ring-[#FFFFFF]" style={{ backgroundImage: SEA }}>

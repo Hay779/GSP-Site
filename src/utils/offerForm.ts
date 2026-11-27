@@ -1,21 +1,12 @@
 /**
- * Inscription à l'offre -5 % du flyer (page /offre) : choix proposés,
+ * Inscription à une offre (page /offre) : choix proposés,
  * validation, lignes envoyées au serveur et date de fin de validité.
  */
 import { isValidFrenchPhone, isValidOptionalEmail } from './quoteForm';
+import { DEFAULT_OFFER, reductionLabel, type OfferConfig } from './offers';
 
-export const OFFER_RATE = 5;
-/** Durée de validité après l'inscription (en mois). */
-export const OFFER_MONTHS = 5;
-
-export const OFFER_CONDITIONS = [
-  `-${OFFER_RATE} % sur votre premier achat ou votre première intervention, sur devis signé.`,
-  `Valable ${OFFER_MONTHS} mois après l’inscription.`,
-  'Une seule inscription par société ou par personne.',
-  'Hors dépannage d’urgence (ouverture de porte, mise en sécurité immédiate).',
-  'Non cumulable avec une autre offre ou promotion en cours.',
-  'Présentez votre code (ou donnez-le par téléphone) au moment du devis.',
-] as const;
+/** Durée de validité par défaut (offre de bienvenue), en mois. */
+export const OFFER_MONTHS = DEFAULT_OFFER.months;
 
 export const CUSTOMER_TYPES = [
   'Syndic / copropriété',
@@ -100,9 +91,12 @@ export function formatFrenchDate(date: Date): string {
 }
 
 /** Lignes envoyées au récepteur (libellés « Nom », « Téléphone » et « E-mail » attendus par le serveur). */
-export function buildOfferSummary(draft: OfferDraft): readonly { readonly label: string; readonly value: string }[] {
+export function buildOfferSummary(
+  draft: OfferDraft,
+  offer: OfferConfig = DEFAULT_OFFER
+): readonly { readonly label: string; readonly value: string }[] {
   return [
-    { label: 'Offre', value: `-${OFFER_RATE} % flyer (valable ${OFFER_MONTHS} mois)` },
+    { label: 'Offre', value: `${offer.name} (${reductionLabel(offer)}, valable ${offer.months} mois)` },
     { label: 'Vous êtes', value: draft.customerType ?? '—' },
     { label: 'Société', value: draft.company.trim() || '—' },
     { label: 'Fonction', value: draft.role.trim() || '—' },

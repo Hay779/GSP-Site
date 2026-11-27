@@ -1,3 +1,5 @@
+import { DEFAULT_OFFER, DEFAULT_SLUG, parseOffer, serializeOffer, type OfferConfig } from './offers';
+
 /**
  * Espace gestion (/gestion) : échanges avec public/api/gestion.php et calculs d'affichage
  * (état d'un code -5 %, recherche, export tableur).
@@ -9,6 +11,8 @@ export interface OfferSignup {
   readonly receivedAt: string;
   /** Fin de validité « JJ/MM/AAAA ». */
   readonly validUntil: string;
+  /** Identifiant de l'offre (« bienvenue » = /offre). */
+  readonly offer: string;
   /** Lignes du formulaire : « Vous êtes », « Société », « Nom », « Téléphone »… */
   readonly fields: Readonly<Record<string, string>>;
   /** Date d'utilisation du code (ISO), ou null s'il n'a pas encore servi. */
@@ -18,7 +22,7 @@ export interface OfferSignup {
 
 export type SignupStatus = 'valide' | 'bientot' | 'perime' | 'utilise';
 
-export type ApiFailure = 'non_connecte' | 'mot_de_passe' | 'trop_d_essais' | 'non_configure' | 'reseau' | 'refus';
+export type ApiFailure = 'non_connecte' | 'mot_de_passe' | 'trop_d_essais' | 'non_configure' | 'slug_existe' | 'reseau' | 'refus';
 
 export type ApiResult<T> = { readonly ok: true; readonly data: T } | { readonly ok: false; readonly reason: ApiFailure };
 
@@ -104,6 +108,7 @@ interface RawSignup {
   reference?: unknown;
   recu_le?: unknown;
   valable_jusqu_au?: unknown;
+  offre?: unknown;
   champs?: unknown;
   utilise_le?: unknown;
   note?: unknown;
@@ -125,6 +130,7 @@ export function parseSignups(body: unknown): OfferSignup[] {
         reference: item.reference,
         receivedAt: typeof item.recu_le === 'string' ? item.recu_le : '',
         validUntil: typeof item.valable_jusqu_au === 'string' ? item.valable_jusqu_au : '',
+        offer: typeof item.offre === 'string' && item.offre ? item.offre : DEFAULT_SLUG,
         fields,
         usedAt: typeof item.utilise_le === 'string' ? item.utilise_le : null,
         note: typeof item.note === 'string' ? item.note : '',
@@ -135,7 +141,7 @@ export function parseSignups(body: unknown): OfferSignup[] {
 
 function failureFrom(status: number, body: unknown): ApiFailure {
   const code = (body as { erreur?: unknown } | null)?.erreur;
-  if (code === 'non_connecte' || code === 'mot_de_passe' || code === 'trop_d_essais' || code === 'non_configure') return code;
+  if (code === 'non_connecte' || code === 'mot_de_passe' || code === 'trop_d_essais' || code === 'non_configure' || code === 'slug_existe') return code;
   return status >= 400 && status < 500 ? 'refus' : 'reseau';
 }
 
@@ -149,10 +155,10 @@ function isDevPreview(): boolean {
 let demoConnected = false;
 const demoUsed = new Map<string, string>();
 const DEMO: readonly OfferSignup[] = [
-  { reference: 'OFF-20261127-4821', receivedAt: '2026-11-27T10:12:00+01:00', validUntil: '27/04/2027', fields: { 'Vous êtes': 'Syndic / copropriété', Société: 'Cabinet Exemple Immobilier', Fonction: 'Gestionnaire', Nom: 'Exemple A.', Téléphone: '06 00 00 00 01', 'E-mail': 'exemple-a@exemple.fr', Ville: 'Marseille 6e' }, usedAt: null, note: '' },
-  { reference: 'OFF-20261126-1937', receivedAt: '2026-11-26T16:40:00+01:00', validUntil: '26/04/2027', fields: { 'Vous êtes': 'Particulier', Société: '—', Fonction: '—', Nom: 'Exemple B.', Téléphone: '06 00 00 00 02', 'E-mail': 'exemple-b@exemple.fr', Ville: '—' }, usedAt: null, note: '' },
-  { reference: 'OFF-20261120-7310', receivedAt: '2026-11-20T09:05:00+01:00', validUntil: '20/04/2027', fields: { 'Vous êtes': 'Commerce / entreprise', Société: 'Commerce Exemple', Fonction: 'Gérant', Nom: 'Exemple C.', Téléphone: '06 00 00 00 03', 'E-mail': 'exemple-c@exemple.fr', Ville: 'Marseille 2e' }, usedAt: '2026-11-25T11:00:00+01:00', note: '' },
-  { reference: 'OFF-20260705-2208', receivedAt: '2026-07-05T14:20:00+02:00', validUntil: '05/12/2026', fields: { 'Vous êtes': 'Agence immobilière / bailleur', Société: 'Agence Exemple', Fonction: '—', Nom: 'Exemple D.', Téléphone: '06 00 00 00 04', 'E-mail': 'exemple-d@exemple.fr', Ville: 'Marseille 1er' }, usedAt: null, note: '' },
+  { reference: 'OFF-20261127-4821', receivedAt: '2026-11-27T10:12:00+01:00', validUntil: '27/04/2027', offer: 'syndics-printemps', fields: { 'Vous êtes': 'Syndic / copropriété', Société: 'Cabinet Exemple Immobilier', Fonction: 'Gestionnaire', Nom: 'Exemple A.', Téléphone: '06 00 00 00 01', 'E-mail': 'exemple-a@exemple.fr', Ville: 'Marseille 6e' }, usedAt: null, note: '' },
+  { reference: 'OFF-20261126-1937', receivedAt: '2026-11-26T16:40:00+01:00', validUntil: '26/04/2027', offer: DEFAULT_SLUG, fields: { 'Vous êtes': 'Particulier', Société: '—', Fonction: '—', Nom: 'Exemple B.', Téléphone: '06 00 00 00 02', 'E-mail': 'exemple-b@exemple.fr', Ville: '—' }, usedAt: null, note: '' },
+  { reference: 'OFF-20261120-7310', receivedAt: '2026-11-20T09:05:00+01:00', validUntil: '20/04/2027', offer: DEFAULT_SLUG, fields: { 'Vous êtes': 'Commerce / entreprise', Société: 'Commerce Exemple', Fonction: 'Gérant', Nom: 'Exemple C.', Téléphone: '06 00 00 00 03', 'E-mail': 'exemple-c@exemple.fr', Ville: 'Marseille 2e' }, usedAt: '2026-11-25T11:00:00+01:00', note: '' },
+  { reference: 'OFF-20260705-2208', receivedAt: '2026-07-05T14:20:00+02:00', validUntil: '05/12/2026', offer: DEFAULT_SLUG, fields: { 'Vous êtes': 'Agence immobilière / bailleur', Société: 'Agence Exemple', Fonction: '—', Nom: 'Exemple D.', Téléphone: '06 00 00 00 04', 'E-mail': 'exemple-d@exemple.fr', Ville: 'Marseille 1er' }, usedAt: null, note: '' },
 ];
 
 async function demo<T>(make: () => ApiResult<T>): Promise<ApiResult<T>> {
@@ -246,7 +252,52 @@ export function failureMessage(reason: ApiFailure): string {
       return 'L’espace gestion n’est pas encore activé sur le serveur (mot de passe à créer).';
     case 'non_connecte':
       return 'Votre connexion a expiré. Reconnectez-vous.';
+    case 'slug_existe':
+      return 'Une offre utilise déjà cette adresse. Choisissez-en une autre.';
     default:
       return 'Le serveur ne répond pas. Vérifiez votre connexion et réessayez.';
   }
+}
+
+// --------------------------------------------------------------------------
+// Offres (rubrique « Offres & QR codes »)
+// --------------------------------------------------------------------------
+let demoOffers: OfferConfig[] = [
+  DEFAULT_OFFER,
+  {
+    ...DEFAULT_OFFER,
+    slug: 'syndics-printemps',
+    name: 'Syndics printemps 2027',
+    title: 'Offre syndics : -10 % ce printemps',
+    description: '10 % de réduction sur vos interventions dans vos copropriétés.',
+    reductionValue: 10,
+    months: 3,
+    conditions: ['-10 % sur devis signé, pour les syndics et gestionnaires.', 'Valable 3 mois après l’inscription.', 'Non cumulable avec une autre offre ou promotion en cours.'],
+    start: '2027-03-01',
+    end: '2027-05-31',
+  },
+];
+
+export async function fetchOffers(): Promise<ApiResult<OfferConfig[]>> {
+  if (isDevPreview()) return demo(() => ({ ok: true, data: demoOffers }));
+  const r = await call('GET', 'offres');
+  if (!r) return { ok: false, reason: 'reseau' };
+  if (r.status !== 200) return { ok: false, reason: failureFrom(r.status, r.body) };
+  const list = (r.body as { offres?: unknown })?.offres;
+  return { ok: true, data: Array.isArray(list) ? list.map(parseOffer).filter((o): o is OfferConfig => o !== null) : [] };
+}
+
+export async function saveOffer(offer: OfferConfig, isNew: boolean): Promise<ApiResult<OfferConfig>> {
+  if (isDevPreview()) {
+    return demo(() => {
+      if (isNew && demoOffers.some((o) => o.slug === offer.slug)) return { ok: false, reason: 'slug_existe' };
+      demoOffers = isNew ? [...demoOffers, offer] : demoOffers.map((o) => (o.slug === offer.slug ? offer : o));
+      return { ok: true, data: offer };
+    });
+  }
+  const r = await call('POST', 'offre', { offre: serializeOffer(offer), nouvelle: isNew });
+  if (!r) return { ok: false, reason: 'reseau' };
+  if (r.status !== 200) return { ok: false, reason: failureFrom(r.status, r.body) };
+  const saved = parseOffer((r.body as { offre?: unknown })?.offre);
+  return saved ? { ok: true, data: saved } : { ok: false, reason: 'reseau' };
 }

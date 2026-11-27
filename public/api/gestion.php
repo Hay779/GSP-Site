@@ -8,6 +8,8 @@
  *   POST ?action=deconnexion
  *   GET  ?action=inscriptions   → liste des inscriptions à l'offre -5 % (+ codes utilisés)
  *   POST ?action=utilisation    → { "reference": "OFF-…", "utilise": true|false, "note": "…" }
+ *   GET  ?action=offres         → toutes les offres (voir _offres.php)
+ *   POST ?action=offre          → { "offre": {…}, "nouvelle": true|false } : créer ou modifier une offre
  *
  * Réglages : ~/config-gestion.php (hors du dossier www, jamais dans Git), créé avec
  * « npm run gestion:mot-de-passe ». Modèle : server/config-gestion.exemple.php.
@@ -24,6 +26,8 @@ const DUREE_CONNEXION = 30 * 24 * 3600;
 const ESSAIS_MAX = 5;
 const FENETRE_ESSAIS = 15 * 60;
 const DOMAINES_PAR_DEFAUT = ['www.serrurerierepublique.fr', 'serrurerierepublique.fr'];
+
+require __DIR__ . '/_offres.php';
 
 function repondre(int $code, array $donnees): void
 {
@@ -183,6 +187,7 @@ if ($action === 'inscriptions' && $methode === 'GET') {
             'reference' => $ref,
             'recu_le' => (string) ($d['recu_le'] ?? ''),
             'valable_jusqu_au' => (string) ($d['valable_jusqu_au'] ?? ''),
+            'offre' => (string) ($d['offre'] ?? OFFRE_DEFAUT),
             'champs' => $champs,
             'utilise_le' => isset($utilisations[$ref]['le']) ? (string) $utilisations[$ref]['le'] : null,
             'note' => isset($utilisations[$ref]['note']) ? (string) $utilisations[$ref]['note'] : '',
@@ -230,6 +235,53 @@ if ($action === 'utilisation' && $methode === 'POST') {
         'reference' => $reference,
         'utilise_le' => $utilise ? $utilisations[$reference]['le'] : null,
     ]);
+}
+
+// ---------------------------------------------------------------- offres
+if ($action === 'offres' && $methode === 'GET') {
+    $liste = [];
+    foreach (lireOffres($racine) as $o) {
+        $o['ouverte'] = offreOuverte($o);
+        $liste[] = $o;
+    }
+    repondre(200, ['ok' => true, 'offres' => $liste]);
+}
+
+if ($action === 'offre' && $methode === 'POST') {
+    [$offre, $erreur] = validerOffre(is_array($corps['offre'] ?? null) ? $corps['offre'] : []);
+    if ($erreur !== '') {
+        refuser(400, 'offre_' . $erreur);
+    }
+    $nouvelle = ($corps['nouvelle'] ?? false) === true;
+
+    $f = fopen(fichierOffres($racine), 'c+');
+    if ($f === false || !flock($f, LOCK_EX)) {
+        refuser(500, 'stockage');
+    }
+    $offres = lireOffres($racine);
+    if ($nouvelle && isset($offres[$offre['slug']])) {
+        flock($f, LOCK_UN);
+        fclose($f);
+        refuser(409, 'slug_existe');
+    }
+    if (!$nouvelle && !isset($offres[$offre['slug']])) {
+        flock($f, LOCK_UN);
+        fclose($f);
+        refuser(404, 'offre_inconnue');
+    }
+    $offre['cree_le'] = $nouvelle ? date('c') : (string) ($offres[$offre['slug']]['cree_le'] ?? date('c'));
+    $offre['modifie_le'] = date('c');
+    $offres[$offre['slug']] = $offre;
+    ftruncate($f, 0);
+    rewind($f);
+    fwrite($f, (string) json_encode(array_values($offres), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+    fflush($f);
+    flock($f, LOCK_UN);
+    fclose($f);
+    @chmod(fichierOffres($racine), 0600);
+
+    $offre['ouverte'] = offreOuverte($offre);
+    repondre(200, ['ok' => true, 'offre' => $offre]);
 }
 
 refuser(400, 'action');

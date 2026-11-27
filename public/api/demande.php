@@ -22,10 +22,8 @@ const TYPES = [
     'contact' => ['prefixe' => 'CT', 'titre' => 'Message de contact'],
     'partenaire' => ['prefixe' => 'PA', 'titre' => 'Demande de partenariat'],
     'sinistre' => ['prefixe' => 'SIN', 'titre' => 'Photos après sinistre'],
-    'inscription' => ['prefixe' => 'OFF', 'titre' => 'Inscription offre -5 %'],
+    'inscription' => ['prefixe' => 'OFF', 'titre' => 'Inscription à une offre'],
 ];
-/** Offre du flyer (page /offre) : durée de validité après l'inscription. */
-const OFFRE_MOIS = 5;
 const MAX_CHAMPS = 30;
 const MAX_LIBELLE = 80;
 const MAX_VALEUR = 5000;
@@ -154,15 +152,27 @@ if (mb_strlen($nom) < 2) {
 $valableJusquAu = '';
 $clesInscription = [];
 $fichierInscriptions = $dossierDemandes . '/_inscriptions.json';
+$offre = [];
+$slugOffre = '';
 if ($type === 'inscription') {
+    // Offre choisie (page /offre?o=…) : doit exister et être ouverte. Voir _offres.php.
+    require __DIR__ . '/_offres.php';
+    $slugOffre = (string) ($_POST['offre'] ?? OFFRE_DEFAUT);
+    $offres = lireOffres($racine);
+    if (!isset($offres[$slugOffre]) || !offreOuverte($offres[$slugOffre])) {
+        refuser(410, 'offre');
+    }
+    $offre = $offres[$slugOffre];
+    // Anti-doublon par offre (clés sans préfixe = offre de bienvenue, comme avant).
+    $prefixeCle = $slugOffre === OFFRE_DEFAUT ? '' : $slugOffre . '|';
     $emailInscrit = mb_strtolower(uneLigne($valeurDe('E-mail'), 254));
     if (!filter_var($emailInscrit, FILTER_VALIDATE_EMAIL)) {
         refuser(400, 'email');
     }
-    $clesInscription = ['tel:' . substr($telephone, -9), 'mail:' . $emailInscrit];
+    $clesInscription = [$prefixeCle . 'tel:' . substr($telephone, -9), $prefixeCle . 'mail:' . $emailInscrit];
     $societe = mb_strtolower(preg_replace('/[^\p{L}\p{N}]+/u', '', $valeurDe('Société')) ?? '');
     if (mb_strlen($societe) >= 3) {
-        $clesInscription[] = 'societe:' . $societe;
+        $clesInscription[] = $prefixeCle . 'societe:' . $societe;
     }
     $inscrits = is_file($fichierInscriptions) ? (json_decode((string) file_get_contents($fichierInscriptions), true) ?: []) : [];
     foreach ($clesInscription as $cle) {
@@ -175,9 +185,9 @@ if ($type === 'inscription') {
             ]);
         }
     }
-    // Même jour, 5 mois plus tard (dernier jour du mois si ce jour n'existe pas).
+    // Même jour, N mois plus tard (dernier jour du mois si ce jour n'existe pas).
     $aujourdhui = new DateTimeImmutable('today');
-    $cible = $aujourdhui->modify('first day of this month')->modify('+' . OFFRE_MOIS . ' months');
+    $cible = $aujourdhui->modify('first day of this month')->modify('+' . (int) $offre['duree_mois'] . ' months');
     $jour = min((int) $aujourdhui->format('j'), (int) $cible->format('t'));
     $valableJusquAu = $cible->setDate((int) $cible->format('Y'), (int) $cible->format('n'), $jour)->format('d/m/Y');
 }
@@ -237,6 +247,7 @@ $enregistrement = [
 ];
 if ($valableJusquAu !== '') {
     $enregistrement['valable_jusqu_au'] = $valableJusquAu;
+    $enregistrement['offre'] = $slugOffre;
 }
 foreach ($photos as $p) {
     if (!move_uploaded_file($p['tmp'], $dossier . '/' . $p['nom'])) {
@@ -259,7 +270,7 @@ if (count($photos) > 0) {
     $texte .= "\n" . count($photos) . " photo(s) en pièce jointe.\n";
 }
 if ($valableJusquAu !== '') {
-    $texte .= "\nCode de réduction : " . $reference . "\nValable jusqu'au : " . $valableJusquAu . "\n";
+    $texte .= "\nOffre : " . $offre['nom'] . ' (' . libelleReduction($offre) . ")\nCode de réduction : " . $reference . "\nValable jusqu'au : " . $valableJusquAu . "\n";
 }
 $texte .= "\nRappeler le client : " . $valeurDe('Téléphone') . "\n";
 
@@ -305,15 +316,14 @@ if ($type === 'inscription') {
     $texteClient = "Bonjour " . $nom . ",\n\n"
         . "Merci pour votre inscription. Voici votre code de réduction :\n\n"
         . "    " . $reference . "\n\n"
-        . "-5 % sur votre premier achat ou votre première intervention, sur devis signé,\n"
-        . "valable jusqu'au " . $valableJusquAu . ".\n\n"
-        . "Conditions : une seule inscription par société ou par personne ; hors dépannage d'urgence\n"
-        . "(ouverture de porte, mise en sécurité immédiate) ; non cumulable avec une autre offre ou promotion.\n"
+        . libelleReduction($offre) . ' : ' . $offre['description'] . "\n"
+        . "Valable jusqu'au " . $valableJusquAu . ".\n\n"
+        . "Conditions :\n- " . implode("\n- ", $offre['conditions']) . "\n\n"
         . "Donnez ce code au moment du devis, en boutique ou par téléphone.\n\n"
         . "Serrurerie de la République\n48 rue de la République, 13002 Marseille\n04 91 90 51 65\nhttps://www.serrurerierepublique.fr\n";
     $mailClient = mail(
         $emailInscrit,
-        encoderEntete('Votre code -5 % : ' . $reference),
+        encoderEntete('Votre code ' . libelleReduction($offre) . ' : ' . $reference),
         chunk_split(base64_encode($texteClient)),
         implode("\r\n", [
             'From: ' . encoderEntete('Serrurerie de la République') . ' <' . $config['expediteur'] . '>',
