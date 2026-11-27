@@ -407,6 +407,7 @@ const LEGAL_PRIVACY: readonly LegalArticle[] = [
       'Le site utilise Google Analytics (Google Ireland Limited) pour mesurer sa fréquentation : pages vues, provenance des visites (moteur de recherche, réseau social, lien direct), type d’appareil, ville approximative, et clics sur les boutons d’appel, WhatsApp et de demande de devis. Les signaux publicitaires de Google sont désactivés.',
       'Ces cookies (_ga, _ga_*) ne sont déposés qu’après votre accord, donné dans la bannière affichée lors de votre première visite. Sans accord, aucun script Google n’est chargé. Votre choix est conservé 6 mois ; vous pouvez le modifier à tout moment avec le lien « Gérer les cookies » en bas de chaque page.',
       'Les données de mesure d’audience sont conservées 14 mois au maximum. Elles peuvent être traitées par Google en dehors de l’Union européenne, dans le cadre du Data Privacy Framework UE–États-Unis.',
+      'Indépendamment de Google Analytics, le site tient ses propres statistiques de fréquentation, sans cookie et sans aucune donnée personnelle : nombre de pages vues, provenance générale de la visite (moteur de recherche, annuaire, réseau social, QR code, accès direct) et type d’appareil (téléphone ou ordinateur). Rien n’est lu ni enregistré sur votre appareil et aucune adresse IP n’est conservée ; seuls des totaux par jour sont gardés.',
       'Le site ne dépose aucun autre cookie. Les formulaires n’utilisent pas de cookies.',
     ],
   },

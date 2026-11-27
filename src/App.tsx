@@ -21,6 +21,7 @@ import { NotFoundPage } from './components/NotFoundPage';
 import { PartnerPage } from './components/PartnerPage';
 import { OfferPage } from './components/OfferPage';
 import { GestionPage } from './components/GestionPage';
+import { recordVisit } from './utils/siteStats';
 import { QuotePage } from './components/QuotePage';
 import { ReviewsSection } from './components/ReviewsSection';
 import { UrgencySection } from './components/UrgencySection';
@@ -75,6 +76,10 @@ export default function App() {
   // Titre, description, adresse canonique et données structurées de la page.
   useEffect(() => {
     applySeo(seoForRoute(route));
+  }, [route]);
+  // Compteur de visites du site (sans cookie) : « Suivi du site » dans /gestion.
+  useEffect(() => {
+    recordVisit();
   }, [route]);
   const currentPage = resolvePageDefinition(route);
   const sectionHref = (sectionId: SectionId) => hrefForHomeSection(sectionId, route, ROUTER_MODE);

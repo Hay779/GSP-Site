@@ -573,3 +573,81 @@ export async function markRelanceDone(key: string, note = ''): Promise<ApiResult
   const le = (r.body as { le?: unknown })?.le;
   return { ok: true, data: { at: typeof le === 'string' ? le : new Date().toISOString(), note } };
 }
+
+// --------------------------------------------------------------------------
+// Suivi du site (compteur public/api/stat.php)
+// --------------------------------------------------------------------------
+export interface DayStats {
+  /** AAAA-MM-JJ */
+  readonly day: string;
+  /** Pages vues. */
+  readonly views: number;
+  /** Arrivées sur le site (visites). */
+  readonly entries: number;
+  readonly pages: Readonly<Record<string, number>>;
+  readonly sources: Readonly<Record<string, number>>;
+  readonly offers: Readonly<Record<string, number>>;
+  readonly mobile: number;
+  readonly desktop: number;
+}
+
+function numberMap(raw: unknown): Record<string, number> {
+  const out: Record<string, number> = {};
+  if (raw && typeof raw === 'object' && !Array.isArray(raw)) {
+    for (const [k, v] of Object.entries(raw as Record<string, unknown>)) {
+      if (typeof v === 'number' && Number.isFinite(v) && v > 0) out[k] = v;
+    }
+  }
+  return out;
+}
+
+export function parseDayStats(body: unknown): DayStats[] {
+  const list = (body as { jours?: unknown } | null)?.jours;
+  if (!Array.isArray(list)) return [];
+  return list.flatMap((d: Record<string, unknown>) =>
+    typeof d?.jour === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(d.jour)
+      ? [
+          {
+            day: d.jour,
+            views: typeof d.vues === 'number' ? d.vues : 0,
+            entries: typeof d.entrees === 'number' ? d.entrees : 0,
+            pages: numberMap(d.pages),
+            sources: numberMap(d.sources),
+            offers: numberMap(d.offres),
+            mobile: typeof d.mobile === 'number' ? d.mobile : 0,
+            desktop: typeof d.ordinateur === 'number' ? d.ordinateur : 0,
+          },
+        ]
+      : []
+  );
+}
+
+function demoStats(days: number): DayStats[] {
+  const out: DayStats[] = [];
+  const today = new Date();
+  for (let i = days - 1; i >= 0; i--) {
+    const d = new Date(today.getFullYear(), today.getMonth(), today.getDate() - i);
+    const pad = (n: number) => String(n).padStart(2, '0');
+    const seed = (d.getDate() * 37 + d.getMonth() * 11) % 17;
+    const weekend = d.getDay() === 0 || d.getDay() === 6;
+    const entries = Math.round((weekend ? 9 : 18) + seed * 1.3);
+    out.push({
+      day: `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`,
+      views: Math.round(entries * 2.4),
+      entries,
+      pages: { '/': entries, '/devis': Math.round(entries * 0.4), '/cles-badges': Math.round(entries * 0.3), '/offre': Math.round(seed / 3), '/vitrerie-miroiterie': Math.round(entries * 0.2), '/zone-intervention': Math.round(entries * 0.15) },
+      sources: { google: Math.round(entries * 0.55), direct: Math.round(entries * 0.2), annuaire: Math.round(entries * 0.12), qr: Math.round(seed / 4), reseau_social: Math.round(entries * 0.05) },
+      offers: { bienvenue: Math.round(seed / 3) },
+      mobile: Math.round(entries * 0.68),
+      desktop: Math.round(entries * 0.32),
+    });
+  }
+  return out;
+}
+
+export async function fetchStats(days: number): Promise<ApiResult<DayStats[]>> {
+  if (isDevPreview()) return demo(() => ({ ok: true, data: demoStats(days) }));
+  const r = await call('GET', `stats&jours=${days}`);
+  if (!r) return { ok: false, reason: 'reseau' };
+  return r.status === 200 ? { ok: true, data: parseDayStats(r.body) } : { ok: false, reason: failureFrom(r.status, r.body) };
+}
