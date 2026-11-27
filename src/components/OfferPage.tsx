@@ -1,5 +1,5 @@
-import { useRef, useState, type CSSProperties } from 'react';
-import { ArrowRight, Building2, Check, Clock3, Home, KeyRound, Lock, Mail, Phone, ShieldCheck, Store } from 'lucide-react';
+import { useRef, useState, type ReactNode } from 'react';
+import { ArrowRight, BadgePercent, Building2, CalendarHeart, Check, KeyRound, Mail, Phone, ShieldCheck, Sparkles, Store, UserRound, Zap } from 'lucide-react';
 import type { BrandConfig } from '../utils/navigation';
 import {
   buildOfferSummary,
@@ -20,45 +20,45 @@ import { hrefForHome, hrefForPage, type RouterMode } from '../utils/router';
 import { sendFormRequest } from '../utils/formDelivery';
 import { DeliveryErrorNotice, HoneypotField } from './FormDelivery';
 import basiliqueUrl from '../assets/images/logo_basilique_brass.png';
-import photoUrl from '../assets/images/pro_syndics.webp';
 
-const TYPE_ICONS: Readonly<Record<CustomerType, typeof Building2>> = {
-  'Syndic / copropriété': Building2,
-  'Agence immobilière / bailleur': KeyRound,
-  'Assureur / expert': ShieldCheck,
-  'Commerce / entreprise': Store,
-  Particulier: Home,
-};
+/*
+ * Identité propre à la campagne -5 % (volontairement différente du site) :
+ * papier crème, encre noire, contours épais, ombres franches, couleurs vives.
+ */
+const C = {
+  ink: '#14110F',
+  paper: '#FFF7E8',
+  blue: '#2D4BFF',
+  yellow: '#FFD23F',
+  coral: '#FF6B4A',
+  mint: '#4FE0A5',
+  lilac: '#C9B6FF',
+  sky: '#9FD8FF',
+} as const;
 
-/** Libellés courts des boutons de choix (le libellé complet part dans la demande). */
-const TYPE_SHORT: Readonly<Record<CustomerType, string>> = {
-  'Syndic / copropriété': 'Syndic',
-  'Agence immobilière / bailleur': 'Agence / bailleur',
-  'Assureur / expert': 'Assureur',
-  'Commerce / entreprise': 'Entreprise',
-  Particulier: 'Particulier',
+const HARD = 'border-2 border-[#14110F] shadow-[4px_4px_0_#14110F]';
+const HARD_LG = 'border-2 border-[#14110F] shadow-[7px_7px_0_#14110F]';
+
+const TYPES: Readonly<Record<CustomerType, { short: string; icon: typeof Building2; color: string }>> = {
+  'Syndic / copropriété': { short: 'Syndic', icon: Building2, color: C.sky },
+  'Agence immobilière / bailleur': { short: 'Agence / bailleur', icon: KeyRound, color: C.yellow },
+  'Assureur / expert': { short: 'Assureur', icon: ShieldCheck, color: C.mint },
+  'Commerce / entreprise': { short: 'Entreprise', icon: Store, color: C.coral },
+  Particulier: { short: 'Particulier', icon: UserRound, color: C.lilac },
 };
 
 const FIELD =
-  'mt-1.5 h-12 w-full rounded-xl border bg-[#F7F5F0] px-4 text-[16px] text-[#1C1F21] placeholder:text-[#1C1F21]/35 transition-colors duration-150 focus:border-[#B79A62] focus:bg-[#FFFFFF] focus:outline-none focus:ring-4 focus:ring-[#B79A62]/15';
+  'mt-1.5 h-12 w-full rounded-xl border-2 bg-[#FFFFFF] px-4 text-[16px] text-[#14110F] placeholder:text-[#14110F]/35 transition-shadow duration-150 focus:outline-none focus:shadow-[3px_3px_0_#2D4BFF]';
 
-/** Bon de réduction : encoches rondes sur les deux côtés. */
-const TICKET_MASK_IMAGE =
-  'radial-gradient(circle at 0 50%, transparent 13px, #000 13.5px), radial-gradient(circle at 100% 50%, transparent 13px, #000 13.5px)';
-const TICKET_MASK: CSSProperties = {
-  WebkitMaskImage: TICKET_MASK_IMAGE,
-  WebkitMaskSize: '51% 100%',
-  WebkitMaskPosition: 'left, right',
-  WebkitMaskRepeat: 'no-repeat',
-  maskImage: TICKET_MASK_IMAGE,
-  maskSize: '51% 100%',
-  maskPosition: 'left, right',
-  maskRepeat: 'no-repeat',
-};
+const PAGE_CSS = `
+@keyframes offre-defile { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.offre-defile { animation: offre-defile 28s linear infinite; }
+@media (prefers-reduced-motion: reduce) { .offre-defile { animation: none; } }
+`;
 
 function ErrorText({ id, message }: { readonly id: string; readonly message?: string }) {
   return message ? (
-    <p id={id} role="alert" className="mt-1.5 text-[13.5px] font-medium text-[#A33B2B]">
+    <p id={id} role="alert" className="mt-1.5 text-[13.5px] font-semibold text-[#C2261B]">
       {message}
     </p>
   ) : null;
@@ -87,7 +87,7 @@ function TextField({
 }) {
   return (
     <div>
-      <label htmlFor={id} className="text-[14px] font-semibold text-[#1C1F21]/80">
+      <label htmlFor={id} className="text-[14px] font-bold">
         {label}
       </label>
       <input
@@ -100,51 +100,72 @@ function TextField({
         onChange={(e) => onChange(e.target.value)}
         aria-invalid={Boolean(error)}
         aria-describedby={error ? `${id}-err` : undefined}
-        className={`${FIELD} ${error ? 'border-[#A33B2B]' : 'border-transparent'}`}
+        className={`${FIELD} ${error ? 'border-[#C2261B]' : 'border-[#14110F]'}`}
       />
       <ErrorText id={`${id}-err`} message={error} />
     </div>
   );
 }
 
-function ConditionsList({ className = '' }: { readonly className?: string }) {
+/** Pastille « autocollant » légèrement tournée. */
+function Sticker({ children, color, className = '' }: { readonly children: ReactNode; readonly color: string; readonly className?: string }) {
   return (
-    <ul className={`flex flex-col gap-2.5 text-[14.5px] leading-[1.5] text-[#1C1F21]/75 ${className}`}>
-      {OFFER_CONDITIONS.map((item) => (
-        <li key={item} className="flex gap-2.5">
-          <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#7D612D]" strokeWidth={2.4} aria-hidden="true" />
-          {item}
-        </li>
-      ))}
-    </ul>
+    <span style={{ backgroundColor: color }} className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-3.5 py-1.5 text-[13.5px] font-extrabold ${HARD} ${className}`}>
+      {children}
+    </span>
   );
 }
 
-/** Le bon -5 % (sur la photo, puis avec le code une fois inscrit). */
-function Ticket({ code, validUntil }: { readonly code?: string; readonly validUntil?: string }) {
+/** Le bon -5 % (perforé), avec le code une fois inscrit. */
+function Coupon({ code, validUntil }: { readonly code?: string; readonly validUntil?: string }) {
   return (
-    <div style={TICKET_MASK} className="flex items-stretch rounded-2xl bg-[#FFFFFF] shadow-[0_20px_50px_-12px_rgba(28,31,33,0.35)] ring-1 ring-[#1C1F21]/5">
-      <div className={`flex flex-col justify-center py-4 pr-4 ${code ? 'pl-6' : 'pl-7 sm:pl-8'}`}>
-        <p className={`bg-[linear-gradient(135deg,#7D612D,#B79A62_55%,#D9BE86)] bg-clip-text font-display font-extrabold ${code ? 'text-[40px] sm:text-[54px]' : 'text-[54px]'} leading-none tracking-[-0.04em] text-transparent sm:text-[62px]`}>
-          -{OFFER_RATE}%
-        </p>
+    <div className={`relative overflow-hidden rounded-[22px] ${HARD_LG}`} style={{ backgroundColor: C.coral }}>
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-[0.12] [background:repeating-linear-gradient(-45deg,#14110F_0_2px,transparent_2px_14px)]" />
+      <div className="relative flex items-stretch">
+        <div className="flex flex-col justify-center py-5 pl-5 pr-4 sm:pl-7 sm:pr-6">
+          <p className={`font-display font-extrabold leading-[0.85] tracking-[-0.05em] text-[#FFFFFF] [-webkit-text-stroke:2px_#14110F] [paint-order:stroke_fill] ${code ? 'text-[48px] sm:text-[64px]' : 'text-[60px] sm:text-[84px]'}`}>
+            -{OFFER_RATE}%
+          </p>
+        </div>
+        <div aria-hidden="true" className="relative w-0 border-l-[3px] border-dashed border-[#14110F]/70">
+          <span className="absolute -top-3.5 left-1/2 h-6 w-6 -translate-x-1/2 rounded-full border-2 border-[#14110F]" style={{ backgroundColor: C.paper }} />
+          <span className="absolute -bottom-3.5 left-1/2 h-6 w-6 -translate-x-1/2 rounded-full border-2 border-[#14110F]" style={{ backgroundColor: C.paper }} />
+        </div>
+        <div className="flex min-w-0 flex-1 flex-col justify-center py-5 pl-4 pr-5 sm:pl-6">
+          {code ? (
+            <>
+              <p className="text-[11.5px] font-extrabold uppercase tracking-[0.16em]">Votre code</p>
+              <p className="mt-1 break-all rounded-lg border-2 border-[#14110F] bg-[#FFFFFF] px-2 py-1 font-display text-[16px] font-extrabold tabular-nums sm:text-[20px]">{code}</p>
+              <p className="mt-1.5 text-[13.5px] font-bold">Jusqu’au {validUntil}</p>
+            </>
+          ) : (
+            <>
+              <p className="text-[11.5px] font-extrabold uppercase tracking-[0.16em]">Bon de bienvenue</p>
+              <p className="mt-1 font-display text-[16px] font-extrabold leading-tight sm:text-[19px]">1er achat ou 1re intervention</p>
+              <p className="mt-1.5 text-[13.5px] font-bold">Valable {OFFER_MONTHS} mois</p>
+            </>
+          )}
+        </div>
       </div>
-      <div className="my-3 border-l-2 border-dashed border-[#1C1F21]/12" aria-hidden="true" />
-      <div className="flex min-w-0 flex-col justify-center py-4 pl-4 pr-6 sm:pl-5 sm:pr-8">
-        {code ? (
-          <>
-            <p className="text-[11.5px] font-bold uppercase tracking-[0.16em] text-[#7D612D]">Votre code</p>
-            <p className="mt-1 break-all font-display text-[19px] font-bold tabular-nums tracking-[0.02em] sm:text-[24px]">{code}</p>
-            <p className="mt-1 text-[13.5px] text-[#1C1F21]/60">Valable jusqu’au {validUntil}</p>
-          </>
-        ) : (
-          <>
-            <p className="text-[11.5px] font-bold uppercase tracking-[0.16em] text-[#7D612D]">Offre de bienvenue</p>
-            <p className="mt-1 text-[15px] font-semibold leading-snug">1er achat ou 1re intervention</p>
-            <p className="mt-1 text-[13.5px] text-[#1C1F21]/60">Valable {OFFER_MONTHS} mois</p>
-          </>
-        )}
-      </div>
+    </div>
+  );
+}
+
+function Marquee() {
+  const words = [`-${OFFER_RATE} % de bienvenue`, 'Syndics', 'Agences', 'Assureurs', 'Entreprises', 'Particuliers', 'Code immédiat'];
+  const row = (n: number) => (
+    <span key={n} className="flex shrink-0 items-center">
+      {words.map((w) => (
+        <span key={w} className="flex items-center gap-5 pr-5">
+          <span>{w}</span>
+          <Sparkles className="h-4 w-4 text-[#FFD23F]" aria-hidden="true" />
+        </span>
+      ))}
+    </span>
+  );
+  return (
+    <div aria-hidden="true" className="relative overflow-hidden border-y-2 border-[#14110F] py-2.5 font-display text-[15px] font-extrabold uppercase tracking-[0.08em] text-[#FFFFFF]" style={{ backgroundColor: C.blue }}>
+      <div className="offre-defile flex w-max">{[0, 1, 2, 3].map(row)}</div>
     </div>
   );
 }
@@ -211,196 +232,221 @@ export function OfferPage({ brand, routerMode }: { readonly brand: BrandConfig; 
   const pro = isProfessional(draft.customerType);
 
   return (
-    <div className="relative flex flex-1 flex-col overflow-x-clip bg-[#F7F5F0] text-[#1C1F21]">
-      {/* Fond : halo doré + quadrillage léger qui s'efface */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-[760px]">
-        <div className="absolute left-1/2 top-[-260px] h-[620px] w-[1100px] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(217,190,134,0.55),rgba(247,245,240,0))]" />
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(28,31,33,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(28,31,33,0.05)_1px,transparent_1px)] bg-[size:44px_44px] [mask-image:radial-gradient(ellipse_at_top,#000_20%,transparent_70%)]" />
-      </div>
+    <div className="relative flex flex-1 flex-col overflow-x-clip" style={{ backgroundColor: C.paper, color: C.ink }}>
+      <style>{PAGE_CSS}</style>
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 [background-image:radial-gradient(rgba(20,17,15,0.13)_1.2px,transparent_1.2px)] [background-size:22px_22px]" />
 
-      {/* En-tête minimal */}
-      <header className="relative mx-auto flex w-full max-w-[1160px] items-center justify-between gap-4 px-5 pt-5 sm:px-8">
-        <a href={hrefForHome(routerMode)} className="inline-flex items-center gap-3 rounded-md focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#B79A62]">
-          <img src={basiliqueUrl} alt="" width={560} height={150} className="h-7 w-auto sm:h-8" />
-          <span className="font-display text-[15px] font-bold leading-tight sm:text-[16px]">
-            {brand.name}
-            <span className="block text-[11px] font-semibold uppercase tracking-[0.22em] text-[#7D612D]">{brand.city}</span>
-          </span>
+      {/* En-tête */}
+      <header className="relative mx-auto flex w-full max-w-[1160px] items-center justify-between gap-4 px-5 py-4 sm:px-8">
+        <a href={hrefForHome(routerMode)} className="inline-flex items-center gap-2.5 rounded-md focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#2D4BFF]">
+          <img src={basiliqueUrl} alt="" width={560} height={150} className="h-6 w-auto sm:h-7" />
+          <span className="font-display text-[14.5px] font-extrabold leading-tight sm:text-[16px]">{brand.name}</span>
         </a>
-        <a href={brand.phoneHref} className="inline-flex h-11 shrink-0 items-center gap-2 rounded-full border border-[#1C1F21]/10 bg-[#FFFFFF]/80 px-4 text-[15px] font-semibold tabular-nums shadow-sm backdrop-blur hover:border-[#B79A62]">
-          <Phone className="h-4 w-4 text-[#7D612D]" aria-hidden="true" />
+        <a href={brand.phoneHref} className={`inline-flex h-11 shrink-0 items-center gap-2 rounded-full px-4 text-[15px] font-extrabold tabular-nums transition-transform hover:-translate-y-0.5 ${HARD}`} style={{ backgroundColor: C.yellow }}>
+          <Phone className="h-4 w-4" strokeWidth={2.5} aria-hidden="true" />
           <span className="hidden sm:inline">{brand.phoneDisplay}</span>
           <span className="sm:hidden">Appeler</span>
         </a>
       </header>
 
-      <div className="relative mx-auto grid w-full max-w-[1160px] gap-10 px-5 pb-16 pt-10 sm:px-8 sm:pt-14 lg:grid-cols-[1.05fr_1fr] lg:gap-14 lg:pt-16">
-        {/* Colonne texte + photo */}
-        <div className="flex flex-col">
-          <p className="inline-flex w-fit items-center gap-2 rounded-full border border-[#B79A62]/35 bg-[#FFFFFF]/70 py-1 pl-1 pr-3.5 text-[13px] font-semibold text-[#7D612D] backdrop-blur">
-            <span className="rounded-full bg-[#1C1F21] px-2.5 py-0.5 text-[12px] font-bold text-[#E9D3A1]">Nouveau</span>
-            Réservé aux inscrits
-          </p>
-          <h1 className="mt-5 font-display text-[40px] font-extrabold leading-[1.02] tracking-[-0.035em] sm:text-[56px] lg:text-[64px]">
-            Votre premier chantier{' '}
-            <span className="bg-[linear-gradient(135deg,#7D612D,#B79A62_50%,#C9A55C)] bg-clip-text text-transparent">à -{OFFER_RATE} %</span>
-          </h1>
-          <p className="mt-5 max-w-[30rem] text-[17px] leading-[1.6] text-[#1C1F21]/70">
-            Syndics, agences, entreprises ou particuliers : inscrivez-vous, recevez votre code et donnez-le au moment du devis.
-          </p>
-          <ul className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-[14.5px] font-medium text-[#1C1F21]/75">
-            <li className="inline-flex items-center gap-1.5"><Clock3 className="h-4 w-4 text-[#7D612D]" aria-hidden="true" />30 secondes</li>
-            <li className="inline-flex items-center gap-1.5"><Mail className="h-4 w-4 text-[#7D612D]" aria-hidden="true" />Code reçu par e-mail</li>
-            <li className="inline-flex items-center gap-1.5"><ShieldCheck className="h-4 w-4 text-[#7D612D]" aria-hidden="true" />Valable {OFFER_MONTHS} mois</li>
-          </ul>
+      <Marquee />
 
-          {/* Photo + bon de réduction (ordinateur et tablette) */}
-          <div className="relative mt-10 hidden sm:block lg:mt-12">
-            <div className="overflow-hidden rounded-[28px] ring-1 ring-[#1C1F21]/10">
-              <img src={photoUrl} alt="Serrurier installant une serrure sur une porte d’immeuble" width={1600} height={1067} className="aspect-[16/10] w-full object-cover" />
-            </div>
-            <div className="absolute -bottom-7 left-6 rotate-[-2deg] sm:left-8">
-              <Ticket />
-            </div>
-          </div>
+      <div className="relative mx-auto grid w-full max-w-[1160px] gap-10 px-5 pb-16 pt-9 sm:px-8 sm:pt-14 lg:grid-cols-[1.05fr_1fr] lg:gap-x-14 lg:gap-y-12">
+        {/* Accroche */}
+        <div className="lg:col-start-1 lg:row-start-1">
+          <Sticker color={C.mint} className="-rotate-2">
+            <Zap className="h-4 w-4" strokeWidth={2.5} aria-hidden="true" />
+            Réservé aux inscrits
+          </Sticker>
+          <h1 className="mt-6 font-display text-[44px] font-extrabold leading-[0.98] tracking-[-0.04em] sm:text-[64px] lg:text-[72px]">
+            Votre 1<sup className="text-[0.45em]">er</sup> chantier{' '}
+            <span className="relative ml-2 inline-block whitespace-nowrap">
+              <span aria-hidden="true" className="absolute inset-x-[-6px] bottom-[4%] top-[20%] -rotate-1 rounded-lg border-2 border-[#14110F]" style={{ backgroundColor: C.yellow }} />
+              <span className="relative">à -{OFFER_RATE} %</span>
+            </span>
+          </h1>
+          <p className="mt-5 max-w-[30rem] text-[17.5px] font-medium leading-[1.55] text-[#14110F]/75">
+            Syndics, agences, assureurs, entreprises ou particuliers : inscrivez-vous, recevez votre code, et économisez dès votre premier devis signé.
+          </p>
         </div>
 
         {/* Carte formulaire */}
-        <section aria-label="Inscription à l’offre" className="lg:pt-2">
-          <div className="rounded-[28px] bg-[linear-gradient(160deg,rgba(183,154,98,0.6),rgba(183,154,98,0.08)_40%,rgba(28,31,33,0.08))] p-px shadow-[0_30px_80px_-30px_rgba(28,31,33,0.35)]">
-            <div className="rounded-[27px] bg-[#FFFFFF] p-6 sm:p-8">
-              {registered ? (
-                <div>
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-[#E7F3EC] px-3 py-1 text-[13px] font-semibold text-[#1F6B45]">
-                    <Check className="h-3.5 w-3.5" strokeWidth={3} aria-hidden="true" />
-                    {registered.alreadyRegistered ? 'Déjà inscrit' : 'Inscription confirmée'}
-                  </span>
-                  <h2 ref={doneRef} tabIndex={-1} className="mt-4 font-display text-[28px] font-extrabold leading-tight tracking-[-0.02em] focus:outline-none">
-                    {registered.alreadyRegistered ? 'Voici votre code.' : 'Votre réduction est activée.'}
-                  </h2>
-                  <div className="mt-6">
-                    <Ticket code={registered.code} validUntil={registered.validUntil} />
-                  </div>
-                  <p className="mt-6 text-[15.5px] leading-[1.6] text-[#1C1F21]/70">
-                    {registered.alreadyRegistered
-                      ? 'Il vous a déjà été envoyé par e-mail.'
-                      : `Nous vous l’envoyons aussi par e-mail à ${draft.email.trim()}.`}{' '}
-                    Donnez ce code au moment du devis, en boutique ou par téléphone.
-                  </p>
-                  <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-                    <a href={brand.phoneHref} className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-[#1C1F21] px-6 text-[15px] font-semibold text-[#FFFFFF] hover:bg-[#2B2F31]">
-                      <Phone className="h-4 w-4 text-[#E9D3A1]" aria-hidden="true" />
-                      {brand.phoneDisplay}
-                    </a>
-                    <a href={hrefForPage('devis', routerMode)} className="inline-flex h-12 items-center justify-center rounded-full border border-[#1C1F21]/15 px-6 text-[15px] font-semibold hover:border-[#B79A62]">
-                      Demander un devis
-                    </a>
-                  </div>
+        <section aria-label="Inscription à l’offre" className="lg:col-start-2 lg:row-span-2 lg:row-start-1">
+          <div className={`rounded-[26px] bg-[#FFFFFF] p-6 sm:p-8 ${HARD_LG}`}>
+            {registered ? (
+              <div>
+                <Sticker color={C.mint} className="-rotate-2">
+                  <Check className="h-4 w-4" strokeWidth={3} aria-hidden="true" />
+                  {registered.alreadyRegistered ? 'Déjà inscrit' : 'Inscription confirmée'}
+                </Sticker>
+                <h2 ref={doneRef} tabIndex={-1} className="mt-5 font-display text-[30px] font-extrabold leading-[1.05] tracking-[-0.03em] focus:outline-none">
+                  {registered.alreadyRegistered ? 'Voici votre code !' : <>Bravo, votre <span className="whitespace-nowrap">-{OFFER_RATE} %</span> est activé !</>}
+                </h2>
+                <div className="mt-6">
+                  <Coupon code={registered.code} validUntil={registered.validUntil} />
                 </div>
-              ) : (
-                <form ref={formRef} onSubmit={submit} noValidate className="relative flex flex-col gap-5">
-                  <div className="flex items-center justify-between gap-3">
-                    <h2 className="font-display text-[22px] font-extrabold tracking-[-0.02em]">Recevoir mon code</h2>
-                    <span className="rounded-full bg-[#F7F5F0] px-3 py-1 text-[12.5px] font-semibold text-[#1C1F21]/60">Gratuit</span>
-                  </div>
+                <p className="mt-6 text-[15.5px] font-medium leading-[1.6] text-[#14110F]/75">
+                  {registered.alreadyRegistered
+                    ? 'Il vous a déjà été envoyé par e-mail.'
+                    : `Nous vous l’envoyons aussi par e-mail à ${draft.email.trim()}.`}{' '}
+                  Donnez ce code au moment du devis, en boutique ou par téléphone.
+                </p>
+                <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+                  <a href={brand.phoneHref} className={`inline-flex h-12 items-center justify-center gap-2 rounded-full px-6 text-[15px] font-extrabold text-[#FFFFFF] transition-transform hover:-translate-y-0.5 ${HARD}`} style={{ backgroundColor: C.blue }}>
+                    <Phone className="h-4 w-4" strokeWidth={2.5} aria-hidden="true" />
+                    {brand.phoneDisplay}
+                  </a>
+                  <a href={hrefForPage('devis', routerMode)} className={`inline-flex h-12 items-center justify-center rounded-full bg-[#FFFFFF] px-6 text-[15px] font-extrabold transition-transform hover:-translate-y-0.5 ${HARD}`}>
+                    Demander un devis
+                  </a>
+                </div>
+              </div>
+            ) : (
+              <form ref={formRef} onSubmit={submit} noValidate className="relative flex flex-col gap-5">
+                <div className="flex items-start justify-between gap-3">
+                  <h2 className="font-display text-[26px] font-extrabold leading-[1.05] tracking-[-0.03em]">
+                    Je récupère
+                    <br />
+                    mon code -{OFFER_RATE} %
+                  </h2>
+                  <Sticker color={C.yellow} className="rotate-3">Gratuit</Sticker>
+                </div>
 
-                  <fieldset data-invalid={Boolean(errors.customerType)} tabIndex={-1} aria-describedby={errors.customerType ? 'type-err' : undefined} className="focus:outline-none">
-                    <legend className="text-[14px] font-semibold text-[#1C1F21]/80">Vous êtes</legend>
-                    <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-6">
-                      {CUSTOMER_TYPES.map((type, index) => {
-                        const Icon = TYPE_ICONS[type];
-                        const checked = draft.customerType === type;
-                        return (
-                          <label key={type} className={`relative cursor-pointer ${index < 3 ? 'sm:col-span-2' : 'sm:col-span-3'} ${index === 4 ? 'col-span-2' : ''}`} title={type}>
-                            <input type="radio" name="type" aria-label={type} checked={checked} onChange={() => update({ customerType: type })} className="peer sr-only" />
-                            <span className={`flex h-[68px] flex-col items-start justify-between rounded-xl border px-3 py-2.5 text-[13.5px] font-semibold leading-tight transition-colors duration-150 peer-focus-visible:ring-4 peer-focus-visible:ring-[#B79A62]/25 ${checked ? 'border-[#1C1F21] bg-[#1C1F21] text-[#FFFFFF]' : 'border-[#1C1F21]/10 bg-[#F7F5F0] hover:border-[#B79A62]'}`}>
-                              <Icon className={`h-4 w-4 ${checked ? 'text-[#E9D3A1]' : 'text-[#7D612D]'}`} strokeWidth={2} aria-hidden="true" />
-                              {TYPE_SHORT[type]}
+                <fieldset data-invalid={Boolean(errors.customerType)} tabIndex={-1} aria-describedby={errors.customerType ? 'type-err' : undefined} className="focus:outline-none">
+                  <legend className="text-[14px] font-bold">Vous êtes…</legend>
+                  <div className="mt-2.5 grid grid-cols-2 gap-2.5 sm:grid-cols-6">
+                    {CUSTOMER_TYPES.map((type, index) => {
+                      const t = TYPES[type];
+                      const checked = draft.customerType === type;
+                      return (
+                        <label key={type} title={type} className={`relative cursor-pointer ${index < 3 ? 'sm:col-span-2' : 'sm:col-span-3'} ${index === 4 ? 'col-span-2' : ''}`}>
+                          <input type="radio" name="type" aria-label={type} checked={checked} onChange={() => update({ customerType: type })} className="peer sr-only" />
+                          <span
+                            className={`flex h-[60px] items-center gap-2.5 rounded-2xl border-2 border-[#14110F] px-2.5 text-[14px] font-extrabold leading-tight transition-all duration-150 peer-focus-visible:outline-3 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-[#2D4BFF] ${checked ? '-translate-y-0.5 shadow-[4px_4px_0_#14110F]' : 'bg-[#FFFFFF] hover:-translate-y-0.5 hover:shadow-[3px_3px_0_#14110F]'}`}
+                            style={checked ? { backgroundColor: t.color } : undefined}
+                          >
+                            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl border-2 border-[#14110F]" style={{ backgroundColor: checked ? '#FFFFFF' : t.color }}>
+                              {checked ? <Check className="h-[18px] w-[18px]" strokeWidth={3} aria-hidden="true" /> : <t.icon className="h-[18px] w-[18px]" strokeWidth={2.4} aria-hidden="true" />}
                             </span>
-                          </label>
-                        );
-                      })}
-                    </div>
-                    <ErrorText id="type-err" message={errors.customerType} />
-                  </fieldset>
-
-                  {pro && (
-                    <TextField id="o-company" label="Société" autoComplete="organization" placeholder="Nom de la société" value={draft.company} onChange={(v) => update({ company: v })} error={errors.company} />
-                  )}
-                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <TextField id="o-name" label="Nom et prénom" autoComplete="name" value={draft.fullName} onChange={(v) => update({ fullName: v })} error={errors.fullName} />
-                    <TextField id="o-phone" label="Téléphone" type="tel" inputMode="tel" autoComplete="tel" placeholder="06 12 34 56 78" value={draft.phone} onChange={(v) => update({ phone: v })} error={errors.phone} />
+                            {t.short}
+                          </span>
+                        </label>
+                      );
+                    })}
                   </div>
-                  <TextField id="o-email" label="E-mail (votre code y est envoyé)" type="email" inputMode="email" autoComplete="email" placeholder="vous@exemple.fr" value={draft.email} onChange={(v) => update({ email: v })} error={errors.email} />
+                  <ErrorText id="type-err" message={errors.customerType} />
+                </fieldset>
 
-                  <div>
-                    <label className="flex cursor-pointer items-start gap-3 text-[14px] leading-[1.55] text-[#1C1F21]/70">
-                      <input
-                        type="checkbox"
-                        checked={draft.acceptConditions && draft.consent}
-                        onChange={(e) => update({ acceptConditions: e.target.checked, consent: e.target.checked })}
-                        aria-invalid={Boolean(errors.acceptConditions || errors.consent)}
-                        aria-describedby={errors.acceptConditions || errors.consent ? 'cond-err' : undefined}
-                        className="mt-0.5 h-5 w-5 shrink-0 accent-[#1C1F21]"
-                      />
-                      <span>
-                        J’accepte les conditions de l’offre et que {brand.name} utilise ces informations pour gérer mon code (
-                        <a href={hrefForPage('confidentialite', routerMode)} className="font-medium text-[#7D612D] underline underline-offset-2">confidentialité</a>).
-                      </span>
-                    </label>
-                    <ErrorText id="cond-err" message={errors.acceptConditions ?? errors.consent} />
-                    <details className="group mt-3 rounded-xl border border-[#1C1F21]/10 px-4 py-3">
-                      <summary className="flex cursor-pointer list-none items-center justify-between text-[14px] font-semibold text-[#1C1F21]/75 [&::-webkit-details-marker]:hidden">
-                        Conditions de l’offre
-                        <span className="text-[18px] leading-none text-[#7D612D] transition-transform duration-200 group-open:rotate-45" aria-hidden="true">+</span>
-                      </summary>
-                      <ConditionsList className="mt-3" />
-                    </details>
-                  </div>
+                {pro && (
+                  <TextField id="o-company" label="Société" autoComplete="organization" placeholder="Nom de la société" value={draft.company} onChange={(v) => update({ company: v })} error={errors.company} />
+                )}
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <TextField id="o-name" label="Nom et prénom" autoComplete="name" value={draft.fullName} onChange={(v) => update({ fullName: v })} error={errors.fullName} />
+                  <TextField id="o-phone" label="Téléphone" type="tel" inputMode="tel" autoComplete="tel" placeholder="06 12 34 56 78" value={draft.phone} onChange={(v) => update({ phone: v })} error={errors.phone} />
+                </div>
+                <TextField id="o-email" label="E-mail (on vous y envoie le code)" type="email" inputMode="email" autoComplete="email" placeholder="vous@exemple.fr" value={draft.email} onChange={(v) => update({ email: v })} error={errors.email} />
 
-                  <HoneypotField value={honeypot} onChange={setHoneypot} />
-                  {failure && <DeliveryErrorNotice reason={failure} />}
-                  <button type="submit" disabled={sending} aria-busy={sending} className="group inline-flex h-14 w-full cursor-pointer items-center justify-between rounded-full bg-[#1C1F21] pl-6 pr-2 text-[16px] font-semibold text-[#FFFFFF] shadow-[0_12px_30px_-10px_rgba(28,31,33,0.6)] transition-colors hover:bg-[#2B2F31] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B79A62] disabled:cursor-wait disabled:opacity-70">
-                    {sending ? 'Inscription en cours…' : `Recevoir mon code -${OFFER_RATE} %`}
-                    <span className="grid h-10 w-10 place-items-center rounded-full bg-[linear-gradient(135deg,#B79A62,#E9D3A1)] text-[#1C1F21] transition-transform duration-200 group-hover:translate-x-0.5">
-                      <ArrowRight className="h-5 w-5" aria-hidden="true" />
+                <div>
+                  <label className="flex cursor-pointer items-start gap-3 text-[14px] font-medium leading-[1.55] text-[#14110F]/80">
+                    <input
+                      type="checkbox"
+                      checked={draft.acceptConditions && draft.consent}
+                      onChange={(e) => update({ acceptConditions: e.target.checked, consent: e.target.checked })}
+                      aria-invalid={Boolean(errors.acceptConditions || errors.consent)}
+                      aria-describedby={errors.acceptConditions || errors.consent ? 'cond-err' : undefined}
+                      className="mt-0.5 h-5 w-5 shrink-0 accent-[#2D4BFF]"
+                    />
+                    <span>
+                      J’accepte les conditions de l’offre et que {brand.name} utilise ces informations pour gérer mon code (
+                      <a href={hrefForPage('confidentialite', routerMode)} className="font-bold underline underline-offset-2">confidentialité</a>).
                     </span>
-                  </button>
-                  <p className="-mt-1 flex items-center justify-center gap-1.5 text-[13px] text-[#1C1F21]/50">
-                    <Lock className="h-3.5 w-3.5" aria-hidden="true" />
-                    Vos informations restent chez nous.
-                  </p>
-                </form>
-              )}
-            </div>
+                  </label>
+                  <ErrorText id="cond-err" message={errors.acceptConditions ?? errors.consent} />
+                  <details className="group mt-3 rounded-xl border-2 border-dashed border-[#14110F]/40 px-4 py-3">
+                    <summary className="flex cursor-pointer list-none items-center justify-between text-[14px] font-extrabold [&::-webkit-details-marker]:hidden">
+                      Conditions de l’offre
+                      <span className="grid h-6 w-6 place-items-center rounded-full border-2 border-[#14110F] text-[15px] leading-none transition-transform duration-200 group-open:rotate-45" style={{ backgroundColor: C.yellow }} aria-hidden="true">+</span>
+                    </summary>
+                    <ul className="mt-3 flex flex-col gap-2 text-[14px] font-medium leading-[1.5] text-[#14110F]/75">
+                      {OFFER_CONDITIONS.map((item) => (
+                        <li key={item} className="flex gap-2.5">
+                          <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#2D4BFF]" strokeWidth={3} aria-hidden="true" />
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </details>
+                </div>
+
+                <HoneypotField value={honeypot} onChange={setHoneypot} />
+                {failure && <DeliveryErrorNotice reason={failure} />}
+                <button
+                  type="submit"
+                  disabled={sending}
+                  aria-busy={sending}
+                  className="group inline-flex h-[58px] w-full cursor-pointer items-center justify-between rounded-full border-2 border-[#14110F] pl-6 pr-2 text-[17px] font-extrabold text-[#FFFFFF] shadow-[5px_5px_0_#14110F] transition-all duration-150 hover:-translate-y-0.5 hover:shadow-[7px_7px_0_#14110F] active:translate-x-[3px] active:translate-y-[3px] active:shadow-[2px_2px_0_#14110F] focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-[#2D4BFF] disabled:cursor-wait disabled:opacity-70"
+                  style={{ backgroundColor: C.blue }}
+                >
+                  {sending ? 'Inscription en cours…' : `Je récupère mon -${OFFER_RATE} %`}
+                  <span className="grid h-11 w-11 place-items-center rounded-full border-2 border-[#14110F] text-[#14110F] transition-transform duration-200 group-hover:rotate-[-20deg]" style={{ backgroundColor: C.yellow }}>
+                    <ArrowRight className="h-5 w-5" strokeWidth={2.75} aria-hidden="true" />
+                  </span>
+                </button>
+                <p className="-mt-1 text-center text-[13px] font-medium text-[#14110F]/55">Sans engagement · vos informations restent chez nous</p>
+              </form>
+            )}
           </div>
         </section>
 
-        {/* Mobile : bon de réduction sous le formulaire */}
-        {!registered && (
-          <div className="flex justify-center pb-2 sm:hidden">
-            <div className="rotate-[-2deg]">
-              <Ticket />
+        {/* Bon de réduction + étapes */}
+        <div className="lg:col-start-1 lg:row-start-2">
+          {!registered && (
+            <div className="relative mx-auto max-w-[470px] pt-2 lg:mx-0">
+              <div className="rotate-[-2.5deg]">
+                <Coupon />
+              </div>
+              <Sticker color={C.lilac} className="absolute -right-1 -top-4 rotate-6 sm:-right-5">
+                <CalendarHeart className="h-4 w-4" strokeWidth={2.5} aria-hidden="true" />
+                {OFFER_MONTHS} mois
+              </Sticker>
             </div>
-          </div>
-        )}
+          )}
+          <ol className="mt-12 grid gap-3 sm:grid-cols-3">
+            {[
+              { icon: BadgePercent, color: C.yellow, title: 'Je m’inscris', text: '30 secondes' },
+              { icon: Mail, color: C.sky, title: 'Je reçois mon code', text: 'Écran + e-mail' },
+              { icon: Check, color: C.mint, title: 'Je l’utilise', text: 'Au moment du devis' },
+            ].map((step, i) => (
+              <li key={step.title} className={`flex items-center gap-3 rounded-2xl bg-[#FFFFFF] p-3.5 sm:flex-col sm:items-start ${HARD}`}>
+                <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl border-2 border-[#14110F]" style={{ backgroundColor: step.color }}>
+                  <step.icon className="h-5 w-5" strokeWidth={2.5} aria-hidden="true" />
+                </span>
+                <span>
+                  <span className="block text-[11.5px] font-extrabold uppercase tracking-[0.12em] text-[#14110F]/50">Étape {i + 1}</span>
+                  <span className="block font-display text-[16px] font-extrabold leading-tight">{step.title}</span>
+                  <span className="block text-[13.5px] font-medium text-[#14110F]/65">{step.text}</span>
+                </span>
+              </li>
+            ))}
+          </ol>
+        </div>
       </div>
 
       {/* Bas de page réduit */}
-      <footer className="relative mx-auto mt-auto w-full max-w-[1160px] border-t border-[#1C1F21]/10 px-5 pb-8 pt-8 text-[14px] leading-[1.6] text-[#1C1F21]/60 sm:px-8">
-        <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
+      <footer className="relative mt-auto border-t-2 border-[#14110F] bg-[#FFFFFF]">
+        <div className="mx-auto flex w-full max-w-[1160px] flex-col justify-between gap-3 px-5 py-7 text-[14px] leading-[1.6] text-[#14110F]/70 sm:flex-row sm:items-end sm:px-8">
           <div>
-            <p className="font-semibold text-[#1C1F21]">{brand.name}</p>
+            <p className="font-extrabold text-[#14110F]">{brand.name}</p>
             <p>
               48 rue de la République, 13002 Marseille ·{' '}
-              <a href={brand.phoneHref} className="whitespace-nowrap font-semibold text-[#7D612D] hover:text-[#1C1F21]">{brand.phoneDisplay}</a>
+              <a href={brand.phoneHref} className="whitespace-nowrap font-extrabold text-[#14110F] underline underline-offset-2">{brand.phoneDisplay}</a>
             </p>
           </div>
-          <p className="flex flex-wrap gap-x-4 gap-y-1">
-            <a href={hrefForHome(routerMode)} className="hover:text-[#1C1F21]">Découvrir le site</a>
-            <a href={hrefForPage('mentions-legales', routerMode)} className="hover:text-[#1C1F21]">Mentions légales</a>
-            <a href={hrefForPage('confidentialite', routerMode)} className="hover:text-[#1C1F21]">Confidentialité</a>
-            <a href={hrefForPage('cgv', routerMode)} className="hover:text-[#1C1F21]">CGV</a>
+          <p className="flex flex-wrap gap-x-4 gap-y-1 font-medium">
+            <a href={hrefForHome(routerMode)} className="hover:text-[#2D4BFF]">Découvrir le site</a>
+            <a href={hrefForPage('mentions-legales', routerMode)} className="hover:text-[#2D4BFF]">Mentions légales</a>
+            <a href={hrefForPage('confidentialite', routerMode)} className="hover:text-[#2D4BFF]">Confidentialité</a>
+            <a href={hrefForPage('cgv', routerMode)} className="hover:text-[#2D4BFF]">CGV</a>
           </p>
         </div>
       </footer>
