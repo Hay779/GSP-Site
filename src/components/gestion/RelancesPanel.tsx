@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { BellRing, CalendarClock, Check, FileText, Hourglass, Mail, MessageCircle, MessageSquareText, Phone, PhoneCall, RefreshCw, Ticket } from 'lucide-react';
+import { BellRing, CalendarClock, Check, FileText, Hourglass, Mail, MessageCircle, MessageSquareText, Phone, PhoneCall, RefreshCw, Star, Ticket } from 'lucide-react';
 import { formatDateTime, markRelanceDone, type ApiFailure, type OfferSignup, type RelanceDone, type SiteRequest } from '../../utils/gestion';
 import { computeRelances, mailHref, RELANCE_GROUPS, RELANCE_PAUSE_JOURS, smsHref, whatsappHref, type Relance, type RelanceReason } from '../../utils/relances';
 
@@ -11,6 +11,7 @@ const GROUP_STYLE: Readonly<Record<RelanceReason, { icon: typeof Phone; tone: st
   suivi: { icon: Hourglass, tone: 'bg-[#FFF4DC] text-[#9A6400]' },
   expire: { icon: CalendarClock, tone: 'bg-[#FFF1E6] text-[#B4460F]' },
   inutilise: { icon: Ticket, tone: 'bg-[#E4F7F3] text-[#0F7A6D]' },
+  avis: { icon: Star, tone: 'bg-[#FFF6D6] text-[#9A6B00]' },
 };
 
 function RelanceCard({ relance, busy, onDone }: { readonly relance: Relance; readonly busy: boolean; readonly onDone: () => void }) {
@@ -33,7 +34,7 @@ function RelanceCard({ relance, busy, onDone }: { readonly relance: Relance; rea
         </div>
         <button type="button" onClick={onDone} disabled={busy} className="inline-flex h-10 shrink-0 cursor-pointer items-center gap-1.5 rounded-full px-4 text-[14px] font-semibold text-[#FFFFFF] shadow-[0_10px_22px_-12px_rgba(14,107,168,0.9)] transition hover:brightness-110 disabled:opacity-60" style={{ backgroundImage: SEA }}>
           <Check className="h-4 w-4" strokeWidth={2.6} aria-hidden="true" />
-          {busy ? 'Enregistrement…' : 'Relancé'}
+          {busy ? 'Enregistrement…' : relance.reason === 'avis' ? 'Avis demandé' : 'Relancé'}
         </button>
       </div>
       <div className="mt-3 flex flex-wrap gap-2">
@@ -98,7 +99,7 @@ export function RelancesPanel({
         <div>
           <h1 className="font-display text-[26px] font-bold tracking-[-0.02em] sm:text-[30px]">Relances</h1>
           <p className="mt-1 max-w-[46rem] text-[14.5px] text-[#0B2A3C]/60">
-            Les clients à recontacter, calculés à partir des demandes et des inscriptions. Appelez ou envoyez le message proposé (SMS, WhatsApp, e-mail), puis cliquez « Relancé » : la ligne disparaît pendant {RELANCE_PAUSE_JOURS} jours.
+            Les clients à recontacter, calculés à partir des demandes et des inscriptions. Appelez ou envoyez le message proposé (SMS, WhatsApp, e-mail), puis cliquez « Relancé » : la ligne disparaît pendant {RELANCE_PAUSE_JOURS} jours. Les demandes d’avis Google ne se font qu’une fois par client : cliquez « Avis demandé » après l’envoi.
           </p>
         </div>
         <button type="button" onClick={onReload} className="inline-flex h-10 cursor-pointer items-center gap-2 rounded-full bg-[#FFFFFF] px-4 text-[14px] font-semibold text-[#0B2A3C]/75 shadow-[0_6px_18px_-12px_rgba(11,42,60,0.5)] ring-1 ring-[#0B2A3C]/[0.08] transition hover:text-[#0E6BA8]">

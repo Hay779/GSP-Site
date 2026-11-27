@@ -408,7 +408,7 @@ if ($action === 'relances' && $methode === 'GET') {
 
 if ($action === 'relance' && $methode === 'POST') {
     $cle = (string) ($corps['cle'] ?? '');
-    if (!preg_match('/^((?:DV|CT|PA|SIN|OFF)-\d{8}-\d{4}):(rappel|devis|suivi|expire|inutilise)$/', $cle, $m) || $dossierDemande($m[1]) === '') {
+    if (!preg_match('/^((?:DV|CT|PA|SIN|OFF)-\d{8}-\d{4}):(rappel|devis|suivi|expire|inutilise|avis)$/', $cle, $m) || $dossierDemande($m[1]) === '') {
         refuser(400, 'relance');
     }
     $note = preg_replace('/[\x00-\x1F\x7F]/u', ' ', mb_substr((string) ($corps['note'] ?? ''), 0, 300)) ?? '';
