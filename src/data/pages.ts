@@ -555,7 +555,7 @@ const LEGAL_CGV: readonly LegalArticle[] = [
 ];
 
 /** Pages assemblées à partir de blocs (la page /devis a son propre composant). */
-export type BlockPageId = Exclude<PageId, 'devis' | 'devenir-partenaire' | 'promotions'>;
+export type BlockPageId = Exclude<PageId, 'devis' | 'devenir-partenaire' | 'promotions' | 'offre'>;
 
 
 /* ------------------------------------------------------------------ */
@@ -1001,7 +1001,7 @@ export function resolvePageDefinition(route: Route): PageDefinition | null {
     return domain ? buildDomainPage(domain) : null;
   }
   if (route.kind === 'page') {
-    return route.id === 'devis' || route.id === 'devenir-partenaire' || route.id === 'promotions'
+    return route.id === 'devis' || route.id === 'devenir-partenaire' || route.id === 'promotions' || route.id === 'offre'
       ? null
       : THEMATIC_PAGES[route.id];
   }

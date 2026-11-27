@@ -19,6 +19,7 @@ import { KeysBadgesSection } from './components/KeysBadgesSection';
 import { MobileActionBar } from './components/MobileActionBar';
 import { NotFoundPage } from './components/NotFoundPage';
 import { PartnerPage } from './components/PartnerPage';
+import { OfferPage } from './components/OfferPage';
 import { QuotePage } from './components/QuotePage';
 import { ReviewsSection } from './components/ReviewsSection';
 import { UrgencySection } from './components/UrgencySection';
@@ -274,6 +275,10 @@ export default function App() {
       ) : route.kind === 'page' && route.id === 'devenir-partenaire' ? (
         <main className="flex-1 flex flex-col">
           <PartnerPage brand={BRAND_CONFIG} routerMode={ROUTER_MODE} />
+        </main>
+      ) : route.kind === 'page' && route.id === 'offre' ? (
+        <main className="flex-1 flex flex-col">
+          <OfferPage brand={BRAND_CONFIG} routerMode={ROUTER_MODE} />
         </main>
       ) : isPromoPage ? (
         <main className="flex-1 flex flex-col">

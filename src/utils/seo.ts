@@ -197,6 +197,12 @@ const STATIC_META: Partial<Record<PageId, { title: string; description: string; 
       'Syndics, assureurs, experts, agences immobilières et bailleurs : présentez-nous votre structure pour organiser une collaboration à Marseille.',
     name: 'Devenir partenaire',
   },
+  offre: {
+    title: 'Offre -5 % : inscription | Serrurerie de la République',
+    description:
+      'Inscrivez-vous pour bénéficier de -5 % sur votre premier achat ou votre première intervention, valable 5 mois après l’inscription.',
+    name: 'Offre -5 %',
+  },
 };
 
 /**
@@ -306,7 +312,8 @@ function baseSeoForRoute(route: Route): SeoData {
       description: fixed.description,
       path,
       image: DEFAULT_IMAGE,
-      noindex: false,
+      // /offre : réservée aux personnes qui ont le flyer (QR code), pas proposée à Google.
+      noindex: route.kind === 'page' && route.id === 'offre',
       jsonLd: [...base, breadcrumb(crumbs)],
     };
   }

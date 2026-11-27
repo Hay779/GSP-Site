@@ -22,7 +22,10 @@ const TYPES = [
     'contact' => ['prefixe' => 'CT', 'titre' => 'Message de contact'],
     'partenaire' => ['prefixe' => 'PA', 'titre' => 'Demande de partenariat'],
     'sinistre' => ['prefixe' => 'SIN', 'titre' => 'Photos après sinistre'],
+    'inscription' => ['prefixe' => 'OFF', 'titre' => 'Inscription offre -5 %'],
 ];
+/** Offre du flyer (page /offre) : durée de validité après l'inscription. */
+const OFFRE_MOIS = 5;
 const MAX_CHAMPS = 30;
 const MAX_LIBELLE = 80;
 const MAX_VALEUR = 5000;
@@ -146,6 +149,39 @@ if (mb_strlen($nom) < 2) {
     refuser(400, 'nom');
 }
 
+// Inscription à l'offre : e-mail obligatoire (le code y est envoyé) et une seule inscription
+// par téléphone, e-mail ou société. Index : ~/demandes/_inscriptions.json (jamais public).
+$valableJusquAu = '';
+$clesInscription = [];
+$fichierInscriptions = $dossierDemandes . '/_inscriptions.json';
+if ($type === 'inscription') {
+    $emailInscrit = mb_strtolower(uneLigne($valeurDe('E-mail'), 254));
+    if (!filter_var($emailInscrit, FILTER_VALIDATE_EMAIL)) {
+        refuser(400, 'email');
+    }
+    $clesInscription = ['tel:' . substr($telephone, -9), 'mail:' . $emailInscrit];
+    $societe = mb_strtolower(preg_replace('/[^\p{L}\p{N}]+/u', '', $valeurDe('Société')) ?? '');
+    if (mb_strlen($societe) >= 3) {
+        $clesInscription[] = 'societe:' . $societe;
+    }
+    $inscrits = is_file($fichierInscriptions) ? (json_decode((string) file_get_contents($fichierInscriptions), true) ?: []) : [];
+    foreach ($clesInscription as $cle) {
+        if (isset($inscrits[$cle]['reference'])) {
+            repondre(200, [
+                'ok' => true,
+                'reference' => $inscrits[$cle]['reference'],
+                'valable_jusqu_au' => $inscrits[$cle]['valable_jusqu_au'] ?? '',
+                'deja_inscrit' => true,
+            ]);
+        }
+    }
+    // Même jour, 5 mois plus tard (dernier jour du mois si ce jour n'existe pas).
+    $aujourdhui = new DateTimeImmutable('today');
+    $cible = $aujourdhui->modify('first day of this month')->modify('+' . OFFRE_MOIS . ' months');
+    $jour = min((int) $aujourdhui->format('j'), (int) $cible->format('t'));
+    $valableJusquAu = $cible->setDate((int) $cible->format('Y'), (int) $cible->format('n'), $jour)->format('d/m/Y');
+}
+
 // Photos (formulaire sinistre uniquement) : JPEG, PNG ou WebP vérifiés par leur contenu.
 $photos = [];
 if (isset($_FILES['photos']) && is_array($_FILES['photos']['name'] ?? null)) {
@@ -199,6 +235,9 @@ $enregistrement = [
     'champs' => $champs,
     'photos' => array_column($photos, 'nom'),
 ];
+if ($valableJusquAu !== '') {
+    $enregistrement['valable_jusqu_au'] = $valableJusquAu;
+}
 foreach ($photos as $p) {
     if (!move_uploaded_file($p['tmp'], $dossier . '/' . $p['nom'])) {
         refuser(500, 'stockage');
@@ -218,6 +257,9 @@ foreach ($champs as $c) {
 }
 if (count($photos) > 0) {
     $texte .= "\n" . count($photos) . " photo(s) en pièce jointe.\n";
+}
+if ($valableJusquAu !== '') {
+    $texte .= "\nCode de réduction : " . $reference . "\nValable jusqu'au : " . $valableJusquAu . "\n";
 }
 $texte .= "\nRappeler le client : " . $valeurDe('Téléphone') . "\n";
 
@@ -252,6 +294,40 @@ if (!$mailEnvoye) {
     file_put_contents($dossier . '/ERREUR-mail.txt', date('c') . " : l'envoi du mail a échoué.\n");
 }
 
+// Inscription à l'offre : index anti-doublon + e-mail de confirmation au client avec son code.
+if ($type === 'inscription') {
+    $inscrits = is_file($fichierInscriptions) ? (json_decode((string) file_get_contents($fichierInscriptions), true) ?: []) : [];
+    foreach ($clesInscription as $cle) {
+        $inscrits[$cle] = ['reference' => $reference, 'valable_jusqu_au' => $valableJusquAu];
+    }
+    file_put_contents($fichierInscriptions, json_encode($inscrits, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+
+    $texteClient = "Bonjour " . $nom . ",\n\n"
+        . "Merci pour votre inscription. Voici votre code de réduction :\n\n"
+        . "    " . $reference . "\n\n"
+        . "-5 % sur votre premier achat ou votre première intervention, sur devis signé,\n"
+        . "valable jusqu'au " . $valableJusquAu . ".\n\n"
+        . "Conditions : une seule inscription par société ou par personne ; hors dépannage d'urgence\n"
+        . "(ouverture de porte, mise en sécurité immédiate) ; non cumulable avec une autre offre ou promotion.\n"
+        . "Donnez ce code au moment du devis, en boutique ou par téléphone.\n\n"
+        . "Serrurerie de la République\n48 rue de la République, 13002 Marseille\n04 91 90 51 65\nhttps://www.serrurerierepublique.fr\n";
+    $mailClient = mail(
+        $emailInscrit,
+        encoderEntete('Votre code -5 % : ' . $reference),
+        chunk_split(base64_encode($texteClient)),
+        implode("\r\n", [
+            'From: ' . encoderEntete('Serrurerie de la République') . ' <' . $config['expediteur'] . '>',
+            'MIME-Version: 1.0',
+            'Content-Type: text/plain; charset=UTF-8',
+            'Content-Transfer-Encoding: base64',
+        ]),
+        '-f' . $config['expediteur']
+    );
+    if (!$mailClient) {
+        file_put_contents($dossier . '/ERREUR-mail-client.txt', date('c') . " : l'envoi du code au client a échoué.\n");
+    }
+}
+
 // Transmission au serveur de l'entreprise (plus tard : base de données).
 $webhook = (string) ($config['webhook_url'] ?? '');
 if ($webhook !== '' && function_exists('curl_init')) {
@@ -276,4 +352,8 @@ if ($webhook !== '' && function_exists('curl_init')) {
 }
 
 // La demande est enregistrée : c'est un succès pour le visiteur, même si le mail a échoué.
-repondre(200, ['ok' => true, 'reference' => $reference]);
+$retour = ['ok' => true, 'reference' => $reference];
+if ($valableJusquAu !== '') {
+    $retour['valable_jusqu_au'] = $valableJusquAu;
+}
+repondre(200, $retour);
