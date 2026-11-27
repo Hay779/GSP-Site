@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
-import { CalendarRange, Check, Copy, Download, ExternalLink, Pause, Pencil, Play, Plus, QrCode, Users, X } from 'lucide-react';
+import { CalendarRange, Check, Copy, Download, ExternalLink, Pause, Pencil, Play, Plus, Printer, QrCode, Users, X } from 'lucide-react';
 import {
   DEFAULT_SLUG,
   OFFER_STATUS_LABELS,
@@ -13,8 +13,9 @@ import {
 } from '../../utils/offers';
 import { saveOffer, signupStatus, type ApiFailure, type OfferSignup } from '../../utils/gestion';
 import { encodeQr, qrToSvg } from '../../utils/qrcode';
-import { OfferEditor } from './OfferEditor';
+import { OfferEditor, type EditorTab } from './OfferEditor';
 import { DEFAULT_PAGE, themeGradient } from '../../utils/offerPage';
+import { DEFAULT_POSTER } from '../../utils/offerPoster';
 
 const SEA = 'linear-gradient(120deg,#0E6BA8 0%,#1391B8 50%,#17B3A3 100%)';
 const INK_HEX = '#0B2A3C';
@@ -153,6 +154,7 @@ function OfferCard({
   busy,
   onQr,
   onEdit,
+  onPoster,
   onToggle,
   onShowSignups,
 }: {
@@ -161,6 +163,7 @@ function OfferCard({
   readonly busy: boolean;
   readonly onQr: () => void;
   readonly onEdit: () => void;
+  readonly onPoster: () => void;
   readonly onToggle: () => void;
   readonly onShowSignups: () => void;
 }) {
@@ -217,6 +220,10 @@ function OfferCard({
           <Pencil className="h-4 w-4" aria-hidden="true" />
           Modifier
         </button>
+        <button type="button" onClick={onPoster} className="inline-flex h-10 cursor-pointer items-center gap-1.5 rounded-full border border-[#0B2A3C]/12 px-4 text-[14px] font-semibold text-[#0B2A3C]/75 transition hover:border-[#1391B8] hover:text-[#0E6BA8]">
+          <Printer className="h-4 w-4" aria-hidden="true" />
+          Affiche
+        </button>
         <button type="button" onClick={onToggle} disabled={busy} className="inline-flex h-10 cursor-pointer items-center gap-1.5 rounded-full border border-[#0B2A3C]/12 px-4 text-[14px] font-semibold text-[#0B2A3C]/75 transition hover:border-[#1391B8] hover:text-[#0E6BA8] disabled:opacity-60">
           {offer.active ? <Pause className="h-4 w-4" aria-hidden="true" /> : <Play className="h-4 w-4" aria-hidden="true" />}
           {offer.active ? 'Mettre en pause' : 'Réactiver'}
@@ -240,6 +247,7 @@ const NEW_OFFER: OfferConfig = {
   active: true,
   questions: [],
   page: DEFAULT_PAGE,
+  poster: DEFAULT_POSTER,
 };
 
 /** Rubrique « Offres & QR codes » de l'espace gestion. */
@@ -257,7 +265,7 @@ export function OffersPanel({
   readonly onError: (reason: ApiFailure) => void;
 }) {
   const [qrFor, setQrFor] = useState<OfferConfig | null>(null);
-  const [editing, setEditing] = useState<{ offer: OfferConfig; isNew: boolean } | null>(null);
+  const [editing, setEditing] = useState<{ offer: OfferConfig; isNew: boolean; tab?: EditorTab } | null>(null);
   const [busySlug, setBusySlug] = useState<string | null>(null);
   const list = offers ?? [];
   const bySlug = useMemo(() => {
@@ -306,6 +314,7 @@ export function OffersPanel({
               busy={busySlug === o.slug}
               onQr={() => setQrFor(o)}
               onEdit={() => setEditing({ offer: o, isNew: false })}
+              onPoster={() => setEditing({ offer: o, isNew: false, tab: 'affiche' })}
               onToggle={() => void toggle(o)}
               onShowSignups={() => onShowSignups(o.slug)}
             />
@@ -322,6 +331,7 @@ export function OffersPanel({
         <OfferEditor
           initial={editing.offer}
           isNew={editing.isNew}
+          initialTab={editing.tab}
           existingSlugs={list.map((o) => o.slug)}
           onClose={() => setEditing(null)}
           onSaved={(saved) => {

@@ -10,6 +10,7 @@ import {
   Hash,
   Lock,
   Plus,
+  Printer,
   Smartphone,
   ToggleLeft,
   Trash2,
@@ -29,6 +30,9 @@ import {
 } from '../../utils/offerQuestions';
 import { failureMessage, saveOffer, type ApiFailure } from '../../utils/gestion';
 import { PREVIEW_READY, PREVIEW_UPDATE } from '../OfferPage';
+import { MAX_POSTER_TEXT, MAX_POSTER_TITLE, POSTER_FORMATS, type PosterSettings } from '../../utils/offerPoster';
+import { BRAND_CONFIG } from '../../utils/navigation';
+import { PosterPreview, usePosterPrint } from './Poster';
 
 const SEA = 'linear-gradient(120deg,#0E6BA8 0%,#1391B8 50%,#17B3A3 100%)';
 const INPUT =
@@ -44,7 +48,8 @@ const TYPE_ICONS: Readonly<Record<QuestionType, typeof Type>> = {
   date: Calendar,
 };
 
-type Tab = 'offre' | 'formulaire' | 'page' | 'apercu';
+export type EditorTab = 'offre' | 'formulaire' | 'page' | 'affiche' | 'apercu';
+type Tab = EditorTab;
 
 function Field({ id, label, hint, error, children }: { readonly id: string; readonly label: string; readonly hint?: string; readonly error?: string; readonly children: ReactNode }) {
   return (
@@ -474,6 +479,69 @@ function PageEditor({
   );
 }
 
+// ---------------------------------------------------------------- onglet « Affiche »
+function PosterEditor({ offer, error, onChange }: { readonly offer: OfferConfig; readonly error?: string; readonly onChange: (p: PosterSettings) => void }) {
+  const poster = offer.poster;
+  const { print, portal } = usePosterPrint({ offer, brandName: BRAND_CONFIG.name, phone: BRAND_CONFIG.phoneDisplay });
+  return (
+    <div className="flex flex-col gap-6">
+      {portal}
+      {error && (
+        <p role="alert" className="rounded-xl bg-[#FDECEA] px-3.5 py-2.5 text-[13.5px] font-medium text-[#A8321F]">
+          {error}
+        </p>
+      )}
+      <div>
+        <p className="text-[15px] font-bold">Format</p>
+        <div className="mt-3 grid grid-cols-3 gap-2.5" role="radiogroup" aria-label="Format de l’affiche">
+          {POSTER_FORMATS.map((f) => {
+            const checked = poster.format === f.id;
+            return (
+              <button
+                key={f.id}
+                type="button"
+                role="radio"
+                aria-checked={checked}
+                onClick={() => onChange({ ...poster, format: f.id })}
+                className={`flex cursor-pointer flex-col items-center gap-2 rounded-2xl bg-[#FFFFFF] p-3 text-center ring-2 transition ${checked ? 'ring-[#0B2A3C]' : 'ring-[#0B2A3C]/[0.08] hover:ring-[#0B2A3C]/30'}`}
+              >
+                <span className="block rounded-[3px] border-2 border-[#0B2A3C]/25" style={{ width: `${f.widthMm / 5}px`, height: `${f.heightMm / 5}px`, backgroundImage: checked ? themeGradient(offer.page.theme) : undefined }} />
+                <span className="text-[15px] font-bold">{f.label}</span>
+                <span className="text-[12px] leading-snug text-[#0B2A3C]/55">{f.hint}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-4">
+        <p className="text-[15px] font-bold">Textes de l’affiche</p>
+        <Field id="po-title" label="Accroche en grand (facultatif)" hint={`Vide : le titre de l’offre. ${MAX_POSTER_TITLE} caractères au maximum.`}>
+          <input id="po-title" maxLength={MAX_POSTER_TITLE} className={`${INPUT} border-[#0B2A3C]/15`} placeholder={offer.title} value={poster.title} onChange={(e) => onChange({ ...poster, title: e.target.value })} />
+        </Field>
+        <Field id="po-text" label="Phrase sous l’accroche (facultatif)" hint={`Vide : l’explication de l’offre. ${MAX_POSTER_TEXT} caractères au maximum.`}>
+          <textarea id="po-text" rows={3} maxLength={MAX_POSTER_TEXT} className="mt-1.5 w-full rounded-xl border border-[#0B2A3C]/15 bg-[#FFFFFF] px-3.5 py-2.5 text-[15px] leading-[1.5] focus:border-[#1391B8] focus:outline-none focus:ring-4 focus:ring-[#1391B8]/15" placeholder={offer.description} value={poster.text} onChange={(e) => onChange({ ...poster, text: e.target.value })} />
+        </Field>
+        <p className="text-[13px] text-[#0B2A3C]/55">Les couleurs suivent le thème choisi dans l’onglet « Page ». Le QR code mène à la page de l’offre.</p>
+      </div>
+
+      <div className="rounded-2xl bg-[#FFFFFF] p-4 ring-1 ring-[#0B2A3C]/[0.08]">
+        <button type="button" onClick={print} className="inline-flex h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-full text-[15px] font-semibold text-[#FFFFFF] shadow-[0_12px_26px_-12px_rgba(14,107,168,0.9)] transition hover:brightness-110" style={{ backgroundImage: SEA }}>
+          <Printer className="h-4 w-4" aria-hidden="true" />
+          Télécharger en PDF / imprimer
+        </button>
+        <p className="mt-3 text-[13px] leading-[1.55] text-[#0B2A3C]/60">
+          Dans la fenêtre qui s’ouvre, choisissez <strong className="font-semibold text-[#0B2A3C]">« Enregistrer au format PDF »</strong> (ou votre imprimante), marges <strong className="font-semibold text-[#0B2A3C]">« Aucune »</strong> et échelle <strong className="font-semibold text-[#0B2A3C]">100 %</strong>. Pensez à enregistrer l’offre pour garder vos textes.
+        </p>
+      </div>
+
+      <div className="flex justify-center lg:hidden">
+        <PosterPreview offer={offer} brandName={BRAND_CONFIG.name} phone={BRAND_CONFIG.phoneDisplay} widthPx={300} />
+      </div>
+    </div>
+  );
+}
+
 // ---------------------------------------------------------------- aperçu téléphone
 function PhonePreview({ offer }: { readonly offer: OfferConfig }) {
   const frameRef = useRef<HTMLIFrameElement | null>(null);
@@ -510,9 +578,11 @@ export function OfferEditor({
   initial,
   isNew,
   existingSlugs,
+  initialTab = 'offre',
   onClose,
   onSaved,
 }: {
+  readonly initialTab?: EditorTab;
   readonly initial: OfferConfig;
   readonly isNew: boolean;
   readonly existingSlugs: readonly string[];
@@ -525,7 +595,7 @@ export function OfferEditor({
   const [errors, setErrors] = useState<OfferErrors>({});
   const [saving, setSaving] = useState(false);
   const [failure, setFailure] = useState<ApiFailure | null>(null);
-  const [tab, setTab] = useState<Tab>('offre');
+  const [tab, setTab] = useState<Tab>(initialTab);
 
   // Offre telle qu'elle sera enregistrée (conditions lues dans la zone de texte).
   const current: OfferConfig = { ...offer, conditions: conditionsText.split('\n').map((c) => c.trim()).filter(Boolean) };
@@ -553,7 +623,7 @@ export function OfferEditor({
     setErrors(found);
     if (Object.keys(found).length > 0) {
       const only = Object.keys(found).length === 1;
-      setTab(only && found.questions ? 'formulaire' : only && found.page ? 'page' : 'offre');
+      setTab(only && found.questions ? 'formulaire' : only && found.page ? 'page' : only && found.poster ? 'affiche' : 'offre');
       return;
     }
     setSaving(true);
@@ -568,6 +638,7 @@ export function OfferEditor({
     { id: 'offre', label: 'Offre' },
     { id: 'formulaire', label: `Formulaire${offer.questions.length ? ` (${offer.questions.length})` : ''}` },
     { id: 'page', label: 'Page' },
+    { id: 'affiche', label: 'Affiche' },
     { id: 'apercu', label: 'Aperçu', mobileOnly: true },
   ];
 
@@ -631,6 +702,7 @@ export function OfferEditor({
             {tab === 'page' && (
               <PageEditor page={offer.page} defaultButton={`Recevoir mon code ${reductionLabel(current)}`} error={errors.page} onChange={(page) => change({ page })} />
             )}
+            {tab === 'affiche' && <PosterEditor offer={current} error={errors.poster} onChange={(poster) => change({ poster })} />}
             {tab === 'formulaire' && <FormBuilder questions={offer.questions} error={errors.questions} onChange={(questions) => change({ questions })} />}
             {tab === 'apercu' && (
               <div className="lg:hidden">
@@ -642,7 +714,14 @@ export function OfferEditor({
 
         {/* Aperçu (ordinateur) */}
         <div className="hidden min-h-0 flex-1 items-start justify-center overflow-y-auto py-6 lg:flex">
-          <PhonePreview offer={current} />
+          {tab === 'affiche' ? (
+            <div className="flex flex-col items-center">
+              <p className="mb-3 text-[13px] font-semibold text-[#0B2A3C]/55">Aperçu de l’affiche</p>
+              <PosterPreview offer={current} brandName={BRAND_CONFIG.name} phone={BRAND_CONFIG.phoneDisplay} widthPx={current.poster.format === 'carte' ? 380 : 470} />
+            </div>
+          ) : (
+            <PhonePreview offer={current} />
+          )}
         </div>
       </div>
     </div>
