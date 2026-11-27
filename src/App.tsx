@@ -20,6 +20,7 @@ import { MobileActionBar } from './components/MobileActionBar';
 import { NotFoundPage } from './components/NotFoundPage';
 import { PartnerPage } from './components/PartnerPage';
 import { OfferPage } from './components/OfferPage';
+import { GestionPage } from './components/GestionPage';
 import { QuotePage } from './components/QuotePage';
 import { ReviewsSection } from './components/ReviewsSection';
 import { UrgencySection } from './components/UrgencySection';
@@ -84,7 +85,8 @@ export default function App() {
   const isQuotePage = route.kind === 'page' && route.id === 'devis';
   const isPromoPage = route.kind === 'page' && route.id === 'promotions';
   // /offre (QR code du flyer) : page seule, sans menu, pied de page ni boutons flottants.
-  const isOfferPage = route.kind === 'page' && route.id === 'offre';
+  // /gestion (espace privé) : même principe.
+  const isOfferPage = route.kind === 'page' && (route.id === 'offre' || route.id === 'gestion');
   const showPromoHome = promoActive && !promoDismissed && onHome;
   const showPromoTicker = promoActive && !promoDismissed && (onHome || isPromoPage);
   const republique = AGENCIES_CONFIG.agencies.find((a) => a.id === 'republique') ?? AGENCIES_CONFIG.agencies[0];
@@ -277,6 +279,10 @@ export default function App() {
       ) : route.kind === 'page' && route.id === 'devenir-partenaire' ? (
         <main className="flex-1 flex flex-col">
           <PartnerPage brand={BRAND_CONFIG} routerMode={ROUTER_MODE} />
+        </main>
+      ) : route.kind === 'page' && route.id === 'gestion' ? (
+        <main className="flex-1 flex flex-col">
+          <GestionPage brand={BRAND_CONFIG} routerMode={ROUTER_MODE} />
         </main>
       ) : route.kind === 'page' && route.id === 'offre' ? (
         <main id="02_Hero" className="flex-1 flex flex-col">

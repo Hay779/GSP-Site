@@ -29,7 +29,8 @@ export type PageId =
   | 'pro-immobilier'
   | 'devenir-partenaire'
   | 'promotions'
-  | 'offre';
+  | 'offre'
+  | 'gestion';
 
 export type Route =
   | { readonly kind: 'home' }
@@ -63,6 +64,7 @@ export const PAGE_SLUGS: Readonly<Record<PageId, string>> = {
   'devenir-partenaire': 'devenir-partenaire',
   promotions: 'promotions',
   offre: 'offre',
+  gestion: 'gestion',
 };
 
 export const HOME_ROUTE: Route = { kind: 'home' };

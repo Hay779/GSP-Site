@@ -203,6 +203,11 @@ const STATIC_META: Partial<Record<PageId, { title: string; description: string; 
       'Inscrivez-vous pour bénéficier de -5 % sur votre premier achat ou votre première intervention, valable 5 mois après l’inscription.',
     name: 'Offre -5 %',
   },
+  gestion: {
+    title: 'Espace gestion | Serrurerie de la République',
+    description: 'Espace réservé à l’équipe de la Serrurerie de la République.',
+    name: 'Espace gestion',
+  },
 };
 
 /**
@@ -313,7 +318,8 @@ function baseSeoForRoute(route: Route): SeoData {
       path,
       image: DEFAULT_IMAGE,
       // /offre : réservée aux personnes qui ont le flyer (QR code), pas proposée à Google.
-      noindex: route.kind === 'page' && route.id === 'offre',
+      // /gestion : espace privé de l'équipe.
+      noindex: route.kind === 'page' && (route.id === 'offre' || route.id === 'gestion'),
       jsonLd: [...base, breadcrumb(crumbs)],
     };
   }
