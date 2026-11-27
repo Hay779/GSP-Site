@@ -115,7 +115,8 @@ export interface BrandsConfig {
   readonly subtitle: string;
   /**
    * Marques sur lesquelles l'entreprise intervient, avec leur logo officiel.
-   * ⚠️ Liste à confirmer par l'entreprise.
+   * ⚠️ Liste à confirmer par l'entreprise. Autorisations d'usage des logos à vérifier :
+   * docs/images-site/8-logos-icones/marques/sources/SOURCES-ET-AUTORISATIONS.md
    */
   readonly partners: readonly PartnerBrandItem[];
   /** Phrase sous la grille (autres marques). */
@@ -534,29 +535,30 @@ export const BRANDS_CONFIG: BrandsConfig = {
     'Nous posons, dépannons et entretenons les équipements des principaux fabricants de serrurerie et de fermeture.',
   partners: [
     { id: 'picard', name: 'Picard', specialty: 'Serrures multipoints', logoSrc: '/assets/brands/picard.png', logoHeight: 52 },
-    { id: 'heracles', name: 'Héraclès', specialty: 'Portes blindées' },
+    { id: 'heracles', name: 'Héraclès', specialty: 'Portes blindées', logoSrc: '/assets/brands/heracles.png', logoHeight: 40 },
     { id: 'iseo', name: 'ISEO', specialty: 'Contrôle d’accès', logoSrc: '/assets/brands/iseo.png', logoHeight: 40 },
     { id: 'dom', name: 'DOM', specialty: 'Organigrammes & clés', logoSrc: '/assets/brands/dom.png', logoHeight: 50 },
-    { id: 'abus', name: 'ABUS', specialty: 'Cadenas & sécurité' },
+    { id: 'abus', name: 'ABUS', specialty: 'Cadenas & sécurité', logoSrc: '/assets/brands/abus.png', logoHeight: 37 },
     { id: 'vachette', name: 'Vachette', specialty: 'Cylindres & serrures', logoSrc: '/assets/brands/vachette.png', logoHeight: 40 },
     { id: 'bricard', name: 'Bricard', specialty: 'Haute sécurité A2P', logoSrc: '/assets/brands/bricard.png', logoHeight: 62 },
-    { id: 'jpm', name: 'JPM', specialty: 'Serrures & cylindres' },
-    { id: 'mottura', name: 'Mottura', specialty: 'Serrures haute sécurité' },
-    { id: 'pollux', name: 'Pollux', specialty: 'Serrures en applique' },
-    { id: 'tordjman', name: 'Tordjman Métal', specialty: 'Portes blindées' },
-    { id: 'muel', name: 'Muel', specialty: 'Serrures & verrous' },
-    { id: 'reelax', name: 'Reelax', specialty: 'Quincaillerie de sécurité' },
+    { id: 'jpm', name: 'JPM', specialty: 'Serrures & cylindres', logoSrc: '/assets/brands/jpm.png', logoHeight: 48 },
+    { id: 'mottura', name: 'Mottura', specialty: 'Serrures haute sécurité', logoSrc: '/assets/brands/mottura.png', logoHeight: 36 },
+    { id: 'pollux', name: 'Pollux', specialty: 'Serrures en applique', logoSrc: '/assets/brands/pollux.png', logoHeight: 32 },
+    { id: 'tordjman', name: 'Tordjman Métal', specialty: 'Portes blindées', logoSrc: '/assets/brands/tordjman.png', logoHeight: 36 },
+    { id: 'muel', name: 'Muel', specialty: 'Serrures & verrous', logoSrc: '/assets/brands/muel.png', logoHeight: 28 },
+    { id: 'reelax', name: 'Reelax', specialty: 'Quincaillerie de sécurité', logoSrc: '/assets/brands/reelax.png', logoHeight: 28 },
     { id: 'fichet', name: 'Point Fort Fichet', specialty: 'Portes blindées', logoSrc: '/assets/brands/fichet.png', logoHeight: 42 },
-    { id: 'cisa', name: 'Cisa', specialty: 'Serrures & cylindres' },
-    { id: 'multlock', name: 'Mul\u2011T\u2011Lock', specialty: 'Cylindres haute sécurité' },
-    { id: 'keso', name: 'Keso', specialty: 'Cylindres haute sécurité' },
-    { id: 'assaabloy', name: 'Assa Abloy', specialty: 'Serrures & contrôle d’accès' },
-    { id: 'laperche', name: 'Laperche', specialty: 'Serrures & verrous' },
-    { id: 'denyfontaine', name: 'Deny Fontaine', specialty: 'Serrures & portes blindées' },
-    { id: 'thirard', name: 'Thirard', specialty: 'Serrures & quincaillerie' },
-    { id: 'somfy', name: 'Somfy', specialty: 'Motorisation volets & rideaux' },
-    { id: 'came', name: 'Came', specialty: 'Motorisation portails & garages' },
-    { id: 'nice', name: 'Nice', specialty: 'Motorisation portails & garages' },
+    { id: 'cisa', name: 'Cisa', specialty: 'Serrures & cylindres', logoSrc: '/assets/brands/cisa.png', logoHeight: 28 },
+    { id: 'multlock', name: 'Mul\u2011T\u2011Lock', specialty: 'Cylindres haute sécurité', logoSrc: '/assets/brands/multlock.png', logoHeight: 29 },
+    { id: 'keso', name: 'Keso', specialty: 'Cylindres haute sécurité', logoSrc: '/assets/brands/keso.png', logoHeight: 36 },
+    { id: 'assaabloy', name: 'Assa Abloy', specialty: 'Serrures & contrôle d’accès', logoSrc: '/assets/brands/assaabloy.png', logoHeight: 40 },
+    { id: 'laperche', name: 'Laperche', specialty: 'Serrures & verrous', logoSrc: '/assets/brands/laperche.png', logoHeight: 46 },
+    // Logo Dény Security : nom adopté par Dény Fontaine.
+    { id: 'denyfontaine', name: 'Deny Fontaine', specialty: 'Serrures & portes blindées', logoSrc: '/assets/brands/denyfontaine.png', logoHeight: 38 },
+    { id: 'thirard', name: 'Thirard', specialty: 'Serrures & quincaillerie', logoSrc: '/assets/brands/thirard.png', logoHeight: 29 },
+    { id: 'somfy', name: 'Somfy', specialty: 'Motorisation volets & rideaux', logoSrc: '/assets/brands/somfy.png', logoHeight: 29 },
+    { id: 'came', name: 'Came', specialty: 'Motorisation portails & garages', logoSrc: '/assets/brands/came.png', logoHeight: 30 },
+    { id: 'nice', name: 'Nice', specialty: 'Motorisation portails & garages', logoSrc: '/assets/brands/nice.png', logoHeight: 50 },
   ],
   otherBrandsLabel: 'Votre équipement est d’une autre marque ?',
   otherBrandsCta: 'Contactez-nous pour vérifier',

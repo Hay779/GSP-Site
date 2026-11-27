@@ -60,7 +60,7 @@ Portraits et descriptions des deux serruriers des images Professionnels, à réu
 
 - `logo_republique_dark.png` : logo du site.
 - `favicon.svg`, `favicon.png`, `favicon.ico`, `apple-touch-icon.png` : petite icône de l'onglet du navigateur et de l'écran d'accueil du téléphone (bouclier doré avec trou de serrure, depuis le 26/11/2026). Pour la changer : déposer une image carrée d'au moins 512 × 512 px dans `0-a-remplacer/` nommée `favicon.png`, Claude Code refait les 4 fichiers.
-- `marques/` : logos des marques (Bricard, Vachette, Fichet, Picard, Dom, Iseo) du bloc « Marques ». Voir aussi `public/assets/brands/LISEZMOI.md`.
+- `marques/` : logos des 24 marques du bloc « Marques » (fichiers d'origine). `marques/sources/` : provenance de chaque logo, aperçu et formulaires d'autorisation. Copies optimisées du site : `public/assets/brands/` (voir son `LISEZMOI.md`).
 - Logo carré pour les annuaires : `docs/logo-google/`.
 
 ### Petites icônes dessinées (pas des fichiers)
