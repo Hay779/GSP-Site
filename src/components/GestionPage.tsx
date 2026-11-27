@@ -17,6 +17,7 @@ import {
   RefreshCw,
   Repeat,
   Search,
+  Sun,
   QrCode,
   Ticket,
   Undo2,
@@ -48,6 +49,7 @@ import { RequestsPanel } from './gestion/RequestsPanel';
 import { RelancesPanel } from './gestion/RelancesPanel';
 import { SuiviPanel } from './gestion/SuiviPanel';
 import { AdsPanel } from './gestion/AdsPanel';
+import { TodayPanel } from './gestion/TodayPanel';
 import { fetchRelancesDone, type RelanceDone } from '../utils/gestion';
 import { computeRelances } from '../utils/relances';
 import { fetchRequests, type SiteRequest } from '../utils/gestion';
@@ -74,8 +76,9 @@ const FILTERS: readonly { readonly id: Filter; readonly label: string }[] = [
 ];
 
 /** Rubriques de l'espace (celles « Bientôt » restent à construire). */
-type SectionId = 'offres' | 'inscrits' | 'demandes' | 'relances' | 'publicite' | 'suivi';
+type SectionId = 'aujourdhui' | 'offres' | 'inscrits' | 'demandes' | 'relances' | 'publicite' | 'suivi';
 const SECTIONS: readonly { readonly id: SectionId; readonly label: string; readonly icon: typeof Ticket; readonly ready: boolean }[] = [
+  { id: 'aujourdhui', label: 'Aujourd’hui', icon: Sun, ready: true },
   { id: 'demandes', label: 'Demandes', icon: Inbox, ready: true },
   { id: 'offres', label: 'Offres & QR codes', icon: QrCode, ready: true },
   { id: 'inscrits', label: 'Inscrits', icon: Users, ready: true },
@@ -266,7 +269,7 @@ function Dashboard({ routerMode, onLoggedOut }: { readonly routerMode: RouterMod
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState<Filter>('tous');
   const [busyRef, setBusyRef] = useState<string | null>(null);
-  const [section, setSection] = useState<SectionId>('demandes');
+  const [section, setSection] = useState<SectionId>('aujourdhui');
   const [offers, setOffers] = useState<OfferConfig[] | null>(null);
   const [offerFilter, setOfferFilter] = useState<string>('toutes');
   const [requests, setRequests] = useState<SiteRequest[] | null>(null);
@@ -405,7 +408,16 @@ function Dashboard({ routerMode, onLoggedOut }: { readonly routerMode: RouterMod
       </header>
 
       <div className="mx-auto w-full max-w-[1180px] flex-1 px-4 py-6 sm:px-6 sm:py-8">
-        {section === 'publicite' ? (
+        {section === 'aujourdhui' ? (
+          <>
+            {error && (
+              <p role="alert" className="mb-5 rounded-xl bg-[#FDECEA] px-4 py-3 text-[14.5px] font-medium text-[#A8321F]">
+                {failureMessage(error)}
+              </p>
+            )}
+            <TodayPanel requests={requests} signups={signups} done={relancesDone} onGo={setSection} />
+          </>
+        ) : section === 'publicite' ? (
           <>
             {error && (
               <p role="alert" className="mb-5 rounded-xl bg-[#FDECEA] px-4 py-3 text-[14.5px] font-medium text-[#A8321F]">
