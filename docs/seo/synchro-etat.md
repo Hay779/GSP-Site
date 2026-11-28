@@ -27,5 +27,6 @@ Autres annuaires (Hoodspot, Yelp, Kompass, Cybo, Cylex/Yably, NosAvis, Marseille
 
 ## Dernier écart identifié
 
+- 28/11/2026 (relevé) : aucun nouvel élément côté Google (note 4,6, dernier post toujours « Bricard SPECTRAL » du 26/11, pas de nouveau post ni photo identifiée comme nouvelle). **PagesJaunes non revérifié le 28/11** (challenge anti-robot depuis le serveur). Écart inchangé : post Google « Bricard SPECTRAL » (26/11) toujours absent des actualités PagesJaunes → reste dans `docs/seo/synchro-a-faire.md`.
 - 27/11/2026 (relevé) : aucun nouvel élément côté Google (note 4,6, dernier post toujours « Bricard SPECTRAL » du 26/11, pas de nouveau post ni photo identifiée comme nouvelle). **PagesJaunes non revérifié le 27/11** (challenge anti-robot depuis le serveur). Écart inchangé : post Google « Bricard SPECTRAL » (26/11) toujours absent des actualités PagesJaunes → reste dans `docs/seo/synchro-a-faire.md`.
 - 26/11/2026 : post Google « Bricard SPECTRAL » (publié le 26/11) absent des actualités PagesJaunes → inscrit dans `docs/seo/synchro-a-faire.md`.

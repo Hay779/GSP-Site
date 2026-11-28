@@ -13,6 +13,9 @@
 
 | Date | À vérifier | Pourquoi | Où |
 |---|---|---|---|
+| 28/11/2026 | Nombre d'avis affiché sur la fiche Google + nouveaux avis (date, note, résumé) | L'affichage limité (non connecté) masque toujours le compteur et les avis ; la page d'avis est bloquée par le captcha depuis le serveur | Fiche Google (compte gspserrurerie13, côté client) |
+| 28/11/2026 | Positions Google Search pour les 6 requêtes de la veille | `google.com/search` renvoie toujours un captcha depuis l'IP du serveur | Compte client / Search Console |
+| 28/11/2026 | Fiche PagesJaunes (actualités, avis, horaires) | https://www.pagesjaunes.fr/pros/65378857 ouvre un challenge anti-robot depuis le serveur ; non revue le 28/11 | Navigateur client (Chrome) |
 | 27/11/2026 | Nombre d'avis affiché sur la fiche Google + nouveaux avis (date, note, résumé) | L'affichage limité (non connecté) masque toujours le compteur et les avis ; la page d'avis est bloquée par le captcha depuis le serveur | Fiche Google (compte gspserrurerie13, côté client) |
 | 27/11/2026 | Positions Google Search pour les 6 requêtes de la veille | `google.com/search` renvoie toujours un captcha depuis l'IP du serveur | Compte client / Search Console |
 | 27/11/2026 | Fiche PagesJaunes (actualités, avis, horaires) | https://www.pagesjaunes.fr/pros/65378857 ouvre un challenge anti-robot depuis le serveur ; non revue le 27/11 | Navigateur client (Chrome) |
